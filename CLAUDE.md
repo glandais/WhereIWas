@@ -75,8 +75,11 @@ The app ships in **English (source) and French**. Two string catalogs under
 `WhereIWas/Resources/` hold everything user-facing:
 
 - `Localizable.xcstrings` — the UI strings
-- `InfoPlist.xcstrings` — the three permission prompts (the English values in
-  `project.yml` stay the source; the catalog localizes them)
+- `InfoPlist.xcstrings` — the three permission prompts. It holds **`fr` only**:
+  the English values live in `project.yml` and reach the app through the
+  generated `Info.plist`. Never add an `en` unit here — iOS resolves
+  `en.lproj/InfoPlist.strings` first, so the catalog would silently win and
+  edits to `project.yml` would have no effect on the shipped prompt.
 
 `knownRegions` in `project.yml` lists the locales. Rules when adding UI strings:
 
@@ -84,10 +87,24 @@ The app ships in **English (source) and French**. Two string catalogs under
 - A `String` variable passed to `Text`/`Label` is **not** — build it with
   `String(localized:)` at the source, or use `Text(verbatim:)` when the value is
   data (coordinates, an error, an audit payload) that must not be translated.
-- Technical identifiers stay English on purpose: `GPSProfile.label`,
-  `AuditCategory.label` and `AuditSeverity.label` are persisted in samples,
-  written to the exports and asserted on in tests. The UI shows the localized
-  `displayName` counterparts defined in `UI/Formatting.swift`.
+- Technical identifiers stay English on purpose: `GPSProfile.label` and
+  `AuditSeverity.label` are persisted in samples, written to the exports and
+  asserted on in tests. The UI shows the localized `displayName` counterparts
+  defined in `UI/Formatting.swift`. `AuditCategory` has no `label` — the
+  exporter writes its `rawValue` and the UI uses `displayName`.
+- `StateTransitionRecord.reason` is persisted machine text, so it stays English
+  on disk; the Status screen runs it through `Formatting.transitionReason`,
+  which translates the known vocabulary and passes anything else through.
+- Do **not** reuse a key across two subjects. French agrees adjectives with the
+  subject, so `Denied` shared by the location and motion rows cannot be right
+  in both — hence the `auth.location.*` / `auth.motion.*` and `precise.on` /
+  `precise.off` splits. Same for a noun and a verb that happen to spell the
+  same in English (`Export` the screen vs `audit.export.action` the button).
+- Give every `%lld` key plural variations in **both** locales, English included
+  — without an `en` unit the singular falls back to the key and prints
+  "1 days".
+- Coordinates go through `Formatting.coordinate`, which pins `en_US_POSIX` so
+  the decimal separator never collides with the field separator.
 
 `xcodebuild` compiles the catalogs but never writes new keys back into them.
 After adding strings, extract them by hand:
@@ -100,7 +117,8 @@ WhereIWas.build/Debug-iphonesimulator/WhereIWas.build/Objects-normal -name '*.st
 xcrun xcstringstool sync WhereIWas/Resources/Localizable.xcstrings --stringsdata $DD/*.stringsdata
 ```
 
-then fill the `fr` unit of every new key (`extractionState: stale` entries are
+then fill the `fr` unit of every new key (and the `en` unit too, for keys
+whose name is not the English text, such as `auth.*` and `reason.*`) (`extractionState: stale` entries are
 dead keys — delete them). Check the result in the simulator with
 `xcrun simctl launch booted io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR`.
 
@@ -156,15 +174,19 @@ used. `fileSizeKey` in `ExportView` is not one of them.
 - Two of the five screenshots are placeholders (map and status) — see
   `screenshots/STATUS.md` for what each one is waiting for
 - `fr-FR` has no screenshots; ASC does not inherit them from the primary locale
-- Verify "App Store Regulations and Permits" by hand — `asc review doctor` reports it
-  as NOT_CHECKED, it is website-only
+- App Store Regulations and Permits: checked by hand (asc reports it NOT_CHECKED, it is
+  website-only). Vietnam gaming licence and regulated medical devices do not apply.
+  Encryption is already declared through `ITSAppUsesNonExemptEncryption: false`. DSA
+  status is "non-trader", which is right for a free app with no monetisation — revisit
+  it if the app is ever monetised.
 
 Done: app icon; privacy manifest; both locales of `metadata/` applied and verified
 against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
 five IPHONE_65 screenshots uploaded (COMPLETE); App Privacy published as
 Data Not Collected; age rating (all NONE/false); categories NAVIGATION / UTILITIES;
 content rights DOES_NOT_USE_THIRD_PARTY_CONTENT; availability on 175 territories with
-availableInNewTerritories; price set to free (isFree, base territory USA); Mac Apple
+availableInNewTerritories; mainland China removed for want of an ICP filing (174
+territories); price set to free (isFree, base territory USA); Mac Apple
 Silicon and Vision Pro distribution unchecked, since CoreMotion, background location,
 significant changes and visits do nothing on those platforms; App Store review details
 with the guideline 2.5.4 background-location rationale.
@@ -175,6 +197,14 @@ with the guideline 2.5.4 background-location rationale.
 the publish state. Confirmed published two ways — `asc web privacy pull` returns
 `published: true`, and the ASC page shows "Published … by Gabriel Landais" with the
 Publish button gone. Ignore it.
+
+### Mainland China
+
+CHN is deliberately excluded. Apple requires an ICP filing (备案) from the Chinese MIIT
+for any app distributed in mainland China, which needs a Chinese business entity or a
+local hosting partner. Without it the app cannot ship there, so asking App Review to
+approve that distribution only risks a round trip. Note that `availableInNewTerritories`
+is true, so re-check this if Apple ever restructures territories.
 
 ### What asc validate does not check
 

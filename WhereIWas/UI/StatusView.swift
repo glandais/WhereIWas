@@ -237,7 +237,7 @@ private struct TransitionRow: View {
                     .foregroundStyle(.secondary)
             }
             HStack {
-                Text(record.reason)
+                Text(Formatting.transitionReason(record.reason))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)

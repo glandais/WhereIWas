@@ -1,57 +1,39 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "NSLocationAlwaysAndWhenInUseUsageDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhereIWas enregistre votre position en continu, y compris en arrière-plan, afin que vos déplacements pendant une intervention ne soient jamais perdus. Les données restent sur cet appareil jusqu’à ce que vous les exportiez."
+  "sourceLanguage": "en",
+  "strings": {
+    "NSLocationAlwaysAndWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas enregistre votre position en continu, y compris en arrière-plan, afin que vos déplacements pendant une intervention ne soient jamais perdus. Les données restent sur cet appareil jusqu’à ce que vous les exportiez."
           }
         }
       }
     },
-    "NSLocationWhenInUseUsageDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhereIWas records your position to build your location history."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "WhereIWas enregistre votre position pour constituer votre historique de déplacements."
+    "NSLocationWhenInUseUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas enregistre votre position pour constituer votre historique de déplacements."
           }
         }
       }
     },
-    "NSMotionUsageDescription" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "L’activité physique (marche, conduite, immobilité) sert à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie."
+    "NSMotionUsageDescription": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’activité physique (marche, conduite, immobilité) sert à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie."
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

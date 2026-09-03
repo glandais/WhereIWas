@@ -84,9 +84,89 @@ enum Formatting {
     }
 
     /// Latitude/longitude with 5 decimals (~1 m).
+    ///
+    /// Coordinates are data, not prose: they keep a dot as the decimal
+    /// separator in every locale. A locale-aware style would render
+    /// "48,85837, 2,29448" in French, where the decimal separator and the
+    /// field separator are the same character.
     static func coordinate(_ latitude: Double, _ longitude: Double) -> String {
-        let f = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(5))
+        let f = FloatingPointFormatStyle<Double>.number
+            .precision(.fractionLength(5))
+            .locale(Locale(identifier: "en_US_POSIX"))
         return "\(latitude.formatted(f)), \(longitude.formatted(f))"
+    }
+
+    /// Translates the machine-built transition reason for display.
+    ///
+    /// `StateTransitionRecord.reason` is composed by the coordinator as
+    /// `"<input> [<detail>]"` and is *persisted*, so it stays English on disk
+    /// and in the exports. The Status screen is ordinary UI, not the opt-in
+    /// audit trail, so it shows a translated copy. Anything outside the known
+    /// vocabulary falls through unchanged.
+    static func transitionReason(_ raw: String) -> String {
+        guard raw.hasSuffix("]"), let bracket = raw.range(of: " [") else {
+            return reasonAtom(raw)
+        }
+        let head = String(raw[raw.startIndex..<bracket.lowerBound])
+        let detail = String(raw[bracket.upperBound..<raw.index(before: raw.endIndex)])
+        return "\(reasonAtom(head)) [\(reasonAtom(detail))]"
+    }
+
+    /// One `TrackingCoordinator.describe(_:)` token, or one of the explicit
+    /// reasons the coordinator passes alongside it.
+    private static func reasonAtom(_ token: String) -> String {
+        switch token {
+        case "enable": return String(localized: "reason.enable", defaultValue: "Tracking on")
+        case "disable": return String(localized: "reason.disable", defaultValue: "Tracking off")
+        case "stillness timer": return String(localized: "reason.stillnessTimer", defaultValue: "Stillness timer")
+        case "probe timer": return String(localized: "reason.probeTimer", defaultValue: "Probe timer")
+        case "significant change": return String(localized: "reason.significantChange", defaultValue: "Significant change")
+        case "visit": return String(localized: "reason.visit", defaultValue: "Visit")
+        case "visit arrival": return String(localized: "reason.visitArrival", defaultValue: "Visit arrival")
+        case "visit departure": return String(localized: "reason.visitDeparture", defaultValue: "Visit departure")
+        case "motion hint": return String(localized: "reason.motionHint", defaultValue: "Motion hint")
+        case "fix (no speed)": return String(localized: "reason.fixNoSpeed", defaultValue: "Fix (no speed)")
+        case "user": return String(localized: "reason.user", defaultValue: "User")
+        case "launch": return String(localized: "reason.launch", defaultValue: "App launch")
+        case "relaunch (location event)":
+            return String(localized: "reason.relaunch", defaultValue: "Relaunch (location event)")
+        default: break
+        }
+        if let rest = token.dropPrefixIfPresent("activity "),
+           let slash = rest.firstIndex(of: "/"),
+           let kind = ActivityKind(rawValue: String(rest[rest.startIndex..<slash])),
+           let confidence = confidence(named: String(rest[rest.index(after: slash)...])) {
+            return String(localized: "reason.activity",
+                          defaultValue: "Activity \(kind.title) (\(confidence.title))")
+        }
+        if let rest = token.dropPrefixIfPresent("fix "), rest.hasSuffix(" m/s"),
+           let mps = Double(rest.dropLast(4)) {
+            return String(localized: "reason.fix", defaultValue: "Fix \(speed(mps))")
+        }
+        if let rest = token.dropPrefixIfPresent("steps("), rest.hasSuffix(")"),
+           let steps = Int(rest.dropLast()) {
+            return String(localized: "reason.steps", defaultValue: "\(steps) steps")
+        }
+        if let rest = token.dropPrefixIfPresent("accelerometer("), rest.hasSuffix("g)") {
+            return String(localized: "reason.accelerometer",
+                          defaultValue: "Accelerometer (\(String(rest.dropLast(2))) g)")
+        }
+        return token
+    }
+
+    private static func confidence(named name: String) -> ActivityConfidence? {
+        switch name {
+        case "low": return .low
+        case "medium": return .medium
+        case "high": return .high
+        default: return nil
+        }
+    }
+}
+
+private extension String {
+    func dropPrefixIfPresent(_ prefix: String) -> Substring? {
+        hasPrefix(prefix) ? dropFirst(prefix.count) : nil
     }
 }
 
@@ -169,10 +249,10 @@ extension AccuracyLevel {
         switch self {
         case .bestForNavigation: return String(localized: "Best for navigation")
         case .best: return String(localized: "Best")
-        case .tenMeters: return "10 m"
-        case .hundredMeters: return "100 m"
-        case .kilometer: return "1 km"
-        case .threeKilometers: return "3 km"
+        case .tenMeters: return Formatting.distance(10)
+        case .hundredMeters: return Formatting.distance(100)
+        case .kilometer: return Formatting.distance(1_000)
+        case .threeKilometers: return Formatting.distance(3_000)
         }
     }
 }
@@ -188,14 +268,29 @@ extension ActivityTypeHint {
     }
 }
 
+// The location and motion authorization states read the same in English but
+// not in every language: French agrees the adjective with the subject
+// ("localisation" is feminine, "mouvement" masculine), so the two enums get
+// their own keys instead of sharing one.
+
 extension LocationAuthorization {
     var title: String {
         switch self {
-        case .notDetermined: return String(localized: "Not requested")
-        case .restricted: return String(localized: "Restricted")
-        case .denied: return String(localized: "Denied")
-        case .whenInUse: return String(localized: "While using")
-        case .always: return String(localized: "Always")
+        case .notDetermined:
+            return String(localized: "auth.location.notRequested", defaultValue: "Not requested",
+                          comment: "Value of the “Location” permission row")
+        case .restricted:
+            return String(localized: "auth.location.restricted", defaultValue: "Restricted",
+                          comment: "Value of the “Location” permission row")
+        case .denied:
+            return String(localized: "auth.location.denied", defaultValue: "Denied",
+                          comment: "Value of the “Location” permission row")
+        case .whenInUse:
+            return String(localized: "auth.location.whenInUse", defaultValue: "While using",
+                          comment: "Value of the “Location” permission row")
+        case .always:
+            return String(localized: "auth.location.always", defaultValue: "Always",
+                          comment: "Value of the “Location” permission row")
         }
     }
 }
@@ -203,10 +298,18 @@ extension LocationAuthorization {
 extension MotionAuthorization {
     var title: String {
         switch self {
-        case .notDetermined: return String(localized: "Not requested")
-        case .restricted: return String(localized: "Restricted")
-        case .denied: return String(localized: "Denied")
-        case .authorized: return String(localized: "Authorized")
+        case .notDetermined:
+            return String(localized: "auth.motion.notRequested", defaultValue: "Not requested",
+                          comment: "Value of the “Motion & Fitness” permission row")
+        case .restricted:
+            return String(localized: "auth.motion.restricted", defaultValue: "Restricted",
+                          comment: "Value of the “Motion & Fitness” permission row")
+        case .denied:
+            return String(localized: "auth.motion.denied", defaultValue: "Denied",
+                          comment: "Value of the “Motion & Fitness” permission row")
+        case .authorized:
+            return String(localized: "auth.motion.authorized", defaultValue: "Authorized",
+                          comment: "Value of the “Motion & Fitness” permission row")
         }
     }
 }
@@ -247,10 +350,11 @@ extension ExportFormat {
     }
 }
 
-// `GPSProfile.label`, `AuditCategory.label` and `AuditSeverity.label` are
-// technical identifiers: they are persisted in samples, written to the audit
-// exports and asserted on in tests, so they stay English. The UI shows these
-// translated `displayName`s instead.
+// `GPSProfile.label` and `AuditSeverity.label` are technical identifiers: they
+// are persisted in samples, written to the audit exports and asserted on in
+// tests, so they stay English. The UI shows these translated `displayName`s
+// instead. `AuditCategory` has no `label` for that reason — the exporter
+// writes its `rawValue`.
 
 extension GPSProfile {
     var displayName: String {

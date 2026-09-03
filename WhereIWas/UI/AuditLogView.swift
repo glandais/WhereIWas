@@ -159,7 +159,9 @@ struct AuditLogView: View {
                         Text(verbatim: format.displayName).tag(format)
                     }
                 }
-                Button("Export", systemImage: "square.and.arrow.up") {
+                Button(String(localized: "audit.export.action", defaultValue: "Export",
+                              comment: "Menu action that exports the audit trail; a verb"),
+                       systemImage: "square.and.arrow.up") {
                     Task { await export() }
                 }
                 .disabled(isExporting || events.isEmpty)

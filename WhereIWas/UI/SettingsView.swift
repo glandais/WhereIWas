@@ -40,7 +40,8 @@ struct SettingsView: View {
 
     private var permissionsSection: some View {
         Section {
-            LabeledContent("Location") {
+            LabeledContent(String(localized: "settings.permission.location", defaultValue: "Location",
+                                  comment: "Title of the location permission row; the iOS system permission, not the audit category")) {
                 permissionValue(controller.status.locationAuthorization.title,
                                 ok: controller.status.locationAuthorization == .always)
             }

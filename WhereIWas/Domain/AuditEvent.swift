@@ -28,22 +28,6 @@ public enum AuditCategory: String, Codable, Sendable, Hashable, CaseIterable, Id
 
     public var id: String { rawValue }
 
-    /// Short human label for the UI.
-    public var label: String {
-        switch self {
-        case .lifecycle: return "Lifecycle"
-        case .state: return "State"
-        case .effect: return "Effect"
-        case .location: return "Location"
-        case .filter: return "Filter"
-        case .motion: return "Motion"
-        case .permission: return "Permission"
-        case .persistence: return "Storage"
-        case .maintenance: return "Maintenance"
-        case .export: return "Export"
-        }
-    }
-
     /// SF Symbol used by the audit screen.
     public var symbolName: String {
         switch self {
