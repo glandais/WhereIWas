@@ -5,30 +5,82 @@ import SwiftUI
 /// derived from `Foundation` format styles so Dynamic Type / localisation
 /// come for free.
 enum Formatting {
-    /// "12 m", "1.2 km".
+    // MARK: Unit system
+
+    /// Unit system the measurement helpers below render in, mirroring
+    /// `TrackingSettings.unitSystem`.
+    ///
+    /// `nonisolated(unsafe)` because the formatting helpers are plain static
+    /// functions called from every view body; isolating this to the main
+    /// actor would make them `@MainActor` and unusable from the previews and
+    /// tests that call them directly. It is only ever *written* from the main
+    /// actor — `RootView` applies the setting at launch and on change, and
+    /// the Settings picker writes it in its binding setter — and reads
+    /// happen while building the UI on that same actor.
+    nonisolated(unsafe) static var unitSystem: UnitSystem = .deviceDefault {
+        didSet {
+            guard unitSystem != oldValue else { return }
+            measurementLocale = Self.locale(for: unitSystem)
+        }
+    }
+
+    /// `Locale.current` with its measurement system forced to ``unitSystem``.
+    ///
+    /// Cached: it only changes when the setting does, while a single list row
+    /// formats several measurements and `Locale.Components` resolution is not
+    /// free.
+    nonisolated(unsafe) private static var measurementLocale = Formatting.locale(for: .deviceDefault)
+
+    private static func locale(for system: UnitSystem) -> Locale {
+        var components = Locale.Components(locale: .current)
+        components.measurementSystem = system == .imperial ? .us : .metric
+        return Locale(components: components)
+    }
+
+    // MARK: Measurements
+
+    /// "12 m", "1.2 km" — or "39 ft", "0.8 mi" in imperial.
     static func distance(_ meters: Double) -> String {
         Measurement(value: meters, unit: UnitLength.meters)
-            .formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(0...1))))
+            .formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(0...1)))
+                .locale(measurementLocale))
     }
 
-    /// Horizontal/vertical accuracy: "±8 m".
+    /// Horizontal/vertical accuracy: "±8 m", "±26 ft".
+    ///
+    /// Converted explicitly rather than through `usage: .general`, which would
+    /// promote a large value to kilometers or miles: an accuracy is read
+    /// against the other accuracies on screen, so the unit has to stay the
+    /// same one at every magnitude.
     static func accuracy(_ meters: Double) -> String {
         guard meters > 0 else { return "—" }
-        return "±" + Measurement(value: meters, unit: UnitLength.meters)
-            .formatted(.measurement(width: .abbreviated, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(0))))
+        return "±" + length(meters)
+            .formatted(.measurement(width: .abbreviated, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(0)))
+                .locale(measurementLocale))
     }
 
-    /// Speed from m/s: "4.3 km/h" (or mph depending on locale).
+    /// Speed from m/s: "4.3 km/h", or "2.7 mph" in imperial.
     static func speed(_ metersPerSecond: Double?) -> String {
         guard let mps = metersPerSecond, mps >= 0 else { return "—" }
         return Measurement(value: mps, unit: UnitSpeed.metersPerSecond)
-            .formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(0...1))))
+            .formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(0...1)))
+                .locale(measurementLocale))
     }
 
-    /// Altitude: "123 m".
+    /// Altitude: "1234 m", or "4049 ft" in imperial.
+    ///
+    /// Same explicit conversion as ``accuracy(_:)``: `usage: .general` turns
+    /// 1234 m into "1.2 km", which is not how an altitude is read.
     static func altitude(_ meters: Double) -> String {
-        Measurement(value: meters, unit: UnitLength.meters)
-            .formatted(.measurement(width: .abbreviated, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(0))))
+        length(meters)
+            .formatted(.measurement(width: .abbreviated, usage: .asProvided, numberFormatStyle: .number.precision(.fractionLength(0)))
+                .locale(measurementLocale))
+    }
+
+    /// A length in the base unit of the current system: meters, or feet.
+    private static func length(_ meters: Double) -> Measurement<UnitLength> {
+        let measurement = Measurement(value: meters, unit: UnitLength.meters)
+        return unitSystem == .imperial ? measurement.converted(to: .feet) : measurement
     }
 
     /// Course in degrees: "270° W".
@@ -177,10 +229,10 @@ private extension String {
 extension TrackingPhase {
     var title: String {
         switch self {
-        case .disabled: return String(localized: "Off")
-        case .stationary: return String(localized: "Stationary")
-        case .probing: return String(localized: "Probing")
-        case .moving: return String(localized: "Moving")
+        case .disabled: return String(localized: "phase.off", defaultValue: "Off")
+        case .stationary: return String(localized: "common.stationary", defaultValue: "Stationary")
+        case .probing: return String(localized: "common.probing", defaultValue: "Probing")
+        case .moving: return String(localized: "phase.moving", defaultValue: "Moving")
         }
     }
 
@@ -204,10 +256,10 @@ extension TrackingPhase {
 
     var explanation: String {
         switch self {
-        case .disabled: return String(localized: "Tracking is switched off. Nothing is recorded.")
-        case .stationary: return String(localized: "GPS is off or coarse. Waiting for motion, a significant location change or a visit.")
-        case .probing: return String(localized: "GPS is on briefly to confirm whether you are moving.")
-        case .moving: return String(localized: "GPS is on, tuned to your current speed and activity.")
+        case .disabled: return String(localized: "phase.off.explanation", defaultValue: "Tracking is switched off. Nothing is recorded.")
+        case .stationary: return String(localized: "phase.stationary.explanation", defaultValue: "GPS is off or coarse. Waiting for motion, a significant location change or a visit.")
+        case .probing: return String(localized: "phase.probing.explanation", defaultValue: "GPS is on briefly to confirm whether you are moving.")
+        case .moving: return String(localized: "phase.moving.explanation", defaultValue: "GPS is on, tuned to your current speed and activity.")
         }
     }
 }
@@ -215,12 +267,12 @@ extension TrackingPhase {
 extension ActivityKind {
     var title: String {
         switch self {
-        case .unknown: return String(localized: "Unknown")
-        case .stationary: return String(localized: "Stationary")
-        case .walking: return String(localized: "Walking")
-        case .running: return String(localized: "Running")
-        case .cycling: return String(localized: "Cycling")
-        case .automotive: return String(localized: "Driving")
+        case .unknown: return String(localized: "activity.unknown", defaultValue: "Unknown")
+        case .stationary: return String(localized: "common.stationary", defaultValue: "Stationary")
+        case .walking: return String(localized: "activity.walking", defaultValue: "Walking")
+        case .running: return String(localized: "activity.running", defaultValue: "Running")
+        case .cycling: return String(localized: "activity.cycling", defaultValue: "Cycling")
+        case .automotive: return String(localized: "activity.driving", defaultValue: "Driving")
         }
     }
 
@@ -239,9 +291,9 @@ extension ActivityKind {
 extension ActivityConfidence {
     var title: String {
         switch self {
-        case .low: return String(localized: "low", comment: "Activity confidence, shown inline: \"Walking (low)\"")
-        case .medium: return String(localized: "medium", comment: "Activity confidence, shown inline: \"Walking (medium)\"")
-        case .high: return String(localized: "high", comment: "Activity confidence, shown inline: \"Walking (high)\"")
+        case .low: return String(localized: "confidence.low", defaultValue: "low", comment: "Activity confidence, shown inline: \"Walking (low)\"")
+        case .medium: return String(localized: "confidence.medium", defaultValue: "medium", comment: "Activity confidence, shown inline: \"Walking (medium)\"")
+        case .high: return String(localized: "confidence.high", defaultValue: "high", comment: "Activity confidence, shown inline: \"Walking (high)\"")
         }
     }
 }
@@ -249,8 +301,8 @@ extension ActivityConfidence {
 extension AccuracyLevel {
     var title: String {
         switch self {
-        case .bestForNavigation: return String(localized: "Best for navigation")
-        case .best: return String(localized: "Best")
+        case .bestForNavigation: return String(localized: "accuracy.bestForNavigation", defaultValue: "Best for navigation")
+        case .best: return String(localized: "accuracy.best", defaultValue: "Best")
         case .tenMeters: return Formatting.distance(10)
         case .hundredMeters: return Formatting.distance(100)
         case .kilometer: return Formatting.distance(1_000)
@@ -262,10 +314,10 @@ extension AccuracyLevel {
 extension ActivityTypeHint {
     var title: String {
         switch self {
-        case .other: return String(localized: "Other")
-        case .fitness: return String(localized: "Fitness")
-        case .automotiveNavigation: return String(localized: "Automotive")
-        case .otherNavigation: return String(localized: "Navigation")
+        case .other: return String(localized: "activityType.other", defaultValue: "Other")
+        case .fitness: return String(localized: "activityType.fitness", defaultValue: "Fitness")
+        case .automotiveNavigation: return String(localized: "activityType.automotive", defaultValue: "Automotive")
+        case .otherNavigation: return String(localized: "activityType.navigation", defaultValue: "Navigation")
         }
     }
 }
@@ -330,8 +382,8 @@ extension LocationSource {
     var title: String {
         switch self {
         case .gps: return "GPS"
-        case .significantChange: return String(localized: "Significant change")
-        case .visit: return String(localized: "Visit")
+        case .significantChange: return String(localized: "source.significantChange", defaultValue: "Significant change")
+        case .visit: return String(localized: "source.visit", defaultValue: "Visit")
         }
     }
 }
@@ -361,12 +413,12 @@ extension ExportFormat {
 extension GPSProfile {
     var displayName: String {
         switch label {
-        case "probing": return String(localized: "Probing")
-        case "stationary-coarse": return String(localized: "Stationary (coarse)")
-        case "walking": return String(localized: "Walking")
-        case "running": return String(localized: "Running")
-        case "cycling": return String(localized: "Cycling")
-        case "automotive": return String(localized: "Driving")
+        case "probing": return String(localized: "common.probing", defaultValue: "Probing")
+        case "stationary-coarse": return String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)")
+        case "walking": return String(localized: "activity.walking", defaultValue: "Walking")
+        case "running": return String(localized: "activity.running", defaultValue: "Running")
+        case "cycling": return String(localized: "activity.cycling", defaultValue: "Cycling")
+        case "automotive": return String(localized: "activity.driving", defaultValue: "Driving")
         // These three name a *profile*, not an activity, so they get their own
         // keys: French agrees the adjective with the subject and "profil" is
         // masculine where "activité" — the subject of `ActivityKind.title` —
@@ -388,16 +440,16 @@ extension GPSProfile {
 extension AuditCategory {
     var displayName: String {
         switch self {
-        case .lifecycle: return String(localized: "Lifecycle")
-        case .state: return String(localized: "State")
-        case .effect: return String(localized: "Effect")
-        case .location: return String(localized: "Location")
-        case .filter: return String(localized: "Filter")
-        case .motion: return String(localized: "Motion")
-        case .permission: return String(localized: "Permission")
-        case .persistence: return String(localized: "Storage")
-        case .maintenance: return String(localized: "Maintenance")
-        case .export: return String(localized: "Export")
+        case .lifecycle: return String(localized: "audit.category.lifecycle", defaultValue: "Lifecycle")
+        case .state: return String(localized: "common.state", defaultValue: "State")
+        case .effect: return String(localized: "audit.category.effect", defaultValue: "Effect")
+        case .location: return String(localized: "audit.category.location", defaultValue: "Location")
+        case .filter: return String(localized: "audit.category.filter", defaultValue: "Filter")
+        case .motion: return String(localized: "audit.category.motion", defaultValue: "Motion")
+        case .permission: return String(localized: "audit.category.permission", defaultValue: "Permission")
+        case .persistence: return String(localized: "audit.category.storage", defaultValue: "Storage")
+        case .maintenance: return String(localized: "audit.category.maintenance", defaultValue: "Maintenance")
+        case .export: return String(localized: "common.export", defaultValue: "Export")
         }
     }
 }
@@ -405,17 +457,17 @@ extension AuditCategory {
 extension AuditSeverity {
     var displayName: String {
         switch self {
-        case .debug: return String(localized: "Debug")
-        case .info: return String(localized: "Info")
-        case .warning: return String(localized: "Warning")
-        case .error: return String(localized: "Error")
+        case .debug: return String(localized: "audit.severity.debug", defaultValue: "Debug")
+        case .info: return String(localized: "audit.severity.info", defaultValue: "Info")
+        case .warning: return String(localized: "audit.severity.warning", defaultValue: "Warning")
+        case .error: return String(localized: "audit.severity.error", defaultValue: "Error")
         }
     }
 }
 
 extension AuditExportFormat {
     var displayName: String {
-        self == .json ? "JSON" : String(localized: "Plain text")
+        self == .json ? "JSON" : String(localized: "audit.format.plainText", defaultValue: "Plain text")
     }
 }
 

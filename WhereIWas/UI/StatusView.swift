@@ -26,7 +26,7 @@ struct StatusView: View {
                 countersSection
                 transitionsSection
             }
-            .navigationTitle("WhereIWas")
+            .navigationTitle("status.title")
             .refreshable { await reload() }
             .task(id: status.lastTransition) { await reload() }
             .task(id: status.acceptedCount) { await reloadTodayCount() }
@@ -44,22 +44,22 @@ struct StatusView: View {
             Toggle(isOn: Binding(get: { status.isEnabled },
                                  set: { controller.setTrackingEnabled($0) })) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Record my location")
+                    Text("status.tracking.toggle")
                         .font(.title3.weight(.semibold))
-                    Text(status.isEnabled ? "On — runs in the background and after restarts."
-                                          : "Off — nothing is recorded.")
+                    Text(status.isEnabled ? "status.tracking.on"
+                                          : "status.tracking.off")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
             .toggleStyle(.switch)
             .tint(.green)
-            .accessibilityHint("Turns background location recording on or off")
+            .accessibilityHint("status.tracking.hint")
         }
     }
 
     private var warningsSection: some View {
-        Section("Needs attention") {
+        Section("status.warnings.title") {
             ForEach(status.warnings) { warning in
                 VStack(alignment: .leading, spacing: 6) {
                     Label(warning.title, systemImage: warning.systemImage)
@@ -69,7 +69,7 @@ struct StatusView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     if let action = warning.action {
-                        Button(action == .openSettings ? "Open Settings" : "Grant permissions") {
+                        Button(action == .openSettings ? "common.openSettings" : "status.warning.grantPermissions") {
                             perform(action)
                         }
                         .buttonStyle(.borderedProminent)
@@ -82,7 +82,7 @@ struct StatusView: View {
     }
 
     private var stateSection: some View {
-        Section("State") {
+        Section("common.state") {
             HStack(spacing: 14) {
                 Image(systemName: status.phase.systemImage)
                     .font(.system(size: 34, weight: .semibold))
@@ -104,7 +104,7 @@ struct StatusView: View {
             // coarse updates on, CoreLocation is still running (and the system
             // location indicator with it), which "GPS off" would deny.
             if let profile = status.appliedProfile {
-                LabeledContent("GPS profile") {
+                LabeledContent("status.state.gpsProfile") {
                     // The coarse profile's accuracy and distance filter are
                     // both 3 km, so the full form would read "3 km · 3 km".
                     Text(verbatim: profile == .stationaryCoarse
@@ -113,10 +113,10 @@ struct StatusView: View {
                         .multilineTextAlignment(.trailing)
                 }
             } else {
-                LabeledContent("GPS profile") { Text("GPS off") }
+                LabeledContent("status.state.gpsProfile") { Text("status.state.gpsOff") }
             }
 
-            LabeledContent("Activity") {
+            LabeledContent("status.state.activity") {
                 // A `Label` here stretches the row to fill the rest of the
                 // section (it loses its intrinsic height inside the value
                 // slot), which is what left half the Status screen blank.
@@ -127,7 +127,7 @@ struct StatusView: View {
             }
 
             if status.isStale(now: now) {
-                Label("No new fix for a while. If the app was force-quit, reopen it to resume tracking.",
+                Label("status.state.stale",
                       systemImage: "clock.badge.exclamationmark")
                     .font(.footnote)
                     .foregroundStyle(.orange)
@@ -136,9 +136,9 @@ struct StatusView: View {
     }
 
     private var lastFixSection: some View {
-        Section("Last fix") {
+        Section("status.lastFix.title") {
             if let fix = status.lastFix {
-                LabeledContent("When") {
+                LabeledContent("status.lastFix.when") {
                     VStack(alignment: .trailing) {
                         Text(Formatting.relative(fix.timestamp, to: now))
                         Text(Formatting.time(fix.timestamp))
@@ -146,35 +146,35 @@ struct StatusView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                LabeledContent("Position", value: Formatting.coordinate(fix.latitude, fix.longitude))
-                LabeledContent("Accuracy", value: Formatting.accuracy(fix.horizontalAccuracy))
-                LabeledContent("Speed", value: Formatting.speed(fix.validSpeed))
-                LabeledContent("Course", value: Formatting.course(fix.course))
-                LabeledContent("Altitude") {
+                LabeledContent("status.lastFix.position", value: Formatting.coordinate(fix.latitude, fix.longitude))
+                LabeledContent("status.lastFix.accuracy", value: Formatting.accuracy(fix.horizontalAccuracy))
+                LabeledContent("status.lastFix.speed", value: Formatting.speed(fix.validSpeed))
+                LabeledContent("status.lastFix.course", value: Formatting.course(fix.course))
+                LabeledContent("status.lastFix.altitude") {
                     Text(verbatim: "\(Formatting.altitude(fix.altitude)) \(Formatting.accuracy(fix.verticalAccuracy))")
                 }
                 if let source = status.lastFixSource {
-                    LabeledContent("Source", value: source.title)
+                    LabeledContent("status.lastFix.source", value: source.title)
                 }
             } else {
-                Text("No fix yet.")
+                Text("status.lastFix.none")
                     .foregroundStyle(.secondary)
             }
         }
     }
 
     private var countersSection: some View {
-        Section("Samples") {
-            LabeledContent("Today", value: samplesToday.map(Formatting.count) ?? "—")
-            LabeledContent("Total stored", value: Formatting.count(status.stats.totalSamples))
-            LabeledContent("Pending upload", value: Formatting.count(status.stats.pendingUpload))
-            LabeledContent("Accepted / rejected since launch",
+        Section("status.samples.title") {
+            LabeledContent("status.samples.today", value: samplesToday.map(Formatting.count) ?? "—")
+            LabeledContent("status.samples.totalStored", value: Formatting.count(status.stats.totalSamples))
+            LabeledContent("status.samples.pendingUpload", value: Formatting.count(status.stats.pendingUpload))
+            LabeledContent("status.samples.acceptedRejected",
                            value: "\(Formatting.count(status.acceptedCount)) / \(Formatting.count(status.rejectedCount))")
-            LabeledContent("Sessions", value: Formatting.count(status.stats.sessionCount))
+            LabeledContent("common.sessions", value: Formatting.count(status.stats.sessionCount))
             if let oldest = status.stats.oldestSample {
-                LabeledContent("Oldest sample", value: Formatting.dateTime(oldest))
+                LabeledContent("status.samples.oldest", value: Formatting.dateTime(oldest))
             }
-            LabeledContent("Battery") {
+            LabeledContent("common.battery") {
                 Label(Formatting.battery(status.batteryLevel),
                       systemImage: batterySymbol(level: status.batteryLevel, state: status.batteryState))
                     .foregroundStyle((status.batteryLevel ?? 1) < 0.2 ? .red : .primary)
@@ -185,7 +185,7 @@ struct StatusView: View {
     private var transitionsSection: some View {
         Section {
             if transitions.isEmpty {
-                Text("No transitions recorded yet.")
+                Text("status.transitions.empty")
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(transitions) { record in
@@ -193,9 +193,10 @@ struct StatusView: View {
                 }
             }
         } header: {
-            Text("Recent transitions")
+            Text("status.transitions.title")
         } footer: {
-            Text("Moving → stationary requires \(Formatting.duration(controller.settings.stillnessTimeout)) of stillness; any motion switches GPS back on immediately.")
+            Text(verbatim: String(localized: "status.transitions.footer",
+                                  defaultValue: "Moving → stationary requires \(Formatting.duration(controller.settings.stillnessTimeout)) of stillness; any motion switches GPS back on immediately."))
         }
     }
 

@@ -56,3 +56,124 @@ struct CoordinateFormattingTests {
         #expect(Formatting.coordinate(-33.86785, 151.20732) == "-33.86785, 151.20732")
     }
 }
+
+/// The unit system setting drives the measurement helpers, not the machine's
+/// locale.
+///
+/// Assertions are on the *magnitude*, not on the unit symbol: the symbols are
+/// themselves localized (feet abbreviate to "pi" in French, mph to "mi/h"), so
+/// asserting "ft" would only pass on an English machine. A length that comes
+/// out ~3.28× larger can only be feet, and a speed ~1.61× smaller can only be
+/// miles per hour.
+@MainActor
+struct UnitSystemFormattingTests {
+    /// Formats `body` once per system, restoring the previous setting even if
+    /// an expectation fails.
+    private func inBothSystems(_ body: () -> String) -> (metric: String, imperial: String) {
+        let previous = Formatting.unitSystem
+        defer { Formatting.unitSystem = previous }
+        Formatting.unitSystem = .metric
+        let metric = body()
+        Formatting.unitSystem = .imperial
+        let imperial = body()
+        return (metric, imperial)
+    }
+
+    /// The leading number of a formatted measurement, whatever the locale's
+    /// decimal separator ("," in French) and grouping separator (a narrow
+    /// no-break space) are.
+    private func magnitude(_ text: String) throws -> Double {
+        var digits = ""
+        for character in text {
+            if character.isNumber {
+                digits.append(character)
+            } else if character == "," || character == "." {
+                digits.append(".")
+            } else if character.isWhitespace || character.unicodeScalars.allSatisfy({ $0.properties.isWhitespace }) {
+                continue
+            } else if !digits.isEmpty {
+                break
+            }
+        }
+        return try #require(Double(digits), "no number in \(text)")
+    }
+
+    @Test("Distances are kilometers in metric and miles in imperial")
+    func distance() throws {
+        let (metric, imperial) = inBothSystems { Formatting.distance(5_000) }
+        #expect(metric.contains("km"))
+        #expect(!imperial.contains("km"))
+        // 5 km is 3.1 mi.
+        #expect(try magnitude(metric) == 5)
+        #expect(try abs(magnitude(imperial) - 3.1) < 0.2)
+    }
+
+    @Test("Short distances are meters in metric and feet in imperial")
+    func shortDistance() throws {
+        let (metric, imperial) = inBothSystems { Formatting.distance(12) }
+        #expect(metric != imperial)
+        #expect(try magnitude(metric) == 12)
+        // 12 m is 39.4 ft.
+        #expect(try abs(magnitude(imperial) - 39.4) < 0.5)
+    }
+
+    @Test("Speeds are km/h in metric and mph in imperial")
+    func speed() throws {
+        let (metric, imperial) = inBothSystems { Formatting.speed(10) }
+        #expect(metric.contains("km"))
+        #expect(!imperial.contains("km"))
+        // 10 m/s is 36 km/h, i.e. 22.4 mph.
+        #expect(try magnitude(metric) == 36)
+        #expect(try abs(magnitude(imperial) - 22.4) < 0.5)
+    }
+
+    @Test("Altitude follows the unit system")
+    func altitude() throws {
+        let (metric, imperial) = inBothSystems { Formatting.altitude(1_234) }
+        #expect(metric != imperial)
+        #expect(try magnitude(metric) == 1_234)
+        // 1234 m is 4049 ft.
+        #expect(try abs(magnitude(imperial) - 4_049) < 2)
+    }
+
+    @Test("Accuracy follows the unit system and keeps its ± prefix")
+    func accuracy() throws {
+        let (metric, imperial) = inBothSystems { Formatting.accuracy(50) }
+        #expect(metric.hasPrefix("±"))
+        #expect(imperial.hasPrefix("±"))
+        #expect(try magnitude(metric) == 50)
+        // 50 m is 164 ft.
+        #expect(try abs(magnitude(imperial) - 164) < 2)
+    }
+
+    @Test("Accuracy keeps its dash for a non-positive value in both systems")
+    func accuracyUnavailable() {
+        let (metric, imperial) = inBothSystems { Formatting.accuracy(-1) }
+        #expect(metric == "—")
+        #expect(imperial == "—")
+    }
+
+    @Test("Coordinates ignore the unit system entirely")
+    func coordinatesAreUnaffected() {
+        let (metric, imperial) = inBothSystems { Formatting.coordinate(48.85837, 2.29448) }
+        #expect(metric == "48.85837, 2.29448")
+        #expect(imperial == metric)
+    }
+
+    @Test("Setting the unit system twice is idempotent")
+    func repeatedAssignment() {
+        let previous = Formatting.unitSystem
+        defer { Formatting.unitSystem = previous }
+        Formatting.unitSystem = .imperial
+        let once = Formatting.distance(5_000)
+        Formatting.unitSystem = .imperial
+        #expect(Formatting.distance(5_000) == once)
+    }
+
+    @Test("deviceDefault is one of the two cases and the raw values are stable")
+    func deviceDefaultIsOneOfTheTwoCases() {
+        #expect(UnitSystem.allCases.contains(UnitSystem.deviceDefault))
+        #expect(UnitSystem(rawValue: "metric") == .metric)
+        #expect(UnitSystem(rawValue: "imperial") == .imperial)
+    }
+}

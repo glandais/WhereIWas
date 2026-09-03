@@ -42,21 +42,21 @@ struct AuditLogView: View {
                 list
             }
         }
-        .navigationTitle("Audit trail")
+        .navigationTitle("audit.title")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
         .task(id: query) { await load() }
         .refreshable { await load() }
-        .confirmationDialog("Delete the whole audit trail?",
+        .confirmationDialog("audit.clear.title",
                             isPresented: $showClearConfirmation, titleVisibility: .visible) {
-            Button("Delete everything", role: .destructive) {
+            Button("audit.clear.confirm", role: .destructive) {
                 Task {
                     _ = await controller.clearAudit()
                     await load()
                 }
             }
         } message: {
-            Text("Location samples are not affected. Export first if you need the trail.")
+            Text("audit.clear.message")
         }
     }
 
@@ -64,9 +64,9 @@ struct AuditLogView: View {
 
     private var disabledState: some View {
         ContentUnavailableView {
-            Label("Audit trail is off", systemImage: "doc.text.magnifyingglass")
+            Label("audit.disabled.title", systemImage: "doc.text.magnifyingglass")
         } description: {
-            Text("Turn it on in Settings to record every fix received, every validation test run on it, and every state change.")
+            Text("audit.disabled.description")
         }
     }
 
@@ -86,15 +86,18 @@ struct AuditLogView: View {
                     ShareLink(item: exportURL,
                               preview: SharePreview(exportURL.lastPathComponent,
                                                     image: Image(systemName: "doc.text.magnifyingglass"))) {
-                        Label("Share \(exportURL.lastPathComponent)", systemImage: "square.and.arrow.up")
+                        Label(String(localized: "common.share",
+                                     defaultValue: "Share \(exportURL.lastPathComponent)"),
+                              systemImage: "square.and.arrow.up")
                     }
                 } footer: {
-                    Text("Written to a temporary folder: \(events.count) events plus the settings in force at export time.")
+                    Text(verbatim: String(localized: "audit.export.footer",
+                                          defaultValue: "Written to a temporary folder: \(events.count) events plus the settings in force at export time."))
                 }
             }
             Section {
                 if events.isEmpty {
-                    Text(isLoading ? "Loading…" : "No events match these filters.")
+                    Text(isLoading ? "common.loading" : "audit.list.empty")
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(events) { event in
@@ -106,9 +109,10 @@ struct AuditLogView: View {
                     }
                 }
             } header: {
-                Text("\(events.count) shown · \(storedCount) stored")
+                Text(verbatim: String(localized: "audit.list.counts",
+                                      defaultValue: "\(events.count) shown · \(storedCount) stored"))
             } footer: {
-                Text("Newest first. Tap an event for its full payload.")
+                Text("audit.list.footer")
             }
         }
         .listStyle(.plain)
@@ -116,7 +120,7 @@ struct AuditLogView: View {
 
     private var filterControls: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Picker("Minimum severity", selection: $minimumSeverity) {
+            Picker("audit.minimumSeverity", selection: $minimumSeverity) {
                 ForEach(AuditSeverity.allCases, id: \.rawValue) { severity in
                     Text(verbatim: severity.displayName).tag(severity)
                 }
@@ -154,7 +158,7 @@ struct AuditLogView: View {
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Menu {
-                Picker("Format", selection: $exportFormat) {
+                Picker("common.format", selection: $exportFormat) {
                     ForEach(AuditExportFormat.allCases) { format in
                         Text(verbatim: format.displayName).tag(format)
                     }
@@ -166,12 +170,12 @@ struct AuditLogView: View {
                 }
                 .disabled(isExporting || events.isEmpty)
                 Divider()
-                Button("Delete trail", systemImage: "trash", role: .destructive) {
+                Button("audit.clear.action", systemImage: "trash", role: .destructive) {
                     showClearConfirmation = true
                 }
                 .disabled(storedCount == 0)
             } label: {
-                Label("Actions", systemImage: "ellipsis.circle")
+                Label("audit.toolbar.actions", systemImage: "ellipsis.circle")
             }
         }
     }
@@ -252,26 +256,26 @@ private struct AuditEventDetailView: View {
 
     var body: some View {
         List {
-            Section("Event") {
-                LabeledContent("Name", value: event.name)
-                LabeledContent("Category", value: event.category.displayName)
-                LabeledContent("Severity", value: event.severity.displayName)
-                LabeledContent("Time") {
+            Section("audit.detail.event") {
+                LabeledContent("audit.detail.name", value: event.name)
+                LabeledContent("audit.detail.category", value: event.category.displayName)
+                LabeledContent("audit.detail.severity", value: event.severity.displayName)
+                LabeledContent("audit.detail.time") {
                     Text(event.timestamp, format: .dateTime.year().month().day()
                         .hour().minute().second())
                 }
                 if let phase = event.phase {
-                    LabeledContent("Phase", value: phase.rawValue)
+                    LabeledContent("audit.detail.phase", value: phase.rawValue)
                 }
                 if let battery = event.batteryLevel {
-                    LabeledContent("Battery", value: battery.formatted(.percent.precision(.fractionLength(0))))
+                    LabeledContent("common.battery", value: battery.formatted(.percent.precision(.fractionLength(0))))
                 }
             }
-            Section("Message") {
+            Section("audit.detail.message") {
                 Text(verbatim: event.message)
             }
             if !checks.isEmpty {
-                Section("Tests performed") {
+                Section("audit.detail.tests") {
                     ForEach(checks, id: \.key) { detail in
                         VStack(alignment: .leading, spacing: 2) {
                             Text(verbatim: detail.key.replacingOccurrences(of: "check.", with: ""))
@@ -284,7 +288,7 @@ private struct AuditEventDetailView: View {
                 }
             }
             if !data.isEmpty {
-                Section("Data") {
+                Section("audit.detail.data") {
                     ForEach(data, id: \.key) { detail in
                         LabeledContent(detail.key) {
                             Text(verbatim: detail.value)

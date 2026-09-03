@@ -36,12 +36,12 @@ struct MapView: View {
                 }
 
                 if let first = samples.first {
-                    Marker("Start", systemImage: "flag", coordinate: coordinate(of: first))
+                    Marker("map.marker.start", systemImage: "flag", coordinate: coordinate(of: first))
                         .tint(.green)
                         .tag(first.sequence)
                 }
                 if let last = samples.last, samples.count > 1 {
-                    Marker("End", systemImage: "flag.checkered", coordinate: coordinate(of: last))
+                    Marker("map.marker.end", systemImage: "flag.checkered", coordinate: coordinate(of: last))
                         .tint(.red)
                         .tag(last.sequence)
                 }
@@ -67,12 +67,13 @@ struct MapView: View {
                         .background(.regularMaterial, in: .rect(cornerRadius: 12))
                 } else if samples.isEmpty {
                     ContentUnavailableView {
-                        Label("No track", systemImage: "point.topleft.down.to.point.bottomright.curvepath")
+                        Label("map.empty.title", systemImage: "point.topleft.down.to.point.bottomright.curvepath")
                     } description: {
                         if let loadError {
                             Text(verbatim: loadError)
                         } else {
-                            Text("No samples recorded on \(Formatting.day(day)).")
+                            Text(verbatim: String(localized: "map.empty.description",
+                                                  defaultValue: "No samples recorded on \(Formatting.day(day))."))
                         }
                     }
                     .padding()
@@ -81,11 +82,11 @@ struct MapView: View {
                     .allowsHitTesting(false)
                 }
             }
-            .navigationTitle("Map")
+            .navigationTitle("map.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Fit track", systemImage: "arrow.up.left.and.arrow.down.right") { fitTrack() }
+                    Button("map.fitTrack", systemImage: "arrow.up.left.and.arrow.down.right") { fitTrack() }
                         .disabled(samples.isEmpty)
                 }
             }
@@ -101,14 +102,14 @@ struct MapView: View {
 
     private var dayPicker: some View {
         HStack {
-            Button("Previous day", systemImage: "chevron.left") { shift(by: -1) }
+            Button("map.previousDay", systemImage: "chevron.left") { shift(by: -1) }
                 .labelStyle(.iconOnly)
             Spacer()
-            DatePicker("Day", selection: $day, in: ...Date.now, displayedComponents: .date)
+            DatePicker("map.dayPicker", selection: $day, in: ...Date.now, displayedComponents: .date)
                 .labelsHidden()
                 .datePickerStyle(.compact)
             Spacer()
-            Button("Next day", systemImage: "chevron.right") { shift(by: 1) }
+            Button("map.nextDay", systemImage: "chevron.right") { shift(by: 1) }
                 .labelStyle(.iconOnly)
                 .disabled(isToday)
         }
@@ -128,7 +129,8 @@ struct MapView: View {
                         .foregroundStyle(.secondary)
                 }
                 .font(.subheadline.weight(.semibold))
-                Text("\(Formatting.speed(sample.fix.validSpeed)) · \(Formatting.accuracy(sample.fix.horizontalAccuracy)) · \(Formatting.altitude(sample.fix.altitude)) · battery \(Formatting.battery(sample.annotation.batteryLevel))")
+                Text(verbatim: String(localized: "map.sample.summary",
+                                      defaultValue: "\(Formatting.speed(sample.fix.validSpeed)) · \(Formatting.accuracy(sample.fix.horizontalAccuracy)) · \(Formatting.altitude(sample.fix.altitude)) · battery \(Formatting.battery(sample.annotation.batteryLevel))"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(Formatting.coordinate(sample.fix.latitude, sample.fix.longitude))
@@ -140,10 +142,10 @@ struct MapView: View {
             .background(.bar)
         } else if !samples.isEmpty {
             HStack(spacing: 16) {
-                stat("Points", Formatting.count(samples.count))
-                stat("Distance", Formatting.distance(pathLength))
+                stat("map.stat.points", Formatting.count(samples.count))
+                stat("map.stat.distance", Formatting.distance(pathLength))
                 if let first = samples.first, let last = samples.last {
-                    stat("Span", "\(Formatting.time(first.fix.timestamp)) – \(Formatting.time(last.fix.timestamp))")
+                    stat("map.stat.span", "\(Formatting.time(first.fix.timestamp)) – \(Formatting.time(last.fix.timestamp))")
                 }
             }
             .padding()

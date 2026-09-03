@@ -21,44 +21,44 @@ extension TrackingStatus {
         switch locationAuthorization {
         case .denied, .restricted:
             list.append(.init(id: "loc-denied", severity: .critical,
-                              title: String(localized: "Location access denied"),
-                              message: String(localized: "WhereIWas cannot record anything. Allow location access “Always” in Settings."),
+                              title: String(localized: "warning.locationDenied.title", defaultValue: "Location access denied"),
+                              message: String(localized: "warning.locationDenied.message", defaultValue: "WhereIWas cannot record anything. Allow location access “Always” in Settings."),
                               action: .openSettings))
         case .whenInUse:
             list.append(.init(id: "loc-wheninuse", severity: .critical,
-                              title: String(localized: "Location only while using the app"),
-                              message: String(localized: "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings."),
+                              title: String(localized: "warning.whenInUse.title", defaultValue: "Location only while using the app"),
+                              message: String(localized: "warning.whenInUse.message", defaultValue: "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings."),
                               action: .openSettings))
         case .notDetermined:
             list.append(.init(id: "loc-none", severity: .warning,
-                              title: String(localized: "Location permission not granted yet"),
-                              message: String(localized: "Grant “Always” location access so tracking survives in the background."),
+                              title: String(localized: "warning.locationNotDetermined.title", defaultValue: "Location permission not granted yet"),
+                              message: String(localized: "warning.locationNotDetermined.message", defaultValue: "Grant “Always” location access so tracking survives in the background."),
                               action: .requestPermissions))
         case .always:
             break
         }
         if locationAuthorization == .always, !hasFullAccuracy {
             list.append(.init(id: "loc-reduced", severity: .warning,
-                              title: String(localized: "Precise location is off"),
-                              message: String(localized: "Samples are only accurate to a few kilometers. Enable Precise Location in Settings."),
+                              title: String(localized: "warning.preciseOff.title", defaultValue: "Precise location is off"),
+                              message: String(localized: "warning.preciseOff.message", defaultValue: "Samples are only accurate to a few kilometers. Enable Precise Location in Settings."),
                               action: .openSettings))
         }
         switch motionAuthorization {
         case .denied, .restricted:
             list.append(.init(id: "motion-denied", severity: .warning,
-                              title: String(localized: "Motion access denied"),
-                              message: String(localized: "Without motion activity the app must rely on GPS to detect movement, which uses more battery."),
+                              title: String(localized: "warning.motionDenied.title", defaultValue: "Motion access denied"),
+                              message: String(localized: "warning.motionDenied.message", defaultValue: "Without motion activity the app must rely on GPS to detect movement, which uses more battery."),
                               action: .openSettings))
         case .notDetermined:
             list.append(.init(id: "motion-none", severity: .info,
-                              title: String(localized: "Motion permission not granted yet"),
-                              message: String(localized: "Motion activity lets the app switch GPS off while you are still."),
+                              title: String(localized: "warning.motionNotDetermined.title", defaultValue: "Motion permission not granted yet"),
+                              message: String(localized: "warning.motionNotDetermined.message", defaultValue: "Motion activity lets the app switch GPS off while you are still."),
                               action: .requestPermissions))
         case .authorized:
             break
         }
         if let lastError {
-            list.append(.init(id: "error", severity: .info, title: String(localized: "Last error"), message: lastError, action: nil))
+            list.append(.init(id: "error", severity: .info, title: String(localized: "warning.lastError.title", defaultValue: "Last error"), message: lastError, action: nil))
         }
         return list
     }

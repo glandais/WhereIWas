@@ -12,10 +12,10 @@ struct ExportView: View {
             // it truncates ("Aujourd’hui" → "Aujour…").
             case .today: return String(localized: "scope.today", defaultValue: "Today",
                                        comment: "Segment of the export scope picker; keep it short")
-            case .week: return String(localized: "7 days")
-            case .all: return String(localized: "All")
-            case .custom: return String(localized: "Range")
-            case .session: return String(localized: "Session")
+            case .week: return String(localized: "export.scope.week", defaultValue: "7 days")
+            case .all: return String(localized: "export.scope.all", defaultValue: "All")
+            case .custom: return String(localized: "export.scope.range", defaultValue: "Range")
+            case .session: return String(localized: "export.session.label", defaultValue: "Session")
             }
         }
     }
@@ -37,23 +37,23 @@ struct ExportView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("What") {
-                    Picker("Scope", selection: $scope) {
+                Section("export.what") {
+                    Picker("export.scope.label", selection: $scope) {
                         ForEach(Scope.allCases) { Text(verbatim: $0.title).tag($0) }
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
 
                     if scope == .custom {
-                        DatePicker("From", selection: $customStart, in: ...customEnd)
-                        DatePicker("To", selection: $customEnd, in: customStart...Date.now)
+                        DatePicker("export.range.from", selection: $customStart, in: ...customEnd)
+                        DatePicker("export.range.to", selection: $customEnd, in: customStart...Date.now)
                     }
                     if scope == .session {
                         if sessions.isEmpty {
-                            Text("No sessions recorded yet.")
+                            Text("export.sessions.empty")
                                 .foregroundStyle(.secondary)
                         } else {
-                            Picker("Session", selection: $selectedSession) {
+                            Picker("export.session.label", selection: $selectedSession) {
                                 ForEach(sessions) { session in
                                     Text(verbatim: sessionTitle(session)).tag(Optional(session.id))
                                 }
@@ -63,8 +63,8 @@ struct ExportView: View {
                     }
                 }
 
-                Section("Format") {
-                    Picker("Format", selection: $format) {
+                Section("common.format") {
+                    Picker("common.format", selection: $format) {
                         ForEach(ExportFormat.allCases) { f in
                             Label(f.title, systemImage: f.systemImage).tag(f)
                         }
@@ -72,8 +72,8 @@ struct ExportView: View {
                     .pickerStyle(.inline)
                     .labelsHidden()
                     Text(format == .gpx
-                         ? "GPX 1.1 track with elevation, time and extensions (speed, course, accuracy, activity, battery). Opens in most mapping tools."
-                         : "JSON array of every stored sample with all fields, including upload status and sequence ids.")
+                         ? "export.format.gpxDescription"
+                         : "export.format.jsonDescription")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -83,7 +83,9 @@ struct ExportView: View {
                         Task { await export() }
                     } label: {
                         HStack {
-                            Label("Prepare \(format.title) file", systemImage: "doc.badge.gearshape")
+                            Label(String(localized: "export.prepare",
+                                         defaultValue: "Prepare \(format.title) file"),
+                                  systemImage: "doc.badge.gearshape")
                             if isExporting {
                                 Spacer()
                                 ProgressView()
@@ -94,10 +96,12 @@ struct ExportView: View {
 
                     if let url = exportedURL, exportedFor == exportKey {
                         ShareLink(item: url, preview: SharePreview(url.lastPathComponent, image: Image(systemName: format.systemImage))) {
-                            Label("Share \(url.lastPathComponent)", systemImage: "square.and.arrow.up")
+                            Label(String(localized: "common.share",
+                                         defaultValue: "Share \(url.lastPathComponent)"),
+                                  systemImage: "square.and.arrow.up")
                         }
                         if let size = fileSize(url) {
-                            LabeledContent("Size", value: size)
+                            LabeledContent("export.fileSize", value: size)
                         }
                     }
                     if let errorMessage {
@@ -106,18 +110,18 @@ struct ExportView: View {
                             .font(.footnote)
                     }
                 } footer: {
-                    Text("Files are written to a temporary folder and can be shared with AirDrop, Files, Mail or any other app.")
+                    Text("export.footer")
                 }
 
                 if !sessions.isEmpty {
-                    Section("Sessions") {
+                    Section("common.sessions") {
                         ForEach(sessions) { session in
                             SessionRow(session: session)
                         }
                     }
                 }
             }
-            .navigationTitle("Export")
+            .navigationTitle("common.export")
             .task {
                 await loadSessions()
                 #if SCREENSHOTS
@@ -196,7 +200,7 @@ private struct SessionRow: View {
                     .font(.subheadline.weight(.semibold))
                 Spacer()
                 if session.endedAt == nil {
-                    Text("Open")
+                    Text("export.session.open")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -204,7 +208,8 @@ private struct SessionRow: View {
                         .foregroundStyle(.green)
                 }
             }
-            Text("\(Formatting.count(session.sampleCount)) samples · \(Formatting.distance(session.distanceMeters)) · \(durationText)")
+            Text(verbatim: String(localized: "export.session.summary",
+                                  defaultValue: "\(Formatting.count(session.sampleCount)) samples · \(Formatting.distance(session.distanceMeters)) · \(durationText)"))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

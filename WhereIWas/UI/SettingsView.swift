@@ -28,28 +28,45 @@ struct SettingsView: View {
         Binding(get: { controller.settings }, set: { controller.settings = $0 })
     }
 
+    /// The unit system needs one extra step over `settings.unitSystem`:
+    /// `Formatting` reads a static, so it is updated *before* the store write
+    /// that triggers the redraw. Every measurement on screen — this Form
+    /// included — is then formatted with the new system in the same pass,
+    /// without waiting for `RootView`'s `onChange`.
+    private var unitSystem: Binding<UnitSystem> {
+        Binding(get: { controller.settings.unitSystem },
+                set: { newValue in
+                    Formatting.unitSystem = newValue
+                    var updated = controller.settings
+                    updated.unitSystem = newValue
+                    controller.settings = updated
+                })
+    }
+
     var body: some View {
         NavigationStack(path: $path) {
             Form {
                 permissionsSection
                 motionSection
+                unitsSection
                 accuracySection
                 profileSection
                 retentionSection
                 auditSection
                 aboutSection
             }
-            .navigationTitle("Settings")
+            .navigationTitle("settings.title")
             .navigationDestination(for: Route.self) { route in
                 switch route {
                 case .audit: AuditLogView()
                 }
             }
-            .confirmationDialog("Delete samples older than \(controller.settings.retentionDays) days?",
+            .confirmationDialog(String(localized: "settings.purge.title",
+                                       defaultValue: "Delete samples older than \(controller.settings.retentionDays) days?"),
                                 isPresented: $showPurgeConfirmation, titleVisibility: .visible) {
-                Button("Delete now", role: .destructive) { Task { await purge() } }
+                Button("settings.purge.confirm", role: .destructive) { Task { await purge() } }
             } message: {
-                Text("This cannot be undone. Export first if you need the data.")
+                Text("settings.purge.message")
             }
         }
     }
@@ -63,7 +80,7 @@ struct SettingsView: View {
                 permissionValue(controller.status.locationAuthorization.title,
                                 ok: controller.status.locationAuthorization == .always)
             }
-            LabeledContent("Precise location") {
+            LabeledContent("settings.permission.precise") {
                 permissionValue(controller.status.hasFullAccuracy
                                     ? String(localized: "precise.on", defaultValue: "On",
                                              comment: "Value of the “Precise location” row")
@@ -71,70 +88,92 @@ struct SettingsView: View {
                                              comment: "Value of the “Precise location” row"),
                                 ok: controller.status.hasFullAccuracy)
             }
-            LabeledContent("Motion & Fitness") {
+            LabeledContent("settings.permission.motion") {
                 permissionValue(controller.status.motionAuthorization.title,
                                 ok: controller.status.motionAuthorization == .authorized)
             }
             if controller.status.locationAuthorization == .notDetermined
                 || controller.status.motionAuthorization == .notDetermined {
-                Button("Request permissions", systemImage: "hand.raised") {
+                Button("settings.permissions.request", systemImage: "hand.raised") {
                     controller.requestPermissions()
                 }
             }
-            Button("Open Settings", systemImage: "gear") {
+            Button("common.openSettings", systemImage: "gear") {
                 if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
             }
         } header: {
-            Text("Permissions")
+            Text("settings.permissions.title")
         } footer: {
-            Text("Background tracking requires location access set to “Always” with Precise Location on. Motion & Fitness lets the app switch GPS off while you are still.")
+            Text("settings.permissions.footer")
         }
     }
 
     private var motionSection: some View {
         Section {
             Stepper(value: settings.stillnessTimeout, in: 30...900, step: 30) {
-                LabeledContent("Stillness before GPS off", value: Formatting.duration(controller.settings.stillnessTimeout))
+                LabeledContent("settings.motion.stillness", value: Formatting.duration(controller.settings.stillnessTimeout))
             }
             Stepper(value: settings.probeTimeout, in: 15...180, step: 15) {
-                LabeledContent("Probe duration", value: Formatting.duration(controller.settings.probeTimeout))
+                LabeledContent("settings.motion.probeDuration", value: Formatting.duration(controller.settings.probeTimeout))
             }
-            Picker("Minimum activity confidence", selection: settings.minimumActivityConfidence) {
-                Text("Low").tag(ActivityConfidence.low)
-                Text("Medium").tag(ActivityConfidence.medium)
-                Text("High").tag(ActivityConfidence.high)
+            Picker("settings.motion.minimumConfidence", selection: settings.minimumActivityConfidence) {
+                Text("settings.confidence.low").tag(ActivityConfidence.low)
+                Text("settings.confidence.medium").tag(ActivityConfidence.medium)
+                Text("settings.confidence.high").tag(ActivityConfidence.high)
             }
-            Toggle("Keep coarse updates while stationary", isOn: settings.keepCoarseUpdatesWhileStationary)
-            Toggle("Show location indicator", isOn: settings.showsLocationIndicator)
+            Toggle("settings.motion.keepCoarse", isOn: settings.keepCoarseUpdatesWhileStationary)
+            Toggle("settings.motion.showIndicator", isOn: settings.showsLocationIndicator)
         } header: {
-            Text("Motion detection")
+            Text("settings.motion.title")
         } footer: {
-            Text("Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning it off hides it, but iOS still shows it whenever GPS is recording in the background.")
+            Text("settings.motion.footer")
+        }
+    }
+
+    private var unitsSection: some View {
+        Section {
+            Picker(selection: unitSystem) {
+                Text(String(localized: "units.metric", defaultValue: "Metric",
+                            comment: "Unit system choice: meters, kilometers, km/h"))
+                    .tag(UnitSystem.metric)
+                Text(String(localized: "units.imperial", defaultValue: "Imperial",
+                            comment: "Unit system choice: feet, miles, mph"))
+                    .tag(UnitSystem.imperial)
+            } label: {
+                Text(String(localized: "settings.units.title", defaultValue: "Units",
+                            comment: "Title of the unit system picker in Settings"))
+            }
+        } footer: {
+            Text(String(localized: "settings.units.footer",
+                        defaultValue: "Changes how distances, speeds, altitudes and accuracies are displayed. Recorded samples and exports are unaffected: they always store meters and meters per second.",
+                        comment: "Footer under the unit system picker"))
         }
     }
 
     private var accuracySection: some View {
         Section {
             VStack(alignment: .leading) {
-                LabeledContent("Max horizontal accuracy", value: Formatting.accuracy(controller.settings.maxHorizontalAccuracy))
+                LabeledContent("settings.filter.maxAccuracy", value: Formatting.accuracy(controller.settings.maxHorizontalAccuracy))
                 Slider(value: settings.maxHorizontalAccuracy, in: 10...200, step: 5) {
-                    Text("Max horizontal accuracy")
+                    Text("settings.filter.maxAccuracy")
                 } minimumValueLabel: {
-                    Text("10 m").font(.caption2)
+                    // Hardcoded "10 m" / "200 m" would ignore both the
+                    // locale and the unit setting.
+                    Text(Formatting.distance(10)).font(.caption2)
                 } maximumValueLabel: {
-                    Text("200 m").font(.caption2)
+                    Text(Formatting.distance(200)).font(.caption2)
                 }
             }
             Stepper(value: settings.maxSampleAge, in: 5...120, step: 5) {
-                LabeledContent("Max sample age", value: Formatting.duration(controller.settings.maxSampleAge))
+                LabeledContent("settings.filter.maxAge", value: Formatting.duration(controller.settings.maxSampleAge))
             }
             Stepper(value: settings.duplicateDistance, in: 0...20, step: 1) {
-                LabeledContent("Duplicate distance", value: Formatting.distance(controller.settings.duplicateDistance))
+                LabeledContent("settings.filter.duplicateDistance", value: Formatting.distance(controller.settings.duplicateDistance))
             }
         } header: {
-            Text("Sample filter")
+            Text("settings.filter.title")
         } footer: {
-            Text("Fixes less accurate than the limit, older than the max age, or within the duplicate distance of the previous fix are discarded.")
+            Text("settings.filter.footer")
         }
     }
 
@@ -142,9 +181,10 @@ struct SettingsView: View {
         Section {
             ProfileTable(settings: controller.settings)
         } header: {
-            Text("GPS profiles")
+            Text("settings.profiles.title")
         } footer: {
-            Text("Distance filter per activity. Speed above \(Formatting.speed(GPSProfile.vehicleSpeedThreshold)) always selects the driving profile; unknown activity above \(Formatting.speed(GPSProfile.runningSpeedThreshold)) uses the running filter.")
+            Text(verbatim: String(localized: "settings.profiles.footer",
+                                  defaultValue: "Distance filter per activity. Speed above \(Formatting.speed(GPSProfile.vehicleSpeedThreshold)) always selects the driving profile; unknown activity above \(Formatting.speed(GPSProfile.runningSpeedThreshold)) uses the running filter."))
         }
     }
 
@@ -152,49 +192,51 @@ struct SettingsView: View {
     /// several rows per accepted fix.
     private var auditSection: some View {
         Section {
-            Toggle("Record audit trail", isOn: settings.auditEnabled)
+            Toggle("settings.audit.enable", isOn: settings.auditEnabled)
 
             if controller.settings.auditEnabled {
-                Picker("Minimum severity", selection: settings.auditMinimumSeverity) {
+                Picker("audit.minimumSeverity", selection: settings.auditMinimumSeverity) {
                     ForEach(AuditSeverity.allCases, id: \.rawValue) { severity in
                         Text(verbatim: severity.displayName).tag(severity)
                     }
                 }
-                Toggle("Accepted fixes", isOn: settings.auditLogsAcceptedFixes)
-                Toggle("Rejected fixes", isOn: settings.auditLogsRejectedFixes)
-                Toggle("Validation tests", isOn: settings.auditLogsFilterChecks)
-                Toggle("Motion reports", isOn: settings.auditLogsMotionEvents)
+                Toggle("settings.audit.acceptedFixes", isOn: settings.auditLogsAcceptedFixes)
+                Toggle("settings.audit.rejectedFixes", isOn: settings.auditLogsRejectedFixes)
+                Toggle("settings.audit.validationTests", isOn: settings.auditLogsFilterChecks)
+                Toggle("settings.audit.motionReports", isOn: settings.auditLogsMotionEvents)
                 Stepper(value: settings.auditRetentionDays, in: 0...90, step: 1) {
-                    LabeledContent("Keep trail for",
+                    LabeledContent("settings.audit.keepTrail",
                                    value: controller.settings.auditRetentionDays == 0
-                                       ? String(localized: "Forever")
-                                       : String(localized: "\(controller.settings.auditRetentionDays) days"))
+                                       ? String(localized: "settings.retention.forever", defaultValue: "Forever")
+                                       : String(localized: "settings.retention.days",
+                                                defaultValue: "\(controller.settings.auditRetentionDays) days"))
                 }
             }
 
             NavigationLink(value: Route.audit) {
-                Label("Open audit trail", systemImage: "doc.text.magnifyingglass")
+                Label("settings.audit.open", systemImage: "doc.text.magnifyingglass")
             }
         } header: {
-            Text("Audit trail")
+            Text("audit.title")
         } footer: {
-            Text("Off by default. When on, the app records every location received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery.")
+            Text("settings.audit.footer")
         }
     }
 
     private var retentionSection: some View {
         Section {
             Stepper(value: settings.retentionDays, in: 0...365, step: 1) {
-                LabeledContent("Keep samples for",
+                LabeledContent("settings.retention.keepSamples",
                                value: controller.settings.retentionDays == 0
-                                   ? String(localized: "Forever")
-                                   : String(localized: "\(controller.settings.retentionDays) days"))
+                                   ? String(localized: "settings.retention.forever", defaultValue: "Forever")
+                                   : String(localized: "settings.retention.days",
+                                            defaultValue: "\(controller.settings.retentionDays) days"))
             }
             Button(role: .destructive) {
                 showPurgeConfirmation = true
             } label: {
                 HStack {
-                    Label("Delete old samples now", systemImage: "trash")
+                    Label("settings.purge.action", systemImage: "trash")
                     if isPurging { Spacer(); ProgressView() }
                 }
             }
@@ -205,16 +247,16 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
         } header: {
-            Text("Retention")
+            Text("settings.retention.title")
         } footer: {
-            Text("Old samples are deleted automatically by a background maintenance task, or here on demand. Sessions are kept.")
+            Text("settings.retention.footer")
         }
     }
 
     private var aboutSection: some View {
-        Section("About") {
-            LabeledContent("Version", value: appVersion)
-            Button("Reset to defaults", role: .destructive) {
+        Section("settings.about.title") {
+            LabeledContent("settings.about.version", value: appVersion)
+            Button("settings.about.reset", role: .destructive) {
                 controller.settings = TrackingSettings()
             }
         }
@@ -240,9 +282,11 @@ struct SettingsView: View {
         defer { isPurging = false }
         do {
             let deleted = try await controller.purgeNow()
-            purgeResult = String(localized: "Deleted \(Formatting.count(deleted)) samples.")
+            purgeResult = String(localized: "settings.purge.result",
+                                 defaultValue: "Deleted \(Formatting.count(deleted)) samples.")
         } catch {
-            purgeResult = String(localized: "Purge failed: \(error.localizedDescription)")
+            purgeResult = String(localized: "settings.purge.failed",
+                                 defaultValue: "Purge failed: \(error.localizedDescription)")
         }
     }
 }
@@ -263,13 +307,13 @@ private struct ProfileTable: View {
 
     private var rows: [Row] {
         [
-            Row(id: "walking", activity: .walking, title: String(localized: "Walking"), speed: nil),
-            Row(id: "running", activity: .running, title: String(localized: "Running"), speed: nil),
-            Row(id: "cycling", activity: .cycling, title: String(localized: "Cycling"), speed: nil),
-            Row(id: "automotive", activity: .automotive, title: String(localized: "Driving"), speed: nil),
-            Row(id: "unknown", activity: .unknown, title: String(localized: "Unknown, no speed"), speed: nil),
-            Row(id: "unknown-fast", activity: .unknown, title: String(localized: "Unknown, \(Formatting.speed(4))"), speed: 4),
-            Row(id: "any-vehicle", activity: .walking, title: String(localized: "Any, \(Formatting.speed(12))"), speed: 12)
+            Row(id: "walking", activity: .walking, title: String(localized: "activity.walking", defaultValue: "Walking"), speed: nil),
+            Row(id: "running", activity: .running, title: String(localized: "activity.running", defaultValue: "Running"), speed: nil),
+            Row(id: "cycling", activity: .cycling, title: String(localized: "activity.cycling", defaultValue: "Cycling"), speed: nil),
+            Row(id: "automotive", activity: .automotive, title: String(localized: "activity.driving", defaultValue: "Driving"), speed: nil),
+            Row(id: "unknown", activity: .unknown, title: String(localized: "settings.profiles.unknownNoSpeed", defaultValue: "Unknown, no speed"), speed: nil),
+            Row(id: "unknown-fast", activity: .unknown, title: String(localized: "settings.profiles.unknownSpeed", defaultValue: "Unknown, \(Formatting.speed(4))"), speed: 4),
+            Row(id: "any-vehicle", activity: .walking, title: String(localized: "settings.profiles.anySpeed", defaultValue: "Any, \(Formatting.speed(12))"), speed: 12)
         ]
     }
 
@@ -280,10 +324,10 @@ private struct ProfileTable: View {
                            systemImage: row.activity.systemImage,
                            profile: GPSProfile.profile(for: row.activity, speed: row.speed, settings: settings))
             }
-            ProfileRow(title: String(localized: "Probing"),
+            ProfileRow(title: String(localized: "common.probing", defaultValue: "Probing"),
                        systemImage: TrackingPhase.probing.systemImage,
                        profile: .probing)
-            ProfileRow(title: String(localized: "Stationary (coarse)"),
+            ProfileRow(title: String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)"),
                        systemImage: TrackingPhase.stationary.systemImage,
                        profile: .stationaryCoarse)
         }

@@ -31,6 +31,7 @@ struct TrackingSettingsDefaultTests {
         #expect(s.minimumActivityConfidence == .medium)
         #expect(s.keepCoarseUpdatesWhileStationary)
         #expect(s.showsLocationIndicator)
+        #expect(s.unitSystem == UnitSystem.deviceDefault)
         #expect(s.walkingDistanceFilter == 10)
         #expect(s.runningCyclingDistanceFilter == 20)
         #expect(s.automotiveDistanceFilter == 50)
@@ -71,6 +72,7 @@ struct TrackingSettingsCodableTests {
         s.minimumActivityConfidence = .high
         s.keepCoarseUpdatesWhileStationary = false
         s.showsLocationIndicator = false
+        s.unitSystem = UnitSystem.deviceDefault == .metric ? .imperial : .metric
         s.walkingDistanceFilter = 1
         s.runningCyclingDistanceFilter = 2
         s.automotiveDistanceFilter = 3
@@ -110,6 +112,25 @@ struct TrackingSettingsCodableTests {
         #expect(decoded.probeTimeout == 10)
     }
 
+    @Test("unitSystem round-trips through JSON in both directions")
+    func unitSystemRoundTrip() throws {
+        for system in UnitSystem.allCases {
+            var s = TrackingSettings()
+            s.unitSystem = system
+            let decoded = try JSONDecoder().decode(TrackingSettings.self,
+                                                   from: try JSONEncoder().encode(s))
+            #expect(decoded.unitSystem == system)
+            #expect(decoded == s)
+        }
+    }
+
+    @Test("Settings saved before the unit setting existed fall back to the device default")
+    func unitSystemMissingKey() throws {
+        let json = #"{"stillnessTimeout": 60, "retentionDays": 7}"#
+        let decoded = try JSONDecoder().decode(TrackingSettings.self, from: Data(json.utf8))
+        #expect(decoded.unitSystem == UnitSystem.deviceDefault)
+    }
+
     @Test("Wrong type for a known key throws")
     func wrongType() {
         let json = #"{"stillnessTimeout": "soon"}"#
@@ -125,6 +146,7 @@ struct TrackingSettingsCodableTests {
         let expectedKeys: Set<String> = [
             "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "stillSpeedThreshold",
             "minimumActivityConfidence", "keepCoarseUpdatesWhileStationary", "showsLocationIndicator",
+            "unitSystem",
             "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter", "unknownDistanceFilter",
             "maxHorizontalAccuracy", "maxSampleAge", "duplicateDistance",
             "retentionDays", "insertBatchSize",
