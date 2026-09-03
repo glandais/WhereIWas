@@ -15,7 +15,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$@ samples · %2$@ · %3$@"
           }
         },
@@ -31,7 +31,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$@ · %2$@ · %3$@ · battery %4$@"
           }
         },
@@ -87,7 +87,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "%1$lld shown · %2$lld stored"
           }
         },
@@ -515,7 +515,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Distance filter per activity. Speed above %1$@ always selects the driving profile; unknown activity above %2$@ uses the running filter."
           }
         },
@@ -1877,32 +1877,12 @@
         }
       }
     },
-    "Unknown, fast": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inconnue, rapide"
-          }
-        }
-      }
-    },
     "Unknown, no speed": {
       "localizations": {
         "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Inconnue, sans vitesse"
-          }
-        }
-      }
-    },
-    "Unknown, slow": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inconnue, lente"
           }
         }
       }
@@ -2233,7 +2213,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "E"
           }
         },
@@ -2251,7 +2231,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "N"
           }
         },
@@ -2269,7 +2249,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "NE"
           }
         },
@@ -2287,7 +2267,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "NW"
           }
         },
@@ -2305,7 +2285,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "S"
           }
         },
@@ -2323,7 +2303,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "SE"
           }
         },
@@ -2341,7 +2321,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "SW"
           }
         },
@@ -2359,7 +2339,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "W"
           }
         },
@@ -2410,7 +2390,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "Off"
           }
         },
@@ -2428,7 +2408,7 @@
       "localizations": {
         "en": {
           "stringUnit": {
-            "state": "new",
+            "state": "translated",
             "value": "On"
           }
         },
@@ -2436,6 +2416,60 @@
           "stringUnit": {
             "state": "translated",
             "value": "Activée"
+          }
+        }
+      }
+    },
+    "profile.unknown": {
+      "comment": "GPS profile name; the subject is the profile, not the activity",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnu"
+          }
+        }
+      }
+    },
+    "profile.unknownFast": {
+      "comment": "GPS profile name; the subject is the profile, not the activity",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown, fast"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnu, rapide"
+          }
+        }
+      }
+    },
+    "profile.unknownSlow": {
+      "comment": "GPS profile name; the subject is the profile, not the activity",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown, slow"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnu, lent"
           }
         }
       }
@@ -2749,6 +2783,24 @@
           "stringUnit": {
             "state": "translated",
             "value": "Départ de visite"
+          }
+        }
+      }
+    },
+    "scope.today": {
+      "comment": "Segment of the export scope picker; keep it short",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jour"
           }
         }
       }

@@ -7,7 +7,11 @@ struct ExportView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .today: return String(localized: "Today")
+            // Its own key, not the `Today` of the Status screen: this one is a
+            // segment of a five-way segmented picker and has to stay short, or
+            // it truncates ("Aujourd’hui" → "Aujour…").
+            case .today: return String(localized: "scope.today", defaultValue: "Today",
+                                       comment: "Segment of the export scope picker; keep it short")
             case .week: return String(localized: "7 days")
             case .all: return String(localized: "All")
             case .custom: return String(localized: "Range")

@@ -125,6 +125,22 @@ whose name is not the English text, such as `auth.*` and `reason.*`) (`extractio
 dead keys — delete them). Check the result in the simulator with
 `xcrun simctl launch booted io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR`.
 
+Two traps in that `sync`:
+
+- **Run it on the catalog in place**, never on a copy outside the repo. Given a
+  copy, `xcstringstool` resolves no source and marks **every** key `stale` —
+  following the "stale means dead, delete it" rule then empties the catalog.
+- `head -1` picks one architecture slice. That is enough to find new keys, but
+  keys defined only in files the other slice compiled lose their
+  `extractionState`, which shows up as a large no-op diff. Pass every slice
+  (`$DD/../*/*.stringsdata`) to avoid the churn.
+
+To audit the catalog without trusting the tool, diff the keys directly — the
+`.stringsdata` files are plain JSON with a `tables.Localizable[].key` array, so
+their union must equal the set of keys in `Localizable.xcstrings`: anything
+extra in the code is an unextracted string, anything extra in the catalog is a
+dead key.
+
 ## Release
 
 App Store Connect app ID **`6808349924`** — App Store name `WhereIWas GPS Logger`

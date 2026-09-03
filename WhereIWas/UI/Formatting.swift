@@ -367,9 +367,19 @@ extension GPSProfile {
         case "running": return String(localized: "Running")
         case "cycling": return String(localized: "Cycling")
         case "automotive": return String(localized: "Driving")
-        case "fast-unknown": return String(localized: "Unknown, fast")
-        case "slow-unknown": return String(localized: "Unknown, slow")
-        case "unknown": return String(localized: "Unknown")
+        // These three name a *profile*, not an activity, so they get their own
+        // keys: French agrees the adjective with the subject and "profil" is
+        // masculine where "activité" — the subject of `ActivityKind.title` —
+        // is feminine.
+        case "fast-unknown":
+            return String(localized: "profile.unknownFast", defaultValue: "Unknown, fast",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
+        case "slow-unknown":
+            return String(localized: "profile.unknownSlow", defaultValue: "Unknown, slow",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
+        case "unknown":
+            return String(localized: "profile.unknown", defaultValue: "Unknown",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
         default: return label
         }
     }
