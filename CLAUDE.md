@@ -164,16 +164,24 @@ against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`)
 five IPHONE_65 screenshots uploaded (COMPLETE); App Privacy published as
 Data Not Collected; age rating (all NONE/false); categories NAVIGATION / UTILITIES;
 content rights DOES_NOT_USE_THIRD_PARTY_CONTENT; availability on 175 territories with
-availableInNewTerritories; App Store review details with the guideline 2.5.4
-background-location rationale.
+availableInNewTerritories; price set to free (isFree, base territory USA); Mac Apple
+Silicon and Vision Pro distribution unchecked, since CoreMotion, background location,
+significant changes and visits do nothing on those platforms; App Store review details
+with the guideline 2.5.4 background-location rationale.
 
-### Two checks that stay noisy
+### One check that stays noisy
 
-`asc validate` keeps reporting these even when they are fine:
-- `availability.unverified` — Apple's Pricing and Availability endpoints time out.
-  Confirmed set via `asc pricing availability view` (`availableInNewTerritories: true`).
-- `privacy.publish_state.unverified` — the public API cannot read publish state.
-  Confirmed via `asc web privacy pull` (`published: true`), which needs a web session.
+`privacy.publish_state.unverified` is reported on every run: the public API cannot read
+the publish state. Confirmed published two ways — `asc web privacy pull` returns
+`published: true`, and the ASC page shows "Published … by Gabriel Landais" with the
+Publish button gone. Ignore it.
+
+### What asc validate does not check
+
+It reported a clean bill while the app had **no price schedule at all**, which blocks
+submission just as hard as a missing build. Open Pricing and Availability in the browser
+before believing a green report. The same page is where Mac Apple Silicon and Vision Pro
+distribution are silently opted in by default.
 
 ## Known constraints
 
