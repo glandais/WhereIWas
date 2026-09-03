@@ -113,8 +113,10 @@ enum Formatting {
     }
 
     /// One `TrackingCoordinator.describe(_:)` token, or one of the explicit
-    /// reasons the coordinator passes alongside it.
-    private static func reasonAtom(_ token: String) -> String {
+    /// reasons the coordinator passes alongside it. Internal so
+    /// `TransitionReasonTests` can check it still covers the vocabulary the
+    /// coordinator actually produces.
+    static func reasonAtom(_ token: String) -> String {
         switch token {
         case "enable": return String(localized: "reason.enable", defaultValue: "Tracking on")
         case "disable": return String(localized: "reason.disable", defaultValue: "Tracking off")

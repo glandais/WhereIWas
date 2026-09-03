@@ -75,11 +75,14 @@ The app ships in **English (source) and French**. Two string catalogs under
 `WhereIWas/Resources/` hold everything user-facing:
 
 - `Localizable.xcstrings` — the UI strings
-- `InfoPlist.xcstrings` — the three permission prompts. It holds **`fr` only**:
-  the English values live in `project.yml` and reach the app through the
-  generated `Info.plist`. Never add an `en` unit here — iOS resolves
-  `en.lproj/InfoPlist.strings` first, so the catalog would silently win and
-  edits to `project.yml` would have no effect on the shipped prompt.
+- `InfoPlist.xcstrings` — the three permission prompts. Their English text
+  lives in **two** places and must be edited in both: `project.yml` (which
+  writes the required keys into the generated `Info.plist`) and the `en` unit
+  of the catalog. iOS resolves `en.lproj/InfoPlist.strings` first, so the
+  catalog is what an English user actually reads and `project.yml` alone has
+  no effect on the prompt; dropping the `en` unit is not the fix either —
+  `xcstringstool` then emits the key itself as the value and the prompt reads
+  "NSMotionUsageDescription".
 
 `knownRegions` in `project.yml` lists the locales. Rules when adding UI strings:
 
