@@ -107,16 +107,20 @@ Archive and export for the App Store with `ExportOptions.plist`
 
 ### Still to do before a first submission
 
-- App icon and screenshots (none yet)
-- The three URLs in `metadata/` all point at `https://glandais.github.io/WhereIWas/`,
-  which does not exist yet — marketing, `/support/` and `/privacy/` pages are mandatory
+- Screenshots (none yet)
 - App Privacy nutrition labels: the app collects precise location, stored **on device
   only**, never linked to an identity and never uploaded
 - Category, age rating and territory availability are unset
-- Review notes must spell out the background-location use case, and a demo of the Always
-  authorization flow — background location gets extra scrutiny under guideline 2.5.4
-- Decide whether the public version stays `0.1.0` or becomes `1.0.0` (`MARKETING_VERSION`
-  in `project.yml` and the ASC version string must match)
+- The App Store version record in ASC is still `0.1.0`, and canonical metadata still lives
+  under `metadata/version/0.1.0/`. The public version is now `1.0.0` (`MARKETING_VERSION`
+  in `project.yml`), so both must be moved to `1.0.0` before submission — a build only
+  attaches to a version record whose string matches.
+- Re-run the `fr-FR` metadata apply: the last one failed with
+  `Entity with locale: fr-FR already exists. Try updating.`
+
+Done: app icon; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
+TestFlight Test Information, What to Test and the Beta App Review notes (which spell out
+the background-location use case and the Always authorization flow for guideline 2.5.4).
 
 ## Known constraints
 
