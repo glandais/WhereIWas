@@ -242,6 +242,20 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                 stopUpdates()
             }
         }
+        // The indicator flag is read by CoreLocation continuously, so a change
+        // takes effect without restarting the updates.
+        if old.showsLocationIndicator != settings.showsLocationIndicator {
+            manager.showsBackgroundLocationIndicator = settings.showsLocationIndicator
+            audit.record(AuditEvent(timestamp: Date(),
+                                    category: .location,
+                                    severity: .info,
+                                    name: "indicator.changed",
+                                    message: settings.showsLocationIndicator
+                                        ? "System location indicator shown"
+                                        : "System location indicator hidden",
+                                    details: [AuditDetail("showsLocationIndicator",
+                                                          settings.showsLocationIndicator)]))
+        }
         if buffer.count >= settings.insertBatchSize {
             scheduleFlush()
         }
@@ -255,7 +269,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         if !manager.allowsBackgroundLocationUpdates {
             manager.allowsBackgroundLocationUpdates = true
         }
-        manager.showsBackgroundLocationIndicator = true
+        manager.showsBackgroundLocationIndicator = settings.showsLocationIndicator
     }
 
     private func apply(profile: GPSProfile) {

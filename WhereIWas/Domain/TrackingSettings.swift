@@ -37,6 +37,12 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     /// Default `true`.
     public var keepCoarseUpdatesWhileStationary: Bool = true
 
+    /// When `true` (default), CoreLocation shows the system location
+    /// indicator while the app may use location in the background. Turning it
+    /// off only hides it in the coarse/STATIONARY case: the
+    /// `CLBackgroundActivitySession` held while GPS is on always shows it.
+    public var showsLocationIndicator: Bool = true
+
     // MARK: GPS profile distance filters (meters)
 
     public var walkingDistanceFilter: Double = 10
@@ -124,7 +130,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
 
     private enum CodingKeys: String, CodingKey {
         case stillnessTimeout, probeTimeout, movingSpeedThreshold, stillSpeedThreshold
-        case minimumActivityConfidence, keepCoarseUpdatesWhileStationary
+        case minimumActivityConfidence, keepCoarseUpdatesWhileStationary, showsLocationIndicator
         case walkingDistanceFilter, runningCyclingDistanceFilter, automotiveDistanceFilter, unknownDistanceFilter
         case maxHorizontalAccuracy, maxSampleAge, duplicateDistance
         case retentionDays, insertBatchSize
@@ -141,6 +147,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         stillSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .stillSpeedThreshold) ?? d.stillSpeedThreshold
         minimumActivityConfidence = try c.decodeIfPresent(ActivityConfidence.self, forKey: .minimumActivityConfidence) ?? d.minimumActivityConfidence
         keepCoarseUpdatesWhileStationary = try c.decodeIfPresent(Bool.self, forKey: .keepCoarseUpdatesWhileStationary) ?? d.keepCoarseUpdatesWhileStationary
+        showsLocationIndicator = try c.decodeIfPresent(Bool.self, forKey: .showsLocationIndicator) ?? d.showsLocationIndicator
         walkingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .walkingDistanceFilter) ?? d.walkingDistanceFilter
         runningCyclingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .runningCyclingDistanceFilter) ?? d.runningCyclingDistanceFilter
         automotiveDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .automotiveDistanceFilter) ?? d.automotiveDistanceFilter

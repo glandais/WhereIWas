@@ -100,9 +100,16 @@ struct StatusView: View {
             .padding(.vertical, 4)
             .accessibilityElement(children: .combine)
 
-            if let profile = status.activeProfile {
+            // `appliedProfile`, not `activeProfile`: while STATIONARY with
+            // coarse updates on, CoreLocation is still running (and the system
+            // location indicator with it), which "GPS off" would deny.
+            if let profile = status.appliedProfile {
                 LabeledContent("GPS profile") {
-                    Text(verbatim: "\(profile.displayName) · \(profile.desiredAccuracy.title) · \(Formatting.distance(profile.distanceFilter))")
+                    // The coarse profile's accuracy and distance filter are
+                    // both 3 km, so the full form would read "3 km · 3 km".
+                    Text(verbatim: profile == .stationaryCoarse
+                         ? profile.displayName
+                         : "\(profile.displayName) · \(profile.desiredAccuracy.title) · \(Formatting.distance(profile.distanceFilter))")
                         .multilineTextAlignment(.trailing)
                 }
             } else {

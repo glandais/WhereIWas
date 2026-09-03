@@ -103,6 +103,7 @@ final class DemoTrackingController: TrackingControlling {
             isEnabled: true,
             phase: .moving,
             activeProfile: GPSProfile.profile(for: .automotive, speed: 18, settings: settings),
+            appliedProfile: GPSProfile.profile(for: .automotive, speed: 18, settings: settings),
             lastActivity: .automotive,
             lastActivityConfidence: .high,
             lastFix: lastFix,
@@ -290,6 +291,7 @@ final class DemoTrackingController: TrackingControlling {
         status.isEnabled = enabled
         status.phase = enabled ? .moving : .disabled
         status.activeProfile = enabled ? GPSProfile.profile(for: .automotive, speed: 18, settings: settings) : nil
+        status.appliedProfile = status.activeProfile
     }
 
     func requestPermissions() {}

@@ -105,10 +105,11 @@ struct SettingsView: View {
                 Text("High").tag(ActivityConfidence.high)
             }
             Toggle("Keep coarse updates while stationary", isOn: settings.keepCoarseUpdatesWhileStationary)
+            Toggle("Show location indicator", isOn: settings.showsLocationIndicator)
         } header: {
             Text("Motion detection")
         } footer: {
-            Text("Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background.")
+            Text("Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning it off hides it, but iOS still shows it whenever GPS is recording in the background.")
         }
     }
 

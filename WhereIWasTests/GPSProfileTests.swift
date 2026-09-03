@@ -183,3 +183,39 @@ struct GPSProfilePresetTests {
         #expect(decoded == p)
     }
 }
+
+/// The status screen reads `appliedProfile`, not `currentProfile`: with coarse
+/// updates on, CoreLocation keeps running while STATIONARY (and the system
+/// location indicator with it), which "GPS off" would deny.
+@MainActor
+@Suite("Applied profile · coarse mode")
+struct AppliedProfileTests {
+    @Test("stopGPS keeps the coarse profile applied when the option is on")
+    func coarseStaysApplied() {
+        let engine = NoopLocationEngine()
+        engine.startGPS(profile: .probing)
+        #expect(engine.appliedProfile == .probing)
+
+        engine.stopGPS()
+        #expect(engine.currentProfile == nil)
+        #expect(engine.appliedProfile == .stationaryCoarse)
+    }
+
+    @Test("stopGPS applies nothing when coarse updates are off")
+    func coarseDisabled() {
+        let engine = NoopLocationEngine()
+        var settings = TrackingSettings()
+        settings.keepCoarseUpdatesWhileStationary = false
+        engine.apply(settings: settings)
+
+        engine.startGPS(profile: .probing)
+        engine.stopGPS()
+        #expect(engine.appliedProfile == nil)
+    }
+
+    @Test("The coarse profile shows a human label, never its technical one")
+    func coarseDisplayName() {
+        #expect(GPSProfile.stationaryCoarse.displayName != GPSProfile.stationaryCoarse.label)
+        #expect(!GPSProfile.stationaryCoarse.displayName.isEmpty)
+    }
+}

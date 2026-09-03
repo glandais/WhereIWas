@@ -626,6 +626,9 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         s.isEnabled = machine.phase != .disabled
         s.phase = machine.phase
         s.activeProfile = engine.currentProfile ?? machine.activeProfile
+        // Falls back to the high-accuracy profile for any engine that does not
+        // distinguish the two.
+        s.appliedProfile = engine.appliedProfile ?? s.activeProfile
         s.lastActivity = machine.lastActivity
         s.lastActivityConfidence = machine.lastActivityConfidence
         s.lastFix = engine.lastFix

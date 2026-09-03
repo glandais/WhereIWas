@@ -89,6 +89,8 @@ stateDiagram-v2
 | `probing` | `GPSProfile.probing` (best, filter 0) for at most `probeTimeout` (45 s) | everything |
 | `moving` | `GPSProfile.profile(for:speed:settings:)` | everything |
 
+The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedProfile`), not `activeProfile`: in the coarse case CoreLocation is still running, so the row reads "Stationary (coarse)" and not "GPS off". `activeProfile` stays the high-accuracy profile, which is what annotates the samples.
+
 ### Rules
 * **Toward MOVING is immediate** on credible evidence: activity with `impliesMotion` and confidence ≥ `minimumActivityConfidence` (medium), or a probing fix at ≥ `movingSpeedThreshold` (0.7 m/s).
 * **Toward STATIONARY is hysteretic**: from MOVING only via the stillness timer (`stillnessTimeout`, 120 s default) which is armed by a credible `stationary` activity or a fix slower than `stillSpeedThreshold` (0.3 m/s) and cancelled by any moving activity or a fast fix (unless the classifier currently says stationary — GPS speed jitter must not defeat CoreMotion).
@@ -160,6 +162,7 @@ Info.plist: `UIBackgroundModes = [location, processing, fetch]`, `NSLocationAlwa
 * **Reboot**: nothing runs until the user unlocks the device once (data protection). After first unlock, significant-change/visit registrations survive the reboot and relaunch the app in the background on the first event. Between reboot and first unlock, and between unlock and the first significant change (≈500 m of movement or a visit), **no samples are recorded**. There is no API to change that.
 * **Force quit by the user** (swipe up in the app switcher): iOS stops delivering background events until the user opens the app again. Document this in the UI (Status screen shows "tracking armed since …" and a warning if last sample is older than N minutes).
 * **Stationary for long**: while STATIONARY we stop (or coarsen) GPS by design. If the process is later terminated, we depend on significant change / visit to relaunch. First movement after a long stop may lose up to ~500 m / a few minutes before PROBING starts. Keeping coarse updates on (`keepCoarseUpdatesWhileStationary`) makes the OS much less likely to terminate the process, so CoreMotion callbacks usually still arrive and the gap is small.
+* **The system location indicator** (the blue pill around the clock) is on for as long as coarse updates run, i.e. permanently while tracking is enabled with `keepCoarseUpdatesWhileStationary`. `showsLocationIndicator` (default true) lets the user hide it; iOS shows it regardless while a `CLBackgroundActivitySession` is held, that is throughout PROBING and MOVING.
 * **Low Power Mode / Background App Refresh off**: `BGProcessingTask` may never run (purge falls back to launch + Settings). Location background mode still works.
 * **Precise location off** (`reducedAccuracy`): samples are ~1–3 km. The status screen flags it; we still record.
 * **Motion permission denied**: the state machine only has GPS speed and significant change to work with. Coordinator falls back to `keepCoarseUpdatesWhileStationary = true` and a longer PROBING (`probeTimeout` × 2) — GPS is used more, battery suffers, tracking still works.

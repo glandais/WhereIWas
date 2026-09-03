@@ -134,21 +134,40 @@ public final class NoopLocationEngine: LocationEngineProtocol {
     public private(set) var authorization: LocationAuthorization = .notDetermined
     public private(set) var hasFullAccuracy = false
     public private(set) var currentProfile: GPSProfile?
+    public private(set) var appliedProfile: GPSProfile?
     public private(set) var lastFix: LocationFix?
     public private(set) var acceptedCount = 0
     public private(set) var rejectedCount = 0
     /// Recorded calls, for assertions in tests.
     public private(set) var calls: [String] = []
+    /// Last settings pushed, so ``stopGPS()`` mirrors the real engine's coarse
+    /// mode instead of pretending everything stops.
+    private var settings = TrackingSettings()
 
     public init() {}
 
     public func requestAuthorization() { calls.append("requestAuthorization") }
-    public func startGPS(profile: GPSProfile) { currentProfile = profile; calls.append("startGPS(\(profile.label))") }
-    public func stopGPS() { currentProfile = nil; calls.append("stopGPS") }
+
+    public func startGPS(profile: GPSProfile) {
+        currentProfile = profile
+        appliedProfile = profile
+        calls.append("startGPS(\(profile.label))")
+    }
+
+    public func stopGPS() {
+        currentProfile = nil
+        appliedProfile = settings.keepCoarseUpdatesWhileStationary ? .stationaryCoarse : nil
+        calls.append("stopGPS")
+    }
+
     public func startSignificantChangeMonitoring() { calls.append("startSignificantChangeMonitoring") }
     public func stopSignificantChangeMonitoring() { calls.append("stopSignificantChangeMonitoring") }
     public func flush() async { calls.append("flush") }
-    public func apply(settings: TrackingSettings) { calls.append("apply(settings)") }
+
+    public func apply(settings: TrackingSettings) {
+        self.settings = settings
+        calls.append("apply(settings)")
+    }
 }
 
 /// ``MotionMonitoring`` that does nothing (previews / tests).

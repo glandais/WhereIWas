@@ -261,6 +261,11 @@ public protocol LocationEngineProtocol: AnyObject {
     var hasFullAccuracy: Bool { get }
     /// Profile currently applied, `nil` when high-accuracy GPS is off.
     var currentProfile: GPSProfile? { get }
+    /// Profile actually pushed to CoreLocation, ``GPSProfile/stationaryCoarse``
+    /// included. `nil` only when no location updates run at all — so it is
+    /// what the status screen shows, `currentProfile` being blind to the
+    /// coarse mode that keeps the blue indicator on.
+    var appliedProfile: GPSProfile? { get }
     /// Last accepted fix (from any source), in memory.
     var lastFix: LocationFix? { get }
     /// Number of fixes accepted since launch (for the status screen).
@@ -321,6 +326,10 @@ public struct TrackingStatus: Sendable, Hashable {
     public var isEnabled: Bool
     public var phase: TrackingPhase
     public var activeProfile: GPSProfile?
+    /// Profile CoreLocation is really running, coarse mode included. The
+    /// status screen shows this one; ``activeProfile`` stays the
+    /// high-accuracy profile that annotates the samples.
+    public var appliedProfile: GPSProfile?
     public var lastActivity: ActivityKind
     public var lastActivityConfidence: ActivityConfidence
     public var lastFix: LocationFix?
@@ -341,6 +350,7 @@ public struct TrackingStatus: Sendable, Hashable {
     public init(isEnabled: Bool = false,
                 phase: TrackingPhase = .disabled,
                 activeProfile: GPSProfile? = nil,
+                appliedProfile: GPSProfile? = nil,
                 lastActivity: ActivityKind = .unknown,
                 lastActivityConfidence: ActivityConfidence = .low,
                 lastFix: LocationFix? = nil,
@@ -359,6 +369,7 @@ public struct TrackingStatus: Sendable, Hashable {
         self.isEnabled = isEnabled
         self.phase = phase
         self.activeProfile = activeProfile
+        self.appliedProfile = appliedProfile
         self.lastActivity = lastActivity
         self.lastActivityConfidence = lastActivityConfidence
         self.lastFix = lastFix

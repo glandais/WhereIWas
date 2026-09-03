@@ -30,6 +30,7 @@ struct TrackingSettingsDefaultTests {
         #expect(s.stillSpeedThreshold == 0.3)
         #expect(s.minimumActivityConfidence == .medium)
         #expect(s.keepCoarseUpdatesWhileStationary)
+        #expect(s.showsLocationIndicator)
         #expect(s.walkingDistanceFilter == 10)
         #expect(s.runningCyclingDistanceFilter == 20)
         #expect(s.automotiveDistanceFilter == 50)
@@ -69,6 +70,7 @@ struct TrackingSettingsCodableTests {
         s.stillSpeedThreshold = 0.05
         s.minimumActivityConfidence = .high
         s.keepCoarseUpdatesWhileStationary = false
+        s.showsLocationIndicator = false
         s.walkingDistanceFilter = 1
         s.runningCyclingDistanceFilter = 2
         s.automotiveDistanceFilter = 3
@@ -122,7 +124,7 @@ struct TrackingSettingsCodableTests {
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         let expectedKeys: Set<String> = [
             "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "stillSpeedThreshold",
-            "minimumActivityConfidence", "keepCoarseUpdatesWhileStationary",
+            "minimumActivityConfidence", "keepCoarseUpdatesWhileStationary", "showsLocationIndicator",
             "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter", "unknownDistanceFilter",
             "maxHorizontalAccuracy", "maxSampleAge", "duplicateDistance",
             "retentionDays", "insertBatchSize",
@@ -150,6 +152,7 @@ struct TrackingSettingsPersistenceTests {
         s.stillnessTimeout = 300
         s.minimumActivityConfidence = .low
         s.keepCoarseUpdatesWhileStationary = false
+        s.showsLocationIndicator = false
         s.save(to: box.defaults)
         #expect(box.defaults.data(forKey: TrackingSettings.userDefaultsKey) != nil)
         #expect(TrackingSettings.load(from: box.defaults) == s)
