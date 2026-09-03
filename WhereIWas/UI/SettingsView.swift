@@ -1,0 +1,292 @@
+import SwiftUI
+import UIKit
+
+/// Tunables of the state machine and the sample filter, permissions,
+/// retention and a live preview of the GPS profile table.
+struct SettingsView: View {
+    @Environment(\.trackingController) private var controller
+    @Environment(\.openURL) private var openURL
+
+    @State private var showPurgeConfirmation = false
+    @State private var purgeResult: String?
+    @State private var isPurging = false
+
+    private var settings: Binding<TrackingSettings> {
+        Binding(get: { controller.settings }, set: { controller.settings = $0 })
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                permissionsSection
+                motionSection
+                accuracySection
+                profileSection
+                retentionSection
+                auditSection
+                aboutSection
+            }
+            .navigationTitle("Settings")
+            .confirmationDialog("Delete samples older than \(controller.settings.retentionDays) days?",
+                                isPresented: $showPurgeConfirmation, titleVisibility: .visible) {
+                Button("Delete now", role: .destructive) { Task { await purge() } }
+            } message: {
+                Text("This cannot be undone. Export first if you need the data.")
+            }
+        }
+    }
+
+    // MARK: Sections
+
+    private var permissionsSection: some View {
+        Section {
+            LabeledContent("Location") {
+                permissionValue(controller.status.locationAuthorization.title,
+                                ok: controller.status.locationAuthorization == .always)
+            }
+            LabeledContent("Precise location") {
+                permissionValue(controller.status.hasFullAccuracy ? "On" : "Off",
+                                ok: controller.status.hasFullAccuracy)
+            }
+            LabeledContent("Motion & Fitness") {
+                permissionValue(controller.status.motionAuthorization.title,
+                                ok: controller.status.motionAuthorization == .authorized)
+            }
+            if controller.status.locationAuthorization == .notDetermined
+                || controller.status.motionAuthorization == .notDetermined {
+                Button("Request permissions", systemImage: "hand.raised") {
+                    controller.requestPermissions()
+                }
+            }
+            Button("Open Settings", systemImage: "gear") {
+                if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+            }
+        } header: {
+            Text("Permissions")
+        } footer: {
+            Text("Background tracking requires location access set to “Always” with Precise Location on. Motion & Fitness lets the app switch GPS off while you are still.")
+        }
+    }
+
+    private var motionSection: some View {
+        Section {
+            Stepper(value: settings.stillnessTimeout, in: 30...900, step: 30) {
+                LabeledContent("Stillness before GPS off", value: Formatting.duration(controller.settings.stillnessTimeout))
+            }
+            Stepper(value: settings.probeTimeout, in: 15...180, step: 15) {
+                LabeledContent("Probe duration", value: Formatting.duration(controller.settings.probeTimeout))
+            }
+            Picker("Minimum activity confidence", selection: settings.minimumActivityConfidence) {
+                Text("Low").tag(ActivityConfidence.low)
+                Text("Medium").tag(ActivityConfidence.medium)
+                Text("High").tag(ActivityConfidence.high)
+            }
+            Toggle("Keep coarse updates while stationary", isOn: settings.keepCoarseUpdatesWhileStationary)
+        } header: {
+            Text("Motion detection")
+        } footer: {
+            Text("Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background.")
+        }
+    }
+
+    private var accuracySection: some View {
+        Section {
+            VStack(alignment: .leading) {
+                LabeledContent("Max horizontal accuracy", value: Formatting.accuracy(controller.settings.maxHorizontalAccuracy))
+                Slider(value: settings.maxHorizontalAccuracy, in: 10...200, step: 5) {
+                    Text("Max horizontal accuracy")
+                } minimumValueLabel: {
+                    Text("10 m").font(.caption2)
+                } maximumValueLabel: {
+                    Text("200 m").font(.caption2)
+                }
+            }
+            Stepper(value: settings.maxSampleAge, in: 5...120, step: 5) {
+                LabeledContent("Max sample age", value: Formatting.duration(controller.settings.maxSampleAge))
+            }
+            Stepper(value: settings.duplicateDistance, in: 0...20, step: 1) {
+                LabeledContent("Duplicate distance", value: Formatting.distance(controller.settings.duplicateDistance))
+            }
+        } header: {
+            Text("Sample filter")
+        } footer: {
+            Text("Fixes less accurate than the limit, older than the max age, or within the duplicate distance of the previous fix are discarded.")
+        }
+    }
+
+    private var profileSection: some View {
+        Section {
+            ProfileTable(settings: controller.settings)
+        } header: {
+            Text("GPS profiles")
+        } footer: {
+            Text("Distance filter per activity. Speed above \(Formatting.speed(GPSProfile.vehicleSpeedThreshold)) always selects the driving profile; unknown activity above \(Formatting.speed(GPSProfile.runningSpeedThreshold)) uses the running filter.")
+        }
+    }
+
+    /// Opt-in audit trail. Off by default: at debug verbosity it writes
+    /// several rows per accepted fix.
+    private var auditSection: some View {
+        Section {
+            Toggle("Record audit trail", isOn: settings.auditEnabled)
+
+            if controller.settings.auditEnabled {
+                Picker("Minimum severity", selection: settings.auditMinimumSeverity) {
+                    ForEach(AuditSeverity.allCases, id: \.rawValue) { severity in
+                        Text(severity.label).tag(severity)
+                    }
+                }
+                Toggle("Accepted fixes", isOn: settings.auditLogsAcceptedFixes)
+                Toggle("Rejected fixes", isOn: settings.auditLogsRejectedFixes)
+                Toggle("Validation tests", isOn: settings.auditLogsFilterChecks)
+                Toggle("Motion reports", isOn: settings.auditLogsMotionEvents)
+                Stepper(value: settings.auditRetentionDays, in: 0...90, step: 1) {
+                    LabeledContent("Keep trail for",
+                                   value: controller.settings.auditRetentionDays == 0
+                                       ? "Forever"
+                                       : "\(controller.settings.auditRetentionDays) days")
+                }
+            }
+
+            NavigationLink {
+                AuditLogView()
+            } label: {
+                Label("Open audit trail", systemImage: "doc.text.magnifyingglass")
+            }
+        } header: {
+            Text("Audit trail")
+        } footer: {
+            Text("Off by default. When on, the app records every location received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery.")
+        }
+    }
+
+    private var retentionSection: some View {
+        Section {
+            Stepper(value: settings.retentionDays, in: 0...365, step: 1) {
+                LabeledContent("Keep samples for",
+                               value: controller.settings.retentionDays == 0 ? "Forever" : "\(controller.settings.retentionDays) days")
+            }
+            Button(role: .destructive) {
+                showPurgeConfirmation = true
+            } label: {
+                HStack {
+                    Label("Delete old samples now", systemImage: "trash")
+                    if isPurging { Spacer(); ProgressView() }
+                }
+            }
+            .disabled(controller.settings.retentionDays == 0 || isPurging)
+            if let purgeResult {
+                Text(purgeResult)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
+            Text("Retention")
+        } footer: {
+            Text("Old samples are deleted automatically by a background maintenance task, or here on demand. Sessions are kept.")
+        }
+    }
+
+    private var aboutSection: some View {
+        Section("About") {
+            LabeledContent("Version", value: appVersion)
+            Button("Reset to defaults", role: .destructive) {
+                controller.settings = TrackingSettings()
+            }
+        }
+    }
+
+    // MARK: Helpers
+
+    private func permissionValue(_ text: String, ok: Bool) -> some View {
+        Label(text, systemImage: ok ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
+            .foregroundStyle(ok ? Color.green : Color.orange)
+            .labelStyle(.titleAndIcon)
+    }
+
+    private var appVersion: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "?"
+        let build = info?["CFBundleVersion"] as? String ?? "?"
+        return "\(version) (\(build))"
+    }
+
+    private func purge() async {
+        isPurging = true
+        defer { isPurging = false }
+        do {
+            let deleted = try await controller.purgeNow()
+            purgeResult = "Deleted \(Formatting.count(deleted)) samples."
+        } catch {
+            purgeResult = "Purge failed: \(error.localizedDescription)"
+        }
+    }
+}
+
+/// Pure preview of `GPSProfile.profile(for:speed:settings:)`.
+private struct ProfileTable: View {
+    let settings: TrackingSettings
+
+    private struct Row: Identifiable {
+        let id: String
+        let activity: ActivityKind
+        let title: String
+        let speed: Double?
+    }
+
+    private var rows: [Row] {
+        [
+            Row(id: "walking", activity: .walking, title: "Walking", speed: nil),
+            Row(id: "running", activity: .running, title: "Running", speed: nil),
+            Row(id: "cycling", activity: .cycling, title: "Cycling", speed: nil),
+            Row(id: "automotive", activity: .automotive, title: "Driving", speed: nil),
+            Row(id: "unknown", activity: .unknown, title: "Unknown, no speed", speed: nil),
+            Row(id: "unknown-fast", activity: .unknown, title: "Unknown, \(Formatting.speed(4))", speed: 4),
+            Row(id: "any-vehicle", activity: .walking, title: "Any, \(Formatting.speed(12))", speed: 12)
+        ]
+    }
+
+    var body: some View {
+        Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 8) {
+            GridRow {
+                Text("Activity").gridColumnAlignment(.leading)
+                Text("Accuracy")
+                Text("Filter").gridColumnAlignment(.trailing)
+            }
+            .font(.caption.weight(.semibold))
+            .foregroundStyle(.secondary)
+            Divider()
+            ForEach(rows) { row in
+                let profile = GPSProfile.profile(for: row.activity, speed: row.speed, settings: settings)
+                GridRow {
+                    Label(row.title, systemImage: row.activity.systemImage)
+                    Text(profile.desiredAccuracy.title)
+                        .foregroundStyle(.secondary)
+                    Text(Formatting.distance(profile.distanceFilter))
+                        .monospacedDigit()
+                }
+                .font(.subheadline)
+                .accessibilityElement(children: .combine)
+            }
+            Divider()
+            GridRow {
+                Label("Probing", systemImage: TrackingPhase.probing.systemImage)
+                Text(GPSProfile.probing.desiredAccuracy.title).foregroundStyle(.secondary)
+                Text(Formatting.distance(GPSProfile.probing.distanceFilter)).monospacedDigit()
+            }
+            .font(.subheadline)
+            GridRow {
+                Label("Stationary (coarse)", systemImage: TrackingPhase.stationary.systemImage)
+                Text(GPSProfile.stationaryCoarse.desiredAccuracy.title).foregroundStyle(.secondary)
+                Text(Formatting.distance(GPSProfile.stationaryCoarse.distanceFilter)).monospacedDigit()
+            }
+            .font(.subheadline)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+#Preview {
+    SettingsView()
+        .environment(\.trackingController, PreviewTrackingController())
+}
