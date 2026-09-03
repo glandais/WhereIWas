@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>WhereIWas GPS Logger — the GPS only runs while you move</title>
+  <meta name="description" content="An iPhone location logger built for long shifts: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
+  <link rel="canonical" href="https://glandais.github.io/WhereIWas/">
+  <link rel="icon" type="image/png" sizes="180x180" href="assets/appicon-180.png">
+  <link rel="apple-touch-icon" href="assets/appicon-180.png">
+  <meta name="theme-color" content="#EDEFF6">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WhereIWas GPS Logger">
+  <meta property="og:description" content="An iPhone location logger built for long shifts: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
+  <meta property="og:url" content="https://glandais.github.io/WhereIWas/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <a class="wordmark" href="./"><b>WhereIWas</b> <span>GPS Logger</span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="./" aria-current="page">Overview</a>
+        <a href="support/">Support</a>
+        <a href="privacy/">Privacy</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero container">
+      <img class="hero__icon" src="assets/appicon-512.png" width="112" height="112"
+           alt="WhereIWas app icon: a location pin with a fading trail of points behind it.">
+      <h1>The GPS only runs while you move.</h1>
+      <p>
+        WhereIWas keeps a complete record of where you have been through a
+        twelve-hour shift, a multi-day deployment or a long drive — and gives
+        you back the battery that a permanently-on tracker would have spent.
+      </p>
+    </section>
+
+    <section class="container">
+      <div class="shift">
+        <div class="shift__head">
+          <h2 class="shift__title">A twelve-hour shift</h2>
+          <p class="shift__stat">receiver on <b>5 h 40</b> of 12 h</p>
+        </div>
+      <svg class="shift__chart" viewBox="0 0 720 152" role="img" aria-labelledby="shift-title shift-desc" preserveAspectRatio="xMidYMid meet">
+        <title id="shift-title">GPS activity over a twelve-hour shift</title>
+        <desc id="shift-desc">Across a twelve-hour shift the GPS receiver is on for five hours and forty minutes, in five stretches that line up with the periods of detected movement. It is off for the remaining six hours and twenty minutes.</desc>
+        <rect x="0" y="22" width="720" height="30" fill="var(--paper-sink)"/>
+        <rect x="18" y="22" width="54" height="30" fill="var(--accent)"/>
+        <rect x="158" y="22" width="64" height="30" fill="var(--accent)"/>
+        <rect x="328" y="22" width="44" height="30" fill="var(--accent)"/>
+        <rect x="418" y="22" width="134" height="30" fill="var(--accent)"/>
+        <rect x="638" y="22" width="44" height="30" fill="var(--accent)"/>
+        <rect x="0" y="22" width="720" height="30" fill="none" stroke="var(--rule-strong)" stroke-width="1"/>
+        <rect x="0" y="82" width="720" height="14" fill="var(--paper-sink)"/>
+        <rect x="20" y="82" width="50" height="14" fill="var(--ink-mid)"/>
+        <rect x="160" y="82" width="60" height="14" fill="var(--ink-mid)"/>
+        <rect x="330" y="82" width="40" height="14" fill="var(--ink-mid)"/>
+        <rect x="420" y="82" width="130" height="14" fill="var(--ink-mid)"/>
+        <rect x="640" y="82" width="40" height="14" fill="var(--ink-mid)"/>
+        <line x1="0" y1="112" x2="0" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="0" y="136" text-anchor="start" class="shift__tick">06:00</text>
+        <line x1="60" y1="112" x2="60" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="120" y1="112" x2="120" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="120" y="136" text-anchor="middle" class="shift__tick">08:00</text>
+        <line x1="180" y1="112" x2="180" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="240" y1="112" x2="240" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="240" y="136" text-anchor="middle" class="shift__tick">10:00</text>
+        <line x1="300" y1="112" x2="300" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="360" y1="112" x2="360" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="360" y="136" text-anchor="middle" class="shift__tick">12:00</text>
+        <line x1="420" y1="112" x2="420" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="480" y1="112" x2="480" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="480" y="136" text-anchor="middle" class="shift__tick">14:00</text>
+        <line x1="540" y1="112" x2="540" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="600" y1="112" x2="600" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <text x="600" y="136" text-anchor="middle" class="shift__tick">16:00</text>
+        <line x1="660" y1="112" x2="660" y2="117" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="719.5" y1="112" x2="719.5" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+        <line x1="0" y1="112" x2="720" y2="112" stroke="var(--rule-strong)" stroke-width="1"/>
+      <text x="720" y="136" text-anchor="end" class="shift__tick">18:00</text>
+        <text x="0" y="14" class="shift__band">GPS receiver</text>
+        <text x="0" y="74" class="shift__band">Detected movement</text>
+      </svg>
+        <div class="shift__legend">
+          <span><i class="swatch swatch--gps"></i> GPS on</span>
+          <span><i class="swatch swatch--idle"></i> GPS off</span>
+          <span><i class="swatch swatch--move"></i> movement detected by the motion coprocessor</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">How it decides</h2>
+        <div class="sheet__body">
+          <h2>Movement wakes it. Stillness is proved before it sleeps.</h2>
+          <p>
+            The motion coprocessor runs whether or not an app asks it to, so
+            reading it is close to free. WhereIWas listens to it, to significant
+            location changes and to visits — then turns the receiver on only
+            once there is real evidence you are moving.
+          </p>
+          <ol class="states">
+            <li>
+              <b class="states__name">Stationary</b>
+              <span class="states__note">Receiver off. Still listening to activity, pedometer, significant changes and visits.</span>
+            </li>
+            <li>
+              <b class="states__name">Probing</b>
+              <span class="states__note">A hint arrived. Full accuracy for up to 45 seconds, long enough for one real fix to settle the question.</span>
+            </li>
+            <li>
+              <b class="states__name">Moving</b>
+              <span class="states__note">Confirmed. Accuracy and distance filter follow your speed, and change again when your speed does.</span>
+            </li>
+            <li>
+              <b class="states__name">Back to stationary</b>
+              <span class="states__note">Only after two minutes without movement. A red light does not end your track.</span>
+            </li>
+          </ol>
+          <p>
+            Going toward movement is immediate; going back to rest is slow and
+            has to be earned. That asymmetry is why the trace has no holes at
+            the start of a trip.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Accuracy</h2>
+        <div class="sheet__body">
+          <h2>A car does not need a ten-metre filter.</h2>
+          <p>
+            Each detected activity gets a receiver profile of its own. Speed
+            overrides the label when the two disagree, so a mislabelled drive
+            still records like a drive.
+          </p>
+          <div class="scroll-x">
+            <table class="spec">
+            <caption>Receiver profile by detected activity</caption>
+            <thead>
+              <tr><th scope="col">Activity</th><th scope="col">Accuracy</th><th scope="col">Distance filter</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Walking</th><td>Best</td><td class="num">10 m</td></tr>
+              <tr><th scope="row">Running, cycling</th><td>Best</td><td class="num">20 m</td></tr>
+              <tr><th scope="row">Driving</th><td>Navigation</td><td class="num">50 m</td></tr>
+              <tr><th scope="row">Above 7 m/s</th><td>Navigation</td><td class="num">50 m</td></tr>
+              <tr><th scope="row">Probing</th><td>Best</td><td class="num">0 m</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p>
+            Before anything is written, every fix is checked: accuracy worse
+            than 50 m, timestamps in the future, readings older than 30 seconds,
+            points out of order and exact duplicates are all dropped. Cached
+            fixes that iOS replays when the receiver restarts are dropped with
+            them.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">The record</h2>
+        <div class="sheet__body">
+          <h2>Every point carries its own context.</h2>
+          <p>
+            A coordinate on its own cannot be argued with or trusted. Each
+            stored point keeps latitude, longitude and altitude, horizontal and
+            vertical accuracy, speed and its accuracy, course, timestamp, the
+            detected activity and how confident that detection was, the phase
+            the app was in, the battery level and state, the session, and the
+            receiver profile in force.
+          </p>
+          <h3>Audit trail</h3>
+          <p>
+            Turn it on and the app also records <em>why</em>. Every fix
+            received, every check run — with the value measured and the
+            threshold it was measured against — every state change, every time
+            the receiver was stopped. When you need to explain a gap between
+            14:02 and 14:20, the explanation is already written down.
+          </p>
+          <div class="note">
+            <p>
+              The audit trail is off by default and costs nothing while off.
+              It turns over far faster than the track itself, so it keeps its
+              own retention — seven days by default.
+            </p>
+          </div>
+          <h3>Export</h3>
+          <p>
+            GPX 1.1 for any mapping tool, with speed, course, accuracy,
+            activity and battery carried in extensions. Or JSON with the whole
+            record, ISO-8601 throughout. Both go out through the standard share
+            sheet.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Limits</h2>
+        <div class="sheet__body">
+          <h2>What it cannot do.</h2>
+          <p>
+            These are iOS limits, not bugs, and no app can work around them. If
+            a tracker claims otherwise, it is wrong about one of these.
+          </p>
+          <ul class="limits">
+            <li>
+              <b>Between a reboot and the first unlock, nothing is recorded.</b>
+              File protection keeps the app from running until you unlock the
+              device once. After that, recording resumes on the first movement.
+            </li>
+            <li>
+              <b>Force-quitting stops everything.</b> Swipe the app out of the
+              app switcher and iOS delivers it no more background events until
+              you open it again.
+            </li>
+            <li>
+              <b>Coming out of a long stop can cost the first few hundred metres.</b>
+              If iOS terminated the app while you were still, it wakes on a
+              significant location change — roughly 500 m of movement.
+            </li>
+            <li>
+              <b>Always location permission is required.</b> With
+              While-Using, recording stops the moment the app is suspended.
+            </li>
+            <li>
+              <b>Without motion permission the battery suffers.</b> Tracking
+              still works, but the app has to lean on GPS to detect movement
+              that the coprocessor would have reported for free.
+            </li>
+            <li>
+              <b>Low Power Mode can postpone maintenance.</b> The background
+              purge may not run; it also runs at launch and on demand.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Privacy</h2>
+        <div class="sheet__body">
+          <h2>Nothing is uploaded.</h2>
+          <p>
+            There is no account, no server and no analytics. The app has no
+            networking code and no third-party dependencies at all. Your track
+            is a database file on your iPhone, and the only way it goes
+            anywhere is if you export it yourself.
+          </p>
+          <p><a href="privacy/">Read the privacy policy</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>WhereIWas GPS Logger — an app by Gabriel Landais. Requires iOS 17 or later.</span>
+      <nav aria-label="Footer">
+        <a href="./">Overview</a>
+        <a href="support/">Support</a>
+        <a href="privacy/">Privacy</a>
+        <a href="https://github.com/glandais/WhereIWas">Source</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

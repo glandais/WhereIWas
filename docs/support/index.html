@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Support — WhereIWas GPS Logger</title>
+  <meta name="description" content="Setting up WhereIWas, the permissions it needs and why, and how to diagnose a gap in a track using the audit trail.">
+  <link rel="canonical" href="https://glandais.github.io/WhereIWas/support/">
+  <link rel="icon" type="image/png" sizes="180x180" href="../assets/appicon-180.png">
+  <link rel="apple-touch-icon" href="../assets/appicon-180.png">
+  <meta name="theme-color" content="#EDEFF6">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Support — WhereIWas GPS Logger">
+  <meta property="og:description" content="Setting up WhereIWas, the permissions it needs and why, and how to diagnose a gap in a track using the audit trail.">
+  <meta property="og:url" content="https://glandais.github.io/WhereIWas/support/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <a class="wordmark" href="../"><b>WhereIWas</b> <span>GPS Logger</span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="../">Overview</a>
+        <a href="../support/" aria-current="page">Support</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="doc-head container">
+      <p class="doc-meta">Support — WhereIWas GPS Logger — iOS 17 or later</p>
+      <h1>Support</h1>
+      <p>
+        WhereIWas is made by one person. The fastest route to a fix is the
+        issue tracker; everything else worth knowing is below.
+      </p>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Getting started</h2>
+        <div class="sheet__body">
+          <h2>Three permissions, then leave it alone.</h2>
+          <p>
+            The app is designed to be set up once and then forgotten. It has no
+            start button you need to remember to press before a shift.
+          </p>
+          <ol>
+            <li>
+              <b>Allow location, then choose Always.</b> iOS asks for
+              While-Using first and offers Always a little later — accept it
+              when it appears, or set it in Settings. Background recording is
+              impossible without it.
+            </li>
+            <li>
+              <b>Keep Precise Location on.</b> With it off, iOS gives the app
+              positions accurate to a kilometre or so. The app still records
+              and flags it on the status screen, but the track is no longer
+              useful.
+            </li>
+            <li>
+              <b>Allow Motion &amp; Fitness.</b> This is what saves the
+              battery: it is how the app knows you are moving without asking
+              the GPS.
+            </li>
+            <li>
+              <b>Turn tracking on.</b> It stays on across relaunches, reboots
+              and terminations until you turn it off.
+            </li>
+          </ol>
+          <div class="note">
+            <p>
+              While the receiver is running you will see the blue indicator in
+              the status bar. That is deliberate — an app recording your
+              position in the background should say so.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Troubleshooting</h2>
+        <div class="sheet__body">
+          <h3>There is a gap in my track</h3>
+          <p>
+            Turn on the audit trail in Settings and repeat the conditions. Every
+            gap has an entry explaining it: a fix rejected with the check that
+            failed and the value that failed it, a decision to stop the
+            receiver, or a permission change. If the gap starts with a reboot
+            or with the app being swiped away, see the limits on the
+            <a href="../">overview</a> — those are iOS behaviours no app can
+            avoid.
+          </p>
+
+          <h3>Nothing was recorded after I restarted my iPhone</h3>
+          <p>
+            Expected until you unlock the device once. iOS keeps app data
+            encrypted until first unlock, so nothing can run before then.
+            Recording resumes on your first movement afterwards.
+          </p>
+
+          <h3>The battery drain is higher than I expected</h3>
+          <p>
+            Check Motion &amp; Fitness permission first — without it the app
+            has to use GPS to detect movement, which is the expensive way to do
+            it. Then check whether coarse updates while stationary are on: they
+            make iOS far less likely to terminate the app, at a small constant
+            cost. A shift with roughly five hours of movement should land near
+            40–50 % of a full charge.
+          </p>
+
+          <h3>Tracking stopped and did not come back</h3>
+          <p>
+            If the app was force-quit from the app switcher, iOS stops sending
+            it background events entirely. Open the app once and recording
+            resumes on its own.
+          </p>
+
+          <h3>My exported file will not open</h3>
+          <p>
+            GPX exports are plain GPX 1.1 with extra data in an extension
+            namespace; tools that do not understand the extensions ignore them
+            and read the track normally. If a file fails to open anywhere, send
+            it with a bug report.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Contact</h2>
+        <div class="sheet__body">
+          <h2>Reporting something.</h2>
+          <p>
+            For a bug, include what you expected, what happened, your iOS
+            version and iPhone model. If it concerns a gap or a wrong position,
+            an audit-trail export covering the period is worth more than any
+            description.
+          </p>
+          <dl class="contact">
+            <dt>Issue tracker</dt>
+            <dd><a href="https://github.com/glandais/WhereIWas/issues">github.com/glandais/WhereIWas/issues</a></dd>
+            <dt>Email</dt>
+            <dd><a href="mailto:gabriel.landais@gmail.com">gabriel.landais@gmail.com</a></dd>
+            <dt>Source code</dt>
+            <dd><a href="https://github.com/glandais/WhereIWas">github.com/glandais/WhereIWas</a></dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>WhereIWas GPS Logger — an app by Gabriel Landais. Requires iOS 17 or later.</span>
+      <nav aria-label="Footer">
+        <a href="../">Overview</a>
+        <a href="../support/">Support</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="https://github.com/glandais/WhereIWas">Source</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
