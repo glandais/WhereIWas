@@ -58,12 +58,16 @@ Notes:
   up automatically** on regenerate — no manual project edits. `.DS_Store` is excluded.
 - `WhereIWasTests` is a hosted unit-test target (`TEST_HOST` on the app), so it sees the
   whole app module.
-- The app keeps a real `WhereIWas/Info.plist` on disk (unlike DepthWeaver, which generates
-  one): the background modes, the three usage descriptions and
-  `BGTaskSchedulerPermittedIdentifiers` live there. Keep the BGTask identifier in
-  `Info.plist` and `MaintenanceScheduler.taskIdentifier` in sync, or the task never runs.
+- `WhereIWas/Info.plist` exists on disk but is **generated** by XcodeGen from the
+  `info.properties` block in `project.yml` and is overwritten on every `xcodegen generate`
+  — never edit it by hand, edit `project.yml`. The background modes, the three usage
+  descriptions and `BGTaskSchedulerPermittedIdentifiers` all live in that block. Keep the
+  BGTask identifier in `project.yml` and `MaintenanceScheduler.taskIdentifier` in sync, or
+  the task never runs.
 - `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` are set in `project.yml` and are the
-  single place to bump a version.
+  single place to bump a version. `info.properties` maps `CFBundleShortVersionString` and
+  `CFBundleVersion` onto them with `$(...)`; without those two entries XcodeGen writes its
+  own defaults (`1.0` / `1`) and the build number silently ignores `project.yml`.
 
 ## Release
 
