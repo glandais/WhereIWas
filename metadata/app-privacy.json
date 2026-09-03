@@ -1,0 +1,20 @@
+{
+  "_comment": [
+    "App Store privacy nutrition labels for io.github.glandais.whereiwas.",
+    "An empty dataUsages array declares DATA_NOT_COLLECTED for every category.",
+    "",
+    "Rationale: Apple defines collection as transmitting data off the device and",
+    "retaining it beyond what is needed to service the request in real time. The app",
+    "reads precise location, motion activity and battery state, filters them and",
+    "writes them to a local SwiftData database. Nothing is transmitted: there is no",
+    "networking code, no account, no analytics and no third-party SDK in the target.",
+    "Exports are initiated by the user, to a destination the user chooses, which is a",
+    "user action rather than collection by the developer. Apple Maps tiles on the map",
+    "screen are drawn by MapKit, a system framework, and are not developer collection.",
+    "",
+    "Revisit this file the moment an upload layer, analytics or any SDK is added.",
+    "Apply with: asc web privacy plan|apply|publish --app 6808349924 --file metadata/app-privacy.json"
+  ],
+  "schemaVersion": 1,
+  "dataUsages": []
+}

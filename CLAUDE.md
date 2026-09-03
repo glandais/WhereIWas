@@ -106,12 +106,22 @@ Archive and export for the App Store with `ExportOptions.plist`
 
 `.asc/` holds local `asc` state (review plans, failure reports) and is gitignored.
 
+### Privacy manifest
+
+`WhereIWas/Resources/PrivacyInfo.xcprivacy` declares no tracking, no collected data,
+and the one required-reason API the app touches: `UserDefaults` (`CA92.1`, app's own
+data). Without it Apple returns ITMS-91053 on every upload. Re-check it whenever a
+dependency is added — there are none today — or when a new required-reason API is
+used. `fileSizeKey` in `ExportView` is not one of them.
+
 ### Still to do before a first submission
 
 - Two of the five screenshots are placeholders (map and status) — see
   `screenshots/STATUS.md` for what each one is waiting for
-- App Privacy nutrition labels: the app collects precise location, stored **on device
-  only**, never linked to an identity and never uploaded
+- Publish the App Privacy nutrition labels. The declaration is written and versioned
+  at `metadata/app-privacy.json` (empty `dataUsages` = Data Not Collected, with the
+  reasoning inline); it still has to be applied and published, which needs a web
+  session: `asc web privacy plan|apply|publish --app 6808349924 --file metadata/app-privacy.json`
 - Category, age rating and territory availability are unset
 
 Done: app icon; both locales of `metadata/` applied and verified against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
