@@ -12,7 +12,7 @@ WhereIWas.xcodeproj/
 .DS_Store
 
 # Tooling
-.claude
+.claude/settings.local.json
 .asc
 
 # Screenshot pipeline (scripts/screenshots.sh)

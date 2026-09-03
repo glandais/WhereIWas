@@ -15,8 +15,12 @@ The app is iPhone-only (`TARGETED_DEVICE_FAMILY: "1"` in `project.yml`), so
 |---|---|
 | `IPHONE_65` | 1242×2688, 1284×2778 |
 
-A capture from any Pro Max since the iPhone 15 comes out at 1290×2796 and has to be
-resized to 1284×2778 before upload.
+A Pro Max capture is always larger than the accepted sizes and has to be resized
+to 1284×2778 before upload — 1290×2796 on an iPhone 15 to 16 Pro Max, 1320×2868 on
+the iPhone 17 Pro Max that `scripts/sim-config.sh` pins. The aspect ratio differs
+from 1284×2778 by well under a percent, so the downscale is invisible;
+`scripts/screenshots.sh` refuses a capture more than 2% off, which is what a
+non-iPhone would produce.
 
 Landscape variants of the same sizes are accepted too.
 

@@ -16,9 +16,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+source scripts/sim-config.sh
+
 BUNDLE_ID="io.github.glandais.whereiwas"
-DEVICE_NAME="${SCREENSHOT_DEVICE:-iPhone 17 Pro Max}"
-DERIVED="${SCREENSHOT_DERIVED_DATA:-.build/DerivedData}"
 RAW_DIR="screenshots/raw"
 OUT_ROOT="screenshots/IPHONE_65"
 # An accepted IPHONE_65 portrait size (`asc screenshots sizes`); every current
@@ -49,22 +49,19 @@ if [ "$(date +%H%M)" -lt 0140 ]; then
   echo "   Run again later in the day for shots worth uploading." >&2
 fi
 
-UDID=$(xcrun simctl list devices available -j \
-  | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print(next(v['udid'] for r in d for v in d[r] if v['name']=='${DEVICE_NAME}'))")
-echo "▸ simulator ${DEVICE_NAME} (${UDID})"
-
-xcrun simctl boot "$UDID" 2>/dev/null || true
-xcrun simctl bootstatus "$UDID" -b >/dev/null
+UDID=$(sim_udid)
+echo "▸ simulator ${SIM_DEVICE} (${UDID})"
+sim_boot "$UDID"
 
 echo "▸ building (Screenshots configuration)"
 xcodebuild -project WhereIWas.xcodeproj \
   -scheme WhereIWas-Screenshots \
   -configuration Screenshots \
-  -destination "platform=iOS Simulator,id=${UDID}" \
-  -derivedDataPath "$DERIVED" \
+  -destination "$(sim_dest "$UDID")" \
+  -derivedDataPath "$DERIVED_DATA" \
   build >/dev/null
 
-APP="${DERIVED}/Build/Products/Screenshots-iphonesimulator/WhereIWas.app"
+APP="${DERIVED_DATA}/Build/Products/Screenshots-iphonesimulator/WhereIWas.app"
 xcrun simctl install "$UDID" "$APP"
 
 # A clean status bar: full battery, full signal, and the host's current time
@@ -108,9 +105,19 @@ import sys, pathlib
 from PIL import Image
 
 raw, out, width, height = sys.argv[1], sys.argv[2], int(sys.argv[3]), int(sys.argv[4])
+# The captures are downscaled, not cropped. Every recent iPhone is close
+# enough to the IPHONE_65 aspect ratio for that to be invisible (the 17 Pro Max
+# captures 1320x2868, 0.4% off), but an iPad at 3:4 would be squashed flat, so
+# refuse anything that is not within a couple of percent.
+TOLERANCE = 0.02
 for locale in sys.argv[5:]:
     for src in sorted(pathlib.Path(raw, locale).glob("*.png")):
         im = Image.open(src)
+        skew = abs((im.width / im.height) / (width / height) - 1)
+        if skew > TOLERANCE:
+            sys.exit(f"{src} is {im.width}x{im.height}, {skew:.0%} off the "
+                     f"{width}x{height} aspect ratio: WHEREIWAS_SIM_DEVICE must "
+                     f"be an iPhone, and IPHONE_65 wants a Pro Max.")
         if "A" in im.getbands():
             # App Store Connect answers IMAGE_ALPHA_NOT_ALLOWED otherwise, and
             # `asc screenshots validate` does not catch it. Black, since the

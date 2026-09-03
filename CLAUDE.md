@@ -38,8 +38,48 @@ Open `WhereIWas.xcodeproj` in Xcode and build the `WhereIWas` scheme (it also ru
 the simulator — see `ARCHITECTURE.md` §7 for the device test plan.
 
 ```bash
-xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
-  -destination 'generic/platform=iOS Simulator' build
+./scripts/xcb.sh build      # or: test, strings — see below
+```
+
+### Simulator
+
+This machine cannot afford several booted simulators, so the project uses
+**one**: `iPhone 17 Pro Max`, declared once in `scripts/sim-config.sh` and
+nowhere else. It is not an arbitrary pick — `scripts/screenshots.sh` downscales
+to 1284×2778, the IPHONE_65 size a Pro Max capture maps onto, so any other
+device would mean keeping a second simulator around for the App Store shots.
+
+`./scripts/xcb.sh` is the only way to run `xcodebuild` against a simulator. It
+pins `-destination` to that device (by UDID) and `-derivedDataPath` to
+`.build/DerivedData`:
+
+```bash
+./scripts/xcb.sh build              # WhereIWas scheme, Debug
+./scripts/xcb.sh test               # + WhereIWasTests
+./scripts/xcb.sh strings            # build, then sync the string catalog
+./scripts/xcb.sh -- <args...>       # raw xcodebuild, destination still pinned
+```
+
+Never write a `-destination` by hand, and never use
+`generic/platform=iOS Simulator`: it builds without booting anything, but it
+also fixes nothing, so the next command that *does* need a device picks one on
+its own. `scripts/guard-simulator.py` (a `PreToolUse` hook wired from
+`.claude/settings.json`) refuses any Bash command that would drive another
+simulator. It lets through `-showBuildSettings`, `-showdestinations`, `-list`,
+`archive` and real-device destinations (`generic/platform=iOS`), none of which
+boot a simulator.
+
+`WHEREIWAS_SIM_DEVICE` overrides the device (and `WHEREIWAS_DERIVED_DATA` the
+build directory) for the scripts. The hook reads the same `sim-config.sh`, but
+from its own process, so it only sees the variable when it is exported in the
+session environment — not when it is prefixed onto a single command.
+
+To see what is running, and to reclaim memory:
+
+```bash
+xcrun simctl list devices available            # only one should say (Booted)
+du -sh ~/Library/Developer/CoreSimulator/Devices/*/ | sort -h
+xcrun simctl shutdown all                      # harmless, frees the RAM
 ```
 
 ### Screenshot configuration
@@ -127,30 +167,37 @@ The app ships in **English (source) and French**. Two string catalogs under
   the decimal separator never collides with the field separator.
 
 `xcodebuild` compiles the catalogs but never writes new keys back into them.
-After adding strings, extract them by hand:
+After adding strings, extract them:
 
 ```bash
-xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
-  -destination 'generic/platform=iOS Simulator' build
-DD=$(find ~/Library/Developer/Xcode/DerivedData/WhereIWas-*/Build/Intermediates.noindex/\
-WhereIWas.build/Debug-iphonesimulator/WhereIWas.build/Objects-normal -name '*.stringsdata' | head -1 | xargs dirname)
-xcrun xcstringstool sync WhereIWas/Resources/Localizable.xcstrings --stringsdata $DD/*.stringsdata
+./scripts/xcb.sh strings
 ```
 
 then fill the `fr` unit of every new key (and the `en` unit too, for keys
 whose name is not the English text, such as `auth.*` and `reason.*`) (`extractionState: stale` entries are
 dead keys — delete them). Check the result in the simulator with
-`xcrun simctl launch booted io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR`.
 
-Two traps in that `sync`:
+```bash
+xcrun simctl launch "$(source scripts/sim-config.sh && sim_udid)" \
+  io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR
+```
+
+(`booted` would hit whichever simulator happens to be up, which is the habit
+the `Simulator` section above exists to break.)
+
+`xcb.sh strings` exists because of two traps in that `sync`, both of which it
+handles for you:
 
 - **Run it on the catalog in place**, never on a copy outside the repo. Given a
   copy, `xcstringstool` resolves no source and marks **every** key `stale` —
   following the "stale means dead, delete it" rule then empties the catalog.
-- `head -1` picks one architecture slice. That is enough to find new keys, but
-  keys defined only in files the other slice compiled lose their
-  `extractionState`, which shows up as a large no-op diff. Pass every slice
-  (`$DD/../*/*.stringsdata`) to avoid the churn.
+- **Pass every `.stringsdata` file**, not the first one a `find … | head -1`
+  happens to return. Keys defined only in files that slice did not compile lose
+  their `extractionState`, which shows up as a large no-op diff. The script
+  globs `Objects-normal/*/*.stringsdata`, so the whole build is covered.
+
+It also reads the repo-local `.build/DerivedData`, so there is no
+`find ~/Library/Developer/Xcode/DerivedData/WhereIWas-*` left to get wrong.
 
 To audit the catalog without trusting the tool, diff the keys directly — the
 `.stringsdata` files are plain JSON with a `tables.Localizable[].key` array, so

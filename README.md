@@ -29,9 +29,12 @@ background relaunch contract. `CLAUDE.md` covers build and release workflow.
 
 ```bash
 xcodegen generate
-xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
-  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' test
+./scripts/xcb.sh test
 ```
+
+`scripts/xcb.sh` wraps `xcodebuild` and pins it to the single simulator the
+project uses (`scripts/sim-config.sh`), so a build never boots a device of its
+own choosing. See the `Simulator` section of `CLAUDE.md`.
 
 `WhereIWas.xcodeproj` is generated and not committed. Background behaviour
 (relaunch after termination, reboot, visits, motion activity) can only be
