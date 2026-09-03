@@ -14,3 +14,7 @@ WhereIWas.xcodeproj/
 # Tooling
 .claude
 .asc
+
+# Screenshot pipeline (scripts/screenshots.sh)
+.build/
+screenshots/raw/

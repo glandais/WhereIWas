@@ -118,7 +118,13 @@ struct ExportView: View {
                 }
             }
             .navigationTitle("Export")
-            .task { await loadSessions() }
+            .task {
+                await loadSessions()
+                #if SCREENSHOTS
+                // Show a prepared file rather than an inert button.
+                if ScreenshotMode.isActive { await export() }
+                #endif
+            }
             .refreshable { await loadSessions() }
         }
     }

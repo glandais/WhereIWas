@@ -12,12 +12,21 @@ import UIKit
 final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        #if SCREENSHOTS
+        // Screenshot mode runs on DemoTrackingController alone: skipping
+        // bootstrap keeps CLLocationManager, the permission prompts, the
+        // BGTask registration and the on-disk SwiftData store out of the way.
+        if ScreenshotMode.isActive { return true }
+        #endif
         let launchedForLocation = launchOptions?[.location] != nil
         AppEnvironment.shared.bootstrap(launchedForLocation: launchedForLocation)
         return true
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        #if SCREENSHOTS
+        if ScreenshotMode.isActive { return }
+        #endif
         AppEnvironment.shared.didEnterBackground()
     }
 }

@@ -23,6 +23,48 @@ Landscape variants of the same sizes are accepted too.
 `STATUS.md` tracks which screenshots are final and which are placeholders waiting
 to be retaken. Keep it current when you replace one.
 
+## Automated capture
+
+`./scripts/screenshots.sh` produces the whole set — five screens × two locales
+— from mocked data, and leaves the files here ready to upload. Uploading stays
+manual.
+
+```bash
+./scripts/screenshots.sh              # en-US and fr-FR
+./scripts/screenshots.sh fr-FR        # one locale
+SCREENSHOT_DEVICE="iPhone 17 Pro" ./scripts/screenshots.sh
+SCREENSHOT_TIME="9:41" ./scripts/screenshots.sh    # pin the status-bar clock
+```
+
+How it works:
+
+- The app is built in the **`Screenshots`** configuration (see `project.yml`),
+  which defines the `SCREENSHOTS` compilation condition. Everything the mode
+  needs — `ScreenshotMode`, `DemoTrackingController`, the launch-argument hooks
+  in the UI — lives under `#if SCREENSHOTS` and is absent from the archived
+  Release binary. Check with:
+  `xcodebuild -target WhereIWas -configuration Release -showBuildSettings | grep SWIFT_ACTIVE`
+- Each screenshot is one launch:
+  `simctl launch … -screenshotMode YES -screenshotScreen map -AppleLanguages "(fr)" -AppleLocale fr_FR`.
+  `-screenshotScreen` takes `status`, `map`, `export`, `settings` or `audit`
+  (the audit trail opens itself from Settings). No taps, so nothing depends on
+  a tab label that differs between locales.
+- With `screenshotMode` on, `AppDelegate` skips `AppEnvironment.bootstrap`:
+  no `CLLocationManager`, no permission prompts, no BGTask, no on-disk store.
+  The UI runs entirely on `DemoTrackingController`.
+- Captures come out at the simulator's native size and are scaled to
+  1284×2778 and flattened (see below) into `IPHONE_65/<locale>/`. The raw
+  files stay in `screenshots/raw/` (gitignored).
+
+**Run it during the day.** The demo dataset spans about 92 minutes ending
+"now", and the Map screen shows one day at a time, so before ~01:40 the track
+is squeezed into the few minutes elapsed since midnight and session durations
+read wrong. The script warns when that happens.
+
+To change what the shots show — the track, the phase, the audit events, the
+session list — edit `WhereIWas/App/DemoTrackingController.swift`; it is the
+single source of the mocked data.
+
 ## No alpha channel
 
 App Store Connect rejects any screenshot carrying an alpha channel

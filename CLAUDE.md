@@ -42,6 +42,23 @@ xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
   -destination 'generic/platform=iOS Simulator' build
 ```
 
+### Screenshot configuration
+
+Besides `Debug` and `Release`, `project.yml` declares a **`Screenshots`**
+configuration (a Debug clone plus the `SCREENSHOTS` compilation condition) and
+a `WhereIWas-Screenshots` scheme. Everything the App Store capture mode needs —
+`App/ScreenshotMode.swift`, `App/DemoTrackingController.swift` and a handful of
+short `#if SCREENSHOTS` blocks in `AppDelegate`, `WhereIWasApp`, `SettingsView`,
+`MapView` and `ExportView` — is compiled only there, so none of it reaches the
+archived binary. Verify with:
+
+```bash
+xcodebuild -project WhereIWas.xcodeproj -target WhereIWas -configuration Release \
+  -showBuildSettings | grep SWIFT_ACTIVE_COMPILATION_CONDITIONS   # must be empty
+```
+
+`./scripts/screenshots.sh` drives it — see `screenshots/README.md`.
+
 ### Project generation (XcodeGen)
 
 `WhereIWas.xcodeproj` is **generated** from `project.yml` via
@@ -168,9 +185,14 @@ asc metadata apply    --app 6808349924 --version "1.0.0" --dir "./metadata" \
                       --review-dir ".asc/metadata/review" --confirm
 ```
 
-Screenshots live under `./screenshots/<DISPLAY_TYPE>/<locale>/` — see
-`screenshots/README.md` for the workflow and `screenshots/STATUS.md` for which
-shots are final and which are placeholders. The app is iPhone-only (`TARGETED_DEVICE_FAMILY` is `"1"`), so
+Screenshots live under `./screenshots/<DISPLAY_TYPE>/<locale>/` and are
+**generated**: `./scripts/screenshots.sh` builds the `Screenshots`
+configuration and captures all five screens in `en-US` and `fr-FR` from mocked
+data, no device and no manual navigation. Run it during the day (the demo track
+spans 92 minutes ending "now"; just after midnight it gets compressed). Edit
+`WhereIWas/App/DemoTrackingController.swift` to change what the shots show. See
+`screenshots/README.md` for the workflow and `screenshots/STATUS.md` for the
+current state. Uploading stays manual. The app is iPhone-only (`TARGETED_DEVICE_FAMILY` is `"1"`), so
 `IPHONE_65` is the only required display type.
 
 Archive and export for the App Store with `ExportOptions.plist`
@@ -190,9 +212,9 @@ used. `fileSizeKey` in `ExportView` is not one of them.
 
 - **Attach a build.** The only blocking check left: archive, upload to TestFlight and
   select the build on version 1.0.0. `asc validate` reports 1 error, 1 warning, 1 info.
-- Two of the five screenshots are placeholders (map and status) — see
-  `screenshots/STATUS.md` for what each one is waiting for
-- `fr-FR` has no screenshots; ASC does not inherit them from the primary locale
+- Re-upload the screenshots: all ten (five screens × `en-US`/`fr-FR`) are now
+  generated locally and no longer match what the store serves. ASC does not
+  inherit screenshots from the primary locale, so `fr-FR` needs its own upload.
 - App Store Regulations and Permits: checked by hand (asc reports it NOT_CHECKED, it is
   website-only). Vietnam gaming licence and regulated medical devices do not apply.
   Encryption is already declared through `ITSAppUsesNonExemptEncryption: false`. DSA

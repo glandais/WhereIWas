@@ -5,7 +5,11 @@ struct RootView: View {
     enum Tab: Hashable { case status, map, export, settings }
 
     @Environment(\.trackingController) private var controller
-    @State private var selection: Tab = .status
+    @State private var selection: Tab
+
+    init(initialTab: Tab = .status) {
+        _selection = State(initialValue: initialTab)
+    }
 
     var body: some View {
         TabView(selection: $selection) {
@@ -38,3 +42,18 @@ struct RootView: View {
     RootView()
         .environment(\.trackingController, PreviewTrackingController(phase: .stationary, warnings: true))
 }
+
+#if SCREENSHOTS
+extension RootView.Tab {
+    /// The audit trail lives inside Settings, so it opens that tab and lets
+    /// `SettingsView` push the detail itself.
+    init(_ screen: ScreenshotScreen) {
+        switch screen {
+        case .status: self = .status
+        case .map: self = .map
+        case .export: self = .export
+        case .settings, .audit: self = .settings
+        }
+    }
+}
+#endif

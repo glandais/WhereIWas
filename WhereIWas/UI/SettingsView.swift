@@ -7,6 +7,19 @@ struct SettingsView: View {
     @Environment(\.trackingController) private var controller
     @Environment(\.openURL) private var openURL
 
+    /// Routes pushed on top of Settings. Only used to let screenshot mode
+    /// open the audit trail without a tap; a plain `NavigationLink` would do
+    /// otherwise.
+    enum Route: Hashable { case audit }
+
+    @State private var path: [Route] = {
+        #if SCREENSHOTS
+        return ScreenshotMode.isActive && ScreenshotMode.screen == .audit ? [.audit] : []
+        #else
+        return []
+        #endif
+    }()
+
     @State private var showPurgeConfirmation = false
     @State private var purgeResult: String?
     @State private var isPurging = false
@@ -16,7 +29,7 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Form {
                 permissionsSection
                 motionSection
@@ -27,6 +40,11 @@ struct SettingsView: View {
                 aboutSection
             }
             .navigationTitle("Settings")
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .audit: AuditLogView()
+                }
+            }
             .confirmationDialog("Delete samples older than \(controller.settings.retentionDays) days?",
                                 isPresented: $showPurgeConfirmation, titleVisibility: .visible) {
                 Button("Delete now", role: .destructive) { Task { await purge() } }
@@ -153,9 +171,7 @@ struct SettingsView: View {
                 }
             }
 
-            NavigationLink {
-                AuditLogView()
-            } label: {
+            NavigationLink(value: Route.audit) {
                 Label("Open audit trail", systemImage: "doc.text.magnifyingglass")
             }
         } header: {

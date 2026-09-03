@@ -110,10 +110,12 @@ struct StatusView: View {
             }
 
             LabeledContent("Activity") {
-                Label {
-                    Text(verbatim: "\(status.lastActivity.title) (\(status.lastActivityConfidence.title))")
-                } icon: {
+                // A `Label` here stretches the row to fill the rest of the
+                // section (it loses its intrinsic height inside the value
+                // slot), which is what left half the Status screen blank.
+                HStack(spacing: 6) {
                     Image(systemName: status.lastActivity.systemImage)
+                    Text(verbatim: "\(status.lastActivity.title) (\(status.lastActivityConfidence.title))")
                 }
             }
 

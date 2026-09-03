@@ -3,48 +3,50 @@
 What is on the store right now, what is a placeholder, and what each placeholder
 is waiting for. Update this file whenever a screenshot is replaced.
 
-Last reviewed: 3 September 2026.
-Uploaded to App Store Connect (app 6808349924, version 1.0.0, en-US): all five,
-delivery state COMPLETE.
+Last reviewed: 4 September 2026.
+Uploaded to App Store Connect (app 6808349924, version 1.0.0, en-US): the five
+hand-taken shots described below, delivery state COMPLETE. The local files have
+since been **regenerated** by `./scripts/screenshots.sh` and no longer match
+what the store serves — re-upload once you are happy with them.
 
-## IPHONE_65 · en-US
+## How they are produced now
+
+`./scripts/screenshots.sh` builds the app in the `Screenshots` configuration
+and captures all five screens in both locales from `DemoTrackingController`'s
+mocked data. See `README.md` for the mechanics. This replaced the manual
+device captures, which is what unblocked the two placeholders and the empty
+`fr-FR` set.
+
+## IPHONE_65 · en-US and fr-FR
 
 | # | File | State | Notes |
 |---|---|---|---|
-| 1 | `01-map.png` | **placeholder** | The track is 4 points, 0 m, over 25 seconds — there is nothing to look at, and the summary bar says so. Also shows a real street name (Allée de l'Éloquence), which puts a real address on the App Store. |
-| 2 | `02-status.png` | **placeholder** | Taken while stationary, so it reads `Stationary` / `GPS off` — the screen demonstrates nothing. Half the screen is empty, and the shot was taken mid-scroll (a clipped `When … 11 sec ago` row at the bottom). |
-| 3 | `03-audit-trail.png` | good | Five events, legible, showing motion events, an accepted fix and the trail being switched on. This is the differentiator, no competitor shows it. Only weakness: `5 shown · 5 stored`, a trail that was just enabled. |
-| 4 | `04-export.png` | good | Formats, ranges, a prepared JSON file with its size, and a session row. Reads well. The session says `14 samples · 0 m`, which is thin but not distracting. |
-| 5 | `05-settings.png` | good | The tunable thresholds, the sample filter and its explanation. Makes the point that the app is adjustable. Minor: taken mid-scroll, so the top and bottom rows are blurred in transition. |
+| 1 | `01-map.png` | generated | A walking loop then a ~10 km drive, framed with *Fit track*. Fictional coordinates around Place de la République, so no real address is published. |
+| 2 | `02-status.png` | generated | Phase `Moving`, GPS profile `Driving · Best for navigation · 50 m`, activity `Driving (high)`, a fix from two seconds ago. This is what the old placeholder was waiting for. |
+| 3 | `03-audit-trail.png` | generated | Ten events across several categories and severities, including an accepted fix with its validation checks and a rejected one. Still the differentiator no competitor shows. |
+| 4 | `04-export.png` | generated | Formats, ranges, a prepared GPX with its real size, and the session list. |
+| 5 | `05-settings.png` | generated | Permissions all granted, the motion-detection tunables and their explanation. |
 
-## What the placeholders need
+## Known limitations
 
-Both need **one day of real recording with varied movement** — walking and
-driving — before they are worth retaking:
-
-- **`01-map.png`**: a day with a real track, framed with *Fit track*, showing a
-  believable distance and span. Record it somewhere neutral: the map and the
-  `Position` field on the Status screen both expose real coordinates, and a
-  normal day would publish home and work.
-- **`02-status.png`**: taken **while actually moving**, so it shows phase
-  `Moving`, a populated `GPS profile` (e.g. `fitness · Best · 10 m`), a detected
-  `Activity` with its confidence, and a recent `Last fix`. Scroll to the top
-  first so no row is clipped.
-
-Worth reconsidering once both are retaken: the current order follows the app's
-tabs, but the first screenshot is the one most people see, and today it is the
-weakest of the five.
-
-## fr-FR
-
-Empty. The app UI is English-only (no String Catalog yet), so French screenshots
-would show English screens. Either localize the app first, or upload the en-US
-set for fr-FR as well — Apple allows it, but it is visibly a compromise.
+- **Run the script during the day.** The demo track spans ~92 minutes ending
+  "now" and the Map screen shows a single day, so a run just after midnight
+  compresses it and prints implausible session durations. The script warns.
+- The audit trail's `message` and `name` fields stay English in the `fr-FR`
+  shots. That is the app's design — audit payloads are machine text written to
+  the exports, not localized strings (same rule as
+  `StateTransitionRecord.reason`) — not a capture bug.
+- The order still follows the app's tabs. The map is first because it is the
+  one most people see; worth revisiting once there is store data to judge it.
 
 ## Checking before upload
 
 ```bash
 asc screenshots validate --path "./screenshots/IPHONE_65/en-US" --device-type "IPHONE_65"
+asc screenshots validate --path "./screenshots/IPHONE_65/fr-FR" --device-type "IPHONE_65"
 ```
+
+`validate` only checks dimensions; the script already flattens the alpha
+channel, which is the failure it cannot see (see `README.md`).
 
 Files upload in filename order, which is why they are numbered.

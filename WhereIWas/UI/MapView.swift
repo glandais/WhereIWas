@@ -48,7 +48,13 @@ struct MapView: View {
             }
             .mapStyle(.standard(elevation: .flat))
             .mapControls {
+                #if SCREENSHOTS
+                // Nothing is locating us in screenshot mode, so the button
+                // would spin forever in the corner of every shot.
+                if !ScreenshotMode.isActive { MapUserLocationButton() }
+                #else
                 MapUserLocationButton()
+                #endif
                 MapCompass()
                 MapScaleView()
             }
