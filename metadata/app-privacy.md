@@ -1,18 +1,15 @@
 # App Privacy declaration
 
 `app-privacy.json` is the canonical nutrition-label declaration for
-`io.github.glandais.whereiwas`. An empty `dataUsages` array declares
-**Data Not Collected** across every category. The file has to stay schema-clean
-(`asc web privacy` rejects unknown keys, including comments), so the reasoning
-lives here.
+`io.github.glandais.whereiwas`. An empty `dataUsages` array declares **Data Not
+Collected** across every category. The file has to stay schema-clean (`asc web
+privacy` rejects unknown keys, including comments), so the reasoning lives here.
 
 ## Why "not collected"
 
-Apple's own definition, quoted from the App Store Connect questionnaire:
-
-> Collecter signifie transférer des données hors d'un appareil afin que vous ou
-> un partenaire tiers puissiez y accéder pendant un temps plus long que celui
-> qui est nécessaire pour traiter la demande en temps réel.
+Apple's definition, from the App Store Connect questionnaire: collecting means
+transferring data off a device so that you or a third party can access it for
+longer than needed to service the request in real time.
 
 The app reads precise location, motion activity and battery state, filters them
 and writes them to a local SwiftData database. Nothing is transferred:
@@ -23,11 +20,10 @@ and writes them to a local SwiftData database. Nothing is transferred:
 - `requiresNetworkConnectivity = false` on the background maintenance task.
 
 Exports are started by the user, to a destination the user picks in the share
-sheet. That is a user action, not developer collection.
-
-Apple Maps tiles on the Map screen are drawn by MapKit, a system framework.
-Apple learns which area is displayed, which the privacy policy states plainly,
-but this is not developer collection and does not belong in the labels.
+sheet. That is a user action, not developer collection. Apple Maps tiles on the
+Map screen are drawn by MapKit, a system framework: Apple learns which area is
+displayed, which the privacy policy states plainly, but that is not developer
+collection either.
 
 ## When this must be revisited
 
@@ -35,9 +31,8 @@ but this is not developer collection and does not belong in the labels.
 for a future upload layer. **The day that layer ships, this declaration becomes
 false.** Precise location would then be collected, and Apple can pull an app
 whose labels no longer match. Re-do the questionnaire before shipping any
-version that transmits samples.
-
-The same applies to adding analytics, a crash reporter, or any SDK.
+version that transmits samples — same for adding analytics, a crash reporter, or
+any SDK.
 
 ## Applying
 

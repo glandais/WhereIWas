@@ -198,19 +198,11 @@ Device (mandatory for background behaviour):
 
 ---
 
-## 8. CONTRACT — file ownership for parallel agents
+## 8. Conventions
 
-The scaffold (this document, `project.yml`, `WhereIWas/Domain/*`) is frozen. Module agents own **only** the files below, may add files in their own directory, and must not edit another module's files. If an interface is insufficient, implement a superset in your own type and note it in your result; the integrator (Coordinator+App agent) reconciles. Run `xcodegen generate` after adding files.
+`UserDefaults` keys: `whereiwas.trackingEnabled` (Bool), `whereiwas.settings.v1` (JSON, via
+`TrackingSettings.load/save`). BGTask id: `io.github.glandais.whereiwas.maintenance`. os_log
+subsystem: `io.github.glandais.whereiwas`, categories `engine`, `motion`, `coordinator`, `store`.
 
-| Agent | Owns (create/replace) | Depends on |
-|---|---|---|
-| **Persistence** | `WhereIWas/Persistence/Models.swift` (`LocationSample`, `TrackingSession`, `StateTransitionLog` as `@Model`), `WhereIWas/Persistence/LocationStore.swift` (`@ModelActor actor LocationStore: LocationStoring`, `init(modelContainer:)`, plus `static func makeContainer(inMemory: Bool) throws -> ModelContainer`), `WhereIWas/Persistence/GPXExporter.swift` (`enum GPXExporter { static func export(_ samples: [StoredLocationSample], name: String) -> String }`), `WhereIWas/Persistence/JSONExporter.swift` (`enum JSONExporter { static func export(_ samples: [StoredLocationSample]) throws -> Data }`) | Domain |
-| **Location** | `WhereIWas/Location/LocationEngine.swift` (`@MainActor final class LocationEngine: NSObject, LocationEngineProtocol`, `init(store: any LocationStoring, settings: TrackingSettings)`), `WhereIWas/Location/CLMapping.swift` (AccuracyLevel/ActivityTypeHint/CLAuthorizationStatus ↔ CoreLocation, `CLLocation → LocationFix`) | Domain |
-| **Motion** | `WhereIWas/Motion/MotionMonitor.swift` (`@MainActor final class MotionMonitor: MotionMonitoring`, `init()`), `WhereIWas/Motion/CMMapping.swift` | Domain |
-| **Coordinator + App** | `WhereIWas/Coordinator/TrackingCoordinator.swift` (`@MainActor @Observable final class TrackingCoordinator: TrackingControlling, LocationEngineDelegate`, `init(store:engine:motion:settings:defaults:)`, `func bootstrap(launchedForLocation:)`), `WhereIWas/Coordinator/MaintenanceScheduler.swift` (BGTaskScheduler), `WhereIWas/App/AppEnvironment.swift`, `WhereIWas/App/AppDelegate.swift`, `WhereIWas/App/WhereIWasApp.swift` (replace the placeholders; keep `\.trackingController` injection) | everything |
-| **UI** | `WhereIWas/UI/RootView.swift` (replace placeholder with TabView), `StatusView.swift`, `MapView.swift`, `SettingsView.swift`, `ExportView.swift`, `WhereIWas/UI/Formatting.swift` | Domain only — use `@Environment(\.trackingController)`; previews use `NoopTrackingController` |
-| **Tests** | `WhereIWasTests/TrackingStateTests.swift`, `GPSProfileTests.swift`, `LocationFilterTests.swift`, `LocationStoreTests.swift` (uses `LocationStore.makeContainer(inMemory: true)`), `GPXExporterTests.swift`; may delete `ScaffoldTests.swift` | Domain + Persistence |
-
-Persisted keys (owned by Coordinator): `UserDefaults` `whereiwas.trackingEnabled` (Bool), `whereiwas.settings.v1` (JSON, via `TrackingSettings.load/save`). BGTask id: `io.github.glandais.whereiwas.maintenance`. os_log subsystem: `io.github.glandais.whereiwas`, categories `engine`, `motion`, `coordinator`, `store`.
-
-`Domain/Placeholders.swift` (`InMemoryLocationStore`, `NoopLocationEngine`, `NoopMotionMonitor`, `NoopTrackingController`) stays and may be used in previews and tests.
+`Domain/Placeholders.swift` (`InMemoryLocationStore`, `NoopLocationEngine`, `NoopMotionMonitor`,
+`NoopTrackingController`) is used in previews and tests.

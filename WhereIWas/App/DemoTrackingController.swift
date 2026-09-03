@@ -6,7 +6,7 @@ import Observation
 ///
 /// Same idea as `PreviewTrackingController`, but the dataset is built for the
 /// App Store rather than for a Xcode canvas, and answers the two complaints
-/// `screenshots/STATUS.md` files against the hand-taken shots:
+/// against the hand-taken shots it replaced:
 ///
 /// * a real track — a walking loop then a drive, ~11 km over the morning —
 ///   instead of four points and 0 m;
