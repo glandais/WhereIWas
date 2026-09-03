@@ -1,17 +1,22 @@
 #!/usr/bin/env bash
 #
-# App Store screenshots, both locales, from mocked data.
+# App Store screenshots, every locale, from mocked data.
 #
 # Builds the app in the `Screenshots` configuration (see `project.yml`), then
 # launches it once per screen and per locale with the launch arguments read by
 # `ScreenshotMode`. One launch per screenshot means no taps: nothing depends on
-# a tab label, which differs between English and French.
+# a tab label, which differs between languages.
 #
 # Output: screenshots/IPHONE_65/<locale>/NN-name.png, resized to an accepted
 # dimension and flattened (App Store Connect rejects an alpha channel).
 # Uploading stays manual — see screenshots/README.md.
 #
-# Usage: ./scripts/screenshots.sh [locale ...]      (default: en-US fr-FR)
+# Locales are named by their *App Store Connect* code, because the output
+# directory is what `asc screenshots upload` reads. That code is not the app's
+# language code: the store says `nl-NL` and `de-DE` where the bundle says `nl`
+# and `de`, so `apple_locale_for` maps one onto the other.
+#
+# Usage: ./scripts/screenshots.sh [locale ...]      (default: all nine)
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -37,7 +42,23 @@ SCREENS=(
 )
 
 locales=("$@")
-if [ ${#locales[@]} -eq 0 ]; then locales=(en-US fr-FR); fi
+if [ ${#locales[@]} -eq 0 ]; then
+  locales=(en-US fr-FR de-DE es-ES it ja nl-NL pl cs)
+fi
+
+# App Store locale -> the `-AppleLocale` the simulator wants. The store drops
+# the region on the locales that have a single market (`it`, `ja`, `pl`, `cs`);
+# iOS still wants a full identifier, or dates and numbers fall back to a
+# default region that is not the one the screenshot is for.
+apple_locale_for() {
+  case "$1" in
+    it) echo "it_IT" ;;
+    ja) echo "ja_JP" ;;
+    pl) echo "pl_PL" ;;
+    cs) echo "cs_CZ" ;;
+    *)  echo "${1/-/_}" ;;
+  esac
+}
 
 # The demo dataset spans about 92 minutes ending "now" and must fit inside
 # today, or the map (which shows one day at a time) would only get its tail.
@@ -77,7 +98,7 @@ trap 'xcrun simctl status_bar "$UDID" clear >/dev/null 2>&1 || true' EXIT
 
 for locale in "${locales[@]}"; do
   lang="${locale%%-*}"
-  apple_locale="${locale/-/_}"
+  apple_locale="$(apple_locale_for "$locale")"
   mkdir -p "$RAW_DIR/$locale" "$OUT_ROOT/$locale"
   echo "▸ $locale"
 

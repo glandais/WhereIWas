@@ -81,9 +81,16 @@ Three things that bite:
 
 ## Localization
 
-The app ships in **English (source) and French**, through two string catalogs under
-`WhereIWas/Resources/`: `Localizable.xcstrings` (UI) and `InfoPlist.xcstrings` (the three
-permission prompts). `knownRegions` in `project.yml` lists the locales.
+The app ships in **nine languages** — English (source), French, German, Spanish, Italian, Japanese,
+Dutch, Polish and Czech — through two string catalogs under `WhereIWas/Resources/`:
+`Localizable.xcstrings` (UI) and `InfoPlist.xcstrings` (the three permission prompts).
+`knownRegions` in `project.yml` lists them.
+
+Those are **short language codes** (`de`, `es`, `nl`), not region ones: `de` covers de-AT and de-CH,
+`es` covers es-MX and es-419, and none of these markets needs a variant of its own. App Store
+Connect is a separate namespace with its own codes for the same languages — `de-DE`, `es-ES`,
+`nl-NL`, and `it` / `ja` / `pl` / `cs` bare — and those are what `metadata/` and the screenshot
+directories are named after.
 
 The permission prompts' English text lives in **two** places and must be edited in both:
 `project.yml` (which writes the keys into the generated `Info.plist`) and the `en` unit of the
@@ -103,23 +110,37 @@ Rules when adding UI strings:
 - `StateTransitionRecord.reason` is persisted machine text and stays English on disk; the Status
   screen runs it through `Formatting.transitionReason`, which translates the known vocabulary and
   passes anything else through.
+- **Keys are dotted names, never the English sentence** (`status.lastFix.title`, `auth.location.always`).
+  English lives in the `en` unit of the catalog like any other language. A sentence used as a key
+  turns every rewording into a diff of the key set across nine languages.
 - Do **not** reuse a key across two subjects. French agrees adjectives with the subject, so
   `Denied` shared by the location and motion rows cannot be right in both — hence the
   `auth.location.*` / `auth.motion.*` and `precise.on` / `precise.off` splits. Same for a noun and
-  a verb that spell the same in English (`Export` the screen vs `audit.export.action` the button).
-- Give every `%lld` key plural variations in **both** locales, English included — without an `en`
-  unit the singular falls back to the key and prints "1 days".
+  a verb that spell the same in English (`common.export` the screen vs `audit.export.action` the
+  button). Slavic languages make this sharper still, not milder.
+- Give every `%lld` key plural variations in **every** locale, English included — without an `en`
+  unit the singular falls back to the key and prints "1 days". The categories are the language's,
+  not English's: `other` alone in Japanese, `one`/`few`/`many`/`other` in Polish and Czech.
+- Anything naming an iOS control the user is told to go tap ("Always", "Precise Location",
+  "Motion & Fitness", "Settings") must match what iOS itself displays in that language, word for
+  word. A close synonym turns an instruction into a wrong one.
+- Short keys (`phase.*`, `activity.*`, `common.*`, `auth.*`, tab titles, `LabeledContent` labels)
+  share a line with a value. German, Polish and Czech truncate there long before French does; keep
+  them near the English length rather than translating literally.
 - Coordinates go through `Formatting.coordinate`, which pins `en_US_POSIX` so the decimal
   separator never collides with the field separator.
+- Distances, speeds, altitudes and accuracies follow `TrackingSettings.unitSystem`, not the locale:
+  `Formatting` holds the choice in a static the UI pushes to (`RootView` at launch and on change,
+  the Settings picker in its binding setter). Samples stay in meters and m/s everywhere else.
 
 `xcodebuild` compiles the catalogs but never writes new keys back. After adding strings, run
-`./scripts/xcb.sh strings`, then fill the `fr` unit of every new key (and the `en` unit too, for
-keys whose name is not the English text, such as `auth.*` and `reason.*`). `extractionState: stale`
-entries are dead keys — delete them. Check the result in the simulator:
+`./scripts/xcb.sh strings`, then fill the `en` unit of every new key (the key is never the English
+text) and the eight other units. `extractionState: stale` entries are dead keys — delete them.
+Check the result in the simulator:
 
 ```bash
 xcrun simctl launch "$(source scripts/sim-config.sh && sim_udid)" \
-  io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR
+  io.github.glandais.whereiwas -AppleLanguages "(de)" -AppleLocale de_DE
 ```
 
 `xcb.sh strings` exists because `xcstringstool sync` has two ways of quietly destroying the
@@ -176,9 +197,9 @@ when a new required-reason API is used. `metadata/app-privacy.md` covers the nut
 
 - **Attach a build.** The only blocking check left: archive, upload to TestFlight and select the
   build on version 1.0.0.
-- Re-upload all ten screenshots (five screens × two locales): they are now generated locally and
-  no longer match what the store serves. ASC does not inherit screenshots from the primary locale,
-  so `fr-FR` needs its own upload.
+- Re-upload all forty-five screenshots (five screens × nine locales): they are now generated
+  locally and no longer match what the store serves. ASC does not inherit screenshots from the
+  primary locale, so each of the eight others needs its own upload.
 - App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, it is website-only).
 
 Everything else is done: icon, privacy manifest, both locales of `metadata/` applied, the three
