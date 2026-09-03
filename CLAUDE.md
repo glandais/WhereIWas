@@ -151,17 +151,29 @@ used. `fileSizeKey` in `ExportView` is not one of them.
 
 ### Still to do before a first submission
 
+- **Attach a build.** The only blocking check left: archive, upload to TestFlight and
+  select the build on version 1.0.0. `asc validate` reports 1 error, 1 warning, 1 info.
 - Two of the five screenshots are placeholders (map and status) — see
   `screenshots/STATUS.md` for what each one is waiting for
-- Publish the App Privacy nutrition labels. The declaration is written and versioned
-  at `metadata/app-privacy.json` (empty `dataUsages` = Data Not Collected, with the
-  reasoning inline); it still has to be applied and published, which needs a web
-  session: `asc web privacy plan|apply|publish --app 6808349924 --file metadata/app-privacy.json`
-- Category, age rating and territory availability are unset
+- `fr-FR` has no screenshots; ASC does not inherit them from the primary locale
+- Verify "App Store Regulations and Permits" by hand — `asc review doctor` reports it
+  as NOT_CHECKED, it is website-only
 
-Done: app icon; both locales of `metadata/` applied and verified against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
-TestFlight Test Information, What to Test and the Beta App Review notes (which spell out
-the background-location use case and the Always authorization flow for guideline 2.5.4).
+Done: app icon; privacy manifest; both locales of `metadata/` applied and verified
+against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
+five IPHONE_65 screenshots uploaded (COMPLETE); App Privacy published as
+Data Not Collected; age rating (all NONE/false); categories NAVIGATION / UTILITIES;
+content rights DOES_NOT_USE_THIRD_PARTY_CONTENT; availability on 175 territories with
+availableInNewTerritories; App Store review details with the guideline 2.5.4
+background-location rationale.
+
+### Two checks that stay noisy
+
+`asc validate` keeps reporting these even when they are fine:
+- `availability.unverified` — Apple's Pricing and Availability endpoints time out.
+  Confirmed set via `asc pricing availability view` (`availableInNewTerritories: true`).
+- `privacy.publish_state.unverified` — the public API cannot read publish state.
+  Confirmed via `asc web privacy pull` (`published: true`), which needs a web session.
 
 ## Known constraints
 
