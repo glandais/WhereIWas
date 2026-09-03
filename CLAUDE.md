@@ -1,0 +1,130 @@
+# WhereIWas
+
+## Project overview
+
+iOS 17+ app (SwiftUI, SwiftData, Swift 6 strict concurrency) that records the best possible
+GPS history of a first responder over multi-day deployments: **reliably** (survives
+termination, reboot and going offline), **accurately** (filtered samples carrying full
+metadata) and **without draining the battery** (GPS only runs while the device is actually
+moving). Single app target plus a Swift Testing target.
+
+## Architecture
+
+`ARCHITECTURE.md` is the reference and stays authoritative — module map, the pure
+motion-detection state machine, the GPS profile table, the sample filter, the SwiftData
+schema, the background/relaunch contract and the file-ownership rules for parallel agents
+all live there. Read it before touching `Domain/`, `Coordinator/` or `Location/`.
+
+Short version:
+
+```
+App/          WhereIWasApp (@main), AppDelegate (launch re-arming), AppEnvironment (composition root)
+Domain/       pure Swift, no CoreLocation/CoreMotion/SwiftData imports — state machine, filter, profiles
+Persistence/  @Model types, LocationStore (@ModelActor), GPX/JSON/audit exporters
+Location/     LocationEngine (@MainActor, owns CLLocationManager)
+Motion/       MotionMonitor (@MainActor, CMMotionActivityManager + CMPedometer)
+Coordinator/  TrackingCoordinator (@MainActor @Observable) — runs the state machine, executes effects
+UI/           RootView, StatusView, MapView, SettingsView, ExportView, AuditLogView
+```
+
+Every module boundary is a protocol in `Domain/Interfaces.swift` plus `Sendable` value
+types. SwiftData `@Model` classes never leave `Persistence/`.
+
+## Build
+
+Open `WhereIWas.xcodeproj` in Xcode and build the `WhereIWas` scheme (it also runs
+`WhereIWasTests`). Signing is automatic against team `7Q49262697`. Background behaviour
+(relaunch after termination, reboot, visits, CoreMotion activity) **cannot** be tested in
+the simulator — see `ARCHITECTURE.md` §7 for the device test plan.
+
+```bash
+xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
+  -destination 'generic/platform=iOS Simulator' build
+```
+
+### Project generation (XcodeGen)
+
+`WhereIWas.xcodeproj` is **generated** from `project.yml` via
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) — treat `project.yml` as the source of
+truth, not the `.pbxproj`, which is gitignored. After adding, removing or moving files, or
+changing build settings, regenerate with:
+
+```bash
+xcodegen generate      # reads project.yml, rewrites WhereIWas.xcodeproj
+```
+
+Notes:
+- The `WhereIWas` target sources the whole `WhereIWas/` folder, so **new files are picked
+  up automatically** on regenerate — no manual project edits. `.DS_Store` is excluded.
+- `WhereIWasTests` is a hosted unit-test target (`TEST_HOST` on the app), so it sees the
+  whole app module.
+- The app keeps a real `WhereIWas/Info.plist` on disk (unlike DepthWeaver, which generates
+  one): the background modes, the three usage descriptions and
+  `BGTaskSchedulerPermittedIdentifiers` live there. Keep the BGTask identifier in
+  `Info.plist` and `MaintenanceScheduler.taskIdentifier` in sync, or the task never runs.
+- `MARKETING_VERSION` and `CURRENT_PROJECT_VERSION` are set in `project.yml` and are the
+  single place to bump a version.
+
+## Release
+
+App Store Connect app ID **`6808349924`** — App Store name `WhereIWas GPS Logger`
+(the bare `WhereIWas` is reserved by another developer; the home-screen name stays
+`WhereIWas` via `CFBundleDisplayName`), bundle `io.github.glandais.whereiwas`, primary
+locale `en-US`, also localized in `fr-FR`.
+
+Canonical metadata lives under `./metadata/`, one file per scope and locale:
+
+```
+metadata/app-info/<locale>.json          name, subtitle, privacyPolicyUrl
+metadata/version/<version>/<locale>.json description, keywords, promotionalText,
+                                         marketingUrl, supportUrl, whatsNew
+```
+
+Use the `asc` CLI. The plan/approve/apply cycle is deliberate — never `apply` without
+reading the plan first:
+
+```bash
+asc metadata pull     --app 6808349924 --version "0.1.0" --dir "./metadata"
+asc metadata validate --dir "./metadata"
+asc metadata plan     --app 6808349924 --version "0.1.0" --dir "./metadata"
+asc metadata approve  --review-dir ".asc/metadata/review" --all
+asc metadata apply    --app 6808349924 --version "0.1.0" --dir "./metadata" \
+                      --review-dir ".asc/metadata/review" --confirm
+```
+
+Screenshots live under `./screenshots/<DISPLAY_TYPE>/<locale>/` — see
+`screenshots/README.md`. Both `IPHONE_65` and `IPAD_PRO_3GEN_129` are required, because
+`TARGETED_DEVICE_FAMILY` is `"1,2"`.
+
+Archive and export for the App Store with `ExportOptions.plist`
+(`app-store-connect`, team `7Q49262697`).
+
+`.asc/` holds local `asc` state (review plans, failure reports) and is gitignored.
+
+### Still to do before a first submission
+
+- App icon and screenshots (none yet)
+- The three URLs in `metadata/` all point at `https://glandais.github.io/WhereIWas/`,
+  which does not exist yet — marketing, `/support/` and `/privacy/` pages are mandatory
+- App Privacy nutrition labels: the app collects precise location, stored **on device
+  only**, never linked to an identity and never uploaded
+- Category, age rating and territory availability are unset
+- Review notes must spell out the background-location use case, and a demo of the Always
+  authorization flow — background location gets extra scrutiny under guideline 2.5.4
+- Decide whether the public version stays `0.1.0` or becomes `1.0.0` (`MARKETING_VERSION`
+  in `project.yml` and the ASC version string must match)
+
+## Known constraints
+
+- Background tracking requires **Always** location authorization; When-In-Use stops
+  recording as soon as the app is suspended.
+- Nothing is recorded between a reboot and the first device unlock — no API changes that.
+- A user force-quit (swipe up in the app switcher) stops all background delivery until the
+  app is opened again. Expected iOS behaviour, surfaced in the Status screen.
+- `BGProcessingTask` (purge) may never run under Low Power Mode or with Background App
+  Refresh off; purge also runs at launch and from Settings.
+- Motion permission denied degrades the strategy to GPS + significant change: tracking
+  still works, battery suffers.
+- The audit trail is opt-in and off by default; it turns over much faster than the samples
+  and has its own retention (`auditRetentionDays`, 7 days).
+- Simulator: no background relaunch, no CoreMotion activity, no visits.
