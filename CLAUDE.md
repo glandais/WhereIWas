@@ -169,7 +169,13 @@ in `Localizable.xcstrings`.
 App Store Connect app ID **`6808349924`** — App Store name `WhereIWas GPS Logger` (the bare
 `WhereIWas` is reserved by another developer; the home-screen name stays `WhereIWas` via
 `CFBundleDisplayName`), bundle `io.github.glandais.whereiwas`, primary locale `en-US`, also
-`fr-FR`.
+`fr-FR`, `de-DE`, `es-ES`, `it`, `ja`, `nl-NL`, `pl` and `cs`.
+
+Adding a locale takes **two** `apply` runs, and the first one reports failures. Creating an
+`app-info` localization makes App Store Connect create the matching version localization on its own,
+so the version half of the same plan comes back `Entity with locale: X already exists. Try
+updating.` Re-plan and apply again: the second pass sees them and updates. Seven failures on the
+first run of a new locale are expected, not a broken plan.
 
 Canonical metadata lives under `./metadata/`, one file per scope and locale
 (`app-info/<locale>.json`, `version/<version>/<locale>.json`). Use the `asc` CLI; the
@@ -202,7 +208,7 @@ when a new required-reason API is used. `metadata/app-privacy.md` covers the nut
   primary locale, so each of the eight others needs its own upload.
 - App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, it is website-only).
 
-Everything else is done: icon, privacy manifest, both locales of `metadata/` applied, the three
+Everything else is done: icon, privacy manifest, all nine locales of `metadata/` applied, the three
 metadata URLs resolving (GitHub Pages under `docs/`), App Privacy published as Data Not Collected,
 age rating, categories, content rights, availability, free price schedule, review details with the
 guideline 2.5.4 background-location rationale. Mac Apple Silicon and Vision Pro distribution are
