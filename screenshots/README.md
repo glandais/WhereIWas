@@ -23,6 +23,30 @@ Landscape variants of the same sizes are accepted too.
 `STATUS.md` tracks which screenshots are final and which are placeholders waiting
 to be retaken. Keep it current when you replace one.
 
+## No alpha channel
+
+App Store Connect rejects any screenshot carrying an alpha channel
+(`IMAGE_ALPHA_NOT_ALLOWED`). iPhone screenshots have one: the rounded screen
+corners are transparent. Flatten before uploading — on black, since the app is
+dark:
+
+```bash
+python3 -c "
+from PIL import Image; import pathlib
+for p in pathlib.Path('screenshots/IPHONE_65/en-US').glob('*.png'):
+    im = Image.open(p)
+    if 'A' in im.getbands():
+        bg = Image.new('RGB', im.size, (0, 0, 0))
+        bg.paste(im, mask=im.getchannel('A'))
+        bg.save(p, 'PNG', optimize=True)
+"
+```
+
+Note that `asc screenshots validate` does **not** catch this — it checks
+dimensions only, and reported all five as ready. The failure surfaces during
+upload, and the rejected asset stays in the set as `FAILED`; delete it with
+`asc screenshots delete --id <id>` before retrying.
+
 ## Workflow
 
 ```bash

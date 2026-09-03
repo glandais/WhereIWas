@@ -4,6 +4,8 @@ What is on the store right now, what is a placeholder, and what each placeholder
 is waiting for. Update this file whenever a screenshot is replaced.
 
 Last reviewed: 3 September 2026.
+Uploaded to App Store Connect (app 6808349924, version 1.0.0, en-US): all five,
+delivery state COMPLETE.
 
 ## IPHONE_65 · en-US
 
