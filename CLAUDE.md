@@ -185,19 +185,31 @@ xcrun simctl launch "$(source scripts/sim-config.sh && sim_udid)" \
 (`booted` would hit whichever simulator happens to be up, which is the habit
 the `Simulator` section above exists to break.)
 
-`xcb.sh strings` exists because of two traps in that `sync`, both of which it
-handles for you:
+`xcb.sh strings` exists because `xcstringstool sync` has two ways of quietly
+destroying the catalog, both of which it handles for you:
 
-- **Run it on the catalog in place**, never on a copy outside the repo. Given a
-  copy, `xcstringstool` resolves no source and marks **every** key `stale` —
-  following the "stale means dead, delete it" rule then empties the catalog.
+- **Sync the catalog under its own name and path.** `xcstringstool` matches the
+  file to the extracted table by name, so a copy resolves no source and **every**
+  key comes back `stale` — following the "stale means dead, delete it" rule then
+  empties the catalog. This is about the filename, not the directory: a
+  `Localizable-copy.xcstrings` sitting right next to the original is enough.
 - **Pass every `.stringsdata` file**, not the first one a `find … | head -1`
-  happens to return. Keys defined only in files that slice did not compile lose
-  their `extractionState`, which shows up as a large no-op diff. The script
-  globs `Objects-normal/*/*.stringsdata`, so the whole build is covered.
+  happens to return. A key defined only in files that slice did not compile
+  looks like it has left the code, so the sync marks it `stale` and the next
+  cleanup deletes a live string. The script globs
+  `Objects-normal/*/*.stringsdata`, so the whole build is covered.
 
 It also reads the repo-local `.build/DerivedData`, so there is no
 `find ~/Library/Developer/Xcode/DerivedData/WhereIWas-*` left to get wrong.
+
+One thing the sync does not preserve: `extractionState: extracted_with_value`,
+which Xcode writes on keys whose name is not the English text. The CLI strips it
+from every live key and never writes it back. That is annotation only — the
+`localizations` are untouched and the app is unaffected — so the catalog is kept
+in the shape `xcstringstool` itself emits, which makes the sync idempotent and
+keeps later diffs down to what actually changed. Building from the Xcode IDE may
+put those states back; re-running `./scripts/xcb.sh strings` removes them again,
+and either way the file is correct.
 
 To audit the catalog without trusting the tool, diff the keys directly — the
 `.stringsdata` files are plain JSON with a `tables.Localizable[].key` array, so
