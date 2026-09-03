@@ -97,8 +97,8 @@ asc metadata apply    --app 6808349924 --version "0.1.0" --dir "./metadata" \
 ```
 
 Screenshots live under `./screenshots/<DISPLAY_TYPE>/<locale>/` — see
-`screenshots/README.md`. Both `IPHONE_65` and `IPAD_PRO_3GEN_129` are required, because
-`TARGETED_DEVICE_FAMILY` is `"1,2"`.
+`screenshots/README.md`. The app is iPhone-only (`TARGETED_DEVICE_FAMILY` is `"1"`), so
+`IPHONE_65` is the only required display type.
 
 Archive and export for the App Store with `ExportOptions.plist`
 (`app-store-connect`, team `7Q49262697`).

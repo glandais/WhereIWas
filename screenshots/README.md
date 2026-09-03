@@ -7,14 +7,16 @@ upload` expects:
 screenshots/<DISPLAY_TYPE>/<locale>/*.png
 ```
 
-Both display types below are **required** for submission, because the app ships for
-iPhone and iPad (`TARGETED_DEVICE_FAMILY: "1,2"` in `project.yml`). Run
+The app is iPhone-only (`TARGETED_DEVICE_FAMILY: "1"` in `project.yml`), so
+`IPHONE_65` is the only display type submission requires. Run
 `asc screenshots sizes` to re-check the accepted dimensions.
 
 | Display type | Accepted dimensions (portrait) |
 |---|---|
 | `IPHONE_65` | 1242×2688, 1284×2778 |
-| `IPAD_PRO_3GEN_129` | 2048×2732, 2064×2752 |
+
+A capture from any Pro Max since the iPhone 15 comes out at 1290×2796 and has to be
+resized to 1284×2778 before upload.
 
 Landscape variants of the same sizes are accepted too.
 
