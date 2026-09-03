@@ -178,7 +178,10 @@ updating.` Re-plan and apply again: the second pass sees them and updates. Seven
 first run of a new locale are expected, not a broken plan.
 
 Canonical metadata lives under `./metadata/`, one file per scope and locale
-(`app-info/<locale>.json`, `version/<version>/<locale>.json`). Use the `asc` CLI; the
+(`app-info/<locale>.json`, `version/<version>/<locale>.json`). `asc metadata` does **not** cover the
+App Review notes, so those have their own canonical copy in `metadata/review-notes.md`, pushed with
+`asc review details-update`; it has to stay true to the code, since a reviewer reads it with the app
+open in front of them. Use the `asc` CLI; the
 plan/approve/apply cycle is deliberate — never `apply` without reading the plan first:
 
 ```bash
