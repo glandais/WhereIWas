@@ -230,7 +230,10 @@ struct SettingsView: View {
     }
 }
 
-/// Pure preview of `GPSProfile.profile(for:speed:settings:)`.
+/// Pure preview of `GPSProfile.profile(for:speed:settings:)`, one list row
+/// per case: activity on the left, distance filter and accuracy on the right.
+/// A `Group` body so the rows land as real list cells instead of one cramped
+/// three-column grid, which truncated both the titles and the accuracy names.
 private struct ProfileTable: View {
     let settings: TrackingSettings
 
@@ -254,42 +257,44 @@ private struct ProfileTable: View {
     }
 
     var body: some View {
-        Grid(alignment: .leading, horizontalSpacing: 12, verticalSpacing: 8) {
-            GridRow {
-                Text("Activity").gridColumnAlignment(.leading)
-                Text("Accuracy")
-                Text("Filter").gridColumnAlignment(.trailing)
-            }
-            .font(.caption.weight(.semibold))
-            .foregroundStyle(.secondary)
-            Divider()
+        Group {
             ForEach(rows) { row in
-                let profile = GPSProfile.profile(for: row.activity, speed: row.speed, settings: settings)
-                GridRow {
-                    Label(row.title, systemImage: row.activity.systemImage)
-                    Text(profile.desiredAccuracy.title)
-                        .foregroundStyle(.secondary)
-                    Text(Formatting.distance(profile.distanceFilter))
-                        .monospacedDigit()
-                }
-                .font(.subheadline)
-                .accessibilityElement(children: .combine)
+                ProfileRow(title: row.title,
+                           systemImage: row.activity.systemImage,
+                           profile: GPSProfile.profile(for: row.activity, speed: row.speed, settings: settings))
             }
-            Divider()
-            GridRow {
-                Label("Probing", systemImage: TrackingPhase.probing.systemImage)
-                Text(GPSProfile.probing.desiredAccuracy.title).foregroundStyle(.secondary)
-                Text(Formatting.distance(GPSProfile.probing.distanceFilter)).monospacedDigit()
-            }
-            .font(.subheadline)
-            GridRow {
-                Label("Stationary (coarse)", systemImage: TrackingPhase.stationary.systemImage)
-                Text(GPSProfile.stationaryCoarse.desiredAccuracy.title).foregroundStyle(.secondary)
-                Text(Formatting.distance(GPSProfile.stationaryCoarse.distanceFilter)).monospacedDigit()
-            }
-            .font(.subheadline)
+            ProfileRow(title: String(localized: "Probing"),
+                       systemImage: TrackingPhase.probing.systemImage,
+                       profile: .probing)
+            ProfileRow(title: String(localized: "Stationary (coarse)"),
+                       systemImage: TrackingPhase.stationary.systemImage,
+                       profile: .stationaryCoarse)
         }
-        .padding(.vertical, 4)
+    }
+}
+
+/// One profile line: title on the left, the distance filter on the right with
+/// the accuracy level under it.
+private struct ProfileRow: View {
+    let title: String
+    let systemImage: String
+    let profile: GPSProfile
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Label(title, systemImage: systemImage)
+            Spacer(minLength: 0)
+            VStack(alignment: .trailing, spacing: 1) {
+                Text(Formatting.distance(profile.distanceFilter))
+                    .monospacedDigit()
+                Text(profile.desiredAccuracy.title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.trailing)
+        }
+        .font(.subheadline)
+        .accessibilityElement(children: .combine)
     }
 }
 
