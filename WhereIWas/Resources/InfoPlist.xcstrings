@@ -4,10 +4,28 @@
     "NSLocationAlwaysAndWhenInUseUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas zaznamenává polohu průběžně, i na pozadí, aby se pohyb během zásahu neztratil. Data zůstávají v tomto zařízení až do exportu."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas zeichnet die Position fortlaufend auf, auch im Hintergrund, damit die Bewegungen während eines Einsatzes nie verloren gehen. Die Daten bleiben auf diesem Gerät, bis sie exportiert werden."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas registra la posición de forma continua, también en segundo plano, para que los desplazamientos durante una intervención no se pierdan. Los datos permanecen en este dispositivo hasta que se exportan."
           }
         },
         "fr": {
@@ -15,16 +33,58 @@
             "state": "translated",
             "value": "WhereIWas enregistre votre position en continu, y compris en arrière-plan, afin que vos déplacements pendant une intervention ne soient jamais perdus. Les données restent sur cet appareil jusqu’à ce que vous les exportiez."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas registra la posizione in modo continuo, anche in background, affinché gli spostamenti durante un intervento non vadano perduti. I dati restano su questo dispositivo fino all’esportazione."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWasはバックグラウンドを含めて位置を継続的に記録し、出動中の移動が失われないようにします。データはエクスポートするまでこのデバイス内に保存されます。"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas legt de positie doorlopend vast, ook op de achtergrond, zodat verplaatsingen tijdens een inzet niet verloren gaan. De gegevens blijven op dit apparaat totdat ze worden geëxporteerd."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas rejestruje pozycję w sposób ciągły, także w tle, aby przemieszczenia podczas działań nie zostały utracone. Dane pozostają na tym urządzeniu do czasu ich wyeksportowania."
+          }
         }
       }
     },
     "NSLocationWhenInUseUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas zaznamenává polohu, aby vytvořil historii pohybu."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas zeichnet die Position auf, um den Bewegungsverlauf zu erstellen."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "WhereIWas records your position to build your location history."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas registra la posición para crear el historial de desplazamientos."
           }
         },
         "fr": {
@@ -32,22 +92,88 @@
             "state": "translated",
             "value": "WhereIWas enregistre votre position pour constituer votre historique de déplacements."
           }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas registra la posizione per costruire la cronologia degli spostamenti."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWasは移動履歴を作成するために位置を記録します。"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas legt de positie vast om de verplaatsingsgeschiedenis op te bouwen."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas rejestruje pozycję, aby utworzyć historię przemieszczeń."
+          }
         }
       }
     },
     "NSMotionUsageDescription": {
       "extractionState": "manual",
       "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pohybová aktivita (chůze, jízda, nehybnost) slouží k zapnutí GPS pouze při pohybu, což šetří baterii."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Bewegungsaktivität (Gehen, Fahren, Stillstand) dient dazu, GPS nur bei tatsächlicher Bewegung einzuschalten, was den Akku schont."
+          }
+        },
         "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery."
           }
         },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La actividad de movimiento (caminar, conducir, inmovilidad) sirve para activar el GPS solo cuando hay desplazamiento, lo que ahorra batería."
+          }
+        },
         "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "L’activité physique (marche, conduite, immobilité) sert à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’attività di movimento (camminata, guida, immobilità) serve ad attivare il GPS solo quando ci si sposta, riducendo il consumo della batteria."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モーションアクティビティ（歩行、運転、静止）は、実際に移動しているときだけGPSを有効にし、バッテリーの消費を抑えるために使用します。"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bewegingsactiviteit (lopen, rijden, stilstand) wordt gebruikt om GPS alleen tijdens verplaatsing in te schakelen, wat de batterij spaart."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktywność ruchowa (chód, jazda, bezruch) służy do włączania GPS tylko podczas przemieszczania się, co oszczędza baterię."
           }
         }
       }

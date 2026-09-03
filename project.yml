@@ -5,6 +5,13 @@ options:
   knownRegions:
     - en
     - fr
+    - de
+    - es
+    - it
+    - ja
+    - nl
+    - pl
+    - cs
   deploymentTarget:
     iOS: "17.0"
   createIntermediateGroups: true
