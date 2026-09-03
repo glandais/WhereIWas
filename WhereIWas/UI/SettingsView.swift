@@ -45,7 +45,11 @@ struct SettingsView: View {
                                 ok: controller.status.locationAuthorization == .always)
             }
             LabeledContent("Precise location") {
-                permissionValue(controller.status.hasFullAccuracy ? "On" : "Off",
+                permissionValue(controller.status.hasFullAccuracy
+                                    ? String(localized: "precise.on", defaultValue: "On",
+                                             comment: "Value of the “Precise location” row")
+                                    : String(localized: "precise.off", defaultValue: "Off",
+                                             comment: "Value of the “Precise location” row"),
                                 ok: controller.status.hasFullAccuracy)
             }
             LabeledContent("Motion & Fitness") {
@@ -133,7 +137,7 @@ struct SettingsView: View {
             if controller.settings.auditEnabled {
                 Picker("Minimum severity", selection: settings.auditMinimumSeverity) {
                     ForEach(AuditSeverity.allCases, id: \.rawValue) { severity in
-                        Text(severity.label).tag(severity)
+                        Text(verbatim: severity.displayName).tag(severity)
                     }
                 }
                 Toggle("Accepted fixes", isOn: settings.auditLogsAcceptedFixes)
@@ -143,8 +147,8 @@ struct SettingsView: View {
                 Stepper(value: settings.auditRetentionDays, in: 0...90, step: 1) {
                     LabeledContent("Keep trail for",
                                    value: controller.settings.auditRetentionDays == 0
-                                       ? "Forever"
-                                       : "\(controller.settings.auditRetentionDays) days")
+                                       ? String(localized: "Forever")
+                                       : String(localized: "\(controller.settings.auditRetentionDays) days"))
                 }
             }
 
@@ -164,7 +168,9 @@ struct SettingsView: View {
         Section {
             Stepper(value: settings.retentionDays, in: 0...365, step: 1) {
                 LabeledContent("Keep samples for",
-                               value: controller.settings.retentionDays == 0 ? "Forever" : "\(controller.settings.retentionDays) days")
+                               value: controller.settings.retentionDays == 0
+                                   ? String(localized: "Forever")
+                                   : String(localized: "\(controller.settings.retentionDays) days"))
             }
             Button(role: .destructive) {
                 showPurgeConfirmation = true
@@ -176,7 +182,7 @@ struct SettingsView: View {
             }
             .disabled(controller.settings.retentionDays == 0 || isPurging)
             if let purgeResult {
-                Text(purgeResult)
+                Text(verbatim: purgeResult)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -216,9 +222,9 @@ struct SettingsView: View {
         defer { isPurging = false }
         do {
             let deleted = try await controller.purgeNow()
-            purgeResult = "Deleted \(Formatting.count(deleted)) samples."
+            purgeResult = String(localized: "Deleted \(Formatting.count(deleted)) samples.")
         } catch {
-            purgeResult = "Purge failed: \(error.localizedDescription)"
+            purgeResult = String(localized: "Purge failed: \(error.localizedDescription)")
         }
     }
 }
@@ -236,13 +242,13 @@ private struct ProfileTable: View {
 
     private var rows: [Row] {
         [
-            Row(id: "walking", activity: .walking, title: "Walking", speed: nil),
-            Row(id: "running", activity: .running, title: "Running", speed: nil),
-            Row(id: "cycling", activity: .cycling, title: "Cycling", speed: nil),
-            Row(id: "automotive", activity: .automotive, title: "Driving", speed: nil),
-            Row(id: "unknown", activity: .unknown, title: "Unknown, no speed", speed: nil),
-            Row(id: "unknown-fast", activity: .unknown, title: "Unknown, \(Formatting.speed(4))", speed: 4),
-            Row(id: "any-vehicle", activity: .walking, title: "Any, \(Formatting.speed(12))", speed: 12)
+            Row(id: "walking", activity: .walking, title: String(localized: "Walking"), speed: nil),
+            Row(id: "running", activity: .running, title: String(localized: "Running"), speed: nil),
+            Row(id: "cycling", activity: .cycling, title: String(localized: "Cycling"), speed: nil),
+            Row(id: "automotive", activity: .automotive, title: String(localized: "Driving"), speed: nil),
+            Row(id: "unknown", activity: .unknown, title: String(localized: "Unknown, no speed"), speed: nil),
+            Row(id: "unknown-fast", activity: .unknown, title: String(localized: "Unknown, \(Formatting.speed(4))"), speed: 4),
+            Row(id: "any-vehicle", activity: .walking, title: String(localized: "Any, \(Formatting.speed(12))"), speed: 12)
         ]
     }
 

@@ -7,11 +7,11 @@ struct ExportView: View {
         var id: String { rawValue }
         var title: String {
             switch self {
-            case .today: return "Today"
-            case .week: return "7 days"
-            case .all: return "All"
-            case .custom: return "Range"
-            case .session: return "Session"
+            case .today: return String(localized: "Today")
+            case .week: return String(localized: "7 days")
+            case .all: return String(localized: "All")
+            case .custom: return String(localized: "Range")
+            case .session: return String(localized: "Session")
             }
         }
     }
@@ -35,7 +35,7 @@ struct ExportView: View {
             Form {
                 Section("What") {
                     Picker("Scope", selection: $scope) {
-                        ForEach(Scope.allCases) { Text($0.title).tag($0) }
+                        ForEach(Scope.allCases) { Text(verbatim: $0.title).tag($0) }
                     }
                     .pickerStyle(.segmented)
                     .labelsHidden()
@@ -51,7 +51,7 @@ struct ExportView: View {
                         } else {
                             Picker("Session", selection: $selectedSession) {
                                 ForEach(sessions) { session in
-                                    Text(sessionTitle(session)).tag(Optional(session.id))
+                                    Text(verbatim: sessionTitle(session)).tag(Optional(session.id))
                                 }
                             }
                             .pickerStyle(.navigationLink)

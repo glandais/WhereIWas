@@ -69,6 +69,41 @@ Notes:
   `CFBundleVersion` onto them with `$(...)`; without those two entries XcodeGen writes its
   own defaults (`1.0` / `1`) and the build number silently ignores `project.yml`.
 
+## Localization
+
+The app ships in **English (source) and French**. Two string catalogs under
+`WhereIWas/Resources/` hold everything user-facing:
+
+- `Localizable.xcstrings` — the UI strings
+- `InfoPlist.xcstrings` — the three permission prompts (the English values in
+  `project.yml` stay the source; the catalog localizes them)
+
+`knownRegions` in `project.yml` lists the locales. Rules when adding UI strings:
+
+- `Text("…")`, `Label("…")`, `Section("…")` literals are localized automatically.
+- A `String` variable passed to `Text`/`Label` is **not** — build it with
+  `String(localized:)` at the source, or use `Text(verbatim:)` when the value is
+  data (coordinates, an error, an audit payload) that must not be translated.
+- Technical identifiers stay English on purpose: `GPSProfile.label`,
+  `AuditCategory.label` and `AuditSeverity.label` are persisted in samples,
+  written to the exports and asserted on in tests. The UI shows the localized
+  `displayName` counterparts defined in `UI/Formatting.swift`.
+
+`xcodebuild` compiles the catalogs but never writes new keys back into them.
+After adding strings, extract them by hand:
+
+```bash
+xcodebuild -project WhereIWas.xcodeproj -scheme WhereIWas \
+  -destination 'generic/platform=iOS Simulator' build
+DD=$(find ~/Library/Developer/Xcode/DerivedData/WhereIWas-*/Build/Intermediates.noindex/\
+WhereIWas.build/Debug-iphonesimulator/WhereIWas.build/Objects-normal -name '*.stringsdata' | head -1 | xargs dirname)
+xcrun xcstringstool sync WhereIWas/Resources/Localizable.xcstrings --stringsdata $DD/*.stringsdata
+```
+
+then fill the `fr` unit of every new key (`extractionState: stale` entries are
+dead keys — delete them). Check the result in the simulator with
+`xcrun simctl launch booted io.github.glandais.whereiwas -AppleLanguages "(fr)" -AppleLocale fr_FR`.
+
 ## Release
 
 App Store Connect app ID **`6808349924`** — App Store name `WhereIWas GPS Logger`

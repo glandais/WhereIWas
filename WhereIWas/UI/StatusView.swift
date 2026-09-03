@@ -102,16 +102,16 @@ struct StatusView: View {
 
             if let profile = status.activeProfile {
                 LabeledContent("GPS profile") {
-                    Text("\(profile.label) · \(profile.desiredAccuracy.title) · \(Formatting.distance(profile.distanceFilter))")
+                    Text(verbatim: "\(profile.displayName) · \(profile.desiredAccuracy.title) · \(Formatting.distance(profile.distanceFilter))")
                         .multilineTextAlignment(.trailing)
                 }
             } else {
-                LabeledContent("GPS profile", value: "GPS off")
+                LabeledContent("GPS profile") { Text("GPS off") }
             }
 
             LabeledContent("Activity") {
                 Label {
-                    Text("\(status.lastActivity.title) (\(status.lastActivityConfidence.title))")
+                    Text(verbatim: "\(status.lastActivity.title) (\(status.lastActivityConfidence.title))")
                 } icon: {
                     Image(systemName: status.lastActivity.systemImage)
                 }
@@ -142,7 +142,7 @@ struct StatusView: View {
                 LabeledContent("Speed", value: Formatting.speed(fix.validSpeed))
                 LabeledContent("Course", value: Formatting.course(fix.course))
                 LabeledContent("Altitude") {
-                    Text("\(Formatting.altitude(fix.altitude)) \(Formatting.accuracy(fix.verticalAccuracy))")
+                    Text(verbatim: "\(Formatting.altitude(fix.altitude)) \(Formatting.accuracy(fix.verticalAccuracy))")
                 }
                 if let source = status.lastFixSource {
                     LabeledContent("Source", value: source.title)

@@ -118,7 +118,7 @@ struct AuditLogView: View {
         VStack(alignment: .leading, spacing: 12) {
             Picker("Minimum severity", selection: $minimumSeverity) {
                 ForEach(AuditSeverity.allCases, id: \.rawValue) { severity in
-                    Text(severity.label).tag(severity)
+                    Text(verbatim: severity.displayName).tag(severity)
                 }
             }
             .pickerStyle(.segmented)
@@ -134,7 +134,7 @@ struct AuditLogView: View {
                                 selectedCategories.insert(category)
                             }
                         } label: {
-                            Label(category.label, systemImage: category.symbolName)
+                            Label(category.displayName, systemImage: category.symbolName)
                                 .font(.footnote)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 6)
@@ -156,7 +156,7 @@ struct AuditLogView: View {
             Menu {
                 Picker("Format", selection: $exportFormat) {
                     ForEach(AuditExportFormat.allCases) { format in
-                        Text(format.label).tag(format)
+                        Text(verbatim: format.displayName).tag(format)
                     }
                 }
                 Button("Export", systemImage: "square.and.arrow.up") {
@@ -212,7 +212,7 @@ private struct AuditEventRow: View {
                 Image(systemName: event.category.symbolName)
                     .foregroundStyle(color)
                     .accessibilityHidden(true)
-                Text(event.name)
+                Text(verbatim: event.name)
                     .font(.caption.monospaced())
                     .foregroundStyle(color)
                 Spacer()
@@ -220,11 +220,11 @@ private struct AuditEventRow: View {
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
-            Text(event.message)
+            Text(verbatim: event.message)
                 .font(.callout)
                 .lineLimit(2)
             if let phase = event.phase {
-                Text(phase.rawValue)
+                Text(verbatim: phase.rawValue)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -252,8 +252,8 @@ private struct AuditEventDetailView: View {
         List {
             Section("Event") {
                 LabeledContent("Name", value: event.name)
-                LabeledContent("Category", value: event.category.label)
-                LabeledContent("Severity", value: event.severity.label)
+                LabeledContent("Category", value: event.category.displayName)
+                LabeledContent("Severity", value: event.severity.displayName)
                 LabeledContent("Time") {
                     Text(event.timestamp, format: .dateTime.year().month().day()
                         .hour().minute().second())
@@ -266,15 +266,15 @@ private struct AuditEventDetailView: View {
                 }
             }
             Section("Message") {
-                Text(event.message)
+                Text(verbatim: event.message)
             }
             if !checks.isEmpty {
                 Section("Tests performed") {
                     ForEach(checks, id: \.key) { detail in
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(detail.key.replacingOccurrences(of: "check.", with: ""))
+                            Text(verbatim: detail.key.replacingOccurrences(of: "check.", with: ""))
                                 .font(.caption.monospaced())
-                            Text(detail.value)
+                            Text(verbatim: detail.value)
                                 .font(.footnote)
                                 .foregroundStyle(verdictColor(detail.value))
                         }
@@ -285,7 +285,7 @@ private struct AuditEventDetailView: View {
                 Section("Data") {
                     ForEach(data, id: \.key) { detail in
                         LabeledContent(detail.key) {
-                            Text(detail.value)
+                            Text(verbatim: detail.value)
                                 .font(.footnote.monospaced())
                                 .multilineTextAlignment(.trailing)
                         }

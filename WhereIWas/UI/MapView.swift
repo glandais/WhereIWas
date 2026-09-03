@@ -63,7 +63,11 @@ struct MapView: View {
                     ContentUnavailableView {
                         Label("No track", systemImage: "point.topleft.down.to.point.bottomright.curvepath")
                     } description: {
-                        Text(loadError ?? "No samples recorded on \(Formatting.day(day)).")
+                        if let loadError {
+                            Text(verbatim: loadError)
+                        } else {
+                            Text("No samples recorded on \(Formatting.day(day)).")
+                        }
                     }
                     .padding()
                     .background(.regularMaterial, in: .rect(cornerRadius: 16))
@@ -142,7 +146,7 @@ struct MapView: View {
         }
     }
 
-    private func stat(_ title: String, _ value: String) -> some View {
+    private func stat(_ title: LocalizedStringKey, _ value: String) -> some View {
         VStack(spacing: 2) {
             Text(value)
                 .font(.subheadline.weight(.semibold).monospacedDigit())

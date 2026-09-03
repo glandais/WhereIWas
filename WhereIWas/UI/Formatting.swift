@@ -34,7 +34,16 @@ enum Formatting {
     /// Course in degrees: "270° W".
     static func course(_ degrees: Double) -> String {
         guard degrees >= 0 else { return "—" }
-        let dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
+        let dirs = [
+            String(localized: "compass.N", defaultValue: "N", comment: "Compass point: north"),
+            String(localized: "compass.NE", defaultValue: "NE", comment: "Compass point: north-east"),
+            String(localized: "compass.E", defaultValue: "E", comment: "Compass point: east"),
+            String(localized: "compass.SE", defaultValue: "SE", comment: "Compass point: south-east"),
+            String(localized: "compass.S", defaultValue: "S", comment: "Compass point: south"),
+            String(localized: "compass.SW", defaultValue: "SW", comment: "Compass point: south-west"),
+            String(localized: "compass.W", defaultValue: "W", comment: "Compass point: west"),
+            String(localized: "compass.NW", defaultValue: "NW", comment: "Compass point: north-west")
+        ]
         let index = Int((degrees + 22.5).truncatingRemainder(dividingBy: 360) / 45)
         return "\(Int(degrees.rounded()))° \(dirs[index])"
     }
@@ -86,10 +95,10 @@ enum Formatting {
 extension TrackingPhase {
     var title: String {
         switch self {
-        case .disabled: return "Off"
-        case .stationary: return "Stationary"
-        case .probing: return "Probing"
-        case .moving: return "Moving"
+        case .disabled: return String(localized: "Off")
+        case .stationary: return String(localized: "Stationary")
+        case .probing: return String(localized: "Probing")
+        case .moving: return String(localized: "Moving")
         }
     }
 
@@ -113,10 +122,10 @@ extension TrackingPhase {
 
     var explanation: String {
         switch self {
-        case .disabled: return "Tracking is switched off. Nothing is recorded."
-        case .stationary: return "GPS is off or coarse. Waiting for motion, a significant location change or a visit."
-        case .probing: return "GPS is on briefly to confirm whether you are moving."
-        case .moving: return "GPS is on, tuned to your current speed and activity."
+        case .disabled: return String(localized: "Tracking is switched off. Nothing is recorded.")
+        case .stationary: return String(localized: "GPS is off or coarse. Waiting for motion, a significant location change or a visit.")
+        case .probing: return String(localized: "GPS is on briefly to confirm whether you are moving.")
+        case .moving: return String(localized: "GPS is on, tuned to your current speed and activity.")
         }
     }
 }
@@ -124,12 +133,12 @@ extension TrackingPhase {
 extension ActivityKind {
     var title: String {
         switch self {
-        case .unknown: return "Unknown"
-        case .stationary: return "Stationary"
-        case .walking: return "Walking"
-        case .running: return "Running"
-        case .cycling: return "Cycling"
-        case .automotive: return "Driving"
+        case .unknown: return String(localized: "Unknown")
+        case .stationary: return String(localized: "Stationary")
+        case .walking: return String(localized: "Walking")
+        case .running: return String(localized: "Running")
+        case .cycling: return String(localized: "Cycling")
+        case .automotive: return String(localized: "Driving")
         }
     }
 
@@ -148,9 +157,9 @@ extension ActivityKind {
 extension ActivityConfidence {
     var title: String {
         switch self {
-        case .low: return "low"
-        case .medium: return "medium"
-        case .high: return "high"
+        case .low: return String(localized: "low", comment: "Activity confidence, shown inline: \"Walking (low)\"")
+        case .medium: return String(localized: "medium", comment: "Activity confidence, shown inline: \"Walking (medium)\"")
+        case .high: return String(localized: "high", comment: "Activity confidence, shown inline: \"Walking (high)\"")
         }
     }
 }
@@ -158,8 +167,8 @@ extension ActivityConfidence {
 extension AccuracyLevel {
     var title: String {
         switch self {
-        case .bestForNavigation: return "Best for navigation"
-        case .best: return "Best"
+        case .bestForNavigation: return String(localized: "Best for navigation")
+        case .best: return String(localized: "Best")
         case .tenMeters: return "10 m"
         case .hundredMeters: return "100 m"
         case .kilometer: return "1 km"
@@ -171,10 +180,10 @@ extension AccuracyLevel {
 extension ActivityTypeHint {
     var title: String {
         switch self {
-        case .other: return "Other"
-        case .fitness: return "Fitness"
-        case .automotiveNavigation: return "Automotive"
-        case .otherNavigation: return "Navigation"
+        case .other: return String(localized: "Other")
+        case .fitness: return String(localized: "Fitness")
+        case .automotiveNavigation: return String(localized: "Automotive")
+        case .otherNavigation: return String(localized: "Navigation")
         }
     }
 }
@@ -182,11 +191,11 @@ extension ActivityTypeHint {
 extension LocationAuthorization {
     var title: String {
         switch self {
-        case .notDetermined: return "Not requested"
-        case .restricted: return "Restricted"
-        case .denied: return "Denied"
-        case .whenInUse: return "While using"
-        case .always: return "Always"
+        case .notDetermined: return String(localized: "Not requested")
+        case .restricted: return String(localized: "Restricted")
+        case .denied: return String(localized: "Denied")
+        case .whenInUse: return String(localized: "While using")
+        case .always: return String(localized: "Always")
         }
     }
 }
@@ -194,10 +203,10 @@ extension LocationAuthorization {
 extension MotionAuthorization {
     var title: String {
         switch self {
-        case .notDetermined: return "Not requested"
-        case .restricted: return "Restricted"
-        case .denied: return "Denied"
-        case .authorized: return "Authorized"
+        case .notDetermined: return String(localized: "Not requested")
+        case .restricted: return String(localized: "Restricted")
+        case .denied: return String(localized: "Denied")
+        case .authorized: return String(localized: "Authorized")
         }
     }
 }
@@ -216,8 +225,8 @@ extension LocationSource {
     var title: String {
         switch self {
         case .gps: return "GPS"
-        case .significantChange: return "Significant change"
-        case .visit: return "Visit"
+        case .significantChange: return String(localized: "Significant change")
+        case .visit: return String(localized: "Visit")
         }
     }
 }
@@ -235,6 +244,62 @@ extension ExportFormat {
         case .gpx: return "map"
         case .json: return "curlybraces"
         }
+    }
+}
+
+// `GPSProfile.label`, `AuditCategory.label` and `AuditSeverity.label` are
+// technical identifiers: they are persisted in samples, written to the audit
+// exports and asserted on in tests, so they stay English. The UI shows these
+// translated `displayName`s instead.
+
+extension GPSProfile {
+    var displayName: String {
+        switch label {
+        case "probing": return String(localized: "Probing")
+        case "stationary-coarse": return String(localized: "Stationary (coarse)")
+        case "walking": return String(localized: "Walking")
+        case "running": return String(localized: "Running")
+        case "cycling": return String(localized: "Cycling")
+        case "automotive": return String(localized: "Driving")
+        case "fast-unknown": return String(localized: "Unknown, fast")
+        case "slow-unknown": return String(localized: "Unknown, slow")
+        case "unknown": return String(localized: "Unknown")
+        default: return label
+        }
+    }
+}
+
+extension AuditCategory {
+    var displayName: String {
+        switch self {
+        case .lifecycle: return String(localized: "Lifecycle")
+        case .state: return String(localized: "State")
+        case .effect: return String(localized: "Effect")
+        case .location: return String(localized: "Location")
+        case .filter: return String(localized: "Filter")
+        case .motion: return String(localized: "Motion")
+        case .permission: return String(localized: "Permission")
+        case .persistence: return String(localized: "Storage")
+        case .maintenance: return String(localized: "Maintenance")
+        case .export: return String(localized: "Export")
+        }
+    }
+}
+
+extension AuditSeverity {
+    var displayName: String {
+        switch self {
+        case .debug: return String(localized: "Debug")
+        case .info: return String(localized: "Info")
+        case .warning: return String(localized: "Warning")
+        case .error: return String(localized: "Error")
+        }
+    }
+}
+
+extension AuditExportFormat {
+    var displayName: String {
+        self == .json ? "JSON" : String(localized: "Plain text")
     }
 }
 

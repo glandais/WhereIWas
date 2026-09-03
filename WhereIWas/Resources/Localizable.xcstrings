@@ -1,0 +1,2271 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "!": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "!"
+          }
+        }
+      }
+    },
+    "%@ samples · %@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ samples · %2$@ · %3$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ points · %@ · %@"
+          }
+        }
+      }
+    },
+    "%@ · %@ · %@ · battery %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$@ · %2$@ · %3$@ · battery %4$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %@ · %@ · batterie %@"
+          }
+        }
+      }
+    },
+    "%lld days": {
+      "localizations": {
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld jour"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld jours"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld shown · %lld stored": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "%1$lld shown · %2$lld stored"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%#@shown@ · %#@stored@"
+          },
+          "substitutions": {
+            "shown": {
+              "argNum": 1,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg affiché"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg affichés"
+                    }
+                  }
+                }
+              }
+            },
+            "stored": {
+              "argNum": 2,
+              "formatSpecifier": "lld",
+              "variations": {
+                "plural": {
+                  "one": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg stocké"
+                    }
+                  },
+                  "other": {
+                    "stringUnit": {
+                      "state": "translated",
+                      "value": "%arg stockés"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "10 m": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "10 m"
+          }
+        }
+      }
+    },
+    "200 m": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "200 m"
+          }
+        }
+      }
+    },
+    "7 days": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "7 jours"
+          }
+        }
+      }
+    },
+    "About": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À propos"
+          }
+        }
+      }
+    },
+    "Accepted / rejected since launch": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acceptés / rejetés depuis le lancement"
+          }
+        }
+      }
+    },
+    "Accepted fixes": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points acceptés"
+          }
+        }
+      }
+    },
+    "Accuracy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Précision"
+          }
+        }
+      }
+    },
+    "Actions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actions"
+          }
+        }
+      }
+    },
+    "Activity": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activité"
+          }
+        }
+      }
+    },
+    "All": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout"
+          }
+        }
+      }
+    },
+    "Altitude": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Altitude"
+          }
+        }
+      }
+    },
+    "Always": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toujours"
+          }
+        }
+      }
+    },
+    "Any, %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toute activité, %@"
+          }
+        }
+      }
+    },
+    "Audit trail": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journal d’audit"
+          }
+        }
+      }
+    },
+    "Audit trail is off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journal d’audit désactivé"
+          }
+        }
+      }
+    },
+    "Authorized": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisé"
+          }
+        }
+      }
+    },
+    "Automotive": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automobile"
+          }
+        }
+      }
+    },
+    "Background tracking requires location access set to “Always” with Precise Location on. Motion & Fitness lets the app switch GPS off while you are still.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le suivi en arrière-plan exige un accès à la position réglé sur « Toujours », avec la position précise activée. « Mouvement et forme » permet à l’app d’éteindre le GPS lorsque vous êtes immobile."
+          }
+        }
+      }
+    },
+    "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le suivi en arrière-plan s’arrête dès que l’app est suspendue. Passez l’accès à la position sur « Toujours » dans Réglages."
+          }
+        }
+      }
+    },
+    "Battery": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Batterie"
+          }
+        }
+      }
+    },
+    "Best": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximale"
+          }
+        }
+      }
+    },
+    "Best for navigation": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximale (navigation)"
+          }
+        }
+      }
+    },
+    "Category": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Catégorie"
+          }
+        }
+      }
+    },
+    "Course": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cap"
+          }
+        }
+      }
+    },
+    "Cycling": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vélo"
+          }
+        }
+      }
+    },
+    "Data": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Données"
+          }
+        }
+      }
+    },
+    "Day": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jour"
+          }
+        }
+      }
+    },
+    "Debug": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Débogage"
+          }
+        }
+      }
+    },
+    "Delete everything": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout supprimer"
+          }
+        }
+      }
+    },
+    "Delete now": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer maintenant"
+          }
+        }
+      }
+    },
+    "Delete old samples now": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer les anciens échantillons"
+          }
+        }
+      }
+    },
+    "Delete samples older than %lld days?": {
+      "localizations": {
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Supprimer les échantillons de plus de %lld jour ?"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Supprimer les échantillons de plus de %lld jours ?"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Delete the whole audit trail?": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer tout le journal d’audit ?"
+          }
+        }
+      }
+    },
+    "Delete trail": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer le journal"
+          }
+        }
+      }
+    },
+    "Deleted %@ samples.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ échantillons supprimés."
+          }
+        }
+      }
+    },
+    "Denied": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Refusé"
+          }
+        }
+      }
+    },
+    "Distance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance"
+          }
+        }
+      }
+    },
+    "Distance filter per activity. Speed above %@ always selects the driving profile; unknown activity above %@ uses the running filter.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Distance filter per activity. Speed above %1$@ always selects the driving profile; unknown activity above %2$@ uses the running filter."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtre de distance par activité. Une vitesse supérieure à %@ sélectionne toujours le profil automobile ; une activité inconnue au-dessus de %@ utilise le filtre course à pied."
+          }
+        }
+      }
+    },
+    "Driving": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conduite"
+          }
+        }
+      }
+    },
+    "Duplicate distance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Distance de doublon"
+          }
+        }
+      }
+    },
+    "Effect": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effet"
+          }
+        }
+      }
+    },
+    "End": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arrivée"
+          }
+        }
+      }
+    },
+    "Error": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erreur"
+          }
+        }
+      }
+    },
+    "Event": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Événement"
+          }
+        }
+      }
+    },
+    "Export": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export"
+          }
+        }
+      }
+    },
+    "Files are written to a temporary folder and can be shared with AirDrop, Files, Mail or any other app.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les fichiers sont écrits dans un dossier temporaire et peuvent être partagés via AirDrop, Fichiers, Mail ou toute autre app."
+          }
+        }
+      }
+    },
+    "Filter": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtre"
+          }
+        }
+      }
+    },
+    "Fit track": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cadrer la trace"
+          }
+        }
+      }
+    },
+    "Fitness": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sport"
+          }
+        }
+      }
+    },
+    "Fixes less accurate than the limit, older than the max age, or within the duplicate distance of the previous fix are discarded.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les points moins précis que la limite, plus anciens que l’âge maximal, ou situés à moins de la distance de doublon du point précédent sont écartés."
+          }
+        }
+      }
+    },
+    "Forever": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sans limite"
+          }
+        }
+      }
+    },
+    "Format": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format"
+          }
+        }
+      }
+    },
+    "From": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du"
+          }
+        }
+      }
+    },
+    "GPS is off or coarse. Waiting for motion, a significant location change or a visit.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le GPS est éteint ou en mode grossier. En attente d’un mouvement, d’un changement de position significatif ou d’une visite."
+          }
+        }
+      }
+    },
+    "GPS is on briefly to confirm whether you are moving.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le GPS est activé brièvement pour confirmer si vous vous déplacez."
+          }
+        }
+      }
+    },
+    "GPS is on, tuned to your current speed and activity.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le GPS est activé, réglé sur votre vitesse et votre activité actuelles."
+          }
+        }
+      }
+    },
+    "GPS off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPS éteint"
+          }
+        }
+      }
+    },
+    "GPS profile": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil GPS"
+          }
+        }
+      }
+    },
+    "GPS profiles": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profils GPS"
+          }
+        }
+      }
+    },
+    "GPX 1.1 track with elevation, time and extensions (speed, course, accuracy, activity, battery). Opens in most mapping tools.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trace GPX 1.1 avec altitude, horodatage et extensions (vitesse, cap, précision, activité, batterie). S’ouvre dans la plupart des outils cartographiques."
+          }
+        }
+      }
+    },
+    "Grant permissions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accorder les autorisations"
+          }
+        }
+      }
+    },
+    "Grant “Always” location access so tracking survives in the background.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accordez l’accès à la position « Toujours » pour que l’enregistrement se poursuive en arrière-plan."
+          }
+        }
+      }
+    },
+    "High": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Élevée"
+          }
+        }
+      }
+    },
+    "Info": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        }
+      }
+    },
+    "JSON array of every stored sample with all fields, including upload status and sequence ids.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tableau JSON de tous les échantillons stockés, avec tous leurs champs, y compris l’état d’envoi et les numéros de séquence."
+          }
+        }
+      }
+    },
+    "Keep coarse updates while stationary": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Garder des mises à jour grossières à l’arrêt"
+          }
+        }
+      }
+    },
+    "Keep samples for": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserver les échantillons"
+          }
+        }
+      }
+    },
+    "Keep trail for": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserver le journal"
+          }
+        }
+      }
+    },
+    "Last error": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernière erreur"
+          }
+        }
+      }
+    },
+    "Last fix": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dernier point"
+          }
+        }
+      }
+    },
+    "Lifecycle": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cycle de vie"
+          }
+        }
+      }
+    },
+    "Loading…": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement…"
+          }
+        }
+      }
+    },
+    "Location": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position"
+          }
+        }
+      }
+    },
+    "Location access denied": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accès à la position refusé"
+          }
+        }
+      }
+    },
+    "Location only while using the app": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position uniquement pendant l’utilisation"
+          }
+        }
+      }
+    },
+    "Location permission not granted yet": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisation de position pas encore accordée"
+          }
+        }
+      }
+    },
+    "Location samples are not affected. Export first if you need the trail.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les échantillons de position ne sont pas touchés. Exportez d’abord si vous avez besoin du journal."
+          }
+        }
+      }
+    },
+    "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour grossières (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan."
+          }
+        }
+      }
+    },
+    "Low": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Faible"
+          }
+        }
+      }
+    },
+    "Maintenance": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maintenance"
+          }
+        }
+      }
+    },
+    "Map": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carte"
+          }
+        }
+      }
+    },
+    "Max horizontal accuracy": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Précision horizontale max."
+          }
+        }
+      }
+    },
+    "Max sample age": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Âge max. des points"
+          }
+        }
+      }
+    },
+    "Medium": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moyenne"
+          }
+        }
+      }
+    },
+    "Message": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Message"
+          }
+        }
+      }
+    },
+    "Minimum activity confidence": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confiance minimale d’activité"
+          }
+        }
+      }
+    },
+    "Minimum severity": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gravité minimale"
+          }
+        }
+      }
+    },
+    "Motion": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mouvement"
+          }
+        }
+      }
+    },
+    "Motion & Fitness": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mouvement et forme"
+          }
+        }
+      }
+    },
+    "Motion access denied": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accès au mouvement refusé"
+          }
+        }
+      }
+    },
+    "Motion activity lets the app switch GPS off while you are still.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’activité physique permet à l’app d’éteindre le GPS lorsque vous êtes immobile."
+          }
+        }
+      }
+    },
+    "Motion detection": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Détection de mouvement"
+          }
+        }
+      }
+    },
+    "Motion permission not granted yet": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisation de mouvement pas encore accordée"
+          }
+        }
+      }
+    },
+    "Motion reports": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rapports de mouvement"
+          }
+        }
+      }
+    },
+    "Moving": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En mouvement"
+          }
+        }
+      }
+    },
+    "Moving → stationary requires %@ of stillness; any motion switches GPS back on immediately.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Le passage « en mouvement → à l’arrêt » exige %@ d’immobilité ; tout mouvement rallume le GPS immédiatement."
+          }
+        }
+      }
+    },
+    "Name": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom"
+          }
+        }
+      }
+    },
+    "Navigation": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigation"
+          }
+        }
+      }
+    },
+    "Needs attention": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À vérifier"
+          }
+        }
+      }
+    },
+    "Newest first. Tap an event for its full payload.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Du plus récent au plus ancien. Touchez un événement pour voir son contenu complet."
+          }
+        }
+      }
+    },
+    "Next day": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jour suivant"
+          }
+        }
+      }
+    },
+    "No events match these filters.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun événement ne correspond à ces filtres."
+          }
+        }
+      }
+    },
+    "No fix yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun point pour l’instant."
+          }
+        }
+      }
+    },
+    "No new fix for a while. If the app was force-quit, reopen it to resume tracking.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun nouveau point depuis un moment. Si l’app a été forcée à quitter, rouvrez-la pour reprendre l’enregistrement."
+          }
+        }
+      }
+    },
+    "No samples recorded on %@.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun échantillon enregistré le %@."
+          }
+        }
+      }
+    },
+    "No sessions recorded yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune session enregistrée pour l’instant."
+          }
+        }
+      }
+    },
+    "No track": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune trace"
+          }
+        }
+      }
+    },
+    "No transitions recorded yet.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune transition enregistrée pour l’instant."
+          }
+        }
+      }
+    },
+    "Not requested": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non demandée"
+          }
+        }
+      }
+    },
+    "Off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivé"
+          }
+        }
+      }
+    },
+    "Off by default. When on, the app records every location received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivé par défaut. Une fois activé, l’app enregistre chaque position reçue, chaque test de validation effectué et chaque changement d’état, dans sa propre table et avec sa propre durée de conservation. Utile pour un retour d’expérience ; cela coûte du stockage et un peu de batterie."
+          }
+        }
+      }
+    },
+    "Off — nothing is recorded.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivé — rien n’est enregistré."
+          }
+        }
+      }
+    },
+    "Old samples are deleted automatically by a background maintenance task, or here on demand. Sessions are kept.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les anciens échantillons sont supprimés automatiquement par une tâche de maintenance en arrière-plan, ou ici à la demande. Les sessions sont conservées."
+          }
+        }
+      }
+    },
+    "Oldest sample": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échantillon le plus ancien"
+          }
+        }
+      }
+    },
+    "On — runs in the background and after restarts.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activé — fonctionne en arrière-plan et après un redémarrage."
+          }
+        }
+      }
+    },
+    "Open": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En cours"
+          }
+        }
+      }
+    },
+    "Open Settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir Réglages"
+          }
+        }
+      }
+    },
+    "Open audit trail": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir le journal d’audit"
+          }
+        }
+      }
+    },
+    "Other": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autre"
+          }
+        }
+      }
+    },
+    "Pending upload": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "En attente d’envoi"
+          }
+        }
+      }
+    },
+    "Permission": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisation"
+          }
+        }
+      }
+    },
+    "Permissions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorisations"
+          }
+        }
+      }
+    },
+    "Phase": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Phase"
+          }
+        }
+      }
+    },
+    "Plain text": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Texte brut"
+          }
+        }
+      }
+    },
+    "Points": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points"
+          }
+        }
+      }
+    },
+    "Position": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position"
+          }
+        }
+      }
+    },
+    "Precise location": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Position précise"
+          }
+        }
+      }
+    },
+    "Precise location is off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La position précise est désactivée"
+          }
+        }
+      }
+    },
+    "Prepare %@ file": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Préparer le fichier %@"
+          }
+        }
+      }
+    },
+    "Previous day": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jour précédent"
+          }
+        }
+      }
+    },
+    "Probe duration": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Durée de sondage"
+          }
+        }
+      }
+    },
+    "Probing": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sondage"
+          }
+        }
+      }
+    },
+    "Purge failed: %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échec de la purge : %@"
+          }
+        }
+      }
+    },
+    "Range": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Période"
+          }
+        }
+      }
+    },
+    "Recent transitions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Transitions récentes"
+          }
+        }
+      }
+    },
+    "Record audit trail": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer le journal d’audit"
+          }
+        }
+      }
+    },
+    "Record my location": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enregistrer ma position"
+          }
+        }
+      }
+    },
+    "Rejected fixes": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Points rejetés"
+          }
+        }
+      }
+    },
+    "Request permissions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demander les autorisations"
+          }
+        }
+      }
+    },
+    "Reset to defaults": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réinitialiser les réglages"
+          }
+        }
+      }
+    },
+    "Restricted": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restreint"
+          }
+        }
+      }
+    },
+    "Retention": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conservation"
+          }
+        }
+      }
+    },
+    "Running": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Course à pied"
+          }
+        }
+      }
+    },
+    "Sample filter": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtre des points"
+          }
+        }
+      }
+    },
+    "Samples": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Échantillons"
+          }
+        }
+      }
+    },
+    "Samples are only accurate to a few kilometers. Enable Precise Location in Settings.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les points ne sont précis qu’à quelques kilomètres. Activez la position précise dans Réglages."
+          }
+        }
+      }
+    },
+    "Scope": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Étendue"
+          }
+        }
+      }
+    },
+    "Session": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Session"
+          }
+        }
+      }
+    },
+    "Sessions": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sessions"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Réglages"
+          }
+        }
+      }
+    },
+    "Severity": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gravité"
+          }
+        }
+      }
+    },
+    "Share %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Partager %@"
+          }
+        }
+      }
+    },
+    "Significant change": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Changement significatif"
+          }
+        }
+      }
+    },
+    "Size": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taille"
+          }
+        }
+      }
+    },
+    "Source": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source"
+          }
+        }
+      }
+    },
+    "Span": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plage"
+          }
+        }
+      }
+    },
+    "Speed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vitesse"
+          }
+        }
+      }
+    },
+    "Start": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Départ"
+          }
+        }
+      }
+    },
+    "State": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "État"
+          }
+        }
+      }
+    },
+    "Stationary": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À l’arrêt"
+          }
+        }
+      }
+    },
+    "Stationary (coarse)": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À l’arrêt (grossier)"
+          }
+        }
+      }
+    },
+    "Status": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "État"
+          }
+        }
+      }
+    },
+    "Stillness before GPS off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Immobilité avant extinction du GPS"
+          }
+        }
+      }
+    },
+    "Storage": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stockage"
+          }
+        }
+      }
+    },
+    "Tests performed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tests effectués"
+          }
+        }
+      }
+    },
+    "This cannot be undone. Export first if you need the data.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cette action est irréversible. Exportez d’abord si vous avez besoin des données."
+          }
+        }
+      }
+    },
+    "Time": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heure"
+          }
+        }
+      }
+    },
+    "To": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Au"
+          }
+        }
+      }
+    },
+    "Today": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aujourd’hui"
+          }
+        }
+      }
+    },
+    "Total stored": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total stocké"
+          }
+        }
+      }
+    },
+    "Tracking is switched off. Nothing is recorded.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’enregistrement est désactivé. Rien n’est enregistré."
+          }
+        }
+      }
+    },
+    "Turn it on in Settings to record every fix received, every validation test run on it, and every state change.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activez-le dans les réglages pour enregistrer chaque point reçu, chaque test de validation effectué et chaque changement d’état."
+          }
+        }
+      }
+    },
+    "Turns background location recording on or off": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active ou désactive l’enregistrement de la position en arrière-plan"
+          }
+        }
+      }
+    },
+    "Unknown": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnue"
+          }
+        }
+      }
+    },
+    "Unknown, %@": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnue, %@"
+          }
+        }
+      }
+    },
+    "Unknown, fast": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnue, rapide"
+          }
+        }
+      }
+    },
+    "Unknown, no speed": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnue, sans vitesse"
+          }
+        }
+      }
+    },
+    "Unknown, slow": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inconnue, lente"
+          }
+        }
+      }
+    },
+    "Validation tests": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tests de validation"
+          }
+        }
+      }
+    },
+    "Version": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Version"
+          }
+        }
+      }
+    },
+    "Visit": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visite"
+          }
+        }
+      }
+    },
+    "Walking": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Marche"
+          }
+        }
+      }
+    },
+    "Warning": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avertissement"
+          }
+        }
+      }
+    },
+    "What": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quoi"
+          }
+        }
+      }
+    },
+    "When": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quand"
+          }
+        }
+      }
+    },
+    "WhereIWas": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas"
+          }
+        }
+      }
+    },
+    "WhereIWas cannot record anything. Allow location access “Always” in Settings.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WhereIWas ne peut rien enregistrer. Autorisez l’accès à la position « Toujours » dans Réglages."
+          }
+        }
+      }
+    },
+    "While using": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pendant l’utilisation"
+          }
+        }
+      }
+    },
+    "Without motion activity the app must rely on GPS to detect movement, which uses more battery.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sans l’activité physique, l’app doit s’appuyer sur le GPS pour détecter les déplacements, ce qui consomme plus de batterie."
+          }
+        }
+      }
+    },
+    "Written to a temporary folder: %lld events plus the settings in force at export time.": {
+      "localizations": {
+        "fr": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Écrit dans un dossier temporaire : %lld événement, plus les réglages en vigueur au moment de l’export."
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "Écrit dans un dossier temporaire : %lld événements, plus les réglages en vigueur au moment de l’export."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "compass.E": {
+      "comment": "Compass point: east",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "E"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E"
+          }
+        }
+      }
+    },
+    "compass.N": {
+      "comment": "Compass point: north",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "N"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "N"
+          }
+        }
+      }
+    },
+    "compass.NE": {
+      "comment": "Compass point: north-east",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "NE"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NE"
+          }
+        }
+      }
+    },
+    "compass.NW": {
+      "comment": "Compass point: north-west",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "NW"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NO"
+          }
+        }
+      }
+    },
+    "compass.S": {
+      "comment": "Compass point: south",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "S"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "S"
+          }
+        }
+      }
+    },
+    "compass.SE": {
+      "comment": "Compass point: south-east",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "SE"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SE"
+          }
+        }
+      }
+    },
+    "compass.SW": {
+      "comment": "Compass point: south-west",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "SW"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SO"
+          }
+        }
+      }
+    },
+    "compass.W": {
+      "comment": "Compass point: west",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "W"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O"
+          }
+        }
+      }
+    },
+    "high": {
+      "comment": "Activity confidence, shown inline: \"Walking (high)\"",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "élevée"
+          }
+        }
+      }
+    },
+    "low": {
+      "comment": "Activity confidence, shown inline: \"Walking (low)\"",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "faible"
+          }
+        }
+      }
+    },
+    "medium": {
+      "comment": "Activity confidence, shown inline: \"Walking (medium)\"",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "moyenne"
+          }
+        }
+      }
+    },
+    "precise.off": {
+      "comment": "Value of the “Precise location” row",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "Off"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivée"
+          }
+        }
+      }
+    },
+    "precise.on": {
+      "comment": "Value of the “Precise location” row",
+      "extractionState": "extracted_with_value",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "new",
+            "value": "On"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activée"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
