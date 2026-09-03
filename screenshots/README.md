@@ -20,6 +20,9 @@ resized to 1284×2778 before upload.
 
 Landscape variants of the same sizes are accepted too.
 
+`STATUS.md` tracks which screenshots are final and which are placeholders waiting
+to be retaken. Keep it current when you replace one.
+
 ## Workflow
 
 ```bash

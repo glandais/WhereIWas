@@ -88,16 +88,17 @@ Use the `asc` CLI. The plan/approve/apply cycle is deliberate — never `apply` 
 reading the plan first:
 
 ```bash
-asc metadata pull     --app 6808349924 --version "0.1.0" --dir "./metadata"
+asc metadata pull     --app 6808349924 --version "1.0.0" --dir "./metadata"
 asc metadata validate --dir "./metadata"
-asc metadata plan     --app 6808349924 --version "0.1.0" --dir "./metadata"
+asc metadata plan     --app 6808349924 --version "1.0.0" --dir "./metadata"
 asc metadata approve  --review-dir ".asc/metadata/review" --all
-asc metadata apply    --app 6808349924 --version "0.1.0" --dir "./metadata" \
+asc metadata apply    --app 6808349924 --version "1.0.0" --dir "./metadata" \
                       --review-dir ".asc/metadata/review" --confirm
 ```
 
 Screenshots live under `./screenshots/<DISPLAY_TYPE>/<locale>/` — see
-`screenshots/README.md`. The app is iPhone-only (`TARGETED_DEVICE_FAMILY` is `"1"`), so
+`screenshots/README.md` for the workflow and `screenshots/STATUS.md` for which
+shots are final and which are placeholders. The app is iPhone-only (`TARGETED_DEVICE_FAMILY` is `"1"`), so
 `IPHONE_65` is the only required display type.
 
 Archive and export for the App Store with `ExportOptions.plist`
@@ -107,18 +108,13 @@ Archive and export for the App Store with `ExportOptions.plist`
 
 ### Still to do before a first submission
 
-- Screenshots (none yet)
+- Two of the five screenshots are placeholders (map and status) — see
+  `screenshots/STATUS.md` for what each one is waiting for
 - App Privacy nutrition labels: the app collects precise location, stored **on device
   only**, never linked to an identity and never uploaded
 - Category, age rating and territory availability are unset
-- The App Store version record in ASC is still `0.1.0`, and canonical metadata still lives
-  under `metadata/version/0.1.0/`. The public version is now `1.0.0` (`MARKETING_VERSION`
-  in `project.yml`), so both must be moved to `1.0.0` before submission — a build only
-  attaches to a version record whose string matches.
-- Re-run the `fr-FR` metadata apply: the last one failed with
-  `Entity with locale: fr-FR already exists. Try updating.`
 
-Done: app icon; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
+Done: app icon; both locales of `metadata/` applied and verified against ASC; the three `metadata/` URLs now resolve (GitHub Pages under `docs/`);
 TestFlight Test Information, What to Test and the Beta App Review notes (which spell out
 the background-location use case and the Always authorization flow for guideline 2.5.4).
 
