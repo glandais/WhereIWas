@@ -13,8 +13,6 @@
   <meta property="og:title" content="WhereIWas GPS Logger">
   <meta property="og:description" content="An iPhone location logger built for long shifts: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
   <meta property="og:url" content="https://glandais.github.io/WhereIWas/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
@@ -107,8 +105,8 @@
           </p>
           <ol class="states">
             <li>
-              <b class="states__name">Stationary</b>
-              <span class="states__note">Receiver off. Still listening to activity, pedometer, significant changes and visits.</span>
+              <b class="states__name">Stationary (coarse)</b>
+              <span class="states__note">GPS released, no track being written. A three-kilometre update stream stays open — it costs almost nothing and it is what stops iOS terminating the app — alongside activity, pedometer, significant changes and visits. The rare coarse point that stream does produce is stored with its source, so you can tell it from a GPS fix.</span>
             </li>
             <li>
               <b class="states__name">Probing</b>
@@ -128,6 +126,17 @@
             has to be earned. That asymmetry is why the trace has no holes at
             the start of a trip.
           </p>
+          <div class="note">
+            <p>
+              Because that coarse stream stays open, iOS shows the blue location
+              indicator while you are parked as well as while you are moving —
+              the status screen says <em>Stationary (coarse)</em>, not "GPS off",
+              so the two always agree. Settings can hide the indicator for the
+              idle case, and can close the coarse stream entirely at the cost of
+              being terminated more often. Every duration on this page is a
+              default; all of them are settings.
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -152,8 +161,11 @@
               <tr><th scope="row">Walking</th><td>Best</td><td class="num">10 m</td></tr>
               <tr><th scope="row">Running, cycling</th><td>Best</td><td class="num">20 m</td></tr>
               <tr><th scope="row">Driving</th><td>Navigation</td><td class="num">50 m</td></tr>
+              <tr><th scope="row">Unknown, no speed</th><td>Best</td><td class="num">10 m</td></tr>
+              <tr><th scope="row">Unknown, above 2.5 m/s</th><td>Best</td><td class="num">20 m</td></tr>
               <tr><th scope="row">Above 7 m/s</th><td>Navigation</td><td class="num">50 m</td></tr>
               <tr><th scope="row">Probing</th><td>Best</td><td class="num">0 m</td></tr>
+              <tr><th scope="row">Stationary (coarse)</th><td>Three kilometres</td><td class="num">3 km</td></tr>
             </tbody>
           </table>
           </div>
@@ -163,6 +175,13 @@
             points out of order and exact duplicates are all dropped. Cached
             fixes that iOS replays when the receiver restarts are dropped with
             them.
+          </p>
+          <p>
+            Those four numbers are defaults, not the product. The accuracy
+            limit, the staleness window, the duplicate distance, the two-minute
+            stillness timeout and the length of a probe are all sliders in
+            Settings, and the app shows you the same table live, with your own
+            values in it.
           </p>
         </div>
       </div>
@@ -202,6 +221,19 @@
             activity and battery carried in extensions. Or JSON with the whole
             record, ISO-8601 throughout. Both go out through the standard share
             sheet.
+          </p>
+          <p>
+            Export what you need rather than everything: today, the last seven
+            days, a date range you pick, one recorded session, or the lot. The
+            map screen draws the same selection before you send it.
+          </p>
+          <h3>In your language, in your units</h3>
+          <p>
+            The app is translated into nine languages — English, French, German,
+            Spanish, Italian, Japanese, Dutch, Polish and Czech — and distances,
+            speeds and altitudes follow a metric or imperial setting of their
+            own, so you are not forced to change your phone's language to read
+            miles.
           </p>
         </div>
       </div>

@@ -13,8 +13,6 @@
   <meta property="og:title" content="Support — WhereIWas GPS Logger">
   <meta property="og:description" content="Setting up WhereIWas, the permissions it needs and why, and how to diagnose a gap in a track using the audit trail.">
   <meta property="og:url" content="https://glandais.github.io/WhereIWas/support/">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -42,10 +40,11 @@
       <div class="sheet__grid">
         <h2 class="sheet__label">Getting started</h2>
         <div class="sheet__body">
-          <h2>Three permissions, then leave it alone.</h2>
+          <h2>Set it up once, then leave it alone.</h2>
           <p>
-            The app is designed to be set up once and then forgotten. It has no
-            start button you need to remember to press before a shift.
+            Three permissions and one switch, and there is nothing left to
+            remember before a shift: the switch survives relaunches, reboots and
+            terminations until you turn it off yourself.
           </p>
           <ol>
             <li>
@@ -75,6 +74,16 @@
               While the receiver is running you will see the blue indicator in
               the status bar. That is deliberate — an app recording your
               position in the background should say so.
+            </p>
+            <p>
+              You will also see it while the app is idle, because it keeps a
+              coarse three-kilometre update stream open when you are stationary:
+              that stream is what stops iOS terminating the app between trips.
+              <b>Show location indicator</b> in Settings hides it for that idle
+              case; it cannot hide it while you are actually being recorded, and
+              nothing in the app can. If you would rather have no coarse stream
+              at all, turn <b>Keep coarse updates while stationary</b> off and
+              accept being terminated — and relaunched — more often.
             </p>
           </div>
         </div>
@@ -109,8 +118,9 @@
             has to use GPS to detect movement, which is the expensive way to do
             it. Then check whether coarse updates while stationary are on: they
             make iOS far less likely to terminate the app, at a small constant
-            cost. A shift with roughly five hours of movement should land near
-            40–50 % of a full charge.
+            cost. The receiver itself is what costs, so a day of driving costs
+            far more than a day at a desk; the status screen shows which
+            receiver profile is in force at any moment.
           </p>
 
           <h3>Tracking stopped and did not come back</h3>
