@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--
+  Layout A — HERO / BOTTOM EDGE BREAK
+  Text owns the top ~30%, the device owns the bottom ~65% and runs off the bottom edge.
+  A hard-edged colour block (navy field) fills the top 46% of the canvas and the device
+  crosses its boundary, so copy and device are one composition rather than two stacked blocks.
+  Canvas: 1242 x 2688 (iPhone6_5). 1vw = 12.42px, 1vh = 26.88px.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    background: #060D22;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hard block of colour with a slanted cut — the device covers the middle 84vw, so the cut is
+     only ever seen in the two gutters, and a diagonal reads as deliberate there where a flat
+     horizontal line reads as a seam. */
+  .field {
+    position: absolute; top: 0; left: 0; right: 0; height: 56%;
+    background: linear-gradient(152deg, #1D428F 0%, #16295F 52%, #0E1B3E 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 96%, 0 72%);
+  }
+  .field::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(115% 85% at 80% 6%, rgba(53,214,238,0.34), rgba(53,214,238,0) 62%);
+  }
+  .copy {
+    position: absolute; top: 6%; left: 7%; right: 7%;
+    z-index: 3; text-align: left;
+  }
+  h1 {
+    font-size: 11.4vw; font-weight: 800; color: #FFFFFF;
+    line-height: 1.03; letter-spacing: -0.035em; text-wrap: balance;
+  }
+  /* Brand motif: the growing dot trail from the app icon, used as the accent rule. */
+  .trail { display: flex; align-items: center; gap: 1.5vw; margin: 3.2vh 0 3.0vh; }
+  .trail i { display: block; border-radius: 50%; background: linear-gradient(135deg, #3EE07A, #35D6EE); }
+  .trail i:nth-child(1) { width: 0.9vw;  height: 0.9vw;  opacity: .40; }
+  .trail i:nth-child(2) { width: 1.4vw;  height: 1.4vw;  opacity: .58; }
+  .trail i:nth-child(3) { width: 2.0vw;  height: 2.0vw;  opacity: .76; }
+  .trail i:nth-child(4) { width: 2.7vw;  height: 2.7vw;  opacity: .90; }
+  .trail i:nth-child(5) { width: 3.5vw;  height: 3.5vw;  opacity: 1; }
+  p {
+    font-size: 4.9vw; font-weight: 400; color: rgba(255,255,255,0.74);
+    line-height: 1.28; max-width: 90%; text-wrap: balance;
+  }
+
+  .device {
+    position: absolute; bottom: -12%; left: 50%; transform: translateX(-50%);
+    z-index: 2;
+  }
+  .device img {
+    display: block; width: 84vw; height: auto;
+    filter: drop-shadow(0 34px 90px rgba(0,0,0,0.72));
+  }
+</style>
+</head>
+<body>
+  <div class="field"></div>
+
+  <div class="copy" data-fit-budget="25" data-fit-start="11.4" data-fit-min="9" data-fit-sub="4.9" data-fit-sub-min="4.2">
+    <h1 data-kou-id="headline" data-kou-role="headline">{{headline}}</h1>
+    <div class="trail"><i></i><i></i><i></i><i></i><i></i></div>
+    <p data-kou-id="subtitle" data-kou-role="supporting">{{subtitle}}</p>
+  </div>
+
+  <div class="device">
+    <img data-kou-id="device" data-kou-role="device" src="{{app_screenshot}}" alt="">
+  </div>
+<script>
+/* Copy auto-fit.
+   One template set serves nine languages (LEDGER D13) and German, Polish and Czech run 40-60%
+   longer than the English they were written from — "Sie entscheiden, wann Ihre Daten das iPhone
+   verlassen" is six lines at the size English needs three. So the copy block declares the share
+   of the canvas it owns (data-fit-budget, in % of canvas height) and this shrinks the headline,
+   then the subtitle, in 0.15vw steps until the block fits it. English never moves: it is already
+   inside its budget at the starting size. */
+(function () {
+  var box = document.querySelector('[data-fit-budget]');
+  if (!box) return;
+  var budget = parseFloat(box.dataset.fitBudget) / 100 * window.innerHeight;
+  var h1 = box.querySelector('h1'), p = box.querySelector('p');
+  var size = parseFloat(box.dataset.fitStart), min = parseFloat(box.dataset.fitMin);
+  var over = function () { return box.getBoundingClientRect().height > budget; };
+  while (over() && size > min) { size -= 0.15; h1.style.fontSize = size.toFixed(2) + 'vw'; }
+  if (p) {
+    var sub = parseFloat(box.dataset.fitSub), subMin = parseFloat(box.dataset.fitSubMin);
+    while (over() && sub > subMin) { sub -= 0.1; p.style.fontSize = sub.toFixed(2) + 'vw'; }
+  }
+})();
+</script>
+</body>
+</html>

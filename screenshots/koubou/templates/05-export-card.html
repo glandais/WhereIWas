@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--
+  Layout E — LIFTED CARD (cropped screen, no device frame)
+  Inside a device frame the export screen renders at 0.61x and its session list stops being
+  readable, so this slide drops the frame and lifts one window out of the capture at ~0.85x:
+  the prepared file (share row, name, size) and the whole session list under it — six sessions
+  across three days, each with its sample count, distance and duration, the first badged Open.
+  That list is what actually sells the screen; the format picker above it is a settings row.
+
+  Crop window in source pixels: x 45..1275, y 772..2590  (capture is 1320 x 2868).
+  The window is measured from the BOTTOM of the capture, not the top: `ExportView` scrolls the
+  list into view in screenshot mode, so the content is bottom-anchored and everything below the
+  fold sits at the same pixel row in all nine locales. Measured across the nine captures, the
+  session card ends at y 2574 everywhere except en-US (2558) and its six rows have a 197px pitch
+  in all of them; what moves is only what is above — the format description is three lines in
+  ja/pl/cs against two elsewhere, and the "files are written to…" footer takes a third line in
+  German and Polish, which pushes the prepared-file card up by up to 60px. So the bottom edge
+  (2590) is fixed 16px under the card in eight locales, 32px in en-US, and always 28px clear of
+  the tab bar; the top edge (772) is deliberately loose — it lands in the whitespace under the
+  share-row divider in en/de/es/fr/it/nl and under the "Prepare GPX file" row in ja/pl/cs, so no
+  line of text is sliced anywhere. A window measured from the top would have to absorb that 60px
+  of drift twice over.
+    img width      = 1320 / 1230 * 84vw =  90.1463vw
+    img margin-left=  -45 / 1230 * 84vw =  -3.0732vw
+    img margin-top =  -772 / 1230 * 84vw = -52.7220vw
+    card height    = 1818 / 1230 * 84vw = 124.1561vw  (1542px = 57% of canvas)
+  Canvas: 1242 x 2688 (iPhone6_5). 1vw = 12.42px, 1vh = 26.88px.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    background: linear-gradient(168deg, #16306F 0%, #0B1638 46%, #05091A 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Hard block of brand colour, slanted, anchored to the bottom edge. The card sits *into* it
+     rather than floating above it: the block is only ever seen in the two gutters and in a
+     narrow strip under the card, which is what stops the lower third reading as an empty band. */
+  .block {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 23%; z-index: 1;
+    background: linear-gradient(96deg, #3EE07A 0%, #2FD6B2 48%, #35D6EE 100%);
+    clip-path: polygon(0 18%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .copy { position: absolute; top: 7%; left: 7%; right: 7%; z-index: 3; }
+  h1 {
+    font-size: 11.6vw; font-weight: 800; color: #FFFFFF;
+    line-height: 1.02; letter-spacing: -0.038em; text-wrap: balance;
+  }
+  p {
+    font-size: 4.8vw; font-weight: 400; color: rgba(255,255,255,0.74);
+    line-height: 1.28; margin-top: 2.4vh; max-width: 96%; text-wrap: balance;
+  }
+
+  .card {
+    position: absolute; left: 50%; bottom: 6.5%; z-index: 2;
+    width: 84vw; height: 124.1561vw; overflow: hidden;
+    border-radius: 2.4vw;
+    transform: translateX(-50%) rotate(-3deg);
+    box-shadow: 0 46px 90px rgba(0,0,0,0.62), 0 0 0 1px rgba(255,255,255,0.10);
+  }
+  .card img {
+    display: block; width: 90.1463vw; height: auto;
+    margin-left: -3.0732vw; margin-top: -52.7220vw;
+  }
+</style>
+</head>
+<body>
+  <div class="block"></div>
+
+  <div class="card" data-kou-id="device" data-kou-role="device">
+    <img src="{{app_screenshot}}" alt="">
+  </div>
+
+  <div class="copy" data-fit-budget="26" data-fit-start="11.6" data-fit-min="9" data-fit-sub="4.8" data-fit-sub-min="4.2">
+    <h1 data-kou-id="headline" data-kou-role="headline">{{headline}}</h1>
+    <p data-kou-id="subtitle" data-kou-role="supporting">{{subtitle}}</p>
+  </div>
+<script>
+/* Copy auto-fit.
+   One template set serves nine languages (LEDGER D13) and German, Polish and Czech run 40-60%
+   longer than the English they were written from — "Sie entscheiden, wann Ihre Daten das iPhone
+   verlassen" is six lines at the size English needs three. So the copy block declares the share
+   of the canvas it owns (data-fit-budget, in % of canvas height) and this shrinks the headline,
+   then the subtitle, in 0.15vw steps until the block fits it. English never moves: it is already
+   inside its budget at the starting size. */
+(function () {
+  var box = document.querySelector('[data-fit-budget]');
+  if (!box) return;
+  var budget = parseFloat(box.dataset.fitBudget) / 100 * window.innerHeight;
+  var h1 = box.querySelector('h1'), p = box.querySelector('p');
+  var size = parseFloat(box.dataset.fitStart), min = parseFloat(box.dataset.fitMin);
+  var over = function () { return box.getBoundingClientRect().height > budget; };
+  while (over() && size > min) { size -= 0.15; h1.style.fontSize = size.toFixed(2) + 'vw'; }
+  if (p) {
+    var sub = parseFloat(box.dataset.fitSub), subMin = parseFloat(box.dataset.fitSubMin);
+    while (over() && sub > subMin) { sub -= 0.1; p.style.fontSize = sub.toFixed(2) + 'vw'; }
+  }
+})();
+</script>
+</body>
+</html>

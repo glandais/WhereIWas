@@ -6,9 +6,38 @@ recorded as they are made; open questions are listed at the end and removed once
 
 `screenshots/README.md` describes what the pipeline does today.
 
-## Where things stand (2026-09-04, second entry)
+## Where things stand (2026-09-04, fourth entry)
 
-The dataset half of the plan is implemented and the flat captures are regenerated. What exists:
+Card 5 was reframed and the whole set re-rendered. Two changes:
+
+- **`ExportView` scrolls to the session list in screenshot mode.** The old capture opened on the
+  format picker and its grey help text, which is what made the card read like a settings page (the
+  first-set finding below). The capture now shows the prepared file and six sessions across three
+  days, and `05-export-card.html` crops **x 45..1275, y 772..2590** out of it at 0.85× — the share
+  row, the file name, the size, the footer and all six session rows with their sample counts,
+  distances and durations. The old window (`y 895..1800`, aimed at the format card) pointed at
+  nothing after the scroll.
+- The window is measured from the **bottom** of the capture, not the top. Bottom-anchored content
+  means the session card lands at the same pixel row in all nine locales (y 2574; 2558 in en-US)
+  with a 197px row pitch, while everything above it drifts by up to 60px — three-line format
+  descriptions in ja/pl/cs, a three-line footer in German and Polish. A top-measured window would
+  have to absorb that drift twice. `screenshots/README.md` § Framing notes carries the details.
+
+The capture step also grew a guard: five captures in a locale must be five distinct files. It exists
+because a `./scripts/xcb.sh test` run concurrent with a capture installed the Debug app over the
+Screenshots one (same bundle identifier, the test host), which silently produced forty-five copies
+of the permission-denied Status screen from a script that reported success.
+
+Card 5's headline now auto-fits in three locales (German 9.80vw, Dutch and Polish 10.55vw) where it
+did not before — a consequence of the smaller copy budget the taller card needs. German is a
+line-breaking result, not a budget one: more budget would not buy the size back, a shorter headline
+would.
+
+## Where things stand (2026-09-04, third entry)
+
+Everything except the upload (D15) is done. The nine-locale set of framed cards is on disk in
+`screenshots/IPHONE_65/` and passes the dimension, alpha, size and `asc screenshots validate`
+checks. What exists:
 
 - `scripts/generate-tracks.swift` — a one-off, run by hand on this machine, asks **MKDirections**
   for the nine city routes and writes `WhereIWas/App/DemoTracks.swift`. It needs a run loop for
@@ -19,8 +48,18 @@ The dataset half of the plan is implemented and the flat captures are regenerate
 - `scripts/screenshots.sh` — five cards, `-screenshotScenario`, locales read from `knownRegions`,
   flat captures in `screenshots/flat/` (gitignored) for Koubou to frame.
 - `WhereIWasTests/DemoTracksTests.swift` — the D12 guard.
+- `screenshots/koubou/` — `config.yaml`, five templates, `koubou-strings.xcstrings` with ten
+  strings in nine languages (D1/D13/D14). Renders are gitignored.
+- `screenshots/assemble.sh` — flattens Koubou's `out/<locale>/<device>/` into
+  `screenshots/IPHONE_65/<locale>/`, deletes what the new render does not replace, and fails on a
+  wrong size, an alpha channel, a zero-byte or an outlier-small card.
 
-Still to do: the Koubou half (D1, D13, D14) and the upload (D15).
+Still to do: the upload (D15).
+
+**One deviation worth knowing.** The templates auto-fit the headline per locale, with a 9vw floor
+under the Koubou skill's 10vw minimum for this canvas. Card 1 is the only place it bites: German
+and Polish sit on the floor (9.0vw, three lines) and Czech at 9.15vw, all readable. Shortening
+those three headlines would buy the size back.
 
 ## Findings from the first set (what the decisions answer)
 
@@ -66,6 +105,10 @@ All decided on 2026-09-04.
 | 3 | Map | full day, several stops, walking loop visible, date picker able to step back | Every day of the deployment, on the map. |
 | 4 | Audit trail | severity `Info`, so transitions and rejected fixes show without `store.insert` noise | Every fix accepted or rejected, with the reason. |
 | 5 | Export | session list scrolled into view, 3–4 sessions over several days, short file name | GPX and JSON, with speed, accuracy, activity and battery. |
+
+Card 5 came out with **six** sessions over three days rather than 3–4, and the file name is still
+the long timestamped one — it wraps to two lines and reads fine inside the crop, so it was left
+alone. See the fourth entry above for the framing that resulted.
 
 Headlines are placeholders: the Koubou skill wants 2–3 options per slide before layout work.
 
@@ -149,5 +192,5 @@ changed for a screenshot. Not worth it.
 
 ## Open questions
 
-None. Next step: Koubou — style intake, templates, the nine translations of the headlines (D13),
-then the upload (D15).
+None. Next step: the upload (D15) — nine locales, five cards each, from
+`screenshots/IPHONE_65/`.

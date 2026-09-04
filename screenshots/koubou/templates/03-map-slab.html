@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!--
+  Layout C — INVERTED / DEVICE TOP, COPY SLAB BOTTOM
+  The rhythm flips: the device owns the top, and a solid slab of ink at the bottom carries the
+  copy and cuts across the lower part of the phone. The overlap is the point — the day summary
+  row (points / distance / span) stays readable just above the cut.
+  Canvas: 1242 x 2688 (iPhone6_5). 1vw = 12.42px, 1vh = 26.88px.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 100vw; height: 100vh; overflow: hidden; position: relative;
+    background: #05091A;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Two hard blocks, cut where they stay visible: the device covers the middle 78vw, so any
+     block edge behind it has to land in a gutter or it reads as a stray rectangle. */
+  .field {
+    position: absolute; inset: 0;
+    background: linear-gradient(158deg, #1E4699 0%, #16306F 52%, #0C1A40 100%);
+  }
+  .field::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(80% 55% at 22% 82%, rgba(53,214,238,0.26), rgba(53,214,238,0) 64%);
+  }
+  .column {
+    position: absolute; top: 0; bottom: 0; right: 0; width: 13%;
+    background: #05091A;
+  }
+
+  .device { position: absolute; top: 4%; left: 44%; transform: translateX(-50%); z-index: 2; }
+  .device img {
+    display: block; width: 78vw; height: auto;
+    filter: drop-shadow(0 28px 70px rgba(0,0,0,0.70));
+  }
+
+  .slab {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+    padding: 5.6% 7% 6.4%;
+    background: #05091A;
+    border-top: 12px solid transparent;
+    border-image: linear-gradient(90deg, rgba(53,214,238,0) 0%, #35D6EE 18%, #3EE07A 78%, rgba(62,224,122,0) 100%) 1;
+    box-shadow: 0 -30px 60px rgba(5,9,26,0.85);
+  }
+  h1 {
+    font-size: 11.2vw; font-weight: 800; color: #FFFFFF;
+    line-height: 1.03; letter-spacing: -0.035em; text-wrap: balance;
+  }
+  p {
+    font-size: 4.8vw; font-weight: 400; color: rgba(255,255,255,0.72);
+    line-height: 1.28; margin-top: 2.6vh; max-width: 94%; text-wrap: balance;
+  }
+</style>
+</head>
+<body>
+  <div class="field"></div>
+  <div class="column"></div>
+
+  <div class="device">
+    <img data-kou-id="device" data-kou-role="device" src="{{app_screenshot}}" alt="">
+  </div>
+
+  <div class="slab" data-fit-budget="36" data-fit-start="11.2" data-fit-min="9" data-fit-sub="4.8" data-fit-sub-min="4.2">
+    <h1 data-kou-id="headline" data-kou-role="headline">{{headline}}</h1>
+    <p data-kou-id="subtitle" data-kou-role="supporting">{{subtitle}}</p>
+  </div>
+<script>
+/* Copy auto-fit.
+   One template set serves nine languages (LEDGER D13) and German, Polish and Czech run 40-60%
+   longer than the English they were written from — "Sie entscheiden, wann Ihre Daten das iPhone
+   verlassen" is six lines at the size English needs three. So the copy block declares the share
+   of the canvas it owns (data-fit-budget, in % of canvas height) and this shrinks the headline,
+   then the subtitle, in 0.15vw steps until the block fits it. English never moves: it is already
+   inside its budget at the starting size. */
+(function () {
+  var box = document.querySelector('[data-fit-budget]');
+  if (!box) return;
+  var budget = parseFloat(box.dataset.fitBudget) / 100 * window.innerHeight;
+  var h1 = box.querySelector('h1'), p = box.querySelector('p');
+  var size = parseFloat(box.dataset.fitStart), min = parseFloat(box.dataset.fitMin);
+  var over = function () { return box.getBoundingClientRect().height > budget; };
+  while (over() && size > min) { size -= 0.15; h1.style.fontSize = size.toFixed(2) + 'vw'; }
+  if (p) {
+    var sub = parseFloat(box.dataset.fitSub), subMin = parseFloat(box.dataset.fitSubMin);
+    while (over() && sub > subMin) { sub -= 0.1; p.style.fontSize = sub.toFixed(2) + 'vw'; }
+  }
+})();
+</script>
+</body>
+</html>

@@ -18,5 +18,9 @@ WhereIWas.xcodeproj/
 # Screenshot pipeline (scripts/screenshots.sh) — flat captures are raw
 # material for Koubou, regenerated on every run; screenshots/IPHONE_65/ holds
 # the framed cards Koubou produces from them and stays committed.
+# screenshots/koubou/ itself (config.yaml, templates/, the string catalog) is the
+# source and stays committed; only its render output and scratch configs do not.
 .build/
 screenshots/flat/
+screenshots/koubou/out/
+screenshots/koubou/*.local.yaml

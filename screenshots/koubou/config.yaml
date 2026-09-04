@@ -1,0 +1,74 @@
+# App Store screenshot cards — Koubou sources (LEDGER D1/D13/D14).
+#
+# Run from the repository root:
+#   kou generate screenshots/koubou/config.yaml --output json
+#
+# Every path below is resolved relative to THIS file, not to the working directory.
+#
+# Inputs  : screenshots/flat/<locale>/NN-*.png   (produced by ./scripts/screenshots.sh, gitignored)
+# Outputs : screenshots/koubou/out/<locale>/<device>/NN-*.png (gitignored)
+#           they still have to be copied into screenshots/IPHONE_65/<locale>/ for `asc screenshots upload`.
+#
+# The device frame is a 17 Pro Max because that is the simulator the captures come from
+# (scripts/sim-config.sh) — Deep Blue is the dark finish and the one that sits closest to the
+# icon's navy. The locale list is the App Store Connect namespace, matching the flat/ directories.
+
+project:
+  name: "WhereIWas"
+  output_dir: "out"
+  device: "iPhone 17 Pro Max - Deep Blue - Portrait"
+  output_size: "iPhone6_5"
+
+localization:
+  base_language: "en-US"
+  languages: ["en-US", "fr-FR", "de-DE", "es-ES", "it", "ja", "nl-NL", "pl", "cs"]
+  xcstrings_path: "koubou-strings.xcstrings"
+
+screenshots:
+
+  # 1 — hero. The one argument that has to survive a thumbnail: it records when you are not looking.
+  01-status-moving:
+    template: "templates/01-hero-record.html"
+    variables:
+      headline: "Records with the screen off"
+      subtitle: "Survives termination, reboot and no signal."
+    assets:
+      app_screenshot: "../flat/01-status-moving.png"
+
+  # 2 — the differentiator: the same screen making the opposite argument.
+  02-status-stationary:
+    template: "templates/02-split-motion.html"
+    variables:
+      headline: "GPS runs only while you move"
+      subtitle: "Stand still and it switches off. Move and it is back in seconds."
+    assets:
+      app_screenshot: "../flat/02-status-stationary.png"
+
+  # 3 — the payoff: what all that recording is for.
+  03-map:
+    template: "templates/03-map-slab.html"
+    variables:
+      headline: "Every day, on the map"
+      subtitle: "A full day of the deployment, street by street."
+    assets:
+      app_screenshot: "../flat/03-map.png"
+
+  # 4 — proof. Frame dropped so the log rows stay readable (see the template header).
+  04-audit-trail:
+    template: "templates/04-audit-band.html"
+    frame: false
+    variables:
+      headline: "Every fix, accepted or rejected"
+      subtitle: "With the reason, the threshold and the measured value."
+    assets:
+      app_screenshot: "../flat/04-audit-trail.png"
+
+  # 5 — close on ownership. Frame dropped, one card lifted out of the export screen.
+  05-export:
+    template: "templates/05-export-card.html"
+    frame: false
+    variables:
+      headline: "Your data leaves when you say so"
+      subtitle: "GPX or JSON, with speed, accuracy, activity and battery."
+    assets:
+      app_screenshot: "../flat/05-export.png"
