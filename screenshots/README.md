@@ -153,6 +153,26 @@ size), the footer, and all six sessions across three days with their sample coun
 durations — which is what the screen actually sells; the format picker above it is a settings row
 and stays out of frame.
 
+### Japanese line breaks — an invisible convention
+
+Chromium breaks Japanese between any two characters, which tore particles off the nouns they
+govern: the map headline came out `一日の軌跡 / を、地図で`, the equivalent of breaking "a full
+day's / track" after the apostrophe. `word-break: auto-phrase` is the modern fix and this
+renderer does not implement it — it falls back to breaking anywhere, and removing
+`text-wrap: balance` to let it through only split 地図 down the middle.
+
+So the break points are named instead. The templates set `word-break: keep-all`, which forbids
+every break Chromium would invent, and each Japanese string in `koubou-strings.xcstrings` carries
+a **U+200B zero-width space** at each phrase boundary — the only places a line may then end.
+Latin text is untouched: it still breaks at its spaces, and re-rendering after this change moved
+three Japanese cards and not one byte of the other eight languages.
+
+Two things follow. **Editing a Japanese string means re-placing its U+200B**, and they are
+invisible in every editor — `grep -c $'\u200b'` on the catalog is the way to see them. And a
+phrase wider than the copy box now has nowhere to break, so the auto-fit script treats
+`scrollWidth > clientWidth` as "over" alongside its height test; without that, card 5's
+`自分で決めたときだけ` ran off the canvas edge and lost its last character with no warning.
+
 One template set serves nine languages, so each copy block declares the share of canvas height it
 owns (`data-fit-budget`) and a short inline script steps the headline down until it fits, then the
 subtitle. English never moves. The floor is 9vw, under the 10vw the Koubou skill asks for on this

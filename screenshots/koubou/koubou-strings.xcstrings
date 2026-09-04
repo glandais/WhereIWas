@@ -42,7 +42,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "出動した一日を、街路に沿ってまるごと再現。"
+            "value": "出動した一日を、​街路に沿って​まるごと再現。"
           }
         },
         "nl-NL": {
@@ -100,7 +100,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "一日の軌跡を、地図で"
+            "value": "一日の軌跡を、​地図で"
           }
         },
         "nl-NL": {
@@ -158,7 +158,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "すべての測位を、採否まで記録"
+            "value": "すべての測位を、​採否まで記録"
           }
         },
         "nl-NL": {
@@ -216,7 +216,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPSが動くのは移動中だけ"
+            "value": "GPSが動くのは​移動中だけ"
           }
         },
         "nl-NL": {
@@ -274,7 +274,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPXまたはJSONで、速度・精度・活動・バッテリーまで。"
+            "value": "GPXまたはJSONで、​速度・精度・​活動・バッテリーまで。"
           }
         },
         "nl-NL": {
@@ -332,7 +332,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "画面オフでも記録を継続"
+            "value": "画面オフでも​記録を継続"
           }
         },
         "nl-NL": {
@@ -390,7 +390,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "静止すればオフ、動けば数秒で復帰。"
+            "value": "静止すればオフ、​動けば数秒で復帰。"
           }
         },
         "nl-NL": {
@@ -448,7 +448,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "強制終了・再起動・圏外でも途切れない。"
+            "value": "強制終了・再起動・​圏外でも途切れない。"
           }
         },
         "nl-NL": {
@@ -506,7 +506,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "理由・しきい値・測定値つきで。"
+            "value": "理由・しきい値・​測定値つきで。"
           }
         },
         "nl-NL": {
@@ -564,7 +564,7 @@
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "外に出すのは、自分で決めたときだけ"
+            "value": "外に出すのは、​自分で​決めたときだけ"
           }
         },
         "nl-NL": {
