@@ -36,105 +36,120 @@ struct ExportView: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("export.what") {
-                    Picker("export.scope.label", selection: $scope) {
-                        ForEach(Scope.allCases) { Text(verbatim: $0.title).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
-                    .labelsHidden()
+            ScrollViewReader { proxy in
+                Form {
+                    Section("export.what") {
+                        Picker("export.scope.label", selection: $scope) {
+                            ForEach(Scope.allCases) { Text(verbatim: $0.title).tag($0) }
+                        }
+                        .pickerStyle(.segmented)
+                        .labelsHidden()
 
-                    if scope == .custom {
-                        DatePicker("export.range.from", selection: $customStart, in: ...customEnd)
-                        DatePicker("export.range.to", selection: $customEnd, in: customStart...Date.now)
+                        if scope == .custom {
+                            DatePicker("export.range.from", selection: $customStart, in: ...customEnd)
+                            DatePicker("export.range.to", selection: $customEnd, in: customStart...Date.now)
+                        }
+                        if scope == .session {
+                            if sessions.isEmpty {
+                                Text("export.sessions.empty")
+                                    .foregroundStyle(.secondary)
+                            } else {
+                                Picker("export.session.label", selection: $selectedSession) {
+                                    ForEach(sessions) { session in
+                                        Text(verbatim: sessionTitle(session)).tag(Optional(session.id))
+                                    }
+                                }
+                                .pickerStyle(.navigationLink)
+                            }
+                        }
                     }
-                    if scope == .session {
-                        if sessions.isEmpty {
-                            Text("export.sessions.empty")
-                                .foregroundStyle(.secondary)
-                        } else {
-                            Picker("export.session.label", selection: $selectedSession) {
-                                ForEach(sessions) { session in
-                                    Text(verbatim: sessionTitle(session)).tag(Optional(session.id))
+
+                    Section("common.format") {
+                        Picker("common.format", selection: $format) {
+                            ForEach(ExportFormat.allCases) { f in
+                                Label(f.title, systemImage: f.systemImage).tag(f)
+                            }
+                        }
+                        .pickerStyle(.inline)
+                        .labelsHidden()
+                        Text(format == .gpx
+                             ? "export.format.gpxDescription"
+                             : "export.format.jsonDescription")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Section {
+                        Button {
+                            Task { await export() }
+                        } label: {
+                            HStack {
+                                Label(String(localized: "export.prepare",
+                                             defaultValue: "Prepare \(format.title) file"),
+                                      systemImage: "doc.badge.gearshape")
+                                if isExporting {
+                                    Spacer()
+                                    ProgressView()
                                 }
                             }
-                            .pickerStyle(.navigationLink)
                         }
-                    }
-                }
+                        .disabled(isExporting || (scope == .session && selectedSession == nil))
 
-                Section("common.format") {
-                    Picker("common.format", selection: $format) {
-                        ForEach(ExportFormat.allCases) { f in
-                            Label(f.title, systemImage: f.systemImage).tag(f)
+                        if let url = exportedURL, exportedFor == exportKey {
+                            ShareLink(item: url, preview: SharePreview(url.lastPathComponent, image: Image(systemName: format.systemImage))) {
+                                Label(String(localized: "common.share",
+                                             defaultValue: "Share \(url.lastPathComponent)"),
+                                      systemImage: "square.and.arrow.up")
+                            }
+                            if let size = fileSize(url) {
+                                LabeledContent("export.fileSize", value: size)
+                            }
                         }
+                        if let errorMessage {
+                            Label(errorMessage, systemImage: "exclamationmark.triangle")
+                                .foregroundStyle(.red)
+                                .font(.footnote)
+                        }
+                    } footer: {
+                        Text("export.footer")
                     }
-                    .pickerStyle(.inline)
-                    .labelsHidden()
-                    Text(format == .gpx
-                         ? "export.format.gpxDescription"
-                         : "export.format.jsonDescription")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
 
-                Section {
-                    Button {
-                        Task { await export() }
-                    } label: {
-                        HStack {
-                            Label(String(localized: "export.prepare",
-                                         defaultValue: "Prepare \(format.title) file"),
-                                  systemImage: "doc.badge.gearshape")
-                            if isExporting {
-                                Spacer()
-                                ProgressView()
+                    if !sessions.isEmpty {
+                        Section("common.sessions") {
+                            ForEach(sessions) { session in
+                                SessionRow(session: session)
                             }
                         }
                     }
-                    .disabled(isExporting || (scope == .session && selectedSession == nil))
-
-                    if let url = exportedURL, exportedFor == exportKey {
-                        ShareLink(item: url, preview: SharePreview(url.lastPathComponent, image: Image(systemName: format.systemImage))) {
-                            Label(String(localized: "common.share",
-                                         defaultValue: "Share \(url.lastPathComponent)"),
-                                  systemImage: "square.and.arrow.up")
-                        }
-                        if let size = fileSize(url) {
-                            LabeledContent("export.fileSize", value: size)
-                        }
-                    }
-                    if let errorMessage {
-                        Label(errorMessage, systemImage: "exclamationmark.triangle")
-                            .foregroundStyle(.red)
-                            .font(.footnote)
-                    }
-                } footer: {
-                    Text("export.footer")
                 }
-
-                if !sessions.isEmpty {
-                    Section("common.sessions") {
-                        ForEach(sessions) { session in
-                            SessionRow(session: session)
-                        }
+                .navigationTitle("common.export")
+                .task {
+                    #if SCREENSHOTS
+                    // The whole history, not today: the demo dataset spans three
+                    // days, and "Today" would export the drive in progress alone.
+                    if ScreenshotMode.isActive { scope = .all }
+                    #endif
+                    await loadSessions()
+                    #if SCREENSHOTS
+                    // Show a prepared file rather than an inert button.
+                    if ScreenshotMode.isActive { await export() }
+                    // And scroll to what the screen is actually worth showing. The
+                    // format picker and its help text sit above the fold, so an
+                    // untouched capture of this screen reads like a settings page;
+                    // the session list — dates, durations, distances — is the part
+                    // that sells, and is exactly what a user sees after one flick.
+                    // The target is the last session row rather than the section:
+                    // `Form` is a list, and `scrollTo` resolves rows, so an `.id`
+                    // on a `Section` is not a destination. Rows are identified by
+                    // the summary's own id, so there is nothing else to tag.
+                    if ScreenshotMode.isActive, let last = sessions.last?.id {
+                        try? await Task.sleep(for: .milliseconds(300))
+                        withAnimation(.none) { proxy.scrollTo(last, anchor: .bottom) }
                     }
+                    #endif
                 }
+                .refreshable { await loadSessions() }
             }
-            .navigationTitle("common.export")
-            .task {
-                #if SCREENSHOTS
-                // The whole history, not today: the demo dataset spans three
-                // days, and "Today" would export the drive in progress alone.
-                if ScreenshotMode.isActive { scope = .all }
-                #endif
-                await loadSessions()
-                #if SCREENSHOTS
-                // Show a prepared file rather than an inert button.
-                if ScreenshotMode.isActive { await export() }
-                #endif
-            }
-            .refreshable { await loadSessions() }
         }
     }
 
