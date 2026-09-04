@@ -106,8 +106,14 @@ enum Formatting {
     }
 
     /// "14:32:07".
+    ///
+    /// Built from the field templates rather than `time: .standard`, which
+    /// drops the leading zero in every 24-hour locale that wants one — German
+    /// and French read "6:12:48" where they should read "06:12:48". The audit
+    /// trail already formats its rows this way; this makes the Status and Map
+    /// screens agree with it.
     static func time(_ date: Date) -> String {
-        date.formatted(date: .omitted, time: .standard)
+        date.formatted(.dateTime.hour().minute().second())
     }
 
     /// "Sep 2, 2026, 14:32".

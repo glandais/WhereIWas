@@ -82,13 +82,25 @@ struct UnitSystemFormattingTests {
     /// The leading number of a formatted measurement, whatever the locale's
     /// decimal separator ("," in French) and grouping separator (a narrow
     /// no-break space) are.
+    ///
+    /// The separators are read from the current locale rather than guessed:
+    /// treating "," as a decimal point is right in French and wrong in
+    /// English, where "1,234 m" would come back as 1.234. That matters because
+    /// the simulator's system locale is not a constant — `scripts/screenshots.sh`
+    /// moves it per capture (see LEDGER D16) and restores it on exit, so a
+    /// run interrupted mid-flight leaves the device in another language.
     private func magnitude(_ text: String) throws -> Double {
+        let locale = Locale.current
+        let decimal = Character(locale.decimalSeparator ?? ".")
+        let grouping = locale.groupingSeparator.flatMap { $0.first }
         var digits = ""
         for character in text {
             if character.isNumber {
                 digits.append(character)
-            } else if character == "," || character == "." {
+            } else if character == decimal {
                 digits.append(".")
+            } else if character == grouping {
+                continue
             } else if character.isWhitespace || character.unicodeScalars.allSatisfy({ $0.properties.isWhitespace }) {
                 continue
             } else if !digits.isEmpty {
