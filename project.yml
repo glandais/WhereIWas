@@ -72,7 +72,6 @@ targets:
         UIBackgroundModes:
           - location
           - processing
-          - fetch
         NSLocationAlwaysAndWhenInUseUsageDescription: "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it."
         NSLocationWhenInUseUsageDescription: "WhereIWas records your position to build your location history."
         NSMotionUsageDescription: "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery."

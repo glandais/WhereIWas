@@ -167,7 +167,6 @@ struct StatusView: View {
         Section("status.samples.title") {
             LabeledContent("status.samples.today", value: samplesToday.map(Formatting.count) ?? "—")
             LabeledContent("status.samples.totalStored", value: Formatting.count(status.stats.totalSamples))
-            LabeledContent("status.samples.pendingUpload", value: Formatting.count(status.stats.pendingUpload))
             LabeledContent("status.samples.acceptedRejected",
                            value: "\(Formatting.count(status.acceptedCount)) / \(Formatting.count(status.rejectedCount))")
             LabeledContent("common.sessions", value: Formatting.count(status.stats.sessionCount))
