@@ -14,13 +14,19 @@
 #   ./scripts/xcb.sh -- <args...>     raw xcodebuild, destination still pinned
 #
 # Extra arguments after the subcommand are passed through to xcodebuild.
+#
+# WHEREIWAS_SCHEME picks another scheme of the same project — in practice
+# `WhereIWas-Screenshots`, the only way to compile the `#if SCREENSHOTS` code.
+# It is an environment variable rather than a passed-through `-scheme` because
+# xcodebuild refuses the option twice, and the point of this script is that the
+# pinned destination cannot be argued with.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/sim-config.sh
 
 PROJECT="WhereIWas.xcodeproj"
-SCHEME="WhereIWas"
+SCHEME="${WHEREIWAS_SCHEME:-WhereIWas}"
 CATALOG="WhereIWas/Resources/Localizable.xcstrings"
 
 command="${1:-build}"
