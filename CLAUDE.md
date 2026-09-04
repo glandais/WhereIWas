@@ -222,9 +222,6 @@ translating a privacy policy.
 
 - **Attach a build.** The only blocking check left: archive, upload to TestFlight and select the
   build on version 1.0.0.
-- Re-upload all forty-five screenshots (five screens × nine locales): they are now generated
-  locally and no longer match what the store serves. ASC does not inherit screenshots from the
-  primary locale, so each of the eight others needs its own upload.
 - App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, it is website-only).
 
 Everything else is done: icon, privacy manifest, all nine locales of `metadata/` applied, the three

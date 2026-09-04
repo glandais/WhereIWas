@@ -54,7 +54,7 @@ checks. What exists:
   `screenshots/IPHONE_65/<locale>/`, deletes what the new render does not replace, and fails on a
   wrong size, an alpha channel, a zero-byte or an outlier-small card.
 
-Still to do: the upload (D15).
+All fifteen decisions are implemented and the set is on the store (see D15 below).
 
 **One deviation worth knowing.** The templates auto-fit the headline per locale, with a 9vw floor
 under the Koubou skill's 10vw minimum for this canvas. Card 1 is the only place it bites: German
@@ -190,7 +190,24 @@ would contradict the screen underneath it. Making 9:41 work would mean injecting
 the app — `Formatting.relative(_:to:)` takes a `now` it currently ignores — which is shipping code
 changed for a screenshot. Not worth it.
 
+## D15 — uploaded (2026-09-04)
+
+The nine locales went up in one pass from `screenshots/IPHONE_65/`, 45 assets, every one
+`COMPLETE`. The five hand-taken `en-US` shots were deleted first rather than left alongside: the
+naming changed (`01-map`…`05-settings` became `01-status-moving`…`05-export`), so nothing would
+have overwritten them and the store would have served ten. Version 1.0.0 was in
+`PREPARE_FOR_SUBMISSION` throughout, so no live listing changed under anyone.
+
+Version-localization ids are not worth recording here — they are one
+`asc localizations list --version f94dfadb-4683-433e-bec4-6dccf0656589` away, and they change with
+the version.
+
 ## Open questions
 
-None. Next step: the upload (D15) — nine locales, five cards each, from
-`screenshots/IPHONE_65/`.
+**The audit-trail card will go stale.** Card 4 shows `Fix accepted`, `Fix rejected:
+poorAccuracy(94.0 m)` and `probing → moving` in English under a translated headline, which was the
+documented behaviour when it was captured: audit payloads are machine text written to the exports,
+not localized strings. Work in progress at the time of writing adds `Formatting.auditMessage` and
+its siblings, translating that vocabulary at display time the way `transitionReason` already does
+for the Status screen. When that lands, card 4 has to be re-captured, re-framed and re-uploaded in
+all nine locales — the other four cards are unaffected.
