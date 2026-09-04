@@ -7,9 +7,12 @@
 # their own), so a build could boot a device nobody asked for. Everything now
 # resolves the destination here.
 #
-# `iPhone 17 Pro Max` is not an arbitrary pick: `scripts/screenshots.sh` resizes
-# to 1284x2778, which is the IPHONE_65 size a Pro Max capture scales down to.
-# Any other device would mean keeping two simulators around.
+# `iPhone 17 Pro Max` is not an arbitrary pick: nothing resizes a capture any
+# more (`scripts/screenshots.sh` only checks its shape and flattens alpha), so
+# the device has to be the one Koubou frames — `screenshots/koubou/config.yaml`
+# pins the "iPhone 17 Pro Max" frame, and the framed cards it renders are the
+# 1242x2688 IPHONE_65 assets App Store Connect wants. Any other device would
+# mean keeping two simulators around.
 #
 # Sourced, never executed:  source "$(dirname "$0")/sim-config.sh"
 

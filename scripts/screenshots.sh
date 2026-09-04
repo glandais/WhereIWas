@@ -232,7 +232,7 @@ out = sys.argv[1]
 # and does its own scaling when it frames the card — but a capture from the
 # wrong simulator would still be the wrong shape for a phone frame, so the
 # check stays as a guard against that ever silently happening again.
-TARGET_RATIO = 1290 / 2796  # iPhone 17 Pro Max, the pinned device
+TARGET_RATIO = 1320 / 2868  # iPhone 17 Pro Max, the pinned device, at native resolution
 TOLERANCE = 0.02
 for locale in sys.argv[2:]:
     for src in sorted(pathlib.Path(out, locale).glob("*.png")):

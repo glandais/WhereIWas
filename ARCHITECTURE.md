@@ -1,6 +1,6 @@
 # WhereIWas — Architecture
 
-iOS 17+ · SwiftUI · SwiftData · Swift 6 language mode (strict concurrency) · single app target + Swift Testing target.
+iOS 17+ · iPhone only (`TARGETED_DEVICE_FAMILY = 1`) · SwiftUI · SwiftData · Swift 6 language mode (strict concurrency) · nine languages · one app target and a Swift Testing target, over three build configurations (Debug, Release, Screenshots — see §5.1).
 
 Goal: record the best possible GPS history of a first responder over multi-day deployments, **reliably** (survives termination, reboot, offline), **accurately** (filtered samples with full metadata) and **without draining the battery** (GPS only runs while the device is actually moving).
 
@@ -10,17 +10,23 @@ Goal: record the best possible GPS history of a first responder over multi-day d
 
 ```
 WhereIWas/
-  App/          WhereIWasApp (@main), AppDelegate (launch re-arming), AppEnvironment (composition root)
+  App/          WhereIWasApp (@main), AppDelegate (launch re-arming), AppEnvironment (composition root),
+                ScreenshotMode + DemoTrackingController + DemoTracks (SCREENSHOTS only, see §5.1)
   Domain/       PURE Swift, no CoreLocation/CoreMotion/SwiftData import:
-                ActivityKind, MotionEvent, GPSProfile, LocationFilter, TrackingSettings,
+                ActivityKind, MotionEvent, GPSProfile, LocationFilter, TrackingSettings, UnitSystem,
                 TrackingState (state machine), Interfaces (protocols + DTOs), Placeholders, TrackingEnvironment,
-                AuditEvent, LocationFilterTrace (per-fix validation record), AuditLog (opt-in recorder)
-  Persistence/  @Model LocationSample / TrackingSession / StateTransitionLog / AuditEventRecord,
+                AuditEvent (+ the AuditRecording protocol and NoopAuditLog), LocationFilterTrace
+  Persistence/  @Model LocationSample / TrackingSession / StateTransitionLog / AuditEventLog,
                 LocationStore (@ModelActor), GPXExporter, JSONExporter, AuditExporter
-  Location/     LocationEngine (@MainActor, CLLocationManager owner)
-  Motion/       MotionMonitor (@MainActor, CMMotionActivityManager + CMPedometer + CMMotionManager bursts)
-  Coordinator/  TrackingCoordinator (@MainActor @Observable) — runs the state machine, executes effects
-  UI/           RootView, StatusView, MapView, SettingsView, ExportView, AuditLogView
+  Location/     LocationEngine (@MainActor, CLLocationManager owner), CLMapping, SimulatedLocationEngine
+  Motion/       MotionMonitor (@MainActor, CMMotionActivityManager + CMPedometer + CMMotionManager bursts),
+                CMMapping, SimulatedMotionMonitor
+  Coordinator/  TrackingCoordinator (@MainActor @Observable) — runs the state machine, executes effects;
+                AuditLog (the opt-in recorder — it owns OSLog and a LocationStoring, so it is not Domain);
+                MaintenanceScheduler (BGProcessingTask registration + purge)
+  UI/           RootView, StatusView, MapView, SettingsView, ExportView, AuditLogView,
+                Formatting (localized display + unit system), TrackingStatusProviding
+  Resources/    Localizable.xcstrings, InfoPlist.xcstrings (nine languages), PrivacyInfo.xcprivacy
 WhereIWasTests/ Swift Testing suites
 ```
 
@@ -120,22 +126,24 @@ Check order: `horizontalAccuracy <= 0` → invalid; `> maxHorizontalAccuracy` (5
 
 SwiftData, SQLite on disk (`Application Support`), `ModelContainer` created once in `AppEnvironment` and handed to `LocationStore` (a `@ModelActor`). Models:
 
-* `LocationSample` — `sequence: Int64` (`@Attribute(.unique)`, monotonically increasing; the store keeps the last value in memory after reading `max(sequence)` at init), all `LocationFix` fields, annotation fields (activity/confidence/phase raw values, battery level/state, profile label), `source`, `uploaded: Bool` (indexed, default false), `createdAt`, optional `session` relationship.
-* `TrackingSession` — `id: UUID`, `startedAt`, `endedAt?`, cached `sampleCount` and `distanceMeters` (updated on insert).
-* `StateTransitionLog` — `id`, `timestamp`, `from`, `to`, `reason`, `batteryLevel`.
-* `AuditEventRecord` — the opt-in audit trail (see §4.1): `timestamp` (indexed), `category`, `severityRank` (indexed, so "warnings and above" is a range query), `name`, `message`, JSON-encoded `details`, `phase`, `batteryLevel`.
+* `LocationSample` — `sequence: Int64` (`@Attribute(.unique)`, monotonically increasing; the store keeps the last value in memory after reading `max(sequence)` at init), all `LocationFix` fields, annotation fields (`activityRaw`, `activityConfidenceRaw`, `phaseRaw`, battery level/state, `profileLabel`), `sourceRaw`, `uploaded: Bool` (default false), `createdAt`, and a **denormalized** `sessionID: UUID?` — deliberately not a relationship, so purging thousands of rows never touches the session graph.
+* `TrackingSession` — `id: UUID`, `startedAt`, `endedAt?`, cached `sampleCount` and `distanceMeters`, plus `lastLatitude` / `lastLongitude` (the previous point, so distance accrues incrementally on insert).
+* `StateTransitionLog` — `id`, `timestamp`, `fromRaw`, `toRaw`, `reason`, `batteryLevel`.
+* `AuditEventLog` — the opt-in audit trail (see §4.1): `id`, `timestamp`, `categoryRaw`, `severityRaw`, `name`, `message`, `detailsData` (one JSON blob — details are rendered and exported, never queried on), `phaseRaw`, `batteryLevel`.
 
-Upload-ready: `pendingUpload(limit:)` returns rows by ascending `sequence` with `uploaded == false`; `markUploaded(sequences:)` flips them. A future upload layer only needs these two calls. Writes are batched (`insertBatchSize`, 20) by the engine and flushed on state change, background transition, disable and before export. Purge: `purge(olderThan:)` runs from a `BGProcessingTask` (`io.github.glandais.whereiwas.maintenance`) and from Settings.
+The only index in the schema is the one SwiftData creates for `@Attribute(.unique) sequence` (and the same on `AuditEventLog.id`). Nothing else is indexed: the audit trail is filtered and sorted in memory by `LocationStore.auditEvents`, which is affordable because its retention is a week.
+
+Upload-ready: `pendingUpload(limit:)` returns rows by ascending `sequence` with `uploaded == false`; `markUploaded(sequences:)` flips them. A future upload layer only needs these two calls. Writes are batched (`insertBatchSize`, 20) by the engine and flushed on state change, background transition, disable and before export. Purge: `purge(olderThan:)` runs from three places — a `BGProcessingTask` (`io.github.glandais.whereiwas.maintenance`), `MaintenanceScheduler.purgeAtLaunchIfNeeded()` on every bootstrap, and Settings on demand.
 
 ### 4.1 Audit trail (opt-in, off by default)
 
-Answers "why is there no fix between 14:02 and 14:20?" after the fact. Three kinds of rows, all in `AuditEventRecord`:
+Answers "why is there no fix between 14:02 and 14:20?" after the fact. Three kinds of rows, all in `AuditEventLog`:
 
 * **data received** — every fix, significant change and visit, with its raw coordinates, accuracy, speed and timestamp; every motion report;
-* **tests performed** — `LocationFilter.trace(_:previous:now:settings:)` re-runs the filter recording each check (`horizontalAccuracy.withinLimit`, `timestamp.notStale`, …) with the measured value, the threshold and a verdict of passed / failed / skipped / not-applicable. `LocationFilterTraceTests` asserts the trace and `evaluate` agree over a grid of inputs, so the trail can never describe a decision the filter did not make;
+* **tests performed** — `LocationFilter.trace(_:previous:now:settings:)` re-runs the filter recording each check (`horizontalAccuracy.withinLimit`, `timestamp.notStale`, …) with the measured value, the threshold and a verdict of passed / failed / skipped / not-applicable. the `LocationFilterTraceTests` suite (in `WhereIWasTests/AuditTrailTests.swift`) asserts the trace and `evaluate` agree over a grid of inputs, so the trail can never describe a decision the filter did not make;
 * **decisions taken** — state transitions with their input and reason, every effect executed, GPS profile changes, permission changes, store writes, purges and exports.
 
-Recording costs nothing when off: `AuditLog.record` takes an `@autoclosure`, so a disabled trail never even builds the event, and `LocationEngine` skips `trace` entirely (`evaluate` stays on the hot path). When on, events are buffered in memory (256 max) and written in batches off the main actor, flushed on background.
+Recording costs nothing when off: `AuditLog.record` takes an `@autoclosure`, so a disabled trail never even builds the event, and `LocationEngine` skips `trace` entirely (`evaluate` stays on the hot path). When on, events are buffered in a 400-event ring and written off the main actor in batches of 40 (`AuditLog.ringCapacity` / `flushBatchSize`), flushed on background.
 
 The trail has its own switches and its own retention (`auditRetentionDays`, 7 days by default, purged by the same `BGProcessingTask`), because it turns over much faster than the samples. `AuditExporter` writes it as JSON (with the settings in force, so a reader knows what was being recorded) or plain text. `AuditLogView` reads it back, filtered by category and minimum severity.
 
@@ -145,7 +153,7 @@ Exports: `GPXExporter` (GPX 1.1, `<trkpt>` with `<ele>`, `<time>`, `<extensions>
 
 ## 5. Background, termination, reboot — what iOS really does
 
-Info.plist: `UIBackgroundModes = [location, processing, fetch]`, `NSLocationAlwaysAndWhenInUseUsageDescription`, `NSMotionUsageDescription`, `BGTaskSchedulerPermittedIdentifiers`. Authorization must be **Always** (background tracking is impossible with When-In-Use once the app is suspended). The status screen shows the authorization and offers "Open Settings".
+Info.plist (generated from `project.yml`): `UIBackgroundModes = [location, processing]`, `NSLocationAlwaysAndWhenInUseUsageDescription`, `NSLocationWhenInUseUsageDescription`, `NSMotionUsageDescription`, `BGTaskSchedulerPermittedIdentifiers`, `ITSAppUsesNonExemptEncryption = false`. There is no `fetch` mode: the app registers a `BGProcessingTask` and no `BGAppRefreshTask`, and a declared-but-unused background mode is a free question at review time. Authorization must be **Always** (background tracking is impossible with When-In-Use once the app is suspended). The status screen shows the authorization and offers "Open Settings".
 
 `LocationEngine` configuration:
 * `allowsBackgroundLocationUpdates = true`, `pausesLocationUpdatesAutomatically = false` (the OS would otherwise silently pause updates when it decides the user is stationary, and never resume them until the app is foregrounded — that is exactly the decision we make ourselves, with a restart path).
@@ -155,12 +163,12 @@ Info.plist: `UIBackgroundModes = [location, processing, fetch]`, `NSLocationAlwa
 
 ### Relaunch contract (`AppDelegate` → `AppEnvironment` → `TrackingCoordinator`)
 1. `application(_:didFinishLaunchingWithOptions:)` runs before any SwiftUI view is created. It synchronously calls `AppEnvironment.shared.bootstrap(launchedForLocation:)`.
-2. `TrackingCoordinator.init` reads the persisted `UserDefaults` flag `whereiwas.trackingEnabled`. If set, it **synchronously** (same run-loop turn, before returning) creates the `CLLocationManager`, sets the delegate, calls `startMonitoringSignificantLocationChanges` + `startMonitoringVisits`, starts CoreMotion updates and feeds `.enable` to the state machine (→ PROBING → `startUpdatingLocation`). Creating the manager and starting updates in the same launch turn is required: the location event that caused the relaunch is delivered to a manager created during launch, and the app gets only a few seconds of background time otherwise.
-3. If the app was launched for a location event but the flag is off (user disabled tracking, then the system still had a stale registration), the coordinator explicitly calls `stopMonitoringSignificantLocationChanges` / `stopMonitoringVisits` so the OS stops relaunching us.
+2. `TrackingCoordinator.bootstrap(launchedForLocation:)` — not `init` — reads the persisted `UserDefaults` flag `whereiwas.trackingEnabled`. If set, it **synchronously** (same run-loop turn, before returning) creates the `CLLocationManager`, sets the delegate, calls `startMonitoringSignificantLocationChanges` + `startMonitoringVisits`, starts CoreMotion updates and feeds `.enable` to the state machine (→ PROBING → `startUpdatingLocation`). Creating the manager and starting updates in the same launch turn is required: the location event that caused the relaunch is delivered to a manager created during launch, and the app gets only a few seconds of background time otherwise.
+3. If the app was launched for a location event but the flag is off (user disabled tracking, then the system still had a stale registration), the same method calls `engine.stopSignificantChangeMonitoring()` and `engine.stopGPS()` so the OS stops relaunching us.
 
 ### Honest limitations
 * **Reboot**: nothing runs until the user unlocks the device once (data protection). After first unlock, significant-change/visit registrations survive the reboot and relaunch the app in the background on the first event. Between reboot and first unlock, and between unlock and the first significant change (≈500 m of movement or a visit), **no samples are recorded**. There is no API to change that.
-* **Force quit by the user** (swipe up in the app switcher): iOS stops delivering background events until the user opens the app again. Document this in the UI (Status screen shows "tracking armed since …" and a warning if last sample is older than N minutes).
+* **Force quit by the user** (swipe up in the app switcher): iOS stops delivering background events until the user opens the app again. Surfaced in the UI: `TrackingStatus.isStale(now:threshold:)` warns when the last accepted fix is older than 30 minutes, alongside the other rows of `TrackingStatus.warnings`.
 * **Stationary for long**: while STATIONARY we stop (or coarsen) GPS by design. If the process is later terminated, we depend on significant change / visit to relaunch. First movement after a long stop may lose up to ~500 m / a few minutes before PROBING starts. Keeping coarse updates on (`keepCoarseUpdatesWhileStationary`) makes the OS much less likely to terminate the process, so CoreMotion callbacks usually still arrive and the gap is small.
 * **The system location indicator** (the blue pill around the clock) is on for as long as coarse updates run, i.e. permanently while tracking is enabled with `keepCoarseUpdatesWhileStationary`. `showsLocationIndicator` (default true) lets the user hide it; iOS shows it regardless while a `CLBackgroundActivitySession` is held, that is throughout PROBING and MOVING.
 * **Low Power Mode / Background App Refresh off**: `BGProcessingTask` may never run (purge falls back to launch + Settings). Location background mode still works.
@@ -170,6 +178,33 @@ Info.plist: `UIBackgroundModes = [location, processing, fetch]`, `NSLocationAlwa
 
 ### Battery strategy summary
 GPS at best accuracy costs roughly 8–12 %/h; CoreMotion activity updates, pedometer, significant change and visits are essentially free (the motion coprocessor). So: GPS only in MOVING/PROBING, profile scaled to speed (a car does not need a 10 m filter), 120 s stillness hysteresis to avoid flapping at traffic lights, coarse updates while stationary. Expected: a responder walking 3 h and driving 2 h in a 12 h shift ≈ 40–50 % battery for tracking.
+
+
+### 5.1 Screenshot mode (`SCREENSHOTS`, never in a Release binary)
+
+App Store captures need screens full of plausible history, which a simulator with no GPS and no
+CoreMotion cannot produce. So a whole second app exists behind one compilation condition:
+
+* `project.yml` declares a **`Screenshots`** configuration (a Debug clone with
+  `SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG SCREENSHOTS"`) and a `WhereIWas-Screenshots`
+  scheme. Release never sets the condition — verify with
+  `xcodebuild -configuration Release -showBuildSettings | grep SWIFT_ACTIVE_COMPILATION_CONDITIONS`.
+* `App/ScreenshotMode.swift` reads `-screenshotMode` / `-screenshotScreen` / `-screenshotScenario`
+  out of `UserDefaults`' `NSArgumentDomain`, so `simctl launch` sets them with no parsing. One
+  launch per capture, landing straight on the right tab: the script never has to find a tab by a
+  label that differs in nine languages.
+* `AppDelegate` returns before `bootstrap` and before `didEnterBackground`
+  (`AppDelegate.swift:15-29`), which keeps `CLLocationManager`, the permission prompts, the BGTask
+  registration and the on-disk store out of the way entirely.
+* `WhereIWasApp` injects a `DemoTrackingController` (a full `TrackingControlling` over
+  `DemoTracks` fixtures — real streets in nine cities) in place of the coordinator.
+* `DemoTracks.swift` is compiled **a second time** into the test target with the condition on
+  (`project.yml:87-105`), because `@testable import WhereIWas` links the Debug app, where the `#if`
+  has stripped the file to nothing. No duplicate symbol results: the app target never builds the
+  Screenshots configuration alongside the tests.
+
+The capture pipeline itself (`scripts/screenshots.sh` → `kou generate` → `screenshots/assemble.sh`)
+is documented in `screenshots/README.md`.
 
 ---
 
@@ -185,7 +220,9 @@ GPS at best accuracy costs roughly 8–12 %/h; CoreMotion activity updates, pedo
 
 ## 7. How to test
 
-Unit (simulator, `xcodebuild test`): state machine transitions and effects; GPS profile table; filter; `LocationStore` with an in-memory `ModelContainer` (`isStoredInMemoryOnly: true`); GPX/JSON exporters; audit trail (trace-vs-filter equivalence, opt-in and severity gating, store round-trip, its own retention, export formats).
+Unit (simulator, `./scripts/xcb.sh test`): state machine transitions and effects; GPS profile table; filter; `LocationStore` with an in-memory `ModelContainer` (`isStoredInMemoryOnly: true`); GPX/JSON exporters; audit trail (trace-vs-filter equivalence, opt-in and severity gating, store round-trip, its own retention, export formats); `TrackingSettings` coding and clamping; `Formatting` (including the unit system); `MotionMonitor` mapping, debouncing and burst analysis; `DemoTracks` (the SCREENSHOTS fixtures, compiled into the test target too).
+
+Not covered: there is no suite for `TrackingCoordinator` itself, although `SimulatedLocationEngine` and `SimulatedMotionMonitor` exist to make one writable.
 
 Device (mandatory for background behaviour):
 1. Install a Debug build, grant Always + Precise + Motion.
@@ -202,7 +239,18 @@ Device (mandatory for background behaviour):
 
 `UserDefaults` keys: `whereiwas.trackingEnabled` (Bool), `whereiwas.settings.v1` (JSON, via
 `TrackingSettings.load/save`). BGTask id: `io.github.glandais.whereiwas.maintenance`. os_log
-subsystem: `io.github.glandais.whereiwas`, categories `engine`, `motion`, `coordinator`, `store`.
+subsystem: `io.github.glandais.whereiwas`, categories `engine`, `motion`, `coordinator`, `store`, `audit`.
 
 `Domain/Placeholders.swift` (`InMemoryLocationStore`, `NoopLocationEngine`, `NoopMotionMonitor`,
-`NoopTrackingController`) is used in previews and tests.
+`NoopTrackingController`) is used in previews and tests, with three more doubles alongside it:
+`SimulatedLocationEngine` and `SimulatedMotionMonitor` (scripted fixes and activities, in their own
+modules), `PreviewTrackingController` (`UI/TrackingStatusProviding.swift`) and `NoopAuditLog`
+(`Domain/AuditEvent.swift`).
+
+Localization: nine languages (en source, fr, de, es, it, ja, nl, pl, cs) through
+`Resources/Localizable.xcstrings` and `InfoPlist.xcstrings`, listed in `knownRegions`. Keys are
+dotted names, never the English sentence, and are never shared across two subjects — see the
+Localization section of `CLAUDE.md` for the rules and the `./scripts/xcb.sh strings` workflow.
+Distances, speeds and altitudes follow `TrackingSettings.unitSystem` (metric / imperial, defaulting
+from the device locale), not the display language: `Formatting` holds the choice in a static the UI
+pushes to.

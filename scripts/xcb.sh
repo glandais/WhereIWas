@@ -4,7 +4,7 @@
 #
 # It pins the destination to the one simulator declared in `sim-config.sh` and
 # a repo-local DerivedData, so no build ever boots a device of its own choosing
-# — see the `Simulator` section of `CLAUDE.md`. `scripts/guard-simulator.sh`
+# — see the `Simulator` section of `CLAUDE.md`. `scripts/guard-simulator.py`
 # enforces it for agents.
 #
 # Usage:
@@ -69,7 +69,8 @@ case "$command" in
     fi
     echo "▸ syncing ${CATALOG} from ${#slices[@]} stringsdata file(s)"
     xcrun xcstringstool sync "$CATALOG" --stringsdata "${slices[@]}"
-    echo "▸ done. Fill the fr unit of any new key; extractionState: stale means a dead key."
+    echo "▸ done. Fill the en unit and the eight other units of any new key;"
+    echo "  extractionState: stale means a dead key."
     ;;
 
   --)
