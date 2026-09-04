@@ -200,6 +200,25 @@ done
 
 xcrun simctl terminate "$UDID" "$BUNDLE_ID" 2>/dev/null || true
 
+# The five cards are five different screens, so no two of them can be the same
+# image. When they are, the app that answered the launch was not the one this
+# script installed — anything else installing over `$BUNDLE_ID` mid-run wins,
+# and `./scripts/xcb.sh test` does exactly that, since the test host is the
+# Debug app under the same identifier. The Debug app has no `ScreenshotMode`,
+# so it ignores `-screenshotScreen` and lands on the default tab every time:
+# five captures of the same permission-denied Status screen, and a script that
+# reported success. Cheap to detect, and silence here is worse than a failure.
+echo "▸ checking the captures are five distinct screens"
+for locale in "${locales[@]}"; do
+  duplicates="$(md5 -q "$OUT_ROOT/$locale"/*.png | sort | uniq -d | wc -l | tr -d ' ')"
+  if [ "$duplicates" != "0" ]; then
+    echo "✖ $locale: identical captures — the app that ran is not the one installed." >&2
+    echo "  Nothing else may drive this simulator during a capture (in particular" >&2
+    echo "  ./scripts/xcb.sh test, whose host app shares the bundle identifier)." >&2
+    exit 1
+  fi
+done
+
 echo "▸ flattening alpha to black"
 python3 - "$OUT_ROOT" "${locales[@]}" <<'PY'
 import sys, pathlib
