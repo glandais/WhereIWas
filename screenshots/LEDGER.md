@@ -238,6 +238,37 @@ no longer necessary. `--replace --dry-run` prints the exact deletions first, and
 45 uploads, one for one. Every asset came back `COMPLETE`, five per locale, no duplicates. Version
 1.0.0 was in `PREPARE_FOR_SUBMISSION` throughout.
 
+## D18 — nine language passes, forty-five new cards (2026-09-04)
+
+`812cf6d` rewrote 273 user-visible strings across the nine languages, so every card in every
+locale was wrong in some detail and the whole set was re-made: capture, framing, upload.
+
+What the cards say differently now:
+
+- the PROBING phase reads Détection / Prüfphase / Comprobación / Verifica / 判定中 / Detectie /
+  Wykrywanie / Zjišťování instead of a cognate of "probing", which landed on an opinion poll in
+  five languages and on a space probe in Japanese. It shows on card 4, in the
+  `state.transition` row and in the phase caption under three others.
+- card 3 lost "the deployment" from its headline — it now reads "Every day, on the map" and its
+  translations. The Koubou key is the English sentence, so the rename moved `config.yaml` and
+  `koubou-strings.xcstrings` together and all nine locales re-rendered.
+- card 1's subtitle no longer promises recovery from a force-quit ("Survives termination, reboot
+  and no signal"), and card 5's export screen no longer advertises an upload status the app has
+  never had.
+
+The demo fixtures needed no change this time: nothing under `Coordinator/`, `Location/` or
+`Domain/` moved since D17, which is the only thing that can make `DemoTrackingController` describe
+a screen the app no longer produces.
+
+The 45 assets went up locale by locale, every one `COMPLETE`, and the store listing was read back
+rather than trusted: five cards per locale, the five expected names, no duplicates. Version 1.0.0
+was in `PREPARE_FOR_SUBMISSION` throughout.
+
+One correction to make to the release skill rather than to the cards: this run deleted the 45 old
+assets by id and then uploaded, which is what `.claude/skills/screenshots-release/SKILL.md` still
+documents. D17 established that `asc screenshots upload --replace --confirm` does both in one
+pass. The result is the same; the skill is out of date.
+
 ## Open questions
 
 **The en-US card reads its measurement in feet.** "Fix rejected: accuracy too poor (308.4 ft)"
