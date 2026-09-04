@@ -425,10 +425,11 @@ final class DemoTrackingController: TrackingControlling {
         if scenario == .stationary {
             let parked = last.fix.timestamp.addingTimeInterval(90)
             events.append(AuditEvent(timestamp: parked.addingTimeInterval(2),
-                                     category: .effect, severity: .info,
+                                     category: .location, severity: .info,
                                      name: "gps.changed",
                                      arguments: ["stationary-coarse"],
-                                     details: [AuditDetail("profile", "stationary-coarse"),
+                                     details: [AuditDetail("from", "automotive"),
+                                               AuditDetail("to", "stationary-coarse"),
                                                AuditDetail("desiredAccuracy", "threeKilometers"),
                                                AuditDetail("distanceFilter", 3_000.0),
                                                AuditDetail("activityType", "other")],
@@ -450,6 +451,7 @@ final class DemoTrackingController: TrackingControlling {
                                            AuditDetail("longitude", last.fix.longitude, decimals: 6),
                                            AuditDetail("horizontalAccuracy", last.fix.horizontalAccuracy),
                                            AuditDetail("speed", last.fix.speed),
+                                           AuditDetail("source", "gps"),
                                            AuditDetail("profile", "automotive"),
                                            AuditDetail("check.horizontalAccuracy.valid",
                                                        "passed (\(fmt(last.fix.horizontalAccuracy)) vs > 0 m)"),
@@ -457,7 +459,7 @@ final class DemoTrackingController: TrackingControlling {
                                                        "passed (\(fmt(last.fix.horizontalAccuracy)) vs <= 50.00 m)"),
                                            AuditDetail("check.timestamp.notInFuture", "passed"),
                                            AuditDetail("check.timestamp.notStale", "passed (0.24 s vs <= 30.00 s)"),
-                                           AuditDetail("check.distance.notDuplicate",
+                                           AuditDetail("check.coordinate.notDuplicate",
                                                        "passed (\(fmt(previous.fix.distance(to: last.fix))) vs > 0.00 m)")],
                                  phase: .moving, batteryLevel: battery))
 
@@ -478,10 +480,11 @@ final class DemoTrackingController: TrackingControlling {
                                  phase: .moving, batteryLevel: battery))
 
         events.append(AuditEvent(timestamp: departure.addingTimeInterval(-6),
-                                 category: .effect, severity: .info,
+                                 category: .location, severity: .info,
                                  name: "gps.changed",
                                  arguments: ["automotive"],
-                                 details: [AuditDetail("profile", "automotive"),
+                                 details: [AuditDetail("from", "probing"),
+                                           AuditDetail("to", "automotive"),
                                            AuditDetail("desiredAccuracy", "bestForNavigation"),
                                            AuditDetail("distanceFilter", 50.0),
                                            AuditDetail("activityType", "automotiveNavigation")],
@@ -515,13 +518,16 @@ final class DemoTrackingController: TrackingControlling {
                                      name: "permission.location",
                                      arguments: ["always"],
                                      details: [AuditDetail("status", "always"),
-                                               AuditDetail("fullAccuracy", true)],
+                                               AuditDetail("fullAccuracy", true),
+                                               AuditDetail("allowsBackgroundTracking", true)],
                                      phase: .probing, batteryLevel: 0.97))
             events.append(AuditEvent(timestamp: armed,
                                      category: .lifecycle, severity: .info,
                                      name: "app.relaunched",
                                      details: [AuditDetail("launchedForLocation", true),
-                                               AuditDetail("trackingEnabled", true)],
+                                               AuditDetail("trackingEnabled", true),
+                                               AuditDetail("locationAuthorization", "always"),
+                                               AuditDetail("motionAuthorization", "authorized")],
                                      phase: .disabled, batteryLevel: 0.97))
         }
         return events

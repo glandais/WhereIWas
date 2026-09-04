@@ -202,12 +202,48 @@ Version-localization ids are not worth recording here — they are one
 `asc localizations list --version f94dfadb-4683-433e-bec4-6dccf0656589` away, and they change with
 the version.
 
+## D17 — the audit card, in the reader's language (2026-09-04)
+
+The open question the D15 entry left — card 4 showing `Fix accepted` and `Fix rejected:
+poorAccuracy(94.0 m)` in English under a translated headline — is closed. The trail now stores a
+code plus its parameters instead of an English sentence, and `Formatting.auditSummary` renders it
+in the reader's language, so the card reads "Fix abgelehnt: Genauigkeit zu gering (94 m)",
+"測位を却下：精度が不十分（94 m）", "Fix odrzucony: zbyt niska dokładność (94 m)". The event name
+(`fix.rejected`) stays in monospaced English on purpose: it is what ties a row to a line of the
+exported file, and it reads as an identifier rather than as untranslated text.
+
+All five cards were re-captured, not just card 4. Not because the other four changed — they did
+not — but because the unit of capture is a locale, and a set where four cards carry one clock and
+the fifth another is a set that says it was assembled from two runs.
+
+Two things the re-capture turned up, both in the hand-written demo data, both invisible to the
+compiler and to every check in the pipeline:
+
+- `gps.profile` was filed under the `effect` category while `LocationEngine` emits it under
+  `location`. The card showed the wrong icon, and had done since D14.
+- the fixture used `check.distance.notDuplicate`; the filter's own name is
+  `coordinate.notDuplicate`. Under the old English-payload rendering that read fine — it was just
+  a string. Under the new one an unknown check falls through untranslated, so the mistake would
+  have printed one English test name among translated ones. The rendering did not introduce the
+  bug; it made a year-old typo visible.
+
+Both were caught by doing what the release skill already tells you to do — re-read
+`DemoTrackingController` against the real producers before capturing — and neither would have been
+caught by anything else: the fixtures compile, render, and pass every check in the pipeline while
+describing a screen the app no longer produces.
+
+`asc screenshots upload --replace --confirm` replaced the 45 assets in one fan-out run — it
+deletes each target set before uploading, so the manual delete-then-upload dance D15 describes is
+no longer necessary. `--replace --dry-run` prints the exact deletions first, and did: 45 deletes,
+45 uploads, one for one. Every asset came back `COMPLETE`, five per locale, no duplicates. Version
+1.0.0 was in `PREPARE_FOR_SUBMISSION` throughout.
+
 ## Open questions
 
-**The audit-trail card will go stale.** Card 4 shows `Fix accepted`, `Fix rejected:
-poorAccuracy(94.0 m)` and `probing → moving` in English under a translated headline, which was the
-documented behaviour when it was captured: audit payloads are machine text written to the exports,
-not localized strings. Work in progress at the time of writing adds `Formatting.auditMessage` and
-its siblings, translating that vocabulary at display time the way `transitionReason` already does
-for the Status screen. When that lands, card 4 has to be re-captured, re-framed and re-uploaded in
-all nine locales — the other four cards are unaffected.
+**The en-US card reads its measurement in feet.** "Fix rejected: accuracy too poor (308.4 ft)"
+where the other eight locales read "(94 m)", because the rejection's measurement now goes through
+`Formatting.distance`, which follows `TrackingSettings.unitSystem`, which defaults to the device's
+own system. That is right — an imperial user reads feet everywhere else in the app — but "308.4
+ft" is a less crisp number than "94 m" on the card that sells precision. Whether to pin the demo
+dataset to metric for the capture, or to pick a rejection distance that reads well in both, is
+open.
