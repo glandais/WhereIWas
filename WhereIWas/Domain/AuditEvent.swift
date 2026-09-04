@@ -112,10 +112,17 @@ public struct AuditEvent: Codable, Sendable, Hashable, Identifiable {
     public var timestamp: Date
     public var category: AuditCategory
     public var severity: AuditSeverity
-    /// Short, stable, machine-greppable event name, e.g. `fix.rejected`.
+    /// Short, stable, machine-greppable event code, e.g. `fix.rejected`.
+    ///
+    /// The code *is* the message: the UI renders a localized sentence from it
+    /// (`Formatting.auditSummary`) and the export writes it as-is. Codes that
+    /// need a parameter carry it in ``arguments`` rather than in prose, so
+    /// nothing English is ever persisted or parsed back.
     public var name: String
-    /// One-line human summary.
-    public var message: String
+    /// Parameters the code needs to read as a sentence, in the order the
+    /// sentence uses them. Formatted locale-independently; empty whenever the
+    /// code says everything on its own.
+    public var arguments: [String]
     /// Ordered structured payload: the data the event is about.
     public var details: [AuditDetail]
     /// State-machine phase at the time of the event, when known.
@@ -128,7 +135,7 @@ public struct AuditEvent: Codable, Sendable, Hashable, Identifiable {
                 category: AuditCategory,
                 severity: AuditSeverity = .info,
                 name: String,
-                message: String,
+                arguments: [String] = [],
                 details: [AuditDetail] = [],
                 phase: TrackingPhase? = nil,
                 batteryLevel: Double? = nil) {
@@ -137,10 +144,17 @@ public struct AuditEvent: Codable, Sendable, Hashable, Identifiable {
         self.category = category
         self.severity = severity
         self.name = name
-        self.message = message
+        self.arguments = arguments
         self.details = details
         self.phase = phase
         self.batteryLevel = batteryLevel
+    }
+
+    /// `name arg arg` — the machine rendering, used by the text export and
+    /// the log lines. The UI shows the localized ``Formatting/auditSummary``
+    /// of the same thing.
+    public var summary: String {
+        arguments.isEmpty ? name : "\(name) \(arguments.joined(separator: " "))"
     }
 
     /// `key=value key=value` rendering of ``details``, used by the text

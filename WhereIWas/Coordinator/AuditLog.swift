@@ -94,7 +94,6 @@ public final class AuditLog: AuditRecording {
                               category: .lifecycle,
                               severity: .info,
                               name: "audit.enabled",
-                              message: "Audit trail enabled",
                               details: [AuditDetail("minimumSeverity", settings.auditMinimumSeverity.label),
                                         AuditDetail("retentionDays", settings.auditRetentionDays),
                                         AuditDetail("logAcceptedFixes", settings.auditLogsAcceptedFixes),

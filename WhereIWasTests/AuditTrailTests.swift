@@ -89,7 +89,7 @@ struct AuditLogTests {
 
     private func event(_ name: String, severity: AuditSeverity = .info) -> AuditEvent {
         AuditEvent(timestamp: Date(), category: .state, severity: severity,
-                   name: name, message: name)
+                   name: name)
     }
 
     @Test("Disabled by default: nothing is recorded and the event is never built")
@@ -146,7 +146,7 @@ struct AuditLogTests {
         for i in 0..<5 {
             log.record(AuditEvent(timestamp: Date(timeIntervalSince1970: 1_000 + Double(i)),
                                   category: .location, severity: .info,
-                                  name: "fix.\(i)", message: "fix \(i)"))
+                                  name: "fix.\(i)"))
         }
         let loaded = try await log.load(matching: AuditQuery())
         #expect(loaded.map(\.name) == ["fix.4", "fix.3", "fix.2", "fix.1", "fix.0"])
@@ -161,11 +161,11 @@ struct AuditLogTests {
         let log = AuditLog(store: store, settings: settings)
 
         log.record(AuditEvent(timestamp: Date(timeIntervalSince1970: 1),
-                              category: .location, severity: .debug, name: "a", message: "a"))
+                              category: .location, severity: .debug, name: "a"))
         log.record(AuditEvent(timestamp: Date(timeIntervalSince1970: 2),
-                              category: .motion, severity: .warning, name: "b", message: "b"))
+                              category: .motion, severity: .warning, name: "b"))
         log.record(AuditEvent(timestamp: Date(timeIntervalSince1970: 3),
-                              category: .location, severity: .error, name: "c", message: "c"))
+                              category: .location, severity: .error, name: "c"))
 
         let byCategory = try await log.load(matching: AuditQuery(categories: [.location]))
         #expect(byCategory.map(\.name) == ["c", "a"])
@@ -183,9 +183,9 @@ struct AuditLogTests {
         let now = Date(timeIntervalSince1970: 10_000_000)
 
         log.record(AuditEvent(timestamp: now.addingTimeInterval(-86_400 * 10),
-                              category: .state, severity: .info, name: "old", message: "old"))
+                              category: .state, severity: .info, name: "old"))
         log.record(AuditEvent(timestamp: now.addingTimeInterval(-86_400),
-                              category: .state, severity: .info, name: "recent", message: "recent"))
+                              category: .state, severity: .info, name: "recent"))
 
         let deleted = await log.purge(retentionDays: 7, now: now)
         #expect(deleted == 1)
@@ -238,7 +238,7 @@ struct AuditExporterTests {
                     category: .filter,
                     severity: .info,
                     name: "fix.rejected",
-                    message: "Fix rejected: poorAccuracy(88.0 m)",
+                    arguments: ["poorAccuracy", "88.0"],
                     details: [AuditDetail("horizontalAccuracy", 88.0),
                               AuditDetail("check.horizontalAccuracy.withinLimit", "failed (88.00 vs <= 50.00 m)")],
                     phase: .moving,
@@ -265,7 +265,8 @@ struct AuditExporterTests {
     func textExport() {
         let text = AuditExporter.text(sample, settings: TrackingSettings(), exportedAt: now)
         #expect(text.contains("WhereIWas audit trail"))
-        #expect(text.contains("filter/fix.rejected"))
+        // The code and its parameters, never an English sentence.
+        #expect(text.contains("filter/fix.rejected poorAccuracy 88.0"))
         #expect(text.contains("phase=moving"))
         #expect(text.contains("battery=0.42"))
         #expect(text.contains("horizontalAccuracy: 88.00"))

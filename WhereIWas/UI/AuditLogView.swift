@@ -226,11 +226,11 @@ private struct AuditEventRow: View {
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(.secondary)
             }
-            Text(verbatim: event.message)
+            Text(verbatim: Formatting.auditSummary(event))
                 .font(.callout)
                 .lineLimit(2)
             if let phase = event.phase {
-                Text(verbatim: phase.rawValue)
+                Text(verbatim: phase.title)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
@@ -265,23 +265,25 @@ private struct AuditEventDetailView: View {
                         .hour().minute().second())
                 }
                 if let phase = event.phase {
-                    LabeledContent("audit.detail.phase", value: phase.rawValue)
+                    LabeledContent("audit.detail.phase", value: phase.title)
                 }
                 if let battery = event.batteryLevel {
                     LabeledContent("common.battery", value: battery.formatted(.percent.precision(.fractionLength(0))))
                 }
             }
             Section("audit.detail.message") {
-                Text(verbatim: event.message)
+                Text(verbatim: Formatting.auditSummary(event))
             }
             if !checks.isEmpty {
                 Section("audit.detail.tests") {
                     ForEach(checks, id: \.key) { detail in
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(verbatim: detail.key.replacingOccurrences(of: "check.", with: ""))
-                                .font(.caption.monospaced())
-                            Text(verbatim: detail.value)
+                            Text(verbatim: Formatting.checkName(detail.key))
+                                .font(.caption)
+                            Text(verbatim: Formatting.checkVerdict(detail.value))
                                 .font(.footnote)
+                                // The colour reads the *raw* verdict: the
+                                // displayed one is translated.
                                 .foregroundStyle(verdictColor(detail.value))
                         }
                     }

@@ -129,7 +129,7 @@ SwiftData, SQLite on disk (`Application Support`), `ModelContainer` created once
 * `LocationSample` — `sequence: Int64` (`@Attribute(.unique)`, monotonically increasing; the store keeps the last value in memory after reading `max(sequence)` at init), all `LocationFix` fields, annotation fields (`activityRaw`, `activityConfidenceRaw`, `phaseRaw`, battery level/state, `profileLabel`), `sourceRaw`, `uploaded: Bool` (default false), `createdAt`, and a **denormalized** `sessionID: UUID?` — deliberately not a relationship, so purging thousands of rows never touches the session graph.
 * `TrackingSession` — `id: UUID`, `startedAt`, `endedAt?`, cached `sampleCount` and `distanceMeters`, plus `lastLatitude` / `lastLongitude` (the previous point, so distance accrues incrementally on insert).
 * `StateTransitionLog` — `id`, `timestamp`, `fromRaw`, `toRaw`, `reason`, `batteryLevel`.
-* `AuditEventLog` — the opt-in audit trail (see §4.1): `id`, `timestamp`, `categoryRaw`, `severityRaw`, `name`, `message`, `detailsData` (one JSON blob — details are rendered and exported, never queried on), `phaseRaw`, `batteryLevel`.
+* `AuditEventLog` — the opt-in audit trail (see §4.1): `id`, `timestamp`, `categoryRaw`, `severityRaw`, `name`, `argumentsRaw` (the code's parameters, joined by an ASCII unit separator), `detailsData` (one JSON blob — details are rendered and exported, never queried on), `phaseRaw`, `batteryLevel`.
 
 The only index in the schema is the one SwiftData creates for `@Attribute(.unique) sequence` (and the same on `AuditEventLog.id`). Nothing else is indexed: the audit trail is filtered and sorted in memory by `LocationStore.auditEvents`, which is affordable because its retention is a week.
 
@@ -144,6 +144,8 @@ Answers "why is there no fix between 14:02 and 14:20?" after the fact. Three kin
 * **decisions taken** — state transitions with their input and reason, every effect executed, GPS profile changes, permission changes, store writes, purges and exports.
 
 Recording costs nothing when off: `AuditLog.record` takes an `@autoclosure`, so a disabled trail never even builds the event, and `LocationEngine` skips `trace` entirely (`evaluate` stays on the hot path). When on, events are buffered in a 400-event ring and written off the main actor in batches of 40 (`AuditLog.ringCapacity` / `flushBatchSize`), flushed on background.
+
+An event carries **no prose**: `AuditEvent.name` is a stable code (`fix.rejected`, `effect.startGPS`) and `arguments` holds the parameters its sentence needs, formatted locale-independently (`["poorAccuracy", "88.0"]`). The store and both export formats write the code and its arguments; `Formatting.auditSummary` is the single place that turns them into a localized sentence for `AuditLogView`, falling back to the raw code for anything it does not know. `AuditSummaryTests` walks every producer and fails on a code with no sentence, since nothing in the compiler ties the two together.
 
 The trail has its own switches and its own retention (`auditRetentionDays`, 7 days by default, purged by the same `BGProcessingTask`), because it turns over much faster than the samples. `AuditExporter` writes it as JSON (with the settings in force, so a reader knows what was being recorded) or plain text. `AuditLogView` reads it back, filtered by category and minimum severity.
 

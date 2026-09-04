@@ -140,10 +140,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         audit.record(AuditEvent(timestamp: Date(),
                                 category: .lifecycle,
                                 severity: .info,
-                                name: "app.bootstrap",
-                                message: launchedForLocation
-                                    ? "Relaunched by a location event"
-                                    : "Launched normally",
+                                name: launchedForLocation ? "app.relaunched" : "app.launched",
                                 details: [AuditDetail("launchedForLocation", launchedForLocation),
                                           AuditDetail("trackingEnabled", enabled),
                                           AuditDetail("locationAuthorization", engine.authorization.rawValue),
@@ -266,7 +263,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .export,
                                 severity: .info,
                                 name: "audit.exported",
-                                message: "Exported \(events.count) audit events as \(format.label)",
+                                arguments: [String(events.count), format.rawValue],
                                 details: [AuditDetail("count", events.count),
                                           AuditDetail("format", format.rawValue)]))
         return url
@@ -292,7 +289,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .maintenance,
                                 severity: .info,
                                 name: "maintenance.purge",
-                                message: "Purged \(deleted) samples and \(purgedAudit) audit events",
+                                arguments: [String(deleted), String(purgedAudit)],
                                 details: [AuditDetail("samplesDeleted", deleted),
                                           AuditDetail("auditDeleted", purgedAudit),
                                           AuditDetail("retentionDays", settings.retentionDays),
@@ -332,9 +329,8 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                     category: .effect,
                                     severity: .debug,
                                     name: "effect.\(Self.effectName(effect))",
-                                    message: "Executed \(Self.describe(effect))",
-                                    details: [AuditDetail("effect", Self.describe(effect)),
-                                              AuditDetail("reason", reason)]))
+                                    arguments: Self.arguments(for: effect),
+                                    details: [AuditDetail("reason", reason)] + Self.details(for: effect)))
             switch effect {
             case .startGPS(let profile):
                 engine.startGPS(profile: profile)
@@ -382,7 +378,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .state,
                                 severity: .info,
                                 name: "state.transition",
-                                message: "\(transition.from.rawValue) → \(transition.to.rawValue)",
+                                arguments: [transition.from.rawValue, transition.to.rawValue],
                                 details: [AuditDetail("from", transition.from.rawValue),
                                           AuditDetail("to", transition.to.rawValue),
                                           AuditDetail("input", Self.describe(transition.input)),
@@ -439,8 +435,8 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
             audit.record(AuditEvent(timestamp: Date(),
                                     category: .motion,
                                     severity: .debug,
-                                    name: "motion.event",
-                                    message: Self.describe(event),
+                                    name: Self.eventName(event),
+                                    arguments: Self.arguments(for: event),
                                     details: Self.details(for: event)))
         }
         switch event {
@@ -460,7 +456,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                     category: .permission,
                                     severity: auth == .authorized ? .info : .warning,
                                     name: "permission.motion",
-                                    message: "Motion authorization is \(auth.rawValue)",
+                                    arguments: [auth.rawValue],
                                     details: [AuditDetail("status", auth.rawValue),
                                               AuditDetail("activityAvailable", motion.isActivityAvailable)]))
             applyEffectiveSettings()
@@ -490,7 +486,6 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .location,
                                 severity: .info,
                                 name: "location.significantChange",
-                                message: "Significant location change",
                                 details: Self.details(for: fix)))
         lastFixSource = .significantChange
         handle(.significantChange)
@@ -501,8 +496,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         audit.record(AuditEvent(timestamp: Date(),
                                 category: .location,
                                 severity: .info,
-                                name: "location.visit",
-                                message: isArrival ? "Visit arrival" : "Visit departure",
+                                name: isArrival ? "location.visit.arrival" : "location.visit.departure",
                                 details: [AuditDetail("isArrival", isArrival)] + Self.details(for: fix)))
         lastFixSource = .visit
         handle(.visit, reason: isArrival ? "visit arrival" : "visit departure")
@@ -515,7 +509,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .permission,
                                 severity: status.allowsBackgroundTracking ? .info : .warning,
                                 name: "permission.location",
-                                message: "Location authorization is \(status.rawValue)",
+                                arguments: [status.rawValue],
                                 details: [AuditDetail("status", status.rawValue),
                                           AuditDetail("fullAccuracy", engine.hasFullAccuracy),
                                           AuditDetail("allowsBackgroundTracking", status.allowsBackgroundTracking)]))
@@ -533,7 +527,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 category: .location,
                                 severity: .error,
                                 name: "location.error",
-                                message: error.localizedDescription,
+                                arguments: [error.localizedDescription],
                                 details: [AuditDetail("error", String(describing: error))]))
         lastError = error.localizedDescription
         refreshStatus()
@@ -735,33 +729,66 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         }
     }
 
-    static func describe(_ effect: TrackingEffect) -> String {
+    /// The parameters `effect.<name>` needs to read as a sentence, formatted
+    /// locale-independently. Empty when the code says it all.
+    static func arguments(for effect: TrackingEffect) -> [String] {
         switch effect {
         case .startGPS(let profile):
-            return "start GPS \(profile.label) (\(profile.desiredAccuracy.rawValue), filter \(Int(profile.distanceFilter)) m)"
-        case .stopGPS: return "stop GPS"
-        case .startStillnessTimer(let seconds): return "start stillness timer \(Int(seconds)) s"
-        case .cancelStillnessTimer: return "cancel stillness timer"
-        case .startProbeTimer(let seconds): return "start probe timer \(Int(seconds)) s"
-        case .cancelProbeTimer: return "cancel probe timer"
-        case .startSignificantChange: return "start significant-change + visit monitoring"
-        case .stopSignificantChange: return "stop significant-change + visit monitoring"
-        case .startMotionUpdates: return "start motion updates"
-        case .stopMotionUpdates: return "stop motion updates"
-        case .log(let line): return "log: \(line)"
+            return [profile.label,
+                    profile.desiredAccuracy.rawValue,
+                    String(Int(profile.distanceFilter))]
+        case .startStillnessTimer(let seconds), .startProbeTimer(let seconds):
+            return [String(Int(seconds))]
+        case .log(let line):
+            return [line]
+        case .stopGPS, .cancelStillnessTimer, .cancelProbeTimer,
+             .startSignificantChange, .stopSignificantChange,
+             .startMotionUpdates, .stopMotionUpdates:
+            return []
         }
     }
 
-    static func describe(_ event: MotionEvent) -> String {
+    /// Audit code for a motion report. The four kinds read as four different
+    /// sentences, so they get four codes rather than one plus a payload.
+    static func eventName(_ event: MotionEvent) -> String {
+        switch event {
+        case .activity: return "motion.activity"
+        case .steps: return "motion.steps"
+        case .accelerometerBurst(let isMoving, _, _):
+            return isMoving ? "motion.burst.moving" : "motion.burst.still"
+        case .authorizationChanged: return "motion.authorization"
+        }
+    }
+
+    static func arguments(for event: MotionEvent) -> [String] {
         switch event {
         case .activity(let kind, let confidence, _):
-            return "Activity \(kind.rawValue) (\(confidence) confidence)"
+            return [kind.rawValue, String(describing: confidence)]
         case .steps(let count, _):
-            return "Pedometer reported \(count) steps"
-        case .accelerometerBurst(let isMoving, let magnitude, _):
-            return "Accelerometer burst: \(isMoving ? "moving" : "still") at \(String(format: "%.3f", locale: nil, magnitude)) g"
+            return [String(count)]
+        case .accelerometerBurst(_, let magnitude, _):
+            return [String(format: "%.3f", locale: nil, magnitude)]
         case .authorizationChanged(let auth):
-            return "Motion authorization \(auth.rawValue)"
+            return [auth.rawValue]
+        }
+    }
+
+    /// The raw parameters of an effect, as recorded in the audit trail.
+    static func details(for effect: TrackingEffect) -> [AuditDetail] {
+        switch effect {
+        case .startGPS(let profile):
+            return [AuditDetail("profile", profile.label),
+                    AuditDetail("desiredAccuracy", profile.desiredAccuracy.rawValue),
+                    AuditDetail("distanceFilter", profile.distanceFilter),
+                    AuditDetail("activityType", String(describing: profile.activityType))]
+        case .startStillnessTimer(let seconds), .startProbeTimer(let seconds):
+            return [AuditDetail("seconds", seconds, decimals: 0)]
+        case .log(let line):
+            return [AuditDetail("line", line)]
+        case .stopGPS, .cancelStillnessTimer, .cancelProbeTimer,
+             .startSignificantChange, .stopSignificantChange,
+             .startMotionUpdates, .stopMotionUpdates:
+            return []
         }
     }
 

@@ -53,12 +53,12 @@ enum AuditExporter {
         for event in events {
             out += "\(GPXExporter.iso(event.timestamp)) "
             out += "[\(event.severity.label.uppercased())] "
-            out += "\(event.category.rawValue)/\(event.name)"
+            out += "\(event.category.rawValue)/\(event.summary)"
             if let phase = event.phase { out += " phase=\(phase.rawValue)" }
             if let battery = event.batteryLevel {
                 out += " battery=\(String(format: "%.2f", locale: nil, battery))"
             }
-            out += "\n    \(event.message)\n"
+            out += "\n"
             for detail in event.details {
                 out += "      \(detail.key): \(detail.value)\n"
             }

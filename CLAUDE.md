@@ -120,6 +120,11 @@ Rules when adding UI strings:
 - `StateTransitionRecord.reason` is persisted machine text and stays English on disk; the Status
   screen runs it through `Formatting.transitionReason`, which translates the known vocabulary and
   passes anything else through.
+- **The audit trail persists no prose at all.** An `AuditEvent` is a stable code (`fix.rejected`)
+  plus `arguments` holding what its sentence needs, formatted locale-independently
+  (`["poorAccuracy", "88.0"]`); the store and both exports write exactly that. Adding an audit
+  event therefore means adding a case to `Formatting.auditSummary` — `AuditSummaryTests` fails on a
+  code with no sentence. Never reconstruct an English phrase to parse it back.
 - **Keys are dotted names, never the English sentence** (`status.lastFix.title`, `auth.location.always`).
   English lives in the `en` unit of the catalog like any other language. A sentence used as a key
   turns every rewording into a diff of the key set across nine languages.
@@ -164,11 +169,17 @@ catalog, both of which it handles:
   defined only in files that slice did not compile looks like it has left the code, so the sync
   marks it `stale` and the next cleanup deletes a live string.
 
-One thing the sync does not preserve: `extractionState: extracted_with_value`, which Xcode writes
-on keys whose name is not the English text. That is annotation only — the `localizations` are
-untouched and the app is unaffected — so the catalog is kept in the shape `xcstringstool` itself
-emits, which makes the sync idempotent. Building from the Xcode IDE puts those states back;
-re-running `./scripts/xcb.sh strings` removes them again.
+`extractionState: extracted_with_value` marks a key whose name is not the English text. It is
+annotation only — the `localizations` are untouched and the app is unaffected — so the rule is
+simply to keep the catalog in the shape `xcstringstool` itself emits and let the sync be
+idempotent, which it is: a second run changes nothing.
+
+Do not try to normalise those states by hand, in either direction. The sync writes one on a key
+*it* adds, and puts it straight back if you delete it; it strips them from keys that already had
+one. So a catalog where the old keys carry no state and the ones added by the last sync do is the
+stable shape, not an inconsistency to clean up — two structurally identical keys (same
+`String(localized:defaultValue:)`, no comment, `en` equal to the default) legitimately differ here
+by nothing but their age.
 
 To audit the catalog without trusting the tool, diff the keys directly: the `.stringsdata` files
 are plain JSON with a `tables.Localizable[].key` array, so their union must equal the set of keys

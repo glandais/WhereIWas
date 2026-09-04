@@ -47,6 +47,143 @@ struct TransitionReasonTests {
     }
 }
 
+/// The audit trail persists a *code* plus its parameters, never English
+/// prose, and `Formatting.auditSummary` turns the two into a sentence.
+/// Nothing in the compiler ties a producer's code to an entry in that table,
+/// so these tests fail loudly if one is added without a sentence.
+@MainActor
+struct AuditSummaryTests {
+    private func hasSentence(_ name: String, _ arguments: [String] = []) -> Bool {
+        Formatting.auditSummaryIfKnown(name: name, arguments: arguments) != nil
+    }
+
+    /// Every effect the state machine can order.
+    @Test(arguments: [
+        TrackingEffect.startGPS(.probing),
+        .startGPS(.stationaryCoarse),
+        .stopGPS,
+        .startStillnessTimer(seconds: 120),
+        .cancelStillnessTimer,
+        .startProbeTimer(seconds: 45),
+        .cancelProbeTimer,
+        .startSignificantChange,
+        .stopSignificantChange,
+        .startMotionUpdates,
+        .stopMotionUpdates,
+        .log("anything")
+    ])
+    func everyEffectHasASentence(_ effect: TrackingEffect) {
+        let name = "effect.\(TrackingCoordinator.effectName(effect))"
+        #expect(hasSentence(name, TrackingCoordinator.arguments(for: effect)), "no sentence for \(name)")
+    }
+
+    /// Every GPS profile the machine can ask for is named, not left as its
+    /// English label.
+    @Test(arguments: ActivityKind.allCases)
+    func everyGPSProfileIsNamed(_ kind: ActivityKind) {
+        let profile = GPSProfile.profile(for: kind, speed: nil)
+        #expect(Formatting.profileName(profile.label) != profile.label,
+                "untranslated profile: \(profile.label)")
+    }
+
+    @Test(arguments: [
+        MotionEvent.activity(kind: .walking, confidence: .high, timestamp: .now),
+        .steps(count: 42, timestamp: .now),
+        .accelerometerBurst(isMoving: true, magnitude: 0.052, timestamp: .now),
+        .accelerometerBurst(isMoving: false, magnitude: 0.004, timestamp: .now),
+        .authorizationChanged(.authorized)
+    ])
+    func everyMotionEventHasASentence(_ event: MotionEvent) {
+        let name = TrackingCoordinator.eventName(event)
+        #expect(hasSentence(name, TrackingCoordinator.arguments(for: event)), "no sentence for \(name)")
+    }
+
+    /// The activity report names the activity and its confidence, translated.
+    @Test(arguments: ActivityKind.allCases)
+    func everyActivityIsNamed(_ kind: ActivityKind) {
+        let event = MotionEvent.activity(kind: kind, confidence: .low, timestamp: .now)
+        let sentence = Formatting.auditSummary(name: TrackingCoordinator.eventName(event),
+                                               arguments: TrackingCoordinator.arguments(for: event))
+        #expect(sentence.contains(kind.title))
+        #expect(!sentence.contains(kind.rawValue) || kind.title == kind.rawValue)
+    }
+
+    @Test(arguments: [
+        LocationRejection.invalidAccuracy,
+        .poorAccuracy(meters: 88),
+        .stale(ageSeconds: 12),
+        .futureTimestamp,
+        .duplicate,
+        .outOfOrder
+    ])
+    func everyRejectionHasASentence(_ reason: LocationRejection) {
+        let arguments = LocationEngine.arguments(for: reason)
+        #expect(Formatting.auditRejectionIfKnown(arguments) != nil, "no sentence for \(arguments)")
+        #expect(hasSentence("fix.rejected", arguments))
+    }
+
+    /// The codes the producers write directly, with the arguments they carry.
+    @Test(arguments: [
+        ("app.launched", [String]()),
+        ("app.relaunched", []),
+        ("audit.enabled", []),
+        ("audit.exported", ["12", "text"]),
+        ("maintenance.purge", ["5", "3"]),
+        ("state.transition", ["stationary", "moving"]),
+        ("permission.motion", ["authorized"]),
+        ("permission.location", ["always"]),
+        ("location.significantChange", []),
+        ("location.visit.arrival", []),
+        ("location.visit.departure", []),
+        ("location.error", ["kCLErrorDomain 1"]),
+        ("monitoring.started", []),
+        ("indicator.shown", []),
+        ("indicator.hidden", []),
+        ("gps.started", ["walking"]),
+        ("gps.changed", ["automotive"]),
+        ("gps.stopped", []),
+        ("fix.accepted", []),
+        ("store.insert", ["12"]),
+        ("store.insertFailed", ["12"])
+    ])
+    func everyCodeHasASentence(_ event: (name: String, arguments: [String])) {
+        #expect(hasSentence(event.name, event.arguments), "no sentence for \(event.name)")
+    }
+
+    /// A state transition reads as two translated phase names.
+    @Test func transitionUsesPhaseTitles() {
+        let sentence = Formatting.auditSummary(name: "state.transition",
+                                               arguments: [TrackingPhase.stationary.rawValue,
+                                                           TrackingPhase.moving.rawValue])
+        #expect(sentence == "\(TrackingPhase.stationary.title) → \(TrackingPhase.moving.title)")
+    }
+
+    @Test(arguments: LocationFilter.checkNames)
+    func everyCheckNameIsTranslated(_ name: String) {
+        #expect(Formatting.checkNameIfKnown("check.\(name)") != nil, "unrecognised check: \(name)")
+    }
+
+    @Test(arguments: [FilterCheck.Verdict.passed, .failed, .skipped, .notApplicable])
+    func everyVerdictIsTranslated(_ verdict: FilterCheck.Verdict) {
+        #expect(Formatting.checkVerdictIfKnown(verdict.rawValue) != nil)
+    }
+
+    /// Only the verdict moves: the numbers behind it are data.
+    @Test func verdictKeepsItsMeasurements() {
+        #expect(Formatting.checkVerdict("failed (88.00 vs <= 50.00 m)").hasSuffix(" (88.00 vs <= 50.00 m)"))
+    }
+
+    /// An unknown code still reads as something, and says what it was.
+    @Test func unknownCodeFallsBackToItsRawForm() {
+        #expect(Formatting.auditSummaryIfKnown(name: "brand.new", arguments: []) == nil)
+        #expect(Formatting.auditSummary(name: "brand.new", arguments: []) == "brand.new")
+        #expect(Formatting.auditSummary(name: "brand.new", arguments: ["a", "b"]) == "brand.new a b")
+        #expect(Formatting.auditRejection(["brandNew"]) == "brandNew")
+        #expect(Formatting.checkName("check.brandNew") == "brandNew")
+        #expect(Formatting.checkVerdict("undecided (1 vs 2)") == "undecided (1 vs 2)")
+    }
+}
+
 @MainActor
 struct CoordinateFormattingTests {
     /// Coordinates must not pick up a locale decimal separator: in French it

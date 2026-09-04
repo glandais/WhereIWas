@@ -222,6 +222,275 @@ enum Formatting {
         default: return nil
         }
     }
+
+    // MARK: Audit trail
+
+    /// The localized one-line summary of an audit event.
+    ///
+    /// `AuditEvent` persists a code (`fix.rejected`) and, when the sentence
+    /// needs one, its parameters — never English prose. This is where the two
+    /// become a sentence, so the trail reads in the user's language while the
+    /// store and the exports stay machine text. An unknown code falls through
+    /// to its raw ``AuditEvent/summary``, which is still readable.
+    ///
+    /// `AuditMessageTests` walks every producer and fails on a code that has
+    /// no sentence here: nothing in the compiler ties the two together.
+    static func auditSummary(_ event: AuditEvent) -> String {
+        auditSummary(name: event.name, arguments: event.arguments)
+    }
+
+    static func auditSummary(name: String, arguments: [String]) -> String {
+        auditSummaryIfKnown(name: name, arguments: arguments)
+            ?? (arguments.isEmpty ? name : "\(name) \(arguments.joined(separator: " "))")
+    }
+
+    /// `nil` when the code is not in the table below.
+    static func auditSummaryIfKnown(name: String, arguments: [String]) -> String? {
+        func arg(_ index: Int) -> String {
+            index < arguments.count ? arguments[index] : ""
+        }
+        func meters(_ index: Int) -> String {
+            Double(arg(index)).map(distance) ?? arg(index)
+        }
+        func seconds(_ index: Int) -> String {
+            Double(arg(index)).map(duration) ?? arg(index)
+        }
+
+        switch name {
+        // Lifecycle
+        case "app.launched":
+            return String(localized: "audit.app.launched", defaultValue: "Launched normally")
+        case "app.relaunched":
+            return String(localized: "audit.app.relaunched", defaultValue: "Relaunched by a location event")
+        case "audit.enabled":
+            return String(localized: "audit.audit.enabled", defaultValue: "Audit trail enabled")
+        case "audit.exported":
+            let count = Int(arg(0)) ?? 0
+            let format = AuditExportFormat(rawValue: arg(1))?.displayName ?? arg(1)
+            return String(localized: "audit.audit.exported",
+                          defaultValue: "Export of \(auditEventCount(count)) as \(format)")
+        case "maintenance.purge":
+            return String(localized: "audit.maintenance.purge",
+                          defaultValue: "Purge of \(sampleCount(Int(arg(0)) ?? 0)) and \(auditEventCount(Int(arg(1)) ?? 0))")
+
+        // State machine
+        case "state.transition":
+            let from = TrackingPhase(rawValue: arg(0))?.title ?? arg(0)
+            let to = TrackingPhase(rawValue: arg(1))?.title ?? arg(1)
+            return "\(from) → \(to)"
+
+        // Effects
+        case "effect.startGPS":
+            let accuracy = AccuracyLevel(rawValue: arg(1))?.title ?? arg(1)
+            return String(localized: "audit.effect.startGPS",
+                          defaultValue: "GPS started: \(profileName(arg(0))) (\(accuracy), filter \(meters(2)))")
+        case "effect.stopGPS":
+            return String(localized: "audit.effect.stopGPS", defaultValue: "GPS stopped")
+        case "effect.startStillnessTimer":
+            return String(localized: "audit.effect.startStillnessTimer",
+                          defaultValue: "Stillness timer started (\(seconds(0)))")
+        case "effect.cancelStillnessTimer":
+            return String(localized: "audit.effect.cancelStillnessTimer", defaultValue: "Stillness timer cancelled")
+        case "effect.startProbeTimer":
+            return String(localized: "audit.effect.startProbeTimer",
+                          defaultValue: "Probe timer started (\(seconds(0)))")
+        case "effect.cancelProbeTimer":
+            return String(localized: "audit.effect.cancelProbeTimer", defaultValue: "Probe timer cancelled")
+        case "effect.startSignificantChange":
+            return String(localized: "audit.effect.startSignificantChange",
+                          defaultValue: "Significant-change and visit monitoring started")
+        case "effect.stopSignificantChange":
+            return String(localized: "audit.effect.stopSignificantChange",
+                          defaultValue: "Significant-change and visit monitoring stopped")
+        case "effect.startMotionUpdates":
+            return String(localized: "audit.effect.startMotionUpdates", defaultValue: "Motion updates started")
+        case "effect.stopMotionUpdates":
+            return String(localized: "audit.effect.stopMotionUpdates", defaultValue: "Motion updates stopped")
+        case "effect.log":
+            // The line itself is free-form machine text; only the label moves.
+            return String(localized: "audit.effect.log", defaultValue: "Log: \(arg(0))")
+
+        // Motion
+        case "motion.activity":
+            let kind = ActivityKind(rawValue: arg(0))?.title ?? arg(0)
+            let level = confidence(named: arg(1))?.title ?? arg(1)
+            return String(localized: "reason.activity", defaultValue: "Activity \(kind) (\(level))")
+        case "motion.steps":
+            return String(localized: "audit.motion.steps",
+                          defaultValue: "Pedometer reported \(Int(arg(0)) ?? 0) steps")
+        case "motion.burst.moving":
+            return String(localized: "audit.motion.burstMoving",
+                          defaultValue: "Accelerometer burst: moving at \(arg(0)) g")
+        case "motion.burst.still":
+            return String(localized: "audit.motion.burstStill",
+                          defaultValue: "Accelerometer burst: still at \(arg(0)) g")
+        case "motion.authorization", "permission.motion":
+            let auth = MotionAuthorization(rawValue: arg(0))?.title ?? arg(0)
+            return String(localized: "audit.permission.motion", defaultValue: "Motion authorization: \(auth)")
+        case "permission.location":
+            let auth = LocationAuthorization(rawValue: arg(0))?.title ?? arg(0)
+            return String(localized: "audit.permission.location", defaultValue: "Location authorization: \(auth)")
+
+        // Location
+        case "monitoring.started":
+            return String(localized: "audit.monitoring.started",
+                          defaultValue: "Significant-change and visit monitoring armed")
+        case "indicator.shown":
+            return String(localized: "audit.indicator.shown", defaultValue: "System location indicator shown")
+        case "indicator.hidden":
+            return String(localized: "audit.indicator.hidden", defaultValue: "System location indicator hidden")
+        case "gps.started":
+            return String(localized: "audit.gps.started",
+                          defaultValue: "GPS updates started with profile \(profileName(arg(0)))")
+        case "gps.changed":
+            return String(localized: "audit.gps.changed",
+                          defaultValue: "GPS profile changed to \(profileName(arg(0)))")
+        case "gps.stopped":
+            return String(localized: "audit.gps.stopped", defaultValue: "GPS updates stopped")
+        case "location.significantChange":
+            return String(localized: "audit.location.significantChange", defaultValue: "Significant location change")
+        case "location.visit.arrival":
+            return String(localized: "reason.visitArrival", defaultValue: "Visit arrival")
+        case "location.visit.departure":
+            return String(localized: "reason.visitDeparture", defaultValue: "Visit departure")
+        case "location.error":
+            // Already localized by the system that raised it.
+            return arg(0)
+
+        // Filter
+        case "fix.accepted":
+            return String(localized: "audit.fix.accepted", defaultValue: "Fix accepted")
+        case "fix.rejected":
+            return String(localized: "audit.fix.rejected",
+                          defaultValue: "Fix rejected: \(auditRejection(arguments))")
+
+        // Persistence
+        case "store.insert":
+            return String(localized: "audit.store.insert",
+                          defaultValue: "Persisted \(Int(arg(0)) ?? 0) samples")
+        case "store.insertFailed":
+            return String(localized: "audit.store.insertFailed",
+                          defaultValue: "Insert failed, \(Int(arg(0)) ?? 0) samples kept in memory")
+
+        default:
+            return nil
+        }
+    }
+
+    /// The reason half of `fix.rejected`: a code, plus the measurement behind
+    /// it when the code carries one.
+    static func auditRejectionIfKnown(_ arguments: [String]) -> String? {
+        let value = arguments.count > 1 ? Double(arguments[1]) : nil
+        switch arguments.first {
+        case "invalidAccuracy":
+            return String(localized: "audit.rejection.invalidAccuracy", defaultValue: "invalid accuracy")
+        case "futureTimestamp":
+            return String(localized: "audit.rejection.futureTimestamp", defaultValue: "timestamp in the future")
+        case "duplicate":
+            return String(localized: "audit.rejection.duplicate", defaultValue: "duplicate of the previous fix")
+        case "outOfOrder":
+            return String(localized: "audit.rejection.outOfOrder", defaultValue: "older than the previous fix")
+        case "poorAccuracy":
+            guard let value else { return nil }
+            return String(localized: "audit.rejection.poorAccuracy",
+                          defaultValue: "accuracy too poor (\(distance(value)))")
+        case "stale":
+            guard let value else { return nil }
+            return String(localized: "audit.rejection.stale", defaultValue: "too old (\(duration(value)))")
+        default:
+            return nil
+        }
+    }
+
+    static func auditRejection(_ arguments: [String]) -> String {
+        auditRejectionIfKnown(arguments) ?? arguments.joined(separator: " ")
+    }
+
+    /// Name of one validation test, from its `check.` audit detail key.
+    static func checkNameIfKnown(_ key: String) -> String? {
+        switch key.dropPrefixIfPresent("check.").map(String.init) ?? key {
+        case "horizontalAccuracy.valid":
+            return String(localized: "audit.check.accuracyValid", defaultValue: "Horizontal accuracy is valid")
+        case "horizontalAccuracy.withinLimit":
+            return String(localized: "audit.check.accuracyWithinLimit", defaultValue: "Horizontal accuracy within the limit")
+        case "timestamp.notInFuture":
+            return String(localized: "audit.check.notInFuture", defaultValue: "Timestamp is not in the future")
+        case "timestamp.notStale":
+            return String(localized: "audit.check.notStale", defaultValue: "Timestamp is recent enough")
+        case "timestamp.afterPrevious":
+            return String(localized: "audit.check.afterPrevious", defaultValue: "Timestamp is after the previous fix")
+        case "coordinate.notDuplicate":
+            return String(localized: "audit.check.notDuplicate", defaultValue: "Coordinate is not a duplicate")
+        default:
+            return nil
+        }
+    }
+
+    /// An unrecognised test keeps its identifier, minus the `check.` prefix.
+    static func checkName(_ key: String) -> String {
+        checkNameIfKnown(key) ?? (key.dropPrefixIfPresent("check.").map(String.init) ?? key)
+    }
+
+    /// A check's audit value, `"<verdict> (<measured> vs <limit>)"`. Only the
+    /// verdict is translated: what follows is measured data.
+    static func checkVerdictIfKnown(_ value: String) -> String? {
+        let verdict: String
+        let rest: Substring
+        if let space = value.firstIndex(of: " ") {
+            verdict = String(value[value.startIndex..<space])
+            rest = value[space...]
+        } else {
+            verdict = value
+            rest = ""
+        }
+        switch FilterCheck.Verdict(rawValue: verdict) {
+        case .passed: return String(localized: "audit.verdict.passed", defaultValue: "passed") + rest
+        case .failed: return String(localized: "audit.verdict.failed", defaultValue: "failed") + rest
+        case .skipped: return String(localized: "audit.verdict.skipped", defaultValue: "skipped") + rest
+        case .notApplicable: return String(localized: "audit.verdict.notApplicable", defaultValue: "not applicable") + rest
+        case nil: return nil
+        }
+    }
+
+    static func checkVerdict(_ value: String) -> String { checkVerdictIfKnown(value) ?? value }
+
+    /// Translated name of a `GPSProfile.label`, which is the persisted English
+    /// identifier. Shared by ``GPSProfile/displayName`` and the audit reader,
+    /// which only ever sees the label as text.
+    static func profileName(_ label: String) -> String {
+        switch label {
+        case "probing": return String(localized: "common.probing", defaultValue: "Probing")
+        case "stationary-coarse": return String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)")
+        case "walking": return String(localized: "activity.walking", defaultValue: "Walking")
+        case "running": return String(localized: "activity.running", defaultValue: "Running")
+        case "cycling": return String(localized: "activity.cycling", defaultValue: "Cycling")
+        case "automotive": return String(localized: "activity.driving", defaultValue: "Driving")
+        // These three name a *profile*, not an activity, so they get their own
+        // keys: French agrees the adjective with the subject and "profil" is
+        // masculine where "activité" — the subject of `ActivityKind.title` —
+        // is feminine.
+        case "fast-unknown":
+            return String(localized: "profile.unknownFast", defaultValue: "Unknown, fast",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
+        case "slow-unknown":
+            return String(localized: "profile.unknownSlow", defaultValue: "Unknown, slow",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
+        case "unknown":
+            return String(localized: "profile.unknown", defaultValue: "Unknown",
+                          comment: "GPS profile name; the subject is the profile, not the activity")
+        default: return label
+        }
+    }
+
+    /// Pluralised fragments, so a sentence carrying two counts stays one key
+    /// instead of a catalog substitution per argument.
+    private static func sampleCount(_ count: Int) -> String {
+        String(localized: "audit.count.samples", defaultValue: "\(count) samples")
+    }
+
+    private static func auditEventCount(_ count: Int) -> String {
+        String(localized: "audit.count.events", defaultValue: "\(count) audit events")
+    }
 }
 
 private extension String {
@@ -417,30 +686,9 @@ extension ExportFormat {
 // writes its `rawValue`.
 
 extension GPSProfile {
-    var displayName: String {
-        switch label {
-        case "probing": return String(localized: "common.probing", defaultValue: "Probing")
-        case "stationary-coarse": return String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)")
-        case "walking": return String(localized: "activity.walking", defaultValue: "Walking")
-        case "running": return String(localized: "activity.running", defaultValue: "Running")
-        case "cycling": return String(localized: "activity.cycling", defaultValue: "Cycling")
-        case "automotive": return String(localized: "activity.driving", defaultValue: "Driving")
-        // These three name a *profile*, not an activity, so they get their own
-        // keys: French agrees the adjective with the subject and "profil" is
-        // masculine where "activité" — the subject of `ActivityKind.title` —
-        // is feminine.
-        case "fast-unknown":
-            return String(localized: "profile.unknownFast", defaultValue: "Unknown, fast",
-                          comment: "GPS profile name; the subject is the profile, not the activity")
-        case "slow-unknown":
-            return String(localized: "profile.unknownSlow", defaultValue: "Unknown, slow",
-                          comment: "GPS profile name; the subject is the profile, not the activity")
-        case "unknown":
-            return String(localized: "profile.unknown", defaultValue: "Unknown",
-                          comment: "GPS profile name; the subject is the profile, not the activity")
-        default: return label
-        }
-    }
+    /// The label is the persisted English identifier; the translation table
+    /// lives in `Formatting.profileName`, which the audit reader also uses.
+    var displayName: String { Formatting.profileName(label) }
 }
 
 extension AuditCategory {

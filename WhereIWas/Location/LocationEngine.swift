@@ -167,7 +167,6 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                 category: .location,
                                 severity: .info,
                                 name: "monitoring.started",
-                                message: "Significant-change and visit monitoring armed",
                                 details: [AuditDetail("significantChangeAvailable",
                                                       CLLocationManager.significantLocationChangeMonitoringAvailable())]))
         isMonitoringSignificantChanges = true
@@ -249,10 +248,9 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             audit.record(AuditEvent(timestamp: Date(),
                                     category: .location,
                                     severity: .info,
-                                    name: "indicator.changed",
-                                    message: settings.showsLocationIndicator
-                                        ? "System location indicator shown"
-                                        : "System location indicator hidden",
+                                    name: settings.showsLocationIndicator
+                                        ? "indicator.shown"
+                                        : "indicator.hidden",
                                     details: [AuditDetail("showsLocationIndicator",
                                                           settings.showsLocationIndicator)]))
         }
@@ -277,10 +275,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             audit.record(AuditEvent(timestamp: Date(),
                                     category: .location,
                                     severity: .info,
-                                    name: "gps.profile",
-                                    message: appliedProfile == nil
-                                        ? "GPS updates started with profile \(profile.label)"
-                                        : "GPS profile changed to \(profile.label)",
+                                    name: appliedProfile == nil ? "gps.started" : "gps.changed",
+                                    arguments: [profile.label],
                                     details: [AuditDetail("from", appliedProfile?.label ?? "off"),
                                               AuditDetail("to", profile.label),
                                               AuditDetail("desiredAccuracy", profile.desiredAccuracy.rawValue),
@@ -303,7 +299,6 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                     category: .location,
                                     severity: .info,
                                     name: "gps.stopped",
-                                    message: "GPS updates stopped",
                                     details: [AuditDetail("from", appliedProfile?.label ?? "off")]))
         }
         appliedProfile = nil
@@ -331,7 +326,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                         category: .persistence,
                                         severity: .debug,
                                         name: "store.insert",
-                                        message: "Persisted \(batch.count) samples",
+                                        arguments: [String(batch.count)],
                                         details: [AuditDetail("count", batch.count),
                                                   AuditDetail("firstSequence", Int(sequences.first ?? 0)),
                                                   AuditDetail("lastSequence", Int(sequences.last ?? 0))]))
@@ -342,7 +337,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                         category: .persistence,
                                         severity: .error,
                                         name: "store.insertFailed",
-                                        message: "Insert failed, \(batch.count) samples kept in memory",
+                                        arguments: [String(batch.count)],
                                         details: [AuditDetail("count", batch.count),
                                                   AuditDetail("error", error.localizedDescription)]))
                 delegate?.locationEngine(self, didFail: error)
@@ -423,14 +418,12 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             details.append(AuditDetail("distanceFromPrevious", fix.distance(to: previous)))
         }
 
-        var message: String
+        var arguments: [String] = []
         var severity: AuditSeverity = .debug
         if case .rejected(let reason) = result {
-            message = "Fix rejected: \(Self.describe(reason))"
+            arguments = Self.arguments(for: reason)
             severity = .info
             details.append(AuditDetail("rejection", Self.describe(reason)))
-        } else {
-            message = "Fix accepted"
         }
 
         if settings.auditLogsFilterChecks {
@@ -448,8 +441,23 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                 category: accepted ? .location : .filter,
                                 severity: severity,
                                 name: accepted ? "fix.accepted" : "fix.rejected",
-                                message: message,
+                                arguments: arguments,
                                 details: details))
+    }
+
+    /// The rejection code, plus the measurement behind it when there is one:
+    /// the arguments of `fix.rejected`.
+    static func arguments(for reason: LocationRejection) -> [String] {
+        switch reason {
+        case .invalidAccuracy: return ["invalidAccuracy"]
+        case .poorAccuracy(let meters):
+            return ["poorAccuracy", String(format: "%.1f", locale: nil, meters)]
+        case .stale(let age):
+            return ["stale", String(format: "%.1f", locale: nil, age)]
+        case .futureTimestamp: return ["futureTimestamp"]
+        case .duplicate: return ["duplicate"]
+        case .outOfOrder: return ["outOfOrder"]
+        }
     }
 
     /// Short, stable description of a rejection reason.
