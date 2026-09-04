@@ -102,11 +102,22 @@ Connect is a separate namespace with its own codes for the same languages — `d
 `nl-NL`, and `it` / `ja` / `pl` / `cs` bare — and those are what `metadata/` and the screenshot
 directories are named after.
 
+**`i18n/translations.json` is the source of truth for every translation**, and the catalogs are
+generated from it. It aggregates the two catalogs above, the screenshot catalog
+(`screenshots/koubou/koubou-strings.xcstrings`) and the store metadata under `metadata/` — 21 files
+in nine languages — through `scripts/i18n.py export` / `import`, whose round trip is byte-exact
+(`scripts/i18n.py check` proves it, and fails when the JSON and the sources have diverged). Editing
+a generated file by hand is the one thing to avoid: the edit survives until the next `import`, so it
+works when you test it and is gone when someone else runs the pipeline. The `i18n` skill documents
+the loop; what follows is what to write, which it does not repeat.
+
 The permission prompts' English text lives in **two** places and must be edited in both:
 `project.yml` (which writes the keys into the generated `Info.plist`) and the `en` unit of the
-catalog. iOS resolves `en.lproj/InfoPlist.strings` first, so the catalog is what an English user
-reads. Dropping the `en` unit is not the fix either — `xcstringstool` then emits the key itself as
-the value and the prompt reads "NSMotionUsageDescription".
+catalog — that half through the JSON like any other string, and `scripts/i18n.py` reports the
+divergence when only one of the two moved. iOS resolves `en.lproj/InfoPlist.strings` first, so the
+catalog is what an English user reads. Dropping the `en` unit is not the fix either —
+`xcstringstool` then emits the key itself as the value and the prompt reads
+"NSMotionUsageDescription".
 
 Rules when adding UI strings:
 
@@ -148,10 +159,15 @@ Rules when adding UI strings:
   `Formatting` holds the choice in a static the UI pushes to (`RootView` at launch and on change,
   the Settings picker in its binding setter). Samples stay in meters and m/s everywhere else.
 
-`xcodebuild` compiles the catalogs but never writes new keys back. After adding strings, run
-`./scripts/xcb.sh strings`, then fill the `en` unit of every new key (the key is never the English
-text) and the eight other units. `extractionState: stale` entries are dead keys — delete them.
-Check the result in the simulator:
+`xcodebuild` compiles the catalogs but never writes new keys back, so a new UI key still enters
+through the code rather than through the JSON: `xcstringstool` is what discovers the call sites, and
+it only writes into `Localizable.xcstrings`. Run `./scripts/xcb.sh strings`, then
+`./scripts/i18n.py export` to pull the new keys into `i18n/translations.json`, fill there the `en`
+unit of every one of them (the key is never the English text) and the eight other units, and
+`./scripts/i18n.py import` to write the catalog back. `extractionState: stale` entries are dead keys
+— delete them, remembering that `import` is authoritative for the key set too: a key dropped from
+the JSON disappears from the catalog, which is how a stale key is retired and also how a live string
+gets destroyed. Check the result in the simulator:
 
 ```bash
 xcrun simctl launch "$(source scripts/sim-config.sh && sim_udid)" \
@@ -199,11 +215,14 @@ updating.` Re-plan and apply again: the second pass sees them and updates. Seven
 first run of a new locale are expected, not a broken plan.
 
 Canonical metadata lives under `./metadata/`, one file per scope and locale
-(`app-info/<locale>.json`, `version/<version>/<locale>.json`). `asc metadata` does **not** cover the
-App Review notes, so those have their own canonical copy in `metadata/review-notes.md`, pushed with
-`asc review details-update`; it has to stay true to the code, since a reviewer reads it with the app
-open in front of them. Use the `asc` CLI; the
-plan/approve/apply cycle is deliberate — never `apply` without reading the plan first:
+(`app-info/<locale>.json`, `version/<version>/<locale>.json`), generated from
+`i18n/translations.json` like the catalogs: a wording change goes through `scripts/i18n.py import`
+before `asc` ever reads it, and `asc metadata pull` — which writes those files straight from the
+store — has to be followed by `scripts/i18n.py export`, or the next `import` reverts what the pull
+brought back. `asc metadata` does **not** cover the App Review notes, so those have their own
+canonical copy in `metadata/review-notes.md`, pushed with `asc review details-update`; it has to
+stay true to the code, since a reviewer reads it with the app open in front of them. Use the `asc`
+CLI; the plan/approve/apply cycle is deliberate — never `apply` without reading the plan first:
 
 ```bash
 asc metadata pull     --app 6808349924 --version "1.0.0" --dir "./metadata"
