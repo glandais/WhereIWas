@@ -132,38 +132,45 @@ Read at least these as images before uploading:
 ## 5. Upload
 
 Screenshots hang off a **version localization**, one per locale. App Store Connect does **not**
-inherit them from the primary locale: each of the nine needs its own upload.
+inherit them from the primary locale — but one app-scoped run fans out over all nine, and
+`--replace` deletes each target set before uploading, so an old asset can never be left alongside
+a new one:
 
 ```bash
-asc versions list --app 6808349924 --output table                      # the version id
-asc localizations list --version "VERSION_ID" --output table           # confirm nine locales
-asc screenshots list --version "VERSION_ID" --locale en-US --output json
+asc screenshots upload --app 6808349924 --version "1.0.0" \
+  --path "./screenshots/IPHONE_65" --device-type "IPHONE_65" --replace --dry-run   # read this
+asc screenshots upload --app 6808349924 --version "1.0.0" \
+  --path "./screenshots/IPHONE_65" --device-type "IPHONE_65" --replace --confirm
 ```
 
-The list JSON is `{versionLocalizationId, sets: [{set, screenshots: [...]}]}` — the screenshots are
-nested under a set per display type, not at the top level. That is where the version-localization
-id for the upload comes from.
+Fan-out requires the immediate children of `--path` to be locale directories, which is exactly
+what `assemble.sh` produces. The dry run prints the deletions and the uploads one for one — 45 and
+45 — and is the whole reason not to skip it: it is where a locale gone missing shows up. The run
+takes well over ten minutes, so background it.
 
-**Delete what the new set does not replace, first.** An upload adds assets; it does not reconcile
-names. When the file names changed, the old ones stay and the listing serves both:
+Never delete assets by id first. An upload without `--replace` only *adds*, so it duplicates a set
+whose names did not change and orphans one whose names did — `--replace` is what reconciles both,
+in one approval instead of forty-five.
+
+Read the result back rather than trusting the exit code — every asset `COMPLETE`, five per locale,
+the five expected names:
 
 ```bash
-asc screenshots delete --id "SCREENSHOT_ID" --confirm
+asc screenshots list --app 6808349924 --version "1.0.0" --locale en-US --output json
 ```
 
-Then upload each locale. Nine locales take well over ten minutes — background it:
+That JSON is `{versionLocalizationId, sets: [{set, screenshots: [...]}]}`: the screenshots are
+nested under a set per display type, not at the top level, and each carries its `fileName` and
+`assetDeliveryState` under `attributes`.
+
+Uploading is outward-facing. Check what state the version is in before touching anything —
+`PREPARE_FOR_SUBMISSION` means nothing is public yet; a version in review or released is a
+different conversation, and belongs to the user.
 
 ```bash
-asc screenshots upload --version-localization "VERSION_LOCALIZATION_ID" \
-  --path "./screenshots/IPHONE_65/<locale>" --device-type "IPHONE_65"
+asc versions list --app 6808349924 --output table                # state, and the version id
+asc localizations list --version "VERSION_ID" --output table     # confirm nine locales
 ```
-
-Read the result back rather than trusting the exit code: every asset must be `COMPLETE`, and the
-five file names must be the five expected ones.
-
-Deleting live assets and uploading are outward-facing. Check what state the version is in before
-touching anything — `PREPARE_FOR_SUBMISSION` means nothing is public yet; a version in review or
-released is a different conversation, and belongs to the user.
 
 ## 6. Record it
 
@@ -178,7 +185,10 @@ Never `git add -A`. The working tree usually holds work in progress that is not 
 
 - **`asc` prints raw JSON by default**, and a screenshot list is thousands of tokens. Pass
   `--output table`, or pipe through `python3 -c` / `jq`.
-- **`--version-id` is deprecated** on the localization commands; `--version` takes the same id.
+- **`--version` means two different things.** `asc localizations list --version` takes the version
+  *id*; `asc screenshots list` and `asc screenshots upload` read it as the version *string*
+  (`1.0.0`) and want `--app` alongside — pass an id there and they answer `app store version not
+  found`. `--version-id` is the flag that takes an id on the screenshot commands.
 - **The status-bar clock is drawn by the system, not the app.** `-AppleLanguages` relanguages the
   app only, so the capture script moves the simulator's own locale per locale and restores it on
   exit. Do not add `--time` back to `status_bar override`: it renders with a format of its own and

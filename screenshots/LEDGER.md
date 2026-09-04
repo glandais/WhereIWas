@@ -264,17 +264,20 @@ The 45 assets went up locale by locale, every one `COMPLETE`, and the store list
 rather than trusted: five cards per locale, the five expected names, no duplicates. Version 1.0.0
 was in `PREPARE_FOR_SUBMISSION` throughout.
 
-One correction to make to the release skill rather than to the cards: this run deleted the 45 old
-assets by id and then uploaded, which is what `.claude/skills/screenshots-release/SKILL.md` still
-documents. D17 established that `asc screenshots upload --replace --confirm` does both in one
-pass. The result is the same; the skill is out of date.
+This run still deleted the 45 old assets by id before uploading, because that is what the release
+skill documented: D17 found that `asc screenshots upload --replace --confirm` does both in one
+pass, and nobody carried the finding back into the instructions anyone actually follows. The
+result was the same, and the skill now says so: section 5 is one app-scoped fan-out run over the
+nine locale directories, with a `--replace --dry-run` first. The delete-by-id loop is gone from
+it.
 
-## Open questions
+## Closed questions
 
-**The en-US card reads its measurement in feet.** "Fix rejected: accuracy too poor (308.4 ft)"
-where the other eight locales read "(94 m)", because the rejection's measurement now goes through
-`Formatting.distance`, which follows `TrackingSettings.unitSystem`, which defaults to the device's
-own system. That is right — an imperial user reads feet everywhere else in the app — but "308.4
-ft" is a less crisp number than "94 m" on the card that sells precision. Whether to pin the demo
-dataset to metric for the capture, or to pick a rejection distance that reads well in both, is
-open.
+**The en-US card reads its measurement in feet — and that is the answer.** "Fix rejected: accuracy
+too poor (308.4 ft)" against "(94 m)" in the other eight locales, because the measurement goes
+through `Formatting.distance`, which follows `TrackingSettings.unitSystem`, which follows the
+device. Whether to pin the demo dataset to metric for the capture was left open in D17 and is now
+settled: no. An imperial reader meets feet everywhere else in the app, and a card that showed
+metres would be showing them a screen their phone does not produce. "308.4" is a less crisp number
+than "94"; it is also the true one, and nobody but us was ever going to compare the two cards side
+by side.
