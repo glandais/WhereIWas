@@ -326,3 +326,37 @@ struct UnitSystemFormattingTests {
         #expect(UnitSystem(rawValue: "imperial") == .imperial)
     }
 }
+
+/// `Formatting.duration` renders a deployment, not an outing: a session can run
+/// for days, so the format style has to be allowed to reach for that unit.
+///
+/// Assertions are on the numbers, not on the unit symbols, for the same reason
+/// as ``UnitSystemFormattingTests``: "d" is "j" in French. Every value here is
+/// small enough to carry no grouping separator, so the digits can be read
+/// straight out of the string.
+@MainActor
+struct DurationFormattingTests {
+    /// The runs of digits in a formatted duration, in order.
+    private func numbers(_ text: String) -> [Int] {
+        text.split(whereSeparator: { !$0.isNumber }).compactMap { Int($0) }
+    }
+
+    @Test("A multi-day session is counted in days, not in dozens of hours")
+    func multiDaySession() {
+        let text = Formatting.duration(3 * 86_400 + 2 * 3_600 + 12 * 60)
+        #expect(numbers(text) == [3, 2])
+        #expect(!text.contains("74"))
+    }
+
+    @Test("Durations below a day are unchanged")
+    func shortDurations() {
+        #expect(numbers(Formatting.duration(90)) == [1, 30])
+        #expect(numbers(Formatting.duration(120)) == [2])
+        #expect(numbers(Formatting.duration(5_400)) == [1, 30])
+    }
+
+    @Test("A negative duration is clamped to zero")
+    func negativeIsClamped() {
+        #expect(numbers(Formatting.duration(-5)) == [0])
+    }
+}
