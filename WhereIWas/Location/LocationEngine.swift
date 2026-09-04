@@ -40,6 +40,11 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     /// High-accuracy profile in force; `nil` while GPS is off or coarse.
     public private(set) var currentProfile: GPSProfile?
     public private(set) var lastFix: LocationFix?
+    /// The last accepted fixes, oldest first, feeding the filter's
+    /// `cachedRepeat` check. `lastFix` stays the ordering / duplicate
+    /// reference; this is the short memory that catches a cached fix iOS
+    /// replays with a real one in between.
+    private var recentFixes: [LocationFix] = []
     public private(set) var acceptedCount = 0
     public private(set) var rejectedCount = 0
 
@@ -357,6 +362,15 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     private func enqueue(_ fix: LocationFix, source: LocationSource) {
         buffer.append(LocationSampleDraft(fix: fix, annotation: annotate(), source: source))
         lastFix = fix
+        if source == .gps {
+            // Only real fixes: an event fix is ~500 m wide and speed-less, so
+            // letting it into the ring would evict GPS fixes without ever
+            // matching one.
+            recentFixes.append(fix)
+            if recentFixes.count > LocationFilter.recentCapacity {
+                recentFixes.removeFirst(recentFixes.count - LocationFilter.recentCapacity)
+            }
+        }
         acceptedCount += 1
         if buffer.count >= max(1, settings.insertBatchSize) || source != .gps {
             // Event-style fixes are flushed immediately: after a background
@@ -372,8 +386,12 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         for location in locations {
             let fix = LocationFix(location)
             let previous = lastFix
-            let result = LocationFilter.evaluate(fix, previous: previous, now: now, settings: settings)
-            recordAudit(fix: fix, previous: previous, now: now, result: result)
+            // Snapshot both: `enqueue` mutates them, and the audit trace must
+            // describe the state `evaluate` actually saw.
+            let recent = recentFixes
+            let result = LocationFilter.evaluate(fix, previous: previous, now: now,
+                                                 settings: settings, recent: recent)
+            recordAudit(fix: fix, previous: previous, recent: recent, now: now, result: result)
             switch result {
             case .accepted:
                 enqueue(fix, source: .gps)
@@ -401,6 +419,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     /// switch is set, so the hot path stays allocation-free by default.
     private func recordAudit(fix: LocationFix,
                              previous: LocationFix?,
+                             recent: [LocationFix],
                              now: Date,
                              result: LocationFilterResult) {
         guard audit.isEnabled else { return }
@@ -427,7 +446,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         }
 
         if settings.auditLogsFilterChecks {
-            let trace = LocationFilter.trace(fix, previous: previous, now: now, settings: settings)
+            let trace = LocationFilter.trace(fix, previous: previous, now: now,
+                                             settings: settings, recent: recent)
             for check in trace.checks {
                 var value = check.verdict.rawValue
                 if let measured = check.measured { value += " (\(measured)" }
@@ -456,6 +476,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             return ["stale", String(format: "%.1f", locale: nil, age)]
         case .futureTimestamp: return ["futureTimestamp"]
         case .duplicate: return ["duplicate"]
+        case .cachedRepeat: return ["cachedRepeat"]
         case .outOfOrder: return ["outOfOrder"]
         }
     }
@@ -468,6 +489,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         case .stale(let age): return "stale(\(String(format: "%.1f", locale: nil, age)) s)"
         case .futureTimestamp: return "futureTimestamp"
         case .duplicate: return "duplicate"
+        case .cachedRepeat: return "cachedRepeat"
         case .outOfOrder: return "outOfOrder"
         }
     }
@@ -476,6 +498,11 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     /// coarse update): accuracy limits do not apply (they are ~500 m by
     /// nature), but obviously invalid, out-of-order or duplicate ones are
     /// dropped. Returns `true` when persisted.
+    ///
+    /// The `cachedRepeat` check deliberately does not apply here, and these
+    /// fixes do not enter its ring either: an event fix never carries a speed,
+    /// so it would match the pattern by construction, and these are the only
+    /// fixes that relaunch a terminated app.
     @discardableResult
     private func handleCoarse(_ fix: LocationFix, source: LocationSource) -> Bool {
         guard fix.horizontalAccuracy > 0 else { return false }

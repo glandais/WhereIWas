@@ -72,11 +72,11 @@ Pure `struct TrackingStateMachine` — inputs in, effects out, no clock, no fram
 stateDiagram-v2
     [*] --> disabled
     disabled --> probing : enable / startSignificantChange, startMotionUpdates, startGPS(probing), startProbeTimer
-    probing --> moving : gpsFix(speed ≥ movingSpeedThreshold) | motionActivity(moving, conf ≥ min)
-    probing --> stationary : probeTimerFired | motionActivity(stationary, high) after ≥1 fix
+    probing --> moving : movingFixConfirmations × gpsFix(speed ≥ movingSpeedThreshold) | motionActivity(moving, conf ≥ min)
+    probing --> stationary : probeTimerFired (settles if it saw a fix) | motionActivity(stationary, high) after ≥1 fix
     probing --> probing : significantChange | visit  (restart probe timer)
     stationary --> moving : motionActivity(moving, conf ≥ min)
-    stationary --> probing : significantChange | visit | motionHint | motionActivity(moving, low conf) | motionActivity(unknown, conf ≥ min)
+    stationary --> probing : significantChange | visit | motionHint | motionActivity(moving, low conf) | motionActivity(unknown, conf ≥ min) unless settled
     moving --> moving : gpsFix(speed) → startGPS(new profile) if profile changed
     moving --> moving : motionActivity(stationary, conf ≥ min) | gpsFix(speed < stillSpeedThreshold) → startStillnessTimer
     moving --> moving : motionActivity(moving) | gpsFix(fast) → cancelStillnessTimer
@@ -98,11 +98,16 @@ stateDiagram-v2
 The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedProfile`), not `activeProfile`: in the coarse case CoreLocation is still running, so the row reads "Stationary (coarse)" and not "GPS off". `activeProfile` stays the high-accuracy profile, which is what annotates the samples.
 
 ### Rules
-* **Toward MOVING is immediate** on credible evidence: activity with `impliesMotion` and confidence ≥ `minimumActivityConfidence` (medium), or a probing fix at ≥ `movingSpeedThreshold` (0.7 m/s).
+* **Toward MOVING is immediate** on a credible activity: `impliesMotion` and confidence ≥ `minimumActivityConfidence` (medium). GPS speed alone is slower on purpose: it takes `movingFixConfirmations` (2) **consecutive** probing fixes at ≥ `movingSpeedThreshold` (0.7 m/s), because CoreLocation occasionally puts a large speed on a fix that has not moved — one such reading used to be enough to start an `automotive` profile. Any slower or speed-less fix breaks the streak, as does leaving PROBING. The same confirmation gates the profile while MOVING: `profileSpeed` — the speed the table is fed, distinct from the raw `lastSpeed` the status screen shows — climbs a speed tier only once that many fixes agree, and falls back at the first slower fix (a tighter distance filter only costs precision we already have).
+* **A confirmed settle silences the `unknown` rule.** `settledStationary` is set by a `stationary` activity at high confidence **outside MOVING**, and by a probe window that expired *after seeing at least one fix*; it is cleared by a motion hint, a significant change, a visit, any activity that `impliesMotion`, any fix at or above `movingSpeedThreshold`, and by `disable`. While set, a confidently `unknown` report no longer reopens PROBING: the classifier flaps between `stationary/low` and `unknown/high` while the phone sits still, and probing on every flap woke GPS 259 times in one recorded day.
+
+  The three exclusions are not details. A phone lying on a car seat is genuinely stationary *to CoreMotion* while the car drives on, so settling from MOVING would silence the very reports that bring tracking back. A probe window that saw **no** fix (indoors, a parking garage, a cold receiver) is an absence of evidence in either direction, not evidence of stillness. And a measured GPS speed is a direct refutation of the guess the settle encodes.
+
+  What this costs, stated plainly: while settled, the pedometer is the only *fast* way back, and it needs ten real steps (`TrackingCoordinator.motionHintStepThreshold`) — a driver who never walks depends on CoreMotion classifying `automotive`, or on a significant change (~500 m). That trade is the point of the rule; if it ever proves too coarse, the fix is a bound on how long a settle may last, not a return to probing on every flap.
 * **Toward STATIONARY is hysteretic**: from MOVING only via the stillness timer (`stillnessTimeout`, 120 s default) which is armed by a credible `stationary` activity or a fix slower than `stillSpeedThreshold` (0.3 m/s) and cancelled by any moving activity or a fast fix (unless the classifier currently says stationary — GPS speed jitter must not defeat CoreMotion).
 * **Significant change / visits never jump to MOVING**: they are ~500 m accuracy and also fire when *arriving*. They open a PROBING window; a real fix decides.
 * **`enable` → PROBING**: on user toggle and on every relaunch we want a first fix and speed reading immediately.
-* `startGPS(profile)` is re-emitted whenever the computed profile changes while MOVING (speed tier or activity changed); the engine diffs against `currentProfile` and reconfigures in place (no stop/start).
+* `startGPS(profile)` is re-emitted whenever the computed profile changes while MOVING (speed tier or activity changed); the engine diffs against `currentProfile` and reconfigures in place (no stop/start). The tier comes from `GPSProfile.speedTier` — `0` slow or unknown, `1` above 2.5 m/s, `2` above 7 m/s — which is also what the confirmation above compares. `profileSpeed` follows every fix the machine sees, STATIONARY included (coarse updates still arrive there), so a drive's speed never leaks into the profile of the walk that follows.
 
 ### GPS profile table (`Domain/GPSProfile.swift`, pure)
 
@@ -118,7 +123,7 @@ The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedPr
 Probing: best / 0 m. Stationary coarse: threeKilometers / 3000 m.
 
 ### Sample filter (`Domain/LocationFilter.swift`, pure)
-Check order: `horizontalAccuracy <= 0` → invalid; `> maxHorizontalAccuracy` (50 m) → poor; timestamp > 5 s in the future → future; older than `maxSampleAge` (30 s) → stale (CoreLocation replays cached fixes on `startUpdatingLocation`); not after previous accepted → outOfOrder; within `duplicateDistance` (0 m = identical coords) of previous → duplicate. Every sample keeps latitude/longitude/altitude/h+v accuracy/speed/speedAccuracy/course/timestamp plus the annotation (activity, confidence, phase, battery level/state, session, profile label, source).
+Check order: `horizontalAccuracy <= 0` → invalid; `> maxHorizontalAccuracy` (50 m) → poor; timestamp > 5 s in the future → future; older than `maxSampleAge` (30 s) → stale (CoreLocation replays cached fixes on `startUpdatingLocation`); not after previous accepted → outOfOrder; within `duplicateDistance` (0 m = identical coords) of previous → duplicate; latitude, longitude *and* `horizontalAccuracy` strictly equal to one of the last `LocationFilter.recentCapacity` (10) accepted fixes, with no valid speed → cachedRepeat (iOS replays a cached network fix with a fresh timestamp, which the previous-fix-only duplicate check misses whenever a real fix lands in between; `LocationEngine` keeps the ring, filled from GPS fixes only — `handleCoarse` neither runs the check nor feeds it, since an event fix is ~500 m wide and speed-less. A twin older than `LocationFilter.recentWindow` (600 s) no longer counts, so a receiver whose whole input is one repeated solution is never silenced indefinitely.) Every sample keeps latitude/longitude/altitude/h+v accuracy/speed/speedAccuracy/course/timestamp plus the annotation (activity, confidence, phase, battery level/state, session, profile label, source).
 
 ---
 
@@ -233,7 +238,8 @@ Device (mandatory for background behaviour):
 4. Reboot: reboot, unlock once, leave the app closed, move > 500 m: same expectation.
 5. Force quit: swipe the app away, move: nothing should be recorded (expected iOS behaviour); reopen the app: tracking resumes automatically.
 6. Battery: Settings › Battery after a full day; compare with `keepCoarseUpdatesWhileStationary` on/off.
-7. Audit trail: turn it on in Settings, repeat step 2, then open Settings › Audit trail. Every gap in the samples must be explained by an event — a rejected fix with the check that failed, a stop-GPS effect, or a permission change. Export it and check the file opens outside the app.
+7. Idle noise: with the trail on, leave the phone still on a table for an hour, then export. `state.transition` rows with `reason=activity unknown/high` should be rare (they used to be the bulk of the day), no transition to MOVING may cite a single speed reading, and `rejection=cachedRepeat` is where the replayed fix now goes.
+8. Audit trail: turn it on in Settings, repeat step 2, then open Settings › Audit trail. Every gap in the samples must be explained by an event — a rejected fix with the check that failed, a stop-GPS effect, or a permission change. Export it and check the file opens outside the app.
 
 ---
 

@@ -166,6 +166,101 @@ struct LocationFilterBatchTests {
     }
 }
 
+@Suite("LocationFilter · cached repeat")
+struct LocationFilterCachedRepeatTests {
+    /// The fix iOS kept replaying on 2026-09-04: same coordinates, same
+    /// accuracy to the digit, never a speed.
+    private func ghost(age: TimeInterval) -> LocationFix {
+        fix(lat: 47.229828, lon: -1.614008, accuracy: 7.71, age: age, speed: -1)
+    }
+
+    private func real(age: TimeInterval) -> LocationFix {
+        fix(lat: 47.229780, lon: -1.613845, accuracy: 8.74, age: age, speed: 0.4)
+    }
+
+    @Test("A speed-less fix identical to a recent one is a cached repeat")
+    func rejectsReplay() {
+        let previous = real(age: 2)
+        let recent = [ghost(age: 240), previous]
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: previous, now: now, recent: recent)
+                == .rejected(.cachedRepeat))
+    }
+
+    @Test("The same coordinates with a valid speed are a real fix")
+    func validSpeedIsAccepted() {
+        let previous = real(age: 2)
+        let recent = [ghost(age: 240), previous]
+        let moving = fix(lat: 47.229828, lon: -1.614008, accuracy: 7.71, age: 1, speed: 0)
+        #expect(LocationFilter.evaluate(moving, previous: previous, now: now, recent: recent) == .accepted)
+    }
+
+    @Test("Accuracy is part of the signature: a different one is a real fix")
+    func accuracyMustMatch() {
+        let previous = real(age: 2)
+        let other = fix(lat: 47.229828, lon: -1.614008, accuracy: 7.72, age: 1, speed: -1)
+        #expect(LocationFilter.evaluate(other, previous: previous, now: now, recent: [ghost(age: 240)])
+                == .accepted)
+    }
+
+    @Test("A speed-less fix at new coordinates is accepted")
+    func newCoordinates() {
+        let previous = real(age: 2)
+        let fresh = fix(lat: 47.229601, lon: -1.613926, accuracy: 14.37, age: 1, speed: -1)
+        #expect(LocationFilter.evaluate(fresh, previous: previous, now: now, recent: [ghost(age: 240), previous])
+                == .accepted)
+    }
+
+    @Test("An empty history disables the check")
+    func emptyHistory() {
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: real(age: 2), now: now) == .accepted)
+    }
+
+    @Test("duplicate still wins: it is the more precise diagnosis")
+    func duplicateWins() {
+        let previous = ghost(age: 2)
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: previous, now: now, recent: [previous])
+                == .rejected(.duplicate))
+    }
+
+    @Test("A twin older than the window no longer silences the fix")
+    func windowExpires() {
+        let previous = real(age: 2)
+        // The replayed fix and its twin are both fresh enough to be evaluated,
+        // but far enough apart that the comparison no longer applies.
+        let old = ghost(age: LocationFilter.recentWindow + 60)
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: previous, now: now, recent: [old, previous])
+                == .accepted)
+    }
+
+    @Test("A purely repetitive stream behaves exactly as it did before")
+    func repetitiveStreamUnchanged() {
+        // An indoor Wi-Fi position, the only fix available, always identical:
+        // the previous-fix `duplicate` check already handled that case, and
+        // cachedRepeat must not make it any worse — same verdict, and the
+        // diagnosis stays the more precise of the two.
+        let first = ghost(age: 20)
+        #expect(LocationFilter.evaluate(ghost(age: 10), previous: first, now: now, recent: [first])
+                == .rejected(.duplicate))
+    }
+
+    @Test("Once a real fix lands in between, the replay is caught and named")
+    func replayAfterRealFix() {
+        let twin = ghost(age: 20)
+        let moved = real(age: 10)
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: moved, now: now, recent: [twin, moved])
+                == .rejected(.cachedRepeat))
+    }
+
+    @Test("filter threads its window through a batch, catching a second replay")
+    func batchWindow() {
+        let batch = [real(age: 5), ghost(age: 4), real(age: 3), ghost(age: 2)]
+        let out = LocationFilter.filter(batch, previous: nil, now: now)
+        // The first replay is new, the second is caught by the window.
+        #expect(out.count == 3)
+        #expect(out.last?.latitude == 47.229780)
+    }
+}
+
 @Suite("LocationFix · helpers")
 struct LocationFixTests {
     @Test("validSpeed is nil for negative speed")

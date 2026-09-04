@@ -443,6 +443,23 @@
             "pl": "Znacznik czasu jest późniejszy niż poprzedni fix"
           }
         },
+        "audit.check.notCachedRepeat": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Souřadnice není opakováním z mezipaměti",
+            "de": "Koordinate ist kein wiederholter Cache-Fix",
+            "en": {
+              "value": "Coordinate is not a repeated cached fix",
+              "state": "new"
+            },
+            "es": "La coordenada no es una repetición en caché",
+            "fr": "Coordonnée non répétée depuis le cache",
+            "it": "Coordinata non ripetuta dalla cache",
+            "ja": "座標がキャッシュの再送でない",
+            "nl": "Coördinaat is geen herhaalde cachefix",
+            "pl": "Współrzędne nie są powtórzeniem z pamięci podręcznej"
+          }
+        },
         "audit.check.notDuplicate": {
           "extractionState": "extracted_with_value",
           "translations": {
@@ -1631,6 +1648,23 @@
             "ja": "モーションの許可：%@",
             "nl": "Bewegingstoestemming: %@",
             "pl": "Uprawnienie do ruchu: %@"
+          }
+        },
+        "audit.rejection.cachedRepeat": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "opakovaný fix z mezipaměti iOS",
+            "de": "von iOS wiederholter Cache-Fix",
+            "en": {
+              "value": "cached fix repeated by iOS",
+              "state": "new"
+            },
+            "es": "posición en caché repetida por iOS",
+            "fr": "point en cache répété par iOS",
+            "it": "fix in cache ripetuto da iOS",
+            "ja": "iOS が再送したキャッシュ測位",
+            "nl": "door iOS herhaalde cachefix",
+            "pl": "powtórzony fix z pamięci podręcznej iOS"
           }
         },
         "audit.rejection.duplicate": {

@@ -396,6 +396,8 @@ enum Formatting {
             return String(localized: "audit.rejection.duplicate", defaultValue: "duplicate of the previous fix")
         case "outOfOrder":
             return String(localized: "audit.rejection.outOfOrder", defaultValue: "older than the previous fix")
+        case "cachedRepeat":
+            return String(localized: "audit.rejection.cachedRepeat", defaultValue: "cached fix repeated by iOS")
         case "poorAccuracy":
             guard let value else { return nil }
             return String(localized: "audit.rejection.poorAccuracy",
@@ -427,6 +429,8 @@ enum Formatting {
             return String(localized: "audit.check.afterPrevious", defaultValue: "Timestamp is after the previous fix")
         case "coordinate.notDuplicate":
             return String(localized: "audit.check.notDuplicate", defaultValue: "Coordinate is not a duplicate")
+        case "coordinate.notCachedRepeat":
+            return String(localized: "audit.check.notCachedRepeat", defaultValue: "Coordinate is not a repeated cached fix")
         default:
             return nil
         }

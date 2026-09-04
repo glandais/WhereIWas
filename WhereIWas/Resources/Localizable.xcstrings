@@ -1516,6 +1516,65 @@
         }
       }
     },
+    "audit.check.notCachedRepeat" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Souřadnice není opakováním z mezipaměti"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koordinate ist kein wiederholter Cache-Fix"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Coordinate is not a repeated cached fix"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La coordenada no es una repetición en caché"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coordonnée non répétée depuis le cache"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coordinata non ripetuta dalla cache"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "座標がキャッシュの再送でない"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coördinaat is geen herhaalde cachefix"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Współrzędne nie są powtórzeniem z pamięci podręcznej"
+          }
+        }
+      }
+    },
     "audit.check.notDuplicate" : {
       "extractionState" : "extracted_with_value",
       "localizations" : {
@@ -5353,6 +5412,65 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Uprawnienie do ruchu: %@"
+          }
+        }
+      }
+    },
+    "audit.rejection.cachedRepeat" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "opakovaný fix z mezipaměti iOS"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "von iOS wiederholter Cache-Fix"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "cached fix repeated by iOS"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "posición en caché repetida por iOS"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "point en cache répété par iOS"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "fix in cache ripetuto da iOS"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iOS が再送したキャッシュ測位"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "door iOS herhaalde cachefix"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "powtórzony fix z pamięci podręcznej iOS"
           }
         }
       }

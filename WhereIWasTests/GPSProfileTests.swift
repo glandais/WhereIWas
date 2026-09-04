@@ -213,6 +213,31 @@ struct AppliedProfileTests {
         #expect(engine.appliedProfile == nil)
     }
 
+    @Test("speedTier maps a reading onto the three tiers the table uses",
+          arguments: [(nil as Double?, 0), (-1, 0), (0, 0), (2.49, 0),
+                      (2.5, 1), (6.99, 1), (7.0, 2), (30, 2)])
+    func speedTier(speed: Double?, tier: Int) {
+        #expect(GPSProfile.speedTier(speed) == tier)
+    }
+
+    /// The invariant `TrackingStateMachine.updateProfileSpeed` relies on:
+    /// comparing tiers is a faithful stand-in for comparing profiles, whatever
+    /// the classifier says.
+    @Test("Two speeds in the same tier yield the same profile, for every activity",
+          arguments: [(0.5, 2.0), (3.0, 6.5), (8.0, 30.0)], ActivityKind.allCases)
+    func sameTierSameProfile(speeds: (Double, Double), activity: ActivityKind) {
+        #expect(GPSProfile.profile(for: activity, speed: speeds.0)
+                == GPSProfile.profile(for: activity, speed: speeds.1))
+    }
+
+    @Test("Crossing a tier changes the profile for an unlabelled activity",
+          arguments: [(2.0, 3.0), (6.5, 8.0)])
+    func tierChangeChangesProfile(slow: Double, fast: Double) {
+        #expect(GPSProfile.speedTier(slow) != GPSProfile.speedTier(fast))
+        #expect(GPSProfile.profile(for: .unknown, speed: slow)
+                != GPSProfile.profile(for: .unknown, speed: fast))
+    }
+
     @Test("The coarse profile shows a human label, never its technical one")
     func coarseDisplayName() {
         #expect(GPSProfile.stationaryCoarse.displayName != GPSProfile.stationaryCoarse.label)

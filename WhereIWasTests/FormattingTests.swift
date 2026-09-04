@@ -114,7 +114,8 @@ struct AuditSummaryTests {
         .stale(ageSeconds: 12),
         .futureTimestamp,
         .duplicate,
-        .outOfOrder
+        .outOfOrder,
+        .cachedRepeat
     ])
     func everyRejectionHasASentence(_ reason: LocationRejection) {
         let arguments = LocationEngine.arguments(for: reason)

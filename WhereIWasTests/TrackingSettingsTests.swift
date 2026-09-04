@@ -27,6 +27,7 @@ struct TrackingSettingsDefaultTests {
         #expect(s.stillnessTimeout == 120)
         #expect(s.probeTimeout == 45)
         #expect(s.movingSpeedThreshold == 0.7)
+        #expect(s.movingFixConfirmations == 2)
         #expect(s.stillSpeedThreshold == 0.3)
         #expect(s.minimumActivityConfidence == .medium)
         #expect(s.keepCoarseUpdatesWhileStationary)
@@ -68,6 +69,7 @@ struct TrackingSettingsCodableTests {
         s.stillnessTimeout = 33
         s.probeTimeout = 7
         s.movingSpeedThreshold = 1.1
+        s.movingFixConfirmations = 4
         s.stillSpeedThreshold = 0.05
         s.minimumActivityConfidence = .high
         s.keepCoarseUpdatesWhileStationary = false
@@ -144,7 +146,7 @@ struct TrackingSettingsCodableTests {
         let data = try JSONEncoder().encode(TrackingSettings())
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         let expectedKeys: Set<String> = [
-            "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "stillSpeedThreshold",
+            "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "movingFixConfirmations", "stillSpeedThreshold",
             "minimumActivityConfidence", "keepCoarseUpdatesWhileStationary", "showsLocationIndicator",
             "unitSystem",
             "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter", "unknownDistanceFilter",

@@ -12,9 +12,10 @@ struct LocationFilterTraceTests {
     private func fix(lat: Double = 48.0,
                      lon: Double = 2.0,
                      accuracy: Double = 10,
-                     age: TimeInterval = 1) -> LocationFix {
+                     age: TimeInterval = 1,
+                     speed: Double = 1.2) -> LocationFix {
         LocationFix(latitude: lat, longitude: lon, horizontalAccuracy: accuracy,
-                    speed: 1.2, timestamp: now.addingTimeInterval(-age))
+                    speed: speed, timestamp: now.addingTimeInterval(-age))
     }
 
     @Test("The trace always agrees with the filter's own decision")
@@ -27,19 +28,34 @@ struct LocationFilterTraceTests {
         let ages: [TimeInterval] = [-30, -1, 0, 5, 30, 31, 120]
         let offsets: [Double] = [0, 0.00001, 0.001]
         let previousOptions: [LocationFix?] = [nil, previous]
+        let speeds: [Double] = [-1, 0, 3]
 
         for accuracy in accuracies {
             for age in ages {
                 for offset in offsets {
                     for prev in previousOptions {
-                        let candidate = fix(lat: 48.0 + offset, lon: 2.0 + offset,
-                                            accuracy: accuracy, age: age)
-                        let decision = LocationFilter.evaluate(candidate, previous: prev,
-                                                               now: now, settings: settings)
-                        let trace = LocationFilter.trace(candidate, previous: prev,
-                                                         now: now, settings: settings)
-                        #expect(trace.result == decision,
-                                "accuracy=\(accuracy) age=\(age) offset=\(offset) previous=\(prev != nil)")
+                        for speed in speeds {
+                            let candidate = fix(lat: 48.0 + offset, lon: 2.0 + offset,
+                                                accuracy: accuracy, age: age, speed: speed)
+                            // A twin of the candidate, so the cachedRepeat check
+                            // has something to match on the third history.
+                            let twin = fix(lat: 48.0 + offset, lon: 2.0 + offset,
+                                           accuracy: accuracy, age: age + 60)
+                            let histories: [[LocationFix]] = [[], [previous], [previous, twin]]
+                            for recent in histories {
+                                let decision = LocationFilter.evaluate(candidate, previous: prev,
+                                                                       now: now, settings: settings,
+                                                                       recent: recent)
+                                let trace = LocationFilter.trace(candidate, previous: prev,
+                                                                 now: now, settings: settings,
+                                                                 recent: recent)
+                                #expect(trace.result == decision,
+                                        """
+                                        accuracy=\(accuracy) age=\(age) offset=\(offset) \
+                                        previous=\(prev != nil) speed=\(speed) recent=\(recent.count)
+                                        """)
+                            }
+                        }
                     }
                 }
             }
@@ -64,7 +80,7 @@ struct LocationFilterTraceTests {
     func notApplicableWithoutPrevious() {
         let trace = LocationFilter.trace(fix(), previous: nil, now: now)
         #expect(trace.isAccepted)
-        #expect(trace.checks.suffix(2).allSatisfy { $0.verdict == .notApplicable })
+        #expect(trace.checks.suffix(3).allSatisfy { $0.verdict == .notApplicable })
     }
 
     @Test("A passing check carries the measured value and the threshold")

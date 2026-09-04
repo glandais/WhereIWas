@@ -21,6 +21,12 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     /// PROBING. Default 0.7 m/s (~2.5 km/h).
     public var movingSpeedThreshold: Double = 0.7
 
+    /// Consecutive PROBING fixes at or above ``movingSpeedThreshold`` required
+    /// before leaving PROBING for MOVING. Default 2: CoreLocation sometimes
+    /// reports a large speed on a fix that has not moved, and one such reading
+    /// used to be enough to switch to the automotive profile.
+    public var movingFixConfirmations: Int = 2
+
     /// GPS speed (m/s) below which a fix counts as "still" while MOVING and
     /// arms the stillness timer. Default 0.3 m/s.
     public var stillSpeedThreshold: Double = 0.3
@@ -136,7 +142,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     // MARK: Decoding with defaults for missing keys
 
     private enum CodingKeys: String, CodingKey {
-        case stillnessTimeout, probeTimeout, movingSpeedThreshold, stillSpeedThreshold
+        case stillnessTimeout, probeTimeout, movingSpeedThreshold, movingFixConfirmations, stillSpeedThreshold
         case minimumActivityConfidence, keepCoarseUpdatesWhileStationary, showsLocationIndicator
         case unitSystem
         case walkingDistanceFilter, runningCyclingDistanceFilter, automotiveDistanceFilter, unknownDistanceFilter
@@ -152,6 +158,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         stillnessTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .stillnessTimeout) ?? d.stillnessTimeout
         probeTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .probeTimeout) ?? d.probeTimeout
         movingSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .movingSpeedThreshold) ?? d.movingSpeedThreshold
+        movingFixConfirmations = try c.decodeIfPresent(Int.self, forKey: .movingFixConfirmations) ?? d.movingFixConfirmations
         stillSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .stillSpeedThreshold) ?? d.stillSpeedThreshold
         minimumActivityConfidence = try c.decodeIfPresent(ActivityConfidence.self, forKey: .minimumActivityConfidence) ?? d.minimumActivityConfidence
         keepCoarseUpdatesWhileStationary = try c.decodeIfPresent(Bool.self, forKey: .keepCoarseUpdatesWhileStationary) ?? d.keepCoarseUpdatesWhileStationary

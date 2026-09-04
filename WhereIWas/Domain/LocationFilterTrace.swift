@@ -73,9 +73,10 @@ extension LocationFilter {
         "timestamp.notStale",
         "timestamp.afterPrevious",
         "coordinate.notDuplicate",
+        "coordinate.notCachedRepeat",
     ]
 
-    /// Same decision as ``evaluate(_:previous:now:settings:)``, but recording
+    /// Same decision as ``evaluate(_:previous:now:settings:recent:)``, but recording
     /// every test performed.
     ///
     /// This is only called when the audit trail is enabled: `evaluate` stays
@@ -85,7 +86,8 @@ extension LocationFilter {
     public static func trace(_ fix: LocationFix,
                              previous: LocationFix?,
                              now: Date,
-                             settings: TrackingSettings = TrackingSettings()) -> FilterTrace {
+                             settings: TrackingSettings = TrackingSettings(),
+                             recent: [LocationFix] = []) -> FilterTrace {
         func fmt(_ value: Double, _ decimals: Int = 2) -> String {
             String(format: "%.\(decimals)f", locale: nil, value)
         }
@@ -151,6 +153,27 @@ extension LocationFilter {
             let verdict: FilterCheck.Verdict = result == nil ? .notApplicable : .skipped
             checks.append(FilterCheck(name: "timestamp.afterPrevious", verdict: verdict))
             checks.append(FilterCheck(name: "coordinate.notDuplicate", verdict: verdict))
+        }
+
+        // The check needs a history *and* a fix with no speed to say anything:
+        // a fix that reports one cannot be a replay, so the comparison never
+        // runs and reporting a measurement against a threshold would describe
+        // something that did not happen.
+        if recent.isEmpty || fix.validSpeed != nil {
+            let verdict: FilterCheck.Verdict = result == nil ? .notApplicable : .skipped
+            checks.append(FilterCheck(name: "coordinate.notCachedRepeat", verdict: verdict))
+        } else {
+            let identical = recent.filter {
+                $0.latitude == fix.latitude
+                    && $0.longitude == fix.longitude
+                    && $0.horizontalAccuracy == fix.horizontalAccuracy
+                    && fix.timestamp.timeIntervalSince($0.timestamp) < recentWindow
+            }.count
+            append("coordinate.notCachedRepeat",
+                   !isCachedRepeat(fix, recent: recent),
+                   measured: "\(identical) identical, no speed",
+                   limit: "0 in the last \(recent.count) fixes / \(fmt(recentWindow, 0)) s",
+                   rejection: .cachedRepeat)
         }
 
         return FilterTrace(checks: checks, result: result ?? .accepted)

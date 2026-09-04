@@ -16,12 +16,40 @@ private extension TrackingStateMachine {
             _ = m.handle(.enable)
         case .moving:
             _ = m.handle(.enable)
+            // Two fixes: leaving PROBING on speed alone needs a streak.
+            _ = m.handle(.gpsFix(speed: 1.5))
             _ = m.handle(.gpsFix(speed: 1.5))
         case .stationary:
             _ = m.handle(.enable)
+            // The probe window saw no fix, so this machine is *not* settled:
+            // use `settledStationary()` for the other side of that rule.
             _ = m.handle(.probeTimerFired)
         }
         precondition(m.phase == phase)
+        return m
+    }
+
+    /// STATIONARY with the settle confirmed: a probe window that saw fixes and
+    /// found nothing moving. `unknown` reports no longer open PROBING here.
+    static func settledStationary(settings: TrackingSettings = TrackingSettings()) -> TrackingStateMachine {
+        var m = TrackingStateMachine(settings: settings)
+        _ = m.handle(.enable)
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.probeTimerFired)
+        precondition(m.phase == .stationary)
+        precondition(m.settledStationary)
+        return m
+    }
+
+    /// STATIONARY reached from MOVING through the stillness timer: nothing
+    /// ever confirmed the settle, so `unknown` reports still open PROBING.
+    static func unsettledStationary(settings: TrackingSettings = TrackingSettings()) -> TrackingStateMachine {
+        var m = TrackingStateMachine.at(.moving, settings: settings)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .low))
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.stillnessTimerFired)
+        precondition(m.phase == .stationary)
+        precondition(!m.settledStationary)
         return m
     }
 }
@@ -55,6 +83,9 @@ struct TrackingStateInitialTests {
         #expect(!m.stillnessTimerArmed)
         #expect(!m.probeTimerArmed)
         #expect(m.probeFixCount == 0)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.profileSpeed == nil)
+        #expect(!m.settledStationary)
         #expect(m.lastTransition == nil)
     }
 
@@ -82,6 +113,11 @@ struct TrackingStateInitialTests {
         #expect(m.handle(input).isEmpty)
         #expect(m.phase == .disabled)
         #expect(m.lastTransition == nil)
+        // The phase bookkeeping stays untouched too: a disabled machine must
+        // not come back settled, or holding a streak, from inputs it ignored.
+        #expect(!m.settledStationary)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.profileSpeed == nil)
     }
 }
 
@@ -191,9 +227,12 @@ struct TrackingStateDisableTests {
 
 @Suite("TrackingStateMachine · probing")
 struct TrackingStateProbingTests {
-    @Test("Fast fix promotes to MOVING, cancelling the probe timer")
+    @Test("Two consecutive fast fixes promote to MOVING, cancelling the probe timer")
     func fastFix() {
         var m = TrackingStateMachine.at(.probing)
+        #expect(m.handle(.gpsFix(speed: 0.7)).isEmpty)
+        #expect(m.phase == .probing)
+        #expect(m.fastFixStreak == 1)
         let effects = m.handle(.gpsFix(speed: 0.7))
         #expect(m.phase == .moving)
         let expected = GPSProfile.profile(for: .unknown, speed: 0.7)
@@ -220,6 +259,52 @@ struct TrackingStateProbingTests {
         #expect(m.handle(.gpsFix(speed: -1)).isEmpty)
         #expect(m.probeFixCount == 3)
         #expect(m.lastSpeed == nil)
+        #expect(m.phase == .probing)
+    }
+
+    @Test("A single aberrant fast fix does not leave PROBING")
+    func isolatedFastFix() {
+        var m = TrackingStateMachine.at(.probing)
+        // The 8.4 m/s reading of 11:10 — 25 cm of actual movement.
+        #expect(m.handle(.gpsFix(speed: 8.4)).isEmpty)
+        #expect(m.phase == .probing)
+        #expect(m.fastFixStreak == 1)
+        #expect(m.handle(.gpsFix(speed: 0.05)).isEmpty)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.phase == .probing)
+    }
+
+    @Test("A speed-less fix breaks the streak")
+    func speedlessFixBreaksStreak() {
+        var m = TrackingStateMachine.at(.probing)
+        #expect(m.handle(.gpsFix(speed: 1.5)).isEmpty)
+        #expect(m.handle(.gpsFix(speed: nil)).isEmpty)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.handle(.gpsFix(speed: 1.5)).isEmpty)
+        #expect(m.phase == .probing)
+        _ = m.handle(.gpsFix(speed: 1.5))
+        #expect(m.phase == .moving)
+    }
+
+    @Test("movingFixConfirmations = 1 restores promotion on a single fix")
+    func singleConfirmationSetting() {
+        var s = TrackingSettings()
+        s.movingFixConfirmations = 1
+        var m = TrackingStateMachine.at(.probing, settings: s)
+        _ = m.handle(.gpsFix(speed: 0.7))
+        #expect(m.phase == .moving)
+    }
+
+    @Test("Leaving and re-entering PROBING resets the streak")
+    func streakResetAcrossWindows() {
+        var m = TrackingStateMachine.at(.probing)
+        _ = m.handle(.gpsFix(speed: 1.5))
+        _ = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        _ = m.handle(.motionHint)
+        #expect(m.phase == .probing)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.handle(.gpsFix(speed: 1.5)).isEmpty)
         #expect(m.phase == .probing)
     }
 
@@ -330,13 +415,127 @@ struct TrackingStateStationaryTests {
         #expect(effects.withoutLogs == [.startGPS(.probing), .startProbeTimer(seconds: 45)])
     }
 
-    @Test("Credible unknown activity opens PROBING; low-confidence unknown is ignored")
+    @Test("Credible unknown activity opens PROBING while unsettled; low confidence never does")
     func unknown() {
-        var m = TrackingStateMachine.at(.stationary)
+        var m = TrackingStateMachine.unsettledStationary()
+        #expect(!m.settledStationary)
         #expect(m.handle(.motionActivity(kind: .unknown, confidence: .low)).isEmpty)
         #expect(m.phase == .stationary)
         _ = m.handle(.motionActivity(kind: .unknown, confidence: .medium))
         #expect(m.phase == .probing)
+    }
+
+    @Test("Once settled, repeated confident unknown reports are ignored")
+    func unknownWhileSettled() {
+        var m = TrackingStateMachine.settledStationary()
+        #expect(m.settledStationary)
+        for _ in 0..<10 {
+            #expect(m.handle(.motionActivity(kind: .unknown, confidence: .high)).isEmpty)
+        }
+        #expect(m.phase == .stationary)
+    }
+
+    @Test("A confident stationary report settles the machine")
+    func stationaryReportSettles() {
+        var m = TrackingStateMachine.unsettledStationary()
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .medium))
+        #expect(!m.settledStationary, "medium confidence is not enough")
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        #expect(m.settledStationary)
+        #expect(m.handle(.motionActivity(kind: .unknown, confidence: .high)).isEmpty)
+        #expect(m.phase == .stationary)
+    }
+
+    @Test("Real evidence of motion unsettles the machine",
+          arguments: [TrackingInput.motionHint, .significantChange, .visit,
+                      .motionActivity(kind: .walking, confidence: .low)])
+    func evidenceUnsettles(input: TrackingInput) {
+        var m = TrackingStateMachine.settledStationary()
+        #expect(m.settledStationary)
+        _ = m.handle(input)                    // → probing, and unsettled
+        #expect(!m.settledStationary)
+        #expect(m.phase == .probing)
+    }
+
+    @Test("The observed ping-pong opens PROBING once, not on every unknown report")
+    func pingPongOpensProbingOnce() {
+        var m = TrackingStateMachine.unsettledStationary()
+        var probeEntries = 0
+        // unknown/high → probing, a fix, stationary/high → stationary, repeat.
+        for _ in 0..<5 {
+            if !m.handle(.motionActivity(kind: .unknown, confidence: .high)).isEmpty {
+                probeEntries += 1
+            }
+            if m.phase == .probing {
+                _ = m.handle(.gpsFix(speed: 0))
+                _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+            }
+        }
+        #expect(probeEntries == 1)
+        #expect(m.phase == .stationary)
+    }
+
+    @Test("A probe window that saw no fix at all settles nothing")
+    func emptyProbeWindowDoesNotSettle() {
+        var m = TrackingStateMachine.at(.probing)
+        // Indoors, a garage, a cold receiver: 45 s and not one fix.
+        #expect(m.probeFixCount == 0)
+        _ = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        #expect(!m.settledStationary, "no evidence in either direction is not evidence of stillness")
+        _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.phase == .probing)
+    }
+
+    @Test("A phone still on a car seat does not settle while MOVING")
+    func stationaryReportWhileMovingDoesNotSettle() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        #expect(m.stillnessTimerArmed)
+        #expect(!m.settledStationary, "the classifier describes the phone, not the car")
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .stationary)
+        // The unknown reports that follow can still bring tracking back.
+        _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.phase == .probing)
+    }
+
+    @Test("A measured speed refutes a settle")
+    func fastFixUnsettles() {
+        var m = TrackingStateMachine.settledStationary()
+        _ = m.handle(.gpsFix(speed: 20))   // a coarse fix while stationary
+        #expect(!m.settledStationary)
+        #expect(m.phase == .stationary, "a fix alone still does not leave STATIONARY")
+        _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.phase == .probing)
+    }
+
+    @Test("disable clears the settle, so a new session starts unbiased")
+    func disableClearsTheSettle() {
+        var m = TrackingStateMachine.settledStationary()
+        _ = m.handle(.disable)
+        #expect(!m.settledStationary)
+        _ = m.handle(.enable)
+        _ = m.handle(.probeTimerFired)
+        _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.phase == .probing)
+    }
+
+    @Test("The profile speed keeps up with coarse fixes while STATIONARY")
+    func profileSpeedFollowsCoarseFixes() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 15))
+        _ = m.handle(.gpsFix(speed: 15))
+        #expect(m.activeProfile?.label == "automotive")
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .stationary)
+        _ = m.handle(.gpsFix(speed: 0))    // coarse updates keep arriving
+        #expect(m.profileSpeed == 0)
+        // A pedestrian must not inherit the drive's 50 m filter.
+        _ = m.handle(.motionActivity(kind: .walking, confidence: .high))
+        #expect(m.phase == .moving)
+        #expect(m.activeProfile?.label == "walking")
     }
 
     @Test("Stationary activity keeps STATIONARY")
@@ -501,7 +700,7 @@ struct TrackingStateMovingTests {
 
 @Suite("TrackingStateMachine · profile updates")
 struct TrackingStateProfileTests {
-    @Test("Profile is re-emitted only when it changes")
+    @Test("Profile is re-emitted only when it changes, and climbs a tier on confirmation")
     func reemitOnChange() {
         var m = TrackingStateMachine.at(.moving) // unknown @ 1.5 m/s → slow-unknown
         #expect(m.activeProfile?.label == "slow-unknown")
@@ -509,18 +708,46 @@ struct TrackingStateProfileTests {
         // Same tier: no new startGPS.
         #expect(m.handle(.gpsFix(speed: 2.0)).startGPSProfiles.isEmpty)
 
-        // Crossing the running threshold changes the profile.
+        // Crossing the running threshold takes two fixes.
+        #expect(m.handle(.gpsFix(speed: 3.0)).startGPSProfiles.isEmpty)
+        #expect(m.activeProfile?.label == "slow-unknown")
         let e1 = m.handle(.gpsFix(speed: 3.0))
         #expect(e1.startGPSProfiles == [GPSProfile.profile(for: .unknown, speed: 3.0)])
         #expect(m.activeProfile?.label == "fast-unknown")
 
-        // Vehicle speed.
+        // Vehicle speed, likewise.
+        #expect(m.handle(.gpsFix(speed: 12)).startGPSProfiles.isEmpty)
         let e2 = m.handle(.gpsFix(speed: 12))
         #expect(e2.startGPSProfiles == [GPSProfile.profile(for: .unknown, speed: 12)])
         #expect(m.activeProfile?.desiredAccuracy == .bestForNavigation)
 
         // Same tier again: nothing.
         #expect(m.handle(.gpsFix(speed: 15)).startGPSProfiles.isEmpty)
+    }
+
+    @Test("A lone aberrant speed does not widen the profile")
+    func isolatedFastFixKeepsProfile() {
+        var m = TrackingStateMachine.at(.moving)
+        #expect(m.activeProfile?.label == "slow-unknown")
+        // The 8.4 m/s reading of 11:10, in MOVING this time.
+        #expect(m.handle(.gpsFix(speed: 8.4)).startGPSProfiles.isEmpty)
+        #expect(m.activeProfile?.label == "slow-unknown")
+        #expect(m.lastSpeed == 8.4, "the raw reading is still reported")
+        #expect(m.profileSpeed == 1.5, "but the profile has not followed it")
+        _ = m.handle(.gpsFix(speed: 1.2))
+        #expect(m.activeProfile?.label == "slow-unknown")
+        #expect(m.profileSpeed == 1.2)
+    }
+
+    @Test("Dropping a tier applies at the first slow fix")
+    func tierDropsImmediately() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 12))
+        let e = m.handle(.gpsFix(speed: 12))
+        #expect(e.startGPSProfiles.first?.label == "automotive")
+        let back = m.handle(.gpsFix(speed: 0.8))
+        #expect(back.startGPSProfiles == [GPSProfile.profile(for: .unknown, speed: 0.8)])
+        #expect(m.activeProfile?.label == "slow-unknown")
     }
 
     @Test("Activity change reconfigures the profile, unchanged activity does not")
@@ -551,6 +778,7 @@ struct TrackingStateProfileTests {
         _ = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
         _ = m.handle(.significantChange)
+        _ = m.handle(.gpsFix(speed: 1))          // first of the streak
         let e = m.handle(.gpsFix(speed: 1))
         // lastActivity is .stationary → speed decides.
         #expect(m.phase == .moving)
@@ -618,6 +846,9 @@ struct TrackingStateScenarioTests {
         #expect(!m.stillnessTimerArmed)
         #expect(!m.probeTimerArmed)
         #expect(m.probeFixCount == 0)
+        #expect(m.fastFixStreak == 0)
+        #expect(m.lastSpeed == nil)
+        #expect(m.profileSpeed == nil)
     }
 
     @Test("Machine is a value: copies diverge independently")
@@ -625,6 +856,7 @@ struct TrackingStateScenarioTests {
         let base = TrackingStateMachine.at(.probing)
         var a = base
         var b = base
+        _ = a.handle(.gpsFix(speed: 5))
         _ = a.handle(.gpsFix(speed: 5))
         _ = b.handle(.probeTimerFired)
         #expect(a.phase == .moving)

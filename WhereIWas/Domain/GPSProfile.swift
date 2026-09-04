@@ -77,6 +77,19 @@ public struct GPSProfile: Codable, Sendable, Hashable {
     public static let runningSpeedThreshold: Double = 2.5
     public static let vehicleSpeedThreshold: Double = 7.0
 
+    /// Which of the three speed tiers a reading falls in: `0` for no speed or
+    /// a slow one, `1` above ``runningSpeedThreshold``, `2` above
+    /// ``vehicleSpeedThreshold``.
+    ///
+    /// Only the tier matters to the table, so the state machine compares tiers
+    /// rather than speeds when it decides whether a reading is worth acting on.
+    public static func speedTier(_ speed: Double?) -> Int {
+        guard let s = speed, s >= 0 else { return 0 }
+        if s >= vehicleSpeedThreshold { return 2 }
+        if s >= runningSpeedThreshold { return 1 }
+        return 0
+    }
+
     /// The pure speed/activity → profile table.
     ///
     /// - Parameters:

@@ -19,6 +19,9 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
     public private(set) var hasFullAccuracy: Bool
     public private(set) var currentProfile: GPSProfile?
     public private(set) var lastFix: LocationFix?
+    /// Same short memory as ``LocationEngine``, so the double rejects a
+    /// replayed cached fix exactly like the real thing.
+    private var recentFixes: [LocationFix] = []
     public private(set) var acceptedCount = 0
     public private(set) var rejectedCount = 0
 
@@ -122,7 +125,8 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
     /// filter result so tests can assert on it.
     @discardableResult
     public func simulateFix(_ fix: LocationFix) -> LocationFilterResult {
-        let result = LocationFilter.evaluate(fix, previous: lastFix, now: now(), settings: settings)
+        let result = LocationFilter.evaluate(fix, previous: lastFix, now: now(),
+                                             settings: settings, recent: recentFixes)
         switch result {
         case .accepted:
             enqueue(fix, source: .gps)
@@ -180,6 +184,12 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
         if annotation.profileLabel == nil { annotation.profileLabel = appliedProfile?.label }
         buffer.append(LocationSampleDraft(fix: fix, annotation: annotation, source: source))
         lastFix = fix
+        if source == .gps {
+            recentFixes.append(fix)
+            if recentFixes.count > LocationFilter.recentCapacity {
+                recentFixes.removeFirst(recentFixes.count - LocationFilter.recentCapacity)
+            }
+        }
         acceptedCount += 1
         if buffer.count >= max(1, settings.insertBatchSize) || source != .gps {
             Task { await flush() }
