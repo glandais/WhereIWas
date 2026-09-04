@@ -123,6 +123,11 @@ struct ExportView: View {
             }
             .navigationTitle("common.export")
             .task {
+                #if SCREENSHOTS
+                // The whole history, not today: the demo dataset spans three
+                // days, and "Today" would export the drive in progress alone.
+                if ScreenshotMode.isActive { scope = .all }
+                #endif
                 await loadSessions()
                 #if SCREENSHOTS
                 // Show a prepared file rather than an inert button.

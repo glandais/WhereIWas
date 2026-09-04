@@ -84,6 +84,15 @@ targets:
     platform: iOS
     sources:
       - path: WhereIWasTests
+      # DemoTracks.swift is `#if SCREENSHOTS`-only, so `@testable import
+      # WhereIWas` can't see it through the Debug app the test target links
+      # against. Compiling the file a second time, straight into this target,
+      # with SCREENSHOTS turned on below looks like it risks a duplicate
+      # symbol against the app target — it doesn't, because the app target
+      # builds this configuration in plain Debug (no SCREENSHOTS), so the
+      # `#if` strips the file to nothing there. The Screenshots configuration
+      # never builds the test target at all.
+      - path: WhereIWas/App/DemoTracks.swift
     dependencies:
       - target: WhereIWas
     settings:
@@ -93,6 +102,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/WhereIWas.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WhereIWas"
         BUNDLE_LOADER: "$(TEST_HOST)"
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "DEBUG SCREENSHOTS"
 schemes:
   WhereIWas:
     build:

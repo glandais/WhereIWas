@@ -6,7 +6,17 @@ import SwiftUI
 struct MapView: View {
     @Environment(\.trackingController) private var controller
 
+    #if SCREENSHOTS
+    // Today only holds the drive still in progress; the card is about a whole
+    // day of a deployment, so the shot opens on the last complete one.
+    @State private var day: Date = ScreenshotMode.isActive
+        ? Calendar.current.date(byAdding: .day, value: -1,
+                                to: Calendar.current.startOfDay(for: ScreenshotMode.clock))
+            ?? Calendar.current.startOfDay(for: .now)
+        : Calendar.current.startOfDay(for: .now)
+    #else
     @State private var day: Date = Calendar.current.startOfDay(for: .now)
+    #endif
     @State private var samples: [StoredLocationSample] = []
     @State private var isLoading = false
     @State private var loadError: String?
