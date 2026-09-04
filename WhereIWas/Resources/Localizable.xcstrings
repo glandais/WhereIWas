@@ -186,7 +186,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autofahrt"
+            "value" : "Autofahren"
           }
         },
         "en" : {
@@ -722,13 +722,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reiniciada por un evento de ubicación"
+            "value" : "Reinicio por un evento de ubicación"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Relancée par un événement de position"
+            "value" : "Relance par un événement de position"
           }
         },
         "it" : {
@@ -996,7 +996,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cyklus"
+            "value" : "Životní cyklus"
           }
         },
         "de" : {
@@ -1511,7 +1511,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znacznik czasu po poprzednim fiksie"
+            "value" : "Znacznik czasu jest późniejszy niż poprzedni fix"
           }
         }
       }
@@ -1640,7 +1640,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Časová značka je dostatečně čerstvá"
+            "value" : "Časová značka je dostatečně aktuální"
           }
         },
         "de" : {
@@ -1820,7 +1820,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Positions-Messpunkte sind davon nicht betroffen. Exportieren Sie das Protokoll zuerst, falls Sie es noch benötigen."
+            "value" : "Die Standort-Messpunkte sind davon nicht betroffen. Exportieren Sie das Protokoll zuerst, falls Sie es noch benötigen."
           }
         },
         "en" : {
@@ -1832,7 +1832,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las muestras de posición no se ven afectadas. Exporta primero el registro si lo necesitas."
+            "value" : "Las muestras de posición no se ven afectadas. Exporte primero el registro si lo necesita."
           }
         },
         "fr" : {
@@ -1844,7 +1844,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I campioni di posizione non sono interessati. Esportare prima il registro, se necessario."
+            "value" : "I campioni di posizione non sono interessati. Esporta prima il registro, se necessario."
           }
         },
         "ja" : {
@@ -2694,7 +2694,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ważność"
+            "value" : "Poziom"
           }
         }
       }
@@ -2740,7 +2740,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "実行テスト"
+            "value" : "実行したテスト"
           }
         },
         "nl" : {
@@ -2850,7 +2850,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attivarlo in Impostazioni per registrare ogni fix ricevuto, ogni test di validazione eseguito e ogni cambio di stato."
+            "value" : "Attivalo in Impostazioni per registrare ogni fix ricevuto, ogni test di validazione eseguito e ogni cambio di stato."
           }
         },
         "ja" : {
@@ -2914,7 +2914,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "監査ログは無効です"
+            "value" : "監査ログはオフです"
           }
         },
         "nl" : {
@@ -2937,13 +2937,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Časovač sondování zrušen"
+            "value" : "Časovač zjišťování zrušen"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondierungstimer abgebrochen"
+            "value" : "Prüftimer abgebrochen"
           }
         },
         "en" : {
@@ -2955,37 +2955,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Temporizador de sondeo cancelado"
+            "value" : "Temporizador de comprobación cancelado"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minuteur de sondage annulé"
+            "value" : "Minuteur de détection annulé"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timer di sondaggio annullato"
+            "value" : "Timer di verifica annullato"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "探査タイマーを取り消し"
+            "value" : "判定タイマーを取り消し"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Peiltimer geannuleerd"
+            "value" : "Detectietimer geannuleerd"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik sondowania anulowany"
+            "value" : "Timer wykrywania anulowany"
           }
         }
       }
@@ -3044,7 +3044,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik bezruchu anulowany"
+            "value" : "Timer bezruchu anulowany"
           }
         }
       }
@@ -3232,13 +3232,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Časovač sondování spuštěn (%@)"
+            "value" : "Časovač zjišťování spuštěn (%@)"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondierungstimer gestartet (%@)"
+            "value" : "Prüftimer gestartet (%@)"
           }
         },
         "en" : {
@@ -3250,37 +3250,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Temporizador de sondeo iniciado (%@)"
+            "value" : "Temporizador de comprobación iniciado (%@)"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minuteur de sondage démarré (%@)"
+            "value" : "Minuteur de détection démarré (%@)"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timer di sondaggio avviato (%@)"
+            "value" : "Timer di verifica avviato (%@)"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "探査タイマーを開始（%@）"
+            "value" : "判定タイマーを開始（%@）"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Peiltimer gestart (%@)"
+            "value" : "Detectietimer gestart (%@)"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik sondowania uruchomiony (%@)"
+            "value" : "Timer wykrywania uruchomiony (%@)"
           }
         }
       }
@@ -3333,7 +3333,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bewaking van significante wijzigingen en bezoeken gestart"
+            "value" : "Bewaking van significante locatiewijzigingen en bezoeken gestart"
           }
         },
         "pl" : {
@@ -3398,7 +3398,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik bezruchu uruchomiony (%@)"
+            "value" : "Timer bezruchu uruchomiony (%@)"
           }
         }
       }
@@ -3569,7 +3569,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bewaking van significante wijzigingen en bezoeken gestopt"
+            "value" : "Bewaking van significante locatiewijzigingen en bezoeken gestopt"
           }
         },
         "pl" : {
@@ -4029,7 +4029,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Profil GPS changé pour %@"
+            "value" : "Profil GPS passé à %@"
           }
         },
         "it" : {
@@ -4206,7 +4206,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indicateur de position du système masqué"
+            "value" : "Indicateur de localisation du système masqué"
           }
         },
         "it" : {
@@ -4265,7 +4265,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Indicateur de position du système affiché"
+            "value" : "Indicateur de localisation du système affiché"
           }
         },
         "it" : {
@@ -4633,7 +4633,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geen gebeurtenissen komen overeen met deze filters."
+            "value" : "Er komen geen gebeurtenissen overeen met deze filters."
           }
         },
         "pl" : {
@@ -4661,13 +4661,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Newest first. Tap an event for its full payload."
+            "value" : "Newest first. Tap an event for the full details."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Del más reciente al más antiguo. Toca un evento para ver su contenido completo."
+            "value" : "Del más reciente al más antiguo. Toque un evento para ver su contenido completo."
           }
         },
         "fr" : {
@@ -4679,7 +4679,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dal più recente al più vecchio. Toccare un evento per vederne il contenuto completo."
+            "value" : "Dal più recente al più vecchio. Tocca un evento per vederne il contenuto completo."
           }
         },
         "ja" : {
@@ -4697,7 +4697,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Od najnowszych. Dotknij zdarzenia, aby zobaczyć pełną treść."
+            "value" : "Od najnowszych. Stuknij w zdarzenie, aby zobaczyć pełną treść."
           }
         }
       }
@@ -4767,7 +4767,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Úklid: %1$@ a %2$@"
+            "value" : "Vyčištění: %1$@ a %2$@"
           }
         },
         "de" : {
@@ -4873,7 +4873,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minimalna ważność"
+            "value" : "Minimalny poziom"
           }
         }
       }
@@ -4926,13 +4926,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bewaking van significante wijzigingen en bezoeken geactiveerd"
+            "value" : "Bewaking van significante locatiewijzigingen en bezoeken geactiveerd"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Monitorowanie znaczących zmian i wizyt uzbrojone"
+            "value" : "Monitorowanie znaczących zmian i wizyt aktywne"
           }
         }
       }
@@ -4949,7 +4949,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beschleunigungsmesser-Impuls: in Bewegung bei %@ g"
+            "value" : "Beschleunigungssensor-Messung: in Bewegung bei %@ g"
           }
         },
         "en" : {
@@ -5008,7 +5008,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Beschleunigungsmesser-Impuls: stillstehend bei %@ g"
+            "value" : "Beschleunigungssensor-Messung: stillstehend bei %@ g"
           }
         },
         "en" : {
@@ -5026,7 +5026,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Salve d’accéléromètre : à l’arrêt à %@ g"
+            "value" : "Salve d’accéléromètre : immobile à %@ g"
           }
         },
         "it" : {
@@ -5231,7 +5231,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "Krokomierz zgłosił %lld kroki"
+                  "value" : "Krokomierz zgłosił %lld kroku"
                 }
               }
             }
@@ -5245,7 +5245,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oprávnění polohy: %@"
+            "value" : "Oprávnění k poloze: %@"
           }
         },
         "de" : {
@@ -5293,7 +5293,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uprawnienie lokalizacji: %@"
+            "value" : "Uprawnienie do lokalizacji: %@"
           }
         }
       }
@@ -5304,7 +5304,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Oprávnění pohybu: %@"
+            "value" : "Oprávnění k pohybu: %@"
           }
         },
         "de" : {
@@ -5352,7 +5352,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Uprawnienie ruchu: %@"
+            "value" : "Uprawnienie do ruchu: %@"
           }
         }
       }
@@ -5369,7 +5369,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duplikat des vorherigen Fix"
+            "value" : "Duplikat des vorherigen Fixes"
           }
         },
         "en" : {
@@ -5411,7 +5411,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "duplikat poprzedniego fiksa"
+            "value" : "duplikat poprzedniego fixu"
           }
         }
       }
@@ -5570,7 +5570,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "precedente al fix precedente"
+            "value" : "più vecchio del fix precedente"
           }
         },
         "ja" : {
@@ -6492,7 +6492,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "nelze použít"
+            "value" : "netýká se"
           }
         },
         "de" : {
@@ -6793,7 +6793,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nicht angefragt"
+            "value" : "Nicht angefordert"
           }
         },
         "en" : {
@@ -6911,7 +6911,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bei Verwendung"
+            "value" : "Beim Verwenden"
           }
         },
         "en" : {
@@ -6923,7 +6923,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mientras se usa"
+            "value" : "Al usar la app"
           }
         },
         "fr" : {
@@ -7012,7 +7012,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autoryzowano"
+            "value" : "Przyznano"
           }
         }
       }
@@ -7088,7 +7088,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nicht angefragt"
+            "value" : "Nicht angefordert"
           }
         },
         "en" : {
@@ -7345,7 +7345,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esporta"
+            "value" : "Esportazione"
           }
         },
         "ja" : {
@@ -7547,13 +7547,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondování"
+            "value" : "Zjišťování"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondierend"
+            "value" : "Prüfphase"
           }
         },
         "en" : {
@@ -7565,37 +7565,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondeo"
+            "value" : "Comprobación"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondage"
+            "value" : "Détection"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondaggio"
+            "value" : "Verifica"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "探査中"
+            "value" : "判定中"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Peilend"
+            "value" : "Detectie"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondowanie"
+            "value" : "Wykrywanie"
           }
         }
       }
@@ -7779,7 +7779,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stacionární"
+            "value" : "V klidu"
           }
         },
         "de" : {
@@ -7827,7 +7827,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stacjonarny"
+            "value" : "Bezruch"
           }
         }
       }
@@ -8608,7 +8608,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPX-1.1-Track mit Höhe, Zeitstempel und Erweiterungen (Geschwindigkeit, Kurs, Genauigkeit, Aktivität, Akku). Öffnet sich in den meisten Kartentools."
+            "value" : "GPX-1.1-Track mit Höhe, Zeitstempel und Erweiterungen (Geschwindigkeit, Kurs, Genauigkeit, Aktivität, Akku). Lässt sich in den meisten Kartenprogrammen öffnen."
           }
         },
         "en" : {
@@ -8638,13 +8638,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "標高、時刻、拡張情報（速度、進行方向、精度、活動、バッテリー）を含むGPX 1.1の軌跡。ほとんどの地図ツールで開けます。"
+            "value" : "標高、時刻、拡張情報（速度、進行方向、精度、アクティビティ、バッテリー）を含むGPX 1.1の軌跡。ほとんどの地図ツールで開けます。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPX 1.1-track met hoogte, tijd en extensies (snelheid, koers, nauwkeurigheid, activiteit, batterij). Opent in de meeste kaartprogramma's."
+            "value" : "GPX 1.1-track met hoogte, tijd en extensies (snelheid, koers, nauwkeurigheid, activiteit, batterij). Te openen in de meeste kaartprogramma's."
           }
         },
         "pl" : {
@@ -8660,7 +8660,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pole JSON se všemi uloženými vzorky a jejich poli, včetně stavu odeslání a pořadových ID."
+            "value" : "Pole JSON obsahující každý uložený vzorek se všemi atributy, včetně stavu odeslání a pořadových ID."
           }
         },
         "de" : {
@@ -8672,13 +8672,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "JSON array of every stored sample with all fields, including upload status and sequence ids."
+            "value" : "JSON array of every stored sample with all fields, including sequence IDs."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Matriz JSON de todas las muestras almacenadas con todos sus campos, incluido el estado de envío y los números de secuencia."
+            "value" : "Array JSON de todas las muestras almacenadas con todos sus campos, incluido el estado de envío y los números de secuencia."
           }
         },
         "fr" : {
@@ -9194,7 +9194,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open"
+            "value" : "Ongoing"
           }
         },
         "es" : {
@@ -9276,7 +9276,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@件 · %2$@ · %3$@"
+            "value" : "サンプル%1$@件 · %2$@ · %3$@"
           }
         },
         "nl" : {
@@ -9288,7 +9288,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ próbek · %2$@ · %3$@"
+            "value" : "Próbek: %1$@ · %2$@ · %3$@"
           }
         }
       }
@@ -9380,13 +9380,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quoi"
+            "value" : "Contenu"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cosa"
+            "value" : "Cosa esportare"
           }
         },
         "ja" : {
@@ -9450,7 +9450,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "日"
+            "value" : "日付"
           }
         },
         "nl" : {
@@ -9478,7 +9478,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Messpunkte aufgezeichnet am %@."
+            "value" : "Am %@ wurden keine Messpunkte aufgezeichnet."
           }
         },
         "en" : {
@@ -9588,7 +9588,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zarovnat trasu"
+            "value" : "Zobrazit celou trasu"
           }
         },
         "de" : {
@@ -10030,7 +10030,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ポイント"
+            "value" : "地点数"
           }
         },
         "nl" : {
@@ -10070,19 +10070,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rango"
+            "value" : "Duración"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plage"
+            "value" : "Durée"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Intervallo"
+            "value" : "Durata"
           }
         },
         "ja" : {
@@ -10262,7 +10262,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPSはオンで、現在の速度と活動に合わせて調整されています。"
+            "value" : "GPSはオンで、現在の速度とアクティビティに合わせて調整されています。"
           }
         },
         "nl" : {
@@ -10366,13 +10366,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’enregistrement est désactivé. Rien n’est enregistré."
+            "value" : "Le suivi est désactivé. Rien n’est enregistré."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La registrazione è disattivata. Non viene registrato nulla."
+            "value" : "Il monitoraggio è disattivato. Non viene registrato nulla."
           }
         },
         "ja" : {
@@ -10464,7 +10464,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das GPS ist aus oder grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch."
+            "value" : "Das GPS ist aus oder läuft nur grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch."
           }
         },
         "en" : {
@@ -10482,13 +10482,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le GPS est éteint ou en mode grossier. En attente d’un mouvement, d’un changement de position significatif ou d’une visite."
+            "value" : "Le GPS est éteint ou en mode approximatif. En attente d’un mouvement, d’un changement de position significatif ou d’une visite."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il GPS è disattivato o impreciso. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita."
+            "value" : "Il GPS è spento o in modalità approssimativa. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita."
           }
         },
         "ja" : {
@@ -10582,7 +10582,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An"
+            "value" : "Ein"
           }
         },
         "en" : {
@@ -10634,7 +10634,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stacionární (hrubý)"
+            "value" : "V klidu (hrubý)"
           }
         },
         "de" : {
@@ -10658,13 +10658,13 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "À l’arrêt (grossier)"
+            "value" : "À l’arrêt (approximatif)"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stazionario (approssimato)"
+            "value" : "Stazionario (approssimativo)"
           }
         },
         "ja" : {
@@ -10682,7 +10682,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stacjonarny (przybliżony)"
+            "value" : "Bezruch (przybliżony)"
           }
         }
       }
@@ -11253,7 +11253,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アプリ起動"
+            "value" : "App起動"
           }
         },
         "nl" : {
@@ -11333,13 +11333,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Časovač sondování"
+            "value" : "Časovač zjišťování"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondierungstimer"
+            "value" : "Prüftimer"
           }
         },
         "en" : {
@@ -11351,37 +11351,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Temporizador de sondeo"
+            "value" : "Temporizador de comprobación"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minuteur de sondage"
+            "value" : "Minuteur de détection"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Timer di sondaggio"
+            "value" : "Timer di verifica"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "探査タイマー"
+            "value" : "判定タイマー"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Peiltimer"
+            "value" : "Detectietimer"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik sondowania"
+            "value" : "Timer wykrywania"
           }
         }
       }
@@ -11391,7 +11391,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restart (událost polohy)"
+            "value" : "Znovuspuštění (událost polohy)"
           }
         },
         "de" : {
@@ -11479,7 +11479,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambiamento significativo di posizione"
+            "value" : "Cambiamento significativo"
           }
         },
         "ja" : {
@@ -11497,7 +11497,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znacząca zmiana lokalizacji"
+            "value" : "Znacząca zmiana"
           }
         }
       }
@@ -11511,6 +11511,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld kroky"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld kroku"
                 }
               },
               "one" : {
@@ -11672,7 +11678,7 @@
               "other" : {
                 "stringUnit" : {
                   "state" : "translated",
-                  "value" : "%lld kroków"
+                  "value" : "%lld kroku"
                 }
               }
             }
@@ -11733,7 +11739,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Minutnik bezruchu"
+            "value" : "Timer bezruchu"
           }
         }
       }
@@ -11859,13 +11865,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Příchod návštěvy"
+            "value" : "Začátek návštěvy"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Besuchsankunft"
+            "value" : "Besuch: Ankunft"
           }
         },
         "en" : {
@@ -11883,19 +11889,19 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrivée de visite"
+            "value" : "Début de visite"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrivo visita"
+            "value" : "Inizio visita"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訪問の到着"
+            "value" : "訪問（到着）"
           }
         },
         "nl" : {
@@ -11917,13 +11923,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Odchod návštěvy"
+            "value" : "Konec návštěvy"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Besuchsabreise"
+            "value" : "Besuch: Abfahrt"
           }
         },
         "en" : {
@@ -11941,19 +11947,19 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Départ de visite"
+            "value" : "Fin de visite"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partenza visita"
+            "value" : "Fine visita"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "訪問の出発"
+            "value" : "訪問（出発）"
           }
         },
         "nl" : {
@@ -12000,7 +12006,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jour"
+            "value" : "Ce jour"
           }
         },
         "it" : {
@@ -12070,7 +12076,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "既定値に戻す"
+            "value" : "デフォルトに戻す"
           }
         },
         "nl" : {
@@ -12098,7 +12104,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Über"
+            "value" : "Info"
           }
         },
         "en" : {
@@ -12324,7 +12330,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ve výchozím stavu vypnuto. Po zapnutí aplikace zaznamenává každou přijatou polohu, každý na ní provedený validační test a každou změnu stavu, do vlastní tabulky s vlastní dobou uchování. Užitečné pro zpětné vyhodnocení zásahu; stojí to úložiště a trochu baterie."
+            "value" : "Ve výchozím stavu vypnuto. Po zapnutí aplikace zaznamenává každou přijatou polohu, každý na ní provedený ověřovací test a každou změnu stavu, a to do vlastní tabulky s vlastní dobou uchování. Užitečné pro zpětné vyhodnocení zásahu; stojí to úložiště a trochu baterie."
           }
         },
         "de" : {
@@ -12336,13 +12342,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Off by default. When on, the app records every location received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery."
+            "value" : "Off by default. When on, the app records every fix received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desactivado de forma predeterminada. Al activarlo, la app registra cada posición recibida, cada prueba de validación realizada sobre ella y cada cambio de estado, en su propia tabla y con su propio período de conservación. Útil para el análisis posterior a la intervención; consume almacenamiento y algo de batería."
+            "value" : "Desactivado de forma predeterminada. Al activarlo, la app registra cada posición recibida, cada prueba de validación realizada sobre ella y cada cambio de estado, en su propia tabla y con su propio período de conservación. Útil para el análisis posterior; consume almacenamiento y algo de batería."
           }
         },
         "fr" : {
@@ -12360,13 +12366,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "既定ではオフです。オンにすると、受信したすべての位置情報、実行したすべての検証テスト、すべての状態変化を、専用のテーブルに専用の保持期間で記録します。事後の振り返りに役立ちますが、ストレージとバッテリーを少し消費します。"
+            "value" : "デフォルトではオフです。オンにすると、受信したすべての位置情報、実行したすべての検証テスト、すべての状態変化を、専用のテーブルに専用の保持期間で記録します。事後検証に役立ちますが、ストレージとバッテリーを少し消費します。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standaard uitgeschakeld. Indien ingeschakeld registreert de app elke ontvangen fix, elke validatietest die erop wordt uitgevoerd en elke statusverandering, in een eigen tabel met een eigen bewaartermijn. Nuttig voor evaluatie achteraf; het kost opslagruimte en een beetje batterij."
+            "value" : "Standaard uitgeschakeld. Indien ingeschakeld registreert de app elke ontvangen fix, elke validatietest die erop wordt uitgevoerd en elke statuswijziging, in een eigen tabel met een eigen bewaartermijn. Nuttig voor evaluatie achteraf; het kost opslagruimte en een beetje batterij."
           }
         },
         "pl" : {
@@ -12904,7 +12910,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fixy méně přesné než limit, starší než maximální stáří nebo vzdálené od předchozího fixu méně než vzdálenost duplicit se zahazují."
+            "value" : "Fixy, které jsou méně přesné než limit, starší než maximální stáří nebo blíž k předchozímu fixu než vzdálenost duplicit, se vyřazují."
           }
         },
         "de" : {
@@ -12922,7 +12928,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se descartan las posiciones GPS menos precisas que el límite, más antiguas que la edad máxima o situadas a menos de la distancia de duplicado respecto a la posición anterior."
+            "value" : "Se descartan las posiciones GPS menos precisas que el límite, las que superan la antigüedad máxima o las situadas a menos de la distancia de duplicado respecto a la posición anterior."
           }
         },
         "fr" : {
@@ -12934,7 +12940,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I fix meno precisi del limite, più vecchi dell'età massima, o entro la distanza di duplicato dal fix precedente vengono scartati."
+            "value" : "I fix meno precisi del limite, più vecchi dell'età massima o entro la distanza duplicati dal fix precedente vengono scartati."
           }
         },
         "ja" : {
@@ -12946,13 +12952,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fixes die minder nauwkeurig zijn dan de limiet, ouder dan de maximale leeftijd, of binnen de duplicaatafstand van de vorige fix liggen, worden genegeerd."
+            "value" : "Fixes die minder nauwkeurig zijn dan de limiet, ouder zijn dan de maximale leeftijd of binnen de duplicaatafstand van de vorige fix liggen, worden geweigerd."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fixy mniej dokładne niż limit, starsze niż maksymalny wiek lub znajdujące się w odległości duplikatu od poprzedniego fixu są odrzucane."
+            "value" : "Fixy mniej dokładne niż limit, starsze niż maksymalny wiek lub leżące bliżej poprzedniego fixu niż odległość duplikatu są odrzucane."
           }
         }
       }
@@ -13136,7 +13142,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delší nehybnost brání kolísání na semaforech, ale drží GPS zapnuté déle po zastavení. Hrubé aktualizace (přesnost 3 km) stojí téměř nic a udržují aplikaci aktivní na pozadí — proto systémový indikátor polohy zůstává zapnutý ve stavu Stacionární. Jeho vypnutí ho skryje, ale iOS ho stejně zobrazí, kdykoli GPS zaznamenává na pozadí."
+            "value" : "Delší nehybnost brání kolísání stavu na semaforech, ale po zastavení nechává GPS zapnuté déle. Hrubé aktualizace (přesnost 3 km) mají téměř nulovou spotřebu a udržují aplikaci aktivní na pozadí — proto systémový indikátor polohy svítí, i když jste v klidu. Vypnutí této volby indikátor skryje, ale iOS ho stejně zobrazí, kdykoli GPS zaznamenává na pozadí."
           }
         },
         "de" : {
@@ -13148,31 +13154,31 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning it off hides it, but iOS still shows it whenever GPS is recording in the background."
+            "value" : "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning off “Show location indicator” hides it, but iOS still shows it whenever GPS is recording in the background."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Una inmovilidad más larga evita las oscilaciones en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerse. Las actualizaciones de baja precisión (3 km) apenas consumen recursos y mantienen la app activa en segundo plano; por eso el indicador de ubicación del sistema permanece encendido en estado estacionario. Desactivarlo lo oculta, pero iOS lo sigue mostrando siempre que el GPS esté grabando en segundo plano."
+            "value" : "Una inmovilidad más larga evita las oscilaciones en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerse. Las actualizaciones de baja precisión (3 km) apenas consumen recursos y mantienen la app activa en segundo plano; por eso el indicador de ubicación del sistema permanece encendido en estado estacionario. Desactivar esta opción lo oculta, pero iOS lo sigue mostrando siempre que el GPS esté registrando en segundo plano."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour grossières (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan — c’est pourquoi l’indicateur de localisation du système reste allumé à l’arrêt. Le désactiver le masque, mais iOS l’affiche quand même dès que le GPS enregistre en arrière-plan."
+            "value" : "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour approximatives (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan — c’est pourquoi l’indicateur de localisation du système reste allumé à l’arrêt. Le désactiver le masque, mais iOS l’affiche quand même dès que le GPS enregistre en arrière-plan."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Gli aggiornamenti approssimativi (precisione 3 km) costano quasi nulla e mantengono l'app attiva in background — per questo l'indicatore di localizzazione del sistema resta acceso da stazionario. Disattivarlo lo nasconde, ma iOS lo mostra comunque ogni volta che il GPS registra in background."
+            "value" : "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Gli aggiornamenti approssimativi (precisione 3 km) costano quasi nulla e mantengono l'app attiva in background — per questo l'indicatore di posizione del sistema resta acceso da stazionario. Disattivarlo lo nasconde, ma iOS lo mostra comunque ogni volta che il GPS registra in background."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSが長く点いたままになります。粗い位置情報の更新（精度3km）はほとんど負荷がなく、バックグラウンドでアプリを維持します — これが静止中もシステムの位置情報インジケーターが点灯し続ける理由です。オフにすると非表示になりますが、GPSがバックグラウンドで記録している間はiOSが表示を続けます。"
+            "value" : "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。粗い位置情報の更新（精度3km）はほとんど負荷がなく、バックグラウンドでAppを維持します。静止中もシステムの位置情報インジケータが表示され続けるのはこのためです。オフにすると非表示になりますが、GPSがバックグラウンドで記録している間はiOSが表示を続けます。"
           }
         },
         "nl" : {
@@ -13184,7 +13190,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dłuższy czas bezruchu ogranicza przełączanie stanów na światłach, ale utrzymuje GPS włączony dłużej po zatrzymaniu. Przybliżone aktualizacje (dokładność 3 km) kosztują niemal nic i utrzymują aplikację aktywną w tle — dlatego systemowy wskaźnik lokalizacji pozostaje włączony w stanie stacjonarnym. Wyłączenie tej opcji ukrywa go, ale iOS i tak go pokazuje, gdy GPS rejestruje dane w tle."
+            "value" : "Dłuższy czas bezruchu ogranicza przełączanie stanów na światłach, ale utrzymuje GPS włączony dłużej po zatrzymaniu. Przybliżone aktualizacje (dokładność 3 km) kosztują niemal nic i utrzymują aplikację aktywną w tle — dlatego systemowy wskaźnik lokalizacji pozostaje włączony w bezruchu. Wyłączenie tej opcji ukrywa go, ale iOS i tak go pokazuje, gdy GPS rejestruje dane w tle."
           }
         }
       }
@@ -13218,7 +13224,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Garder des mises à jour grossières à l’arrêt"
+            "value" : "Garder des mises à jour approximatives à l’arrêt"
           }
         },
         "it" : {
@@ -13242,7 +13248,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zachowaj przybliżone dane w stanie stacjonarnym"
+            "value" : "Przybliżone aktualizacje w bezruchu"
           }
         }
       }
@@ -13310,13 +13316,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Doba sondování"
+            "value" : "Doba zjišťování"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sondierungsdauer"
+            "value" : "Prüfdauer"
           }
         },
         "en" : {
@@ -13328,37 +13334,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Duración del sondeo"
+            "value" : "Duración de la comprobación"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Durée de sondage"
+            "value" : "Durée de détection"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Durata sondaggio"
+            "value" : "Durata verifica"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "探査時間"
+            "value" : "移動判定の時間"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Peilduur"
+            "value" : "Detectieduur"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Czas sondowania"
+            "value" : "Czas wykrywania"
           }
         }
       }
@@ -13374,7 +13380,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Standortanzeige anzeigen"
+            "value" : "Standortanzeige einblenden"
           }
         },
         "en" : {
@@ -13398,13 +13404,13 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mostra indicatore di localizzazione"
+            "value" : "Mostra indicatore di posizione"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "位置情報インジケーターを表示"
+            "value" : "位置情報インジケータを表示"
           }
         },
         "nl" : {
@@ -13671,7 +13677,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Precise location"
+            "value" : "Precise Location"
           }
         },
         "es" : {
@@ -14007,7 +14013,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPS profily"
+            "value" : "Profily GPS"
           }
         },
         "de" : {
@@ -14309,7 +14315,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Purge failed: %@"
+            "value" : "Deletion failed: %@"
           }
         },
         "es" : {
@@ -14333,7 +14339,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "パージに失敗しました：%@"
+            "value" : "削除に失敗しました：%@"
           }
         },
         "nl" : {
@@ -14385,7 +14391,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Questa azione è irreversibile. Esportare prima i dati, se necessario."
+            "value" : "Questa azione è irreversibile. Esporta prima i dati, se necessario."
           }
         },
         "ja" : {
@@ -14425,7 +14431,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Deleted %@ samples."
+            "value" : "Samples deleted: %@"
           }
         },
         "es" : {
@@ -14461,7 +14467,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usunięto %@ próbek."
+            "value" : "Usunięto próbek: %@."
           }
         }
       }
@@ -14475,6 +14481,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "Smazat vzorky starší než %lld dny?"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "Smazat vzorky starší než %lld dne?"
                 }
               },
               "one" : {
@@ -14653,6 +14665,12 @@
                 "stringUnit" : {
                   "state" : "translated",
                   "value" : "%lld dny"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld dne"
                 }
               },
               "one" : {
@@ -15283,7 +15301,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Znacząca zmiana lokalizacji"
+            "value" : "Znacząca zmiana"
           }
         }
       }
@@ -15497,7 +15515,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rotta"
+            "value" : "Direzione"
           }
         },
         "ja" : {
@@ -15955,7 +15973,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Échantillon le plus ancien"
+            "value" : "Le plus ancien"
           }
         },
         "it" : {
@@ -16135,7 +16153,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Totale memorizzato"
+            "value" : "Totale salvati"
           }
         },
         "ja" : {
@@ -16279,7 +16297,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPS profil"
+            "value" : "Profil GPS"
           }
         },
         "de" : {
@@ -16343,7 +16361,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Seit einiger Zeit kein neuer Fix. Wurde die App beendet, öffnen Sie sie erneut, um die Aufzeichnung fortzusetzen."
+            "value" : "Seit einiger Zeit kein neuer Fix. Falls Sie die App manuell beendet haben, öffnen Sie sie erneut, um die Aufzeichnung fortzusetzen."
           }
         },
         "en" : {
@@ -16361,31 +16379,31 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun nouveau point depuis un moment. Si l’app a été forcée à quitter, rouvrez-la pour reprendre l’enregistrement."
+            "value" : "Aucun nouveau point depuis un moment. Si l’app a été fermée de force, rouvrez-la pour reprendre l’enregistrement."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nessun nuovo fix da un po'. Se l'app è stata chiusa forzatamente, riaprirla per riprendere il monitoraggio."
+            "value" : "Nessun nuovo fix da un po'. Se l'app è stata chiusa forzatamente, riaprila per riprendere il monitoraggio."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "しばらく新しい測位がありません。アプリが強制終了された場合は、再度開くと記録が再開します。"
+            "value" : "しばらく新しい測位がありません。Appが強制終了された場合は、もう一度開くと記録を再開します。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Al een tijdje geen nieuwe fix. Als de app geforceerd is afgesloten, open deze opnieuw om het traceren te hervatten."
+            "value" : "Al een tijdje geen nieuwe fix. Als de app geforceerd is afgesloten, open deze dan opnieuw om het bijhouden te hervatten."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Brak nowego fixu od dłuższego czasu. Jeśli aplikacja została wymuszenie zamknięta, otwórz ją ponownie, aby wznowić śledzenie."
+            "value" : "Brak nowego fixu od dłuższego czasu. Jeśli aplikacja została zamknięta ręcznie, otwórz ją ponownie, aby wznowić śledzenie."
           }
         }
       }
@@ -16431,7 +16449,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "状態"
+            "value" : "ステータス"
           }
         },
         "nl" : {
@@ -16627,13 +16645,13 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zapnuto — běží na pozadí a po restartu."
+            "value" : "Zapnuto — běží na pozadí a znovu se spustí, když aplikaci ukončí iOS nebo když se restartuje telefon."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ein — läuft im Hintergrund und nach einem Neustart weiter."
+            "value" : "Ein — läuft im Hintergrund und nimmt die Aufzeichnung wieder auf, nachdem iOS die App beendet hat oder das iPhone neu gestartet wurde."
           }
         },
         "en" : {
@@ -16645,37 +16663,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activado: funciona en segundo plano y tras reiniciar."
+            "value" : "Activado: funciona en segundo plano y se reanuda después de que iOS cierre la app o de que se reinicie el teléfono."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Activé — fonctionne en arrière-plan et après un redémarrage."
+            "value" : "Activé — fonctionne en arrière-plan, et se relance après un arrêt par iOS ou un redémarrage du téléphone."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Attivato — funziona in background e dopo un riavvio."
+            "value" : "Attivato — funziona in background e riprende dopo che iOS chiude l'app o dopo il riavvio del telefono."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "オン — バックグラウンドおよび再起動後も動作します。"
+            "value" : "オン — バックグラウンドで動作します。iOSにAppを終了されても、デバイスを再起動しても復帰します。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aan — werkt op de achtergrond en na een herstart."
+            "value" : "Aan — werkt op de achtergrond en hervat het registreren nadat iOS de app heeft beëindigd of de telefoon opnieuw is opgestart."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Włączone — działa w tle i po ponownym uruchomieniu."
+            "value" : "Włączone — działa w tle i wznawia pracę po zamknięciu aplikacji przez iOS lub po restarcie telefonu."
           }
         }
       }
@@ -16801,7 +16819,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Přechod „V pohybu → Stacionární“ vyžaduje %@ nehybnosti; jakýkoli pohyb okamžitě znovu zapne GPS."
+            "value" : "Přechod z pohybu do klidu vyžaduje %@ nehybnosti; jakýkoli pohyb okamžitě znovu zapne GPS."
           }
         },
         "de" : {
@@ -16849,7 +16867,7 @@
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przejście „W ruchu” → „Stacjonarny” wymaga %@ bezruchu; każdy ruch natychmiast włącza GPS z powrotem."
+            "value" : "Przejście „W ruchu” → „Bezruch” wymaga %@ bez wykrytego ruchu; każdy ruch natychmiast włącza GPS z powrotem."
           }
         }
       }
@@ -17005,7 +17023,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Da verificare"
+            "value" : "Richiede attenzione"
           }
         },
         "ja" : {
@@ -17441,7 +17459,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bez aktivity pohybu se aplikace musí při detekci pohybu spoléhat na GPS, což spotřebovává více baterie."
+            "value" : "Bez pohybové aktivity se aplikace musí při detekci pohybu spoléhat na GPS, což spotřebovává více baterie."
           }
         },
         "de" : {
@@ -17465,7 +17483,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sans l’activité physique, l’app doit s’appuyer sur le GPS pour détecter les déplacements, ce qui consomme plus de batterie."
+            "value" : "Sans les données de mouvement, l’app doit s’appuyer sur le GPS pour détecter les déplacements, ce qui consomme plus de batterie."
           }
         },
         "it" : {
@@ -17477,7 +17495,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "モーションアクティビティがないと、アプリは移動の検出をGPSに頼らざるを得ず、バッテリー消費が増えます。"
+            "value" : "モーションアクティビティがないと、Appは移動の検出をGPSに頼らざるを得ず、バッテリー消費が増えます。"
           }
         },
         "nl" : {
@@ -17557,7 +17575,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aktivita pohybu umožňuje aplikaci vypnout GPS, když jste v klidu."
+            "value" : "Pohybová aktivita umožňuje aplikaci vypnout GPS, když jste v klidu."
           }
         },
         "de" : {
@@ -17581,7 +17599,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’activité physique permet à l’app d’éteindre le GPS lorsque vous êtes immobile."
+            "value" : "Les données de mouvement permettent à l’app d’éteindre le GPS lorsque vous êtes immobile."
           }
         },
         "it" : {
@@ -17679,7 +17697,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Messpunkte sind nur auf wenige Kilometer genau. Aktivieren Sie Genauer Standort in den Einstellungen."
+            "value" : "Messpunkte sind nur auf wenige Kilometer genau. Aktivieren Sie „Genauer Standort“ in den Einstellungen."
           }
         },
         "en" : {
@@ -17691,7 +17709,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Las muestras solo son precisas a unos pocos kilómetros. Active Ubicación precisa en Ajustes."
+            "value" : "Las muestras solo tienen una precisión de unos pocos kilómetros. Active Ubicación precisa en Ajustes."
           }
         },
         "fr" : {
@@ -17715,7 +17733,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meetpunten zijn slechts tot enkele kilometers nauwkeurig. Schakel Precieze locatie in bij Instellingen."
+            "value" : "Meetpunten zijn slechts tot op enkele kilometers nauwkeurig. Schakel Precieze locatie in bij Instellingen."
           }
         },
         "pl" : {
@@ -17743,7 +17761,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Precise location is off"
+            "value" : "Precise Location is off"
           }
         },
         "es" : {
@@ -17795,7 +17813,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Aufzeichnung im Hintergrund stoppt, sobald die App in den Hintergrund wechselt. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“."
+            "value" : "Die Aufzeichnung im Hintergrund stoppt, sobald iOS die App anhält. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“."
           }
         },
         "en" : {
@@ -17825,7 +17843,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アプリがサスペンドされると、バックグラウンドでの追跡は直ちに停止します。設定で位置情報へのアクセスを「常に」に変更してください。"
+            "value" : "Appが一時停止されると、バックグラウンドでの追跡は停止します。設定で位置情報へのアクセスを「常に」に変更してください。"
           }
         },
         "nl" : {

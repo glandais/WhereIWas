@@ -283,10 +283,10 @@ struct SettingsView: View {
         do {
             let deleted = try await controller.purgeNow()
             purgeResult = String(localized: "settings.purge.result",
-                                 defaultValue: "Deleted \(Formatting.count(deleted)) samples.")
+                                 defaultValue: "Samples deleted: \(Formatting.count(deleted))")
         } catch {
             purgeResult = String(localized: "settings.purge.failed",
-                                 defaultValue: "Purge failed: \(error.localizedDescription)")
+                                 defaultValue: "Deletion failed: \(error.localizedDescription)")
         }
     }
 }

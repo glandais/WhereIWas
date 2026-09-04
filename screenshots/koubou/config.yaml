@@ -49,7 +49,7 @@ screenshots:
     template: "templates/03-map-slab.html"
     variables:
       headline: "Every day, on the map"
-      subtitle: "A full day of the deployment, street by street."
+      subtitle: "A full day, street by street."
     assets:
       app_screenshot: "../flat/03-map.png"
 

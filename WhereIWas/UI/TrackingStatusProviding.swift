@@ -39,7 +39,7 @@ extension TrackingStatus {
         }
         if locationAuthorization == .always, !hasFullAccuracy {
             list.append(.init(id: "loc-reduced", severity: .warning,
-                              title: String(localized: "warning.preciseOff.title", defaultValue: "Precise location is off"),
+                              title: String(localized: "warning.preciseOff.title", defaultValue: "Precise Location is off"),
                               message: String(localized: "warning.preciseOff.message", defaultValue: "Samples are only accurate to a few kilometers. Enable Precise Location in Settings."),
                               action: .openSettings))
         }

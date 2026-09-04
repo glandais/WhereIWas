@@ -40,8 +40,8 @@
     "project.yml": {
       "note": "XcodeGen writes these into the generated Info.plist, but iOS reads InfoPlist.xcstrings' `en` unit — keep both in step.",
       "strings": {
-        "NSLocationAlwaysAndWhenInUseUsageDescription": "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it.",
-        "NSLocationWhenInUseUsageDescription": "WhereIWas records your position to build your location history.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "WhereIWas records your position in the background, including while the screen is locked, so that no part of your route is lost — even over several days — and it stays on this device until you export it.",
+        "NSLocationWhenInUseUsageDescription": "WhereIWas records your position while the app is open, so you can see your track on the map and export it as GPX or JSON.",
         "NSMotionUsageDescription": "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery."
       }
     },
@@ -58,7 +58,7 @@
         },
         "03-map": {
           "headline": "Every day, on the map",
-          "subtitle": "A full day of the deployment, street by street."
+          "subtitle": "A full day, street by street."
         },
         "04-audit-trail": {
           "headline": "Every fix, accepted or rejected",
@@ -119,7 +119,7 @@
         "activity.driving": {
           "translations": {
             "cs": "Řízení",
-            "de": "Autofahrt",
+            "de": "Autofahren",
             "en": "Driving",
             "es": "Conducción",
             "fr": "Conduite",
@@ -246,8 +246,8 @@
               "value": "Relaunched by a location event",
               "state": "new"
             },
-            "es": "Reiniciada por un evento de ubicación",
-            "fr": "Relancée par un événement de position",
+            "es": "Reinicio por un evento de ubicación",
+            "fr": "Relance par un événement de position",
             "it": "Riavviata da un evento di posizione",
             "ja": "位置情報イベントによる再起動",
             "nl": "Opnieuw gestart door een locatiegebeurtenis",
@@ -316,7 +316,7 @@
         },
         "audit.category.lifecycle": {
           "translations": {
-            "cs": "Cyklus",
+            "cs": "Životní cyklus",
             "de": "Lebenszyklus",
             "en": "Lifecycle",
             "es": "Ciclo de vida",
@@ -440,7 +440,7 @@
             "it": "Timestamp successivo al fix precedente",
             "ja": "タイムスタンプが前回の測位より後",
             "nl": "Tijdstempel ligt na de vorige fix",
-            "pl": "Znacznik czasu po poprzednim fiksie"
+            "pl": "Znacznik czasu jest późniejszy niż poprzedni fix"
           }
         },
         "audit.check.notDuplicate": {
@@ -480,7 +480,7 @@
         "audit.check.notStale": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Časová značka je dostatečně čerstvá",
+            "cs": "Časová značka je dostatečně aktuální",
             "de": "Zeitstempel ist aktuell genug",
             "en": {
               "value": "Timestamp is recent enough",
@@ -523,11 +523,11 @@
         "audit.clear.message": {
           "translations": {
             "cs": "Vzorky polohy nejsou dotčeny. Pokud log potřebujete, nejprve jej exportujte.",
-            "de": "Die Positions-Messpunkte sind davon nicht betroffen. Exportieren Sie das Protokoll zuerst, falls Sie es noch benötigen.",
+            "de": "Die Standort-Messpunkte sind davon nicht betroffen. Exportieren Sie das Protokoll zuerst, falls Sie es noch benötigen.",
             "en": "Location samples are not affected. Export first if you need the trail.",
-            "es": "Las muestras de posición no se ven afectadas. Exporta primero el registro si lo necesitas.",
+            "es": "Las muestras de posición no se ven afectadas. Exporte primero el registro si lo necesita.",
             "fr": "Les échantillons de position ne sont pas touchés. Exportez d’abord si vous avez besoin du journal.",
-            "it": "I campioni di posizione non sono interessati. Esportare prima il registro, se necessario.",
+            "it": "I campioni di posizione non sono interessati. Esporta prima il registro, se necessario.",
             "ja": "位置情報のサンプルには影響しません。ログが必要な場合は先にエクスポートしてください。",
             "nl": "De meetpunten blijven ongewijzigd. Exporteer eerst als het logboek nog nodig is.",
             "pl": "Próbki położenia nie są usuwane. Wyeksportuj dziennik wcześniej, jeśli jest potrzebny."
@@ -792,7 +792,7 @@
             "it": "Gravità",
             "ja": "重大度",
             "nl": "Ernst",
-            "pl": "Ważność"
+            "pl": "Poziom"
           }
         },
         "audit.detail.tests": {
@@ -803,7 +803,7 @@
             "es": "Pruebas realizadas",
             "fr": "Tests effectués",
             "it": "Test eseguiti",
-            "ja": "実行テスト",
+            "ja": "実行したテスト",
             "nl": "Uitgevoerde tests",
             "pl": "Wykonane testy"
           }
@@ -828,7 +828,7 @@
             "en": "Turn it on in Settings to record every fix received, every validation test run on it, and every state change.",
             "es": "Actívelo en Ajustes para registrar cada posición recibida, cada prueba de validación ejecutada y cada cambio de estado.",
             "fr": "Activez-le dans les réglages pour enregistrer chaque point reçu, chaque test de validation effectué et chaque changement d’état.",
-            "it": "Attivarlo in Impostazioni per registrare ogni fix ricevuto, ogni test di validazione eseguito e ogni cambio di stato.",
+            "it": "Attivalo in Impostazioni per registrare ogni fix ricevuto, ogni test di validazione eseguito e ogni cambio di stato.",
             "ja": "設定でオンにすると、受信した各測位、それに対して実行した各検証テスト、状態の変化がすべて記録されます。",
             "nl": "Schakel het in bij Instellingen om elke ontvangen fix, elke validatietest die daarop is uitgevoerd en elke statuswijziging vast te leggen.",
             "pl": "Włącz go w Ustawieniach, aby rejestrować każdy odebrany fix, każdy wykonany na nim test walidacji i każdą zmianę stanu."
@@ -842,7 +842,7 @@
             "es": "Registro de auditoría desactivado",
             "fr": "Journal d’audit désactivé",
             "it": "Registro di audit disattivato",
-            "ja": "監査ログは無効です",
+            "ja": "監査ログはオフです",
             "nl": "Auditlogboek uitgeschakeld",
             "pl": "Dziennik audytu jest wyłączony"
           }
@@ -850,18 +850,18 @@
         "audit.effect.cancelProbeTimer": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Časovač sondování zrušen",
-            "de": "Sondierungstimer abgebrochen",
+            "cs": "Časovač zjišťování zrušen",
+            "de": "Prüftimer abgebrochen",
             "en": {
               "value": "Probe timer cancelled",
               "state": "new"
             },
-            "es": "Temporizador de sondeo cancelado",
-            "fr": "Minuteur de sondage annulé",
-            "it": "Timer di sondaggio annullato",
-            "ja": "探査タイマーを取り消し",
-            "nl": "Peiltimer geannuleerd",
-            "pl": "Minutnik sondowania anulowany"
+            "es": "Temporizador de comprobación cancelado",
+            "fr": "Minuteur de détection annulé",
+            "it": "Timer di verifica annullato",
+            "ja": "判定タイマーを取り消し",
+            "nl": "Detectietimer geannuleerd",
+            "pl": "Timer wykrywania anulowany"
           }
         },
         "audit.effect.cancelStillnessTimer": {
@@ -878,7 +878,7 @@
             "it": "Timer di immobilità annullato",
             "ja": "静止タイマーを取り消し",
             "nl": "Stilstandtimer geannuleerd",
-            "pl": "Minutnik bezruchu anulowany"
+            "pl": "Timer bezruchu anulowany"
           }
         },
         "audit.effect.log": {
@@ -935,18 +935,18 @@
         "audit.effect.startProbeTimer": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Časovač sondování spuštěn (%@)",
-            "de": "Sondierungstimer gestartet (%@)",
+            "cs": "Časovač zjišťování spuštěn (%@)",
+            "de": "Prüftimer gestartet (%@)",
             "en": {
               "value": "Probe timer started (%@)",
               "state": "new"
             },
-            "es": "Temporizador de sondeo iniciado (%@)",
-            "fr": "Minuteur de sondage démarré (%@)",
-            "it": "Timer di sondaggio avviato (%@)",
-            "ja": "探査タイマーを開始（%@）",
-            "nl": "Peiltimer gestart (%@)",
-            "pl": "Minutnik sondowania uruchomiony (%@)"
+            "es": "Temporizador de comprobación iniciado (%@)",
+            "fr": "Minuteur de détection démarré (%@)",
+            "it": "Timer di verifica avviato (%@)",
+            "ja": "判定タイマーを開始（%@）",
+            "nl": "Detectietimer gestart (%@)",
+            "pl": "Timer wykrywania uruchomiony (%@)"
           }
         },
         "audit.effect.startSignificantChange": {
@@ -962,7 +962,7 @@
             "fr": "Surveillance des changements significatifs et des visites démarrée",
             "it": "Monitoraggio dei cambiamenti significativi e delle visite avviato",
             "ja": "大幅な位置の変更と訪問の監視を開始",
-            "nl": "Bewaking van significante wijzigingen en bezoeken gestart",
+            "nl": "Bewaking van significante locatiewijzigingen en bezoeken gestart",
             "pl": "Monitorowanie znaczących zmian i wizyt uruchomione"
           }
         },
@@ -980,7 +980,7 @@
             "it": "Timer di immobilità avviato (%@)",
             "ja": "静止タイマーを開始（%@）",
             "nl": "Stilstandtimer gestart (%@)",
-            "pl": "Minutnik bezruchu uruchomiony (%@)"
+            "pl": "Timer bezruchu uruchomiony (%@)"
           }
         },
         "audit.effect.stopGPS": {
@@ -1030,7 +1030,7 @@
             "fr": "Surveillance des changements significatifs et des visites arrêtée",
             "it": "Monitoraggio dei cambiamenti significativi e delle visite interrotto",
             "ja": "大幅な位置の変更と訪問の監視を停止",
-            "nl": "Bewaking van significante wijzigingen en bezoeken gestopt",
+            "nl": "Bewaking van significante locatiewijzigingen en bezoeken gestopt",
             "pl": "Monitorowanie znaczących zmian i wizyt zatrzymane"
           }
         },
@@ -1184,7 +1184,7 @@
               "state": "new"
             },
             "es": "Perfil de GPS cambiado a %@",
-            "fr": "Profil GPS changé pour %@",
+            "fr": "Profil GPS passé à %@",
             "it": "Profilo GPS cambiato in %@",
             "ja": "GPSプロファイルを%@に変更",
             "nl": "GPS-profiel gewijzigd naar %@",
@@ -1235,7 +1235,7 @@
               "state": "new"
             },
             "es": "Indicador de ubicación del sistema oculto",
-            "fr": "Indicateur de position du système masqué",
+            "fr": "Indicateur de localisation du système masqué",
             "it": "Indicatore di posizione di sistema nascosto",
             "ja": "システムの位置情報インジケータを非表示",
             "nl": "Systeemlocatie-indicator verborgen",
@@ -1252,7 +1252,7 @@
               "state": "new"
             },
             "es": "Indicador de ubicación del sistema visible",
-            "fr": "Indicateur de position du système affiché",
+            "fr": "Indicateur de localisation du système affiché",
             "it": "Indicatore di posizione di sistema mostrato",
             "ja": "システムの位置情報インジケータを表示",
             "nl": "Systeemlocatie-indicator zichtbaar",
@@ -1405,7 +1405,7 @@
             "fr": "Aucun événement ne correspond à ces filtres.",
             "it": "Nessun evento corrisponde a questi filtri.",
             "ja": "この条件に一致するイベントはありません。",
-            "nl": "Geen gebeurtenissen komen overeen met deze filters.",
+            "nl": "Er komen geen gebeurtenissen overeen met deze filters.",
             "pl": "Brak zdarzeń pasujących do tych filtrów."
           }
         },
@@ -1413,13 +1413,13 @@
           "translations": {
             "cs": "Od nejnovějších. Klepnutím na událost zobrazíte celý obsah.",
             "de": "Neueste zuerst. Tippen Sie auf ein Ereignis für den vollständigen Inhalt.",
-            "en": "Newest first. Tap an event for its full payload.",
-            "es": "Del más reciente al más antiguo. Toca un evento para ver su contenido completo.",
+            "en": "Newest first. Tap an event for the full details.",
+            "es": "Del más reciente al más antiguo. Toque un evento para ver su contenido completo.",
             "fr": "Du plus récent au plus ancien. Touchez un événement pour voir son contenu complet.",
-            "it": "Dal più recente al più vecchio. Toccare un evento per vederne il contenuto completo.",
+            "it": "Dal più recente al più vecchio. Tocca un evento per vederne il contenuto completo.",
             "ja": "新しい順に表示されます。イベントをタップすると詳細を確認できます。",
             "nl": "Nieuwste eerst. Tik op een gebeurtenis voor de volledige inhoud.",
-            "pl": "Od najnowszych. Dotknij zdarzenia, aby zobaczyć pełną treść."
+            "pl": "Od najnowszych. Stuknij w zdarzenie, aby zobaczyć pełną treść."
           }
         },
         "audit.location.significantChange": {
@@ -1442,7 +1442,7 @@
         "audit.maintenance.purge": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Úklid: %1$@ a %2$@",
+            "cs": "Vyčištění: %1$@ a %2$@",
             "de": "Bereinigung: %1$@ und %2$@",
             "en": {
               "value": "Purge of %1$@ and %2$@",
@@ -1466,7 +1466,7 @@
             "it": "Gravità minima",
             "ja": "最小重大度",
             "nl": "Minimale ernst",
-            "pl": "Minimalna ważność"
+            "pl": "Minimalny poziom"
           }
         },
         "audit.monitoring.started": {
@@ -1482,15 +1482,15 @@
             "fr": "Surveillance des changements significatifs et des visites armée",
             "it": "Monitoraggio dei cambiamenti significativi e delle visite attivato",
             "ja": "大幅な位置の変更と訪問の監視を有効化",
-            "nl": "Bewaking van significante wijzigingen en bezoeken geactiveerd",
-            "pl": "Monitorowanie znaczących zmian i wizyt uzbrojone"
+            "nl": "Bewaking van significante locatiewijzigingen en bezoeken geactiveerd",
+            "pl": "Monitorowanie znaczących zmian i wizyt aktywne"
           }
         },
         "audit.motion.burstMoving": {
           "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Dávka akcelerometru: v pohybu při %@ g",
-            "de": "Beschleunigungsmesser-Impuls: in Bewegung bei %@ g",
+            "de": "Beschleunigungssensor-Messung: in Bewegung bei %@ g",
             "en": {
               "value": "Accelerometer burst: moving at %@ g",
               "state": "new"
@@ -1507,13 +1507,13 @@
           "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Dávka akcelerometru: v klidu při %@ g",
-            "de": "Beschleunigungsmesser-Impuls: stillstehend bei %@ g",
+            "de": "Beschleunigungssensor-Messung: stillstehend bei %@ g",
             "en": {
               "value": "Accelerometer burst: still at %@ g",
               "state": "new"
             },
             "es": "Ráfaga del acelerómetro: inmóvil a %@ g",
-            "fr": "Salve d’accéléromètre : à l’arrêt à %@ g",
+            "fr": "Salve d’accéléromètre : immobile à %@ g",
             "it": "Burst dell’accelerometro: fermo a %@ g",
             "ja": "加速度センサーのバースト：静止 %@ g",
             "nl": "Versnellingsmeterburst: stilstaand bij %@ g",
@@ -1593,7 +1593,7 @@
                   "few": "Krokomierz zgłosił %lld kroki",
                   "many": "Krokomierz zgłosił %lld kroków",
                   "one": "Krokomierz zgłosił %lld krok",
-                  "other": "Krokomierz zgłosił %lld kroki"
+                  "other": "Krokomierz zgłosił %lld kroku"
                 }
               }
             }
@@ -1602,7 +1602,7 @@
         "audit.permission.location": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Oprávnění polohy: %@",
+            "cs": "Oprávnění k poloze: %@",
             "de": "Standortberechtigung: %@",
             "en": {
               "value": "Location authorization: %@",
@@ -1613,13 +1613,13 @@
             "it": "Autorizzazione posizione: %@",
             "ja": "位置情報の許可：%@",
             "nl": "Locatietoestemming: %@",
-            "pl": "Uprawnienie lokalizacji: %@"
+            "pl": "Uprawnienie do lokalizacji: %@"
           }
         },
         "audit.permission.motion": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Oprávnění pohybu: %@",
+            "cs": "Oprávnění k pohybu: %@",
             "de": "Bewegungsberechtigung: %@",
             "en": {
               "value": "Motion authorization: %@",
@@ -1630,14 +1630,14 @@
             "it": "Autorizzazione movimento: %@",
             "ja": "モーションの許可：%@",
             "nl": "Bewegingstoestemming: %@",
-            "pl": "Uprawnienie ruchu: %@"
+            "pl": "Uprawnienie do ruchu: %@"
           }
         },
         "audit.rejection.duplicate": {
           "extractionState": "extracted_with_value",
           "translations": {
             "cs": "duplikát předchozího fixu",
-            "de": "Duplikat des vorherigen Fix",
+            "de": "Duplikat des vorherigen Fixes",
             "en": {
               "value": "duplicate of the previous fix",
               "state": "new"
@@ -1647,7 +1647,7 @@
             "it": "duplicato del fix precedente",
             "ja": "前回の測位と重複",
             "nl": "duplicaat van de vorige fix",
-            "pl": "duplikat poprzedniego fiksa"
+            "pl": "duplikat poprzedniego fixu"
           }
         },
         "audit.rejection.futureTimestamp": {
@@ -1695,7 +1695,7 @@
             },
             "es": "anterior a la posición previa",
             "fr": "antérieur au point précédent",
-            "it": "precedente al fix precedente",
+            "it": "più vecchio del fix precedente",
             "ja": "前回の測位より古い",
             "nl": "ouder dan de vorige fix",
             "pl": "starszy niż poprzedni fix"
@@ -1991,7 +1991,7 @@
         "audit.verdict.notApplicable": {
           "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "nelze použít",
+            "cs": "netýká se",
             "de": "nicht zutreffend",
             "en": {
               "value": "not applicable",
@@ -2071,7 +2071,7 @@
           "comment": "Value of the “Location” permission row",
           "translations": {
             "cs": "Nevyžádána",
-            "de": "Nicht angefragt",
+            "de": "Nicht angefordert",
             "en": "Not requested",
             "es": "No solicitada",
             "fr": "Non demandée",
@@ -2099,9 +2099,9 @@
           "comment": "Value of the “Location” permission row",
           "translations": {
             "cs": "Při používání",
-            "de": "Bei Verwendung",
+            "de": "Beim Verwenden",
             "en": "While using",
-            "es": "Mientras se usa",
+            "es": "Al usar la app",
             "fr": "Pendant l’utilisation",
             "it": "Durante l'uso",
             "ja": "使用中のみ",
@@ -2120,7 +2120,7 @@
             "it": "Autorizzato",
             "ja": "許可済み",
             "nl": "Toegestaan",
-            "pl": "Autoryzowano"
+            "pl": "Przyznano"
           }
         },
         "auth.motion.denied": {
@@ -2141,7 +2141,7 @@
           "comment": "Value of the “Motion & Fitness” permission row",
           "translations": {
             "cs": "Nevyžádán",
-            "de": "Nicht angefragt",
+            "de": "Nicht angefordert",
             "en": "Not requested",
             "es": "No solicitado",
             "fr": "Non demandé",
@@ -2198,7 +2198,7 @@
             "en": "Export",
             "es": "Exportar",
             "fr": "Export",
-            "it": "Esporta",
+            "it": "Esportazione",
             "ja": "エクスポート",
             "nl": "Export",
             "pl": "Eksport"
@@ -2245,15 +2245,15 @@
         },
         "common.probing": {
           "translations": {
-            "cs": "Sondování",
-            "de": "Sondierend",
+            "cs": "Zjišťování",
+            "de": "Prüfphase",
             "en": "Probing",
-            "es": "Sondeo",
-            "fr": "Sondage",
-            "it": "Sondaggio",
-            "ja": "探査中",
-            "nl": "Peilend",
-            "pl": "Sondowanie"
+            "es": "Comprobación",
+            "fr": "Détection",
+            "it": "Verifica",
+            "ja": "判定中",
+            "nl": "Detectie",
+            "pl": "Wykrywanie"
           }
         },
         "common.sessions": {
@@ -2297,7 +2297,7 @@
         },
         "common.stationary": {
           "translations": {
-            "cs": "Stacionární",
+            "cs": "V klidu",
             "de": "Stationär",
             "en": "Stationary",
             "es": "Estacionario",
@@ -2305,7 +2305,7 @@
             "it": "Stazionario",
             "ja": "静止",
             "nl": "Stilstaand",
-            "pl": "Stacjonarny"
+            "pl": "Bezruch"
           }
         },
         "compass.E": {
@@ -2491,22 +2491,22 @@
         "export.format.gpxDescription": {
           "translations": {
             "cs": "Trasa GPX 1.1 s nadmořskou výškou, časem a rozšířeními (rychlost, kurz, přesnost, aktivita, baterie). Otevře se ve většině mapových nástrojů.",
-            "de": "GPX-1.1-Track mit Höhe, Zeitstempel und Erweiterungen (Geschwindigkeit, Kurs, Genauigkeit, Aktivität, Akku). Öffnet sich in den meisten Kartentools.",
+            "de": "GPX-1.1-Track mit Höhe, Zeitstempel und Erweiterungen (Geschwindigkeit, Kurs, Genauigkeit, Aktivität, Akku). Lässt sich in den meisten Kartenprogrammen öffnen.",
             "en": "GPX 1.1 track with elevation, time and extensions (speed, course, accuracy, activity, battery). Opens in most mapping tools.",
             "es": "Traza GPX 1.1 con altitud, hora y extensiones (velocidad, rumbo, precisión, actividad, batería). Se abre en la mayoría de las herramientas cartográficas.",
             "fr": "Trace GPX 1.1 avec altitude, horodatage et extensions (vitesse, cap, précision, activité, batterie). S’ouvre dans la plupart des outils cartographiques.",
             "it": "Traccia GPX 1.1 con altitudine, orario ed estensioni (velocità, direzione, precisione, attività, batteria). Si apre nella maggior parte degli strumenti cartografici.",
-            "ja": "標高、時刻、拡張情報（速度、進行方向、精度、活動、バッテリー）を含むGPX 1.1の軌跡。ほとんどの地図ツールで開けます。",
-            "nl": "GPX 1.1-track met hoogte, tijd en extensies (snelheid, koers, nauwkeurigheid, activiteit, batterij). Opent in de meeste kaartprogramma's.",
+            "ja": "標高、時刻、拡張情報（速度、進行方向、精度、アクティビティ、バッテリー）を含むGPX 1.1の軌跡。ほとんどの地図ツールで開けます。",
+            "nl": "GPX 1.1-track met hoogte, tijd en extensies (snelheid, koers, nauwkeurigheid, activiteit, batterij). Te openen in de meeste kaartprogramma's.",
             "pl": "Ślad GPX 1.1 z wysokością, znacznikiem czasu i rozszerzeniami (prędkość, kurs, dokładność, aktywność, bateria). Otwiera się w większości aplikacji mapowych."
           }
         },
         "export.format.jsonDescription": {
           "translations": {
-            "cs": "Pole JSON se všemi uloženými vzorky a jejich poli, včetně stavu odeslání a pořadových ID.",
+            "cs": "Pole JSON obsahující každý uložený vzorek se všemi atributy, včetně stavu odeslání a pořadových ID.",
             "de": "JSON-Array aller gespeicherten Messpunkte mit allen Feldern, einschließlich Übertragungsstatus und Sequenznummern.",
-            "en": "JSON array of every stored sample with all fields, including upload status and sequence ids.",
-            "es": "Matriz JSON de todas las muestras almacenadas con todos sus campos, incluido el estado de envío y los números de secuencia.",
+            "en": "JSON array of every stored sample with all fields, including sequence IDs.",
+            "es": "Array JSON de todas las muestras almacenadas con todos sus campos, incluido el estado de envío y los números de secuencia.",
             "fr": "Tableau JSON de tous les échantillons stockés, avec tous leurs champs, y compris l’état d’envoi et les numéros de séquence.",
             "it": "Array JSON di tutti i campioni salvati con tutti i campi, incluso lo stato di invio e i numeri di sequenza.",
             "ja": "保存されているすべてのサンプルを全項目付きで含むJSON配列。送信状態やシーケンスIDも含みます。",
@@ -2622,7 +2622,7 @@
           "translations": {
             "cs": "Probíhá",
             "de": "Läuft",
-            "en": "Open",
+            "en": "Ongoing",
             "es": "En curso",
             "fr": "En cours",
             "it": "In corso",
@@ -2639,9 +2639,9 @@
             "es": "%1$@ muestras · %2$@ · %3$@",
             "fr": "%1$@ points · %2$@ · %3$@",
             "it": "%1$@ campioni · %2$@ · %3$@",
-            "ja": "%1$@件 · %2$@ · %3$@",
+            "ja": "サンプル%1$@件 · %2$@ · %3$@",
             "nl": "%1$@ meetpunten · %2$@ · %3$@",
-            "pl": "%1$@ próbek · %2$@ · %3$@"
+            "pl": "Próbek: %1$@ · %2$@ · %3$@"
           }
         },
         "export.sessions.empty": {
@@ -2663,8 +2663,8 @@
             "de": "Was",
             "en": "What",
             "es": "Qué",
-            "fr": "Quoi",
-            "it": "Cosa",
+            "fr": "Contenu",
+            "it": "Cosa esportare",
             "ja": "内容",
             "nl": "Wat",
             "pl": "Co"
@@ -2678,7 +2678,7 @@
             "es": "Día",
             "fr": "Jour",
             "it": "Giorno",
-            "ja": "日",
+            "ja": "日付",
             "nl": "Dag",
             "pl": "Dzień"
           }
@@ -2686,7 +2686,7 @@
         "map.empty.description": {
           "translations": {
             "cs": "Dne %@ nebyly zaznamenány žádné vzorky.",
-            "de": "Keine Messpunkte aufgezeichnet am %@.",
+            "de": "Am %@ wurden keine Messpunkte aufgezeichnet.",
             "en": "No samples recorded on %@.",
             "es": "No se registraron muestras el %@.",
             "fr": "Aucun échantillon enregistré le %@.",
@@ -2711,7 +2711,7 @@
         },
         "map.fitTrack": {
           "translations": {
-            "cs": "Zarovnat trasu",
+            "cs": "Zobrazit celou trasu",
             "de": "Track einpassen",
             "en": "Fit track",
             "es": "Ajustar traza",
@@ -2808,7 +2808,7 @@
             "es": "Puntos",
             "fr": "Points",
             "it": "Punti",
-            "ja": "ポイント",
+            "ja": "地点数",
             "nl": "Punten",
             "pl": "Punkty"
           }
@@ -2818,9 +2818,9 @@
             "cs": "Rozsah",
             "de": "Zeitspanne",
             "en": "Span",
-            "es": "Rango",
-            "fr": "Plage",
-            "it": "Intervallo",
+            "es": "Duración",
+            "fr": "Durée",
+            "it": "Durata",
             "ja": "期間",
             "nl": "Tijdspanne",
             "pl": "Zakres"
@@ -2860,7 +2860,7 @@
             "es": "El GPS está activado y ajustado a la velocidad y la actividad actuales.",
             "fr": "Le GPS est activé, réglé sur votre vitesse et votre activité actuelles.",
             "it": "Il GPS è attivo, regolato in base alla velocità e all'attività correnti.",
-            "ja": "GPSはオンで、現在の速度と活動に合わせて調整されています。",
+            "ja": "GPSはオンで、現在の速度とアクティビティに合わせて調整されています。",
             "nl": "De GPS is ingeschakeld, afgestemd op de huidige snelheid en activiteit.",
             "pl": "GPS jest włączony i dostosowany do bieżącej prędkości i aktywności."
           }
@@ -2884,8 +2884,8 @@
             "de": "Die Aufzeichnung ist ausgeschaltet. Es wird nichts aufgezeichnet.",
             "en": "Tracking is switched off. Nothing is recorded.",
             "es": "El seguimiento está desactivado. No se registra nada.",
-            "fr": "L’enregistrement est désactivé. Rien n’est enregistré.",
-            "it": "La registrazione è disattivata. Non viene registrato nulla.",
+            "fr": "Le suivi est désactivé. Rien n’est enregistré.",
+            "it": "Il monitoraggio è disattivato. Non viene registrato nulla.",
             "ja": "記録はオフになっています。何も記録されません。",
             "nl": "Het bijhouden is uitgeschakeld. Er wordt niets geregistreerd.",
             "pl": "Rejestrowanie jest wyłączone. Nic nie jest zapisywane."
@@ -2907,11 +2907,11 @@
         "phase.stationary.explanation": {
           "translations": {
             "cs": "GPS je vypnuté nebo v hrubém režimu. Čeká se na pohyb, významnou změnu polohy nebo návštěvu.",
-            "de": "Das GPS ist aus oder grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch.",
+            "de": "Das GPS ist aus oder läuft nur grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch.",
             "en": "GPS is off or coarse. Waiting for motion, a significant location change or a visit.",
             "es": "El GPS está desactivado o en modo impreciso. A la espera de movimiento, un cambio significativo de ubicación o una visita.",
-            "fr": "Le GPS est éteint ou en mode grossier. En attente d’un mouvement, d’un changement de position significatif ou d’une visite.",
-            "it": "Il GPS è disattivato o impreciso. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita.",
+            "fr": "Le GPS est éteint ou en mode approximatif. En attente d’un mouvement, d’un changement de position significatif ou d’une visite.",
+            "it": "Il GPS è spento o in modalità approssimativa. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita.",
             "ja": "GPSはオフまたは粗い状態です。動き、大幅な位置の変更、訪問のいずれかを待機しています。",
             "nl": "De GPS is uitgeschakeld of grof. Wachten op beweging, een significante locatiewijziging of een bezoek.",
             "pl": "GPS jest wyłączony lub działa w trybie przybliżonym. Oczekiwanie na ruch, znaczącą zmianę lokalizacji lub wizytę."
@@ -2935,7 +2935,7 @@
           "comment": "Value of the “Precise location” row",
           "translations": {
             "cs": "Zapnuta",
-            "de": "An",
+            "de": "Ein",
             "en": "On",
             "es": "Activada",
             "fr": "Activée",
@@ -2947,15 +2947,15 @@
         },
         "profile.stationaryCoarse": {
           "translations": {
-            "cs": "Stacionární (hrubý)",
+            "cs": "V klidu (hrubý)",
             "de": "Stationär (grob)",
             "en": "Stationary (coarse)",
             "es": "Estacionario (impreciso)",
-            "fr": "À l’arrêt (grossier)",
-            "it": "Stazionario (approssimato)",
+            "fr": "À l’arrêt (approximatif)",
+            "it": "Stazionario (approssimativo)",
             "ja": "静止（粗い）",
             "nl": "Stilstaand (grof)",
-            "pl": "Stacjonarny (przybliżony)"
+            "pl": "Bezruch (przybliżony)"
           }
         },
         "profile.unknown": {
@@ -3086,7 +3086,7 @@
             "es": "Inicio de la app",
             "fr": "Lancement de l’app",
             "it": "Avvio app",
-            "ja": "アプリ起動",
+            "ja": "App起動",
             "nl": "App-start",
             "pl": "Uruchomienie aplikacji"
           }
@@ -3106,20 +3106,20 @@
         },
         "reason.probeTimer": {
           "translations": {
-            "cs": "Časovač sondování",
-            "de": "Sondierungstimer",
+            "cs": "Časovač zjišťování",
+            "de": "Prüftimer",
             "en": "Probe timer",
-            "es": "Temporizador de sondeo",
-            "fr": "Minuteur de sondage",
-            "it": "Timer di sondaggio",
-            "ja": "探査タイマー",
-            "nl": "Peiltimer",
-            "pl": "Minutnik sondowania"
+            "es": "Temporizador de comprobación",
+            "fr": "Minuteur de détection",
+            "it": "Timer di verifica",
+            "ja": "判定タイマー",
+            "nl": "Detectietimer",
+            "pl": "Timer wykrywania"
           }
         },
         "reason.relaunch": {
           "translations": {
-            "cs": "Restart (událost polohy)",
+            "cs": "Znovuspuštění (událost polohy)",
             "de": "Neustart (Standortereignis)",
             "en": "Relaunch (location event)",
             "es": "Reinicio (evento de ubicación)",
@@ -3137,10 +3137,10 @@
             "en": "Significant change",
             "es": "Cambio significativo",
             "fr": "Changement significatif",
-            "it": "Cambiamento significativo di posizione",
+            "it": "Cambiamento significativo",
             "ja": "大幅な位置の変更",
             "nl": "Significante locatiewijziging",
-            "pl": "Znacząca zmiana lokalizacji"
+            "pl": "Znacząca zmiana"
           }
         },
         "reason.steps": {
@@ -3149,6 +3149,7 @@
               "variations": {
                 "plural": {
                   "few": "%lld kroky",
+                  "many": "%lld kroku",
                   "one": "%lld krok",
                   "other": "%lld kroků"
                 }
@@ -3215,7 +3216,7 @@
                   "few": "%lld kroki",
                   "many": "%lld kroków",
                   "one": "%lld krok",
-                  "other": "%lld kroków"
+                  "other": "%lld kroku"
                 }
               }
             }
@@ -3231,7 +3232,7 @@
             "it": "Timer di immobilità",
             "ja": "静止タイマー",
             "nl": "Stilstandtimer",
-            "pl": "Minutnik bezruchu"
+            "pl": "Timer bezruchu"
           }
         },
         "reason.user": {
@@ -3262,26 +3263,26 @@
         },
         "reason.visitArrival": {
           "translations": {
-            "cs": "Příchod návštěvy",
-            "de": "Besuchsankunft",
+            "cs": "Začátek návštěvy",
+            "de": "Besuch: Ankunft",
             "en": "Visit arrival",
             "es": "Llegada de visita",
-            "fr": "Arrivée de visite",
-            "it": "Arrivo visita",
-            "ja": "訪問の到着",
+            "fr": "Début de visite",
+            "it": "Inizio visita",
+            "ja": "訪問（到着）",
             "nl": "Aankomst bezoek",
             "pl": "Wizyta: przyjazd"
           }
         },
         "reason.visitDeparture": {
           "translations": {
-            "cs": "Odchod návštěvy",
-            "de": "Besuchsabreise",
+            "cs": "Konec návštěvy",
+            "de": "Besuch: Abfahrt",
             "en": "Visit departure",
             "es": "Salida de visita",
-            "fr": "Départ de visite",
-            "it": "Partenza visita",
-            "ja": "訪問の出発",
+            "fr": "Fin de visite",
+            "it": "Fine visita",
+            "ja": "訪問（出発）",
             "nl": "Vertrek bezoek",
             "pl": "Wizyta: wyjazd"
           }
@@ -3293,7 +3294,7 @@
             "de": "Heute",
             "en": "Today",
             "es": "Hoy",
-            "fr": "Jour",
+            "fr": "Ce jour",
             "it": "Oggi",
             "ja": "今日",
             "nl": "Vandaag",
@@ -3308,7 +3309,7 @@
             "es": "Restablecer valores predeterminados",
             "fr": "Réinitialiser les réglages",
             "it": "Ripristina impostazioni predefinite",
-            "ja": "既定値に戻す",
+            "ja": "デフォルトに戻す",
             "nl": "Standaardwaarden herstellen",
             "pl": "Przywróć domyślne"
           }
@@ -3316,7 +3317,7 @@
         "settings.about.title": {
           "translations": {
             "cs": "O aplikaci",
-            "de": "Über",
+            "de": "Info",
             "en": "About",
             "es": "Acerca de",
             "fr": "À propos",
@@ -3367,14 +3368,14 @@
         },
         "settings.audit.footer": {
           "translations": {
-            "cs": "Ve výchozím stavu vypnuto. Po zapnutí aplikace zaznamenává každou přijatou polohu, každý na ní provedený validační test a každou změnu stavu, do vlastní tabulky s vlastní dobou uchování. Užitečné pro zpětné vyhodnocení zásahu; stojí to úložiště a trochu baterie.",
+            "cs": "Ve výchozím stavu vypnuto. Po zapnutí aplikace zaznamenává každou přijatou polohu, každý na ní provedený ověřovací test a každou změnu stavu, a to do vlastní tabulky s vlastní dobou uchování. Užitečné pro zpětné vyhodnocení zásahu; stojí to úložiště a trochu baterie.",
             "de": "Standardmäßig deaktiviert. Ist die Funktion aktiviert, zeichnet die App jede empfangene Position, jeden daran durchgeführten Validierungstest und jeden Zustandswechsel in einer eigenen Tabelle mit eigener Aufbewahrungsdauer auf. Nützlich für die Nachbereitung; das kostet Speicherplatz und etwas Akku.",
-            "en": "Off by default. When on, the app records every location received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery.",
-            "es": "Desactivado de forma predeterminada. Al activarlo, la app registra cada posición recibida, cada prueba de validación realizada sobre ella y cada cambio de estado, en su propia tabla y con su propio período de conservación. Útil para el análisis posterior a la intervención; consume almacenamiento y algo de batería.",
+            "en": "Off by default. When on, the app records every fix received, every validation test run on it, and every state change, in its own table with its own retention. Useful for after-action review; it costs storage and a little battery.",
+            "es": "Desactivado de forma predeterminada. Al activarlo, la app registra cada posición recibida, cada prueba de validación realizada sobre ella y cada cambio de estado, en su propia tabla y con su propio período de conservación. Útil para el análisis posterior; consume almacenamiento y algo de batería.",
             "fr": "Désactivé par défaut. Une fois activé, l’app enregistre chaque position reçue, chaque test de validation effectué et chaque changement d’état, dans sa propre table et avec sa propre durée de conservation. Utile pour un retour d’expérience ; cela coûte du stockage et un peu de batterie.",
             "it": "Disattivato per impostazione predefinita. Una volta attivato, l'app registra ogni posizione ricevuta, ogni test di validazione effettuato e ogni cambiamento di stato, in una propria tabella con una propria durata di conservazione. Utile per un'analisi a posteriori; comporta un costo in spazio di archiviazione e un po' di batteria.",
-            "ja": "既定ではオフです。オンにすると、受信したすべての位置情報、実行したすべての検証テスト、すべての状態変化を、専用のテーブルに専用の保持期間で記録します。事後の振り返りに役立ちますが、ストレージとバッテリーを少し消費します。",
-            "nl": "Standaard uitgeschakeld. Indien ingeschakeld registreert de app elke ontvangen fix, elke validatietest die erop wordt uitgevoerd en elke statusverandering, in een eigen tabel met een eigen bewaartermijn. Nuttig voor evaluatie achteraf; het kost opslagruimte en een beetje batterij.",
+            "ja": "デフォルトではオフです。オンにすると、受信したすべての位置情報、実行したすべての検証テスト、すべての状態変化を、専用のテーブルに専用の保持期間で記録します。事後検証に役立ちますが、ストレージとバッテリーを少し消費します。",
+            "nl": "Standaard uitgeschakeld. Indien ingeschakeld registreert de app elke ontvangen fix, elke validatietest die erop wordt uitgevoerd en elke statuswijziging, in een eigen tabel met een eigen bewaartermijn. Nuttig voor evaluatie achteraf; het kost opslagruimte en een beetje batterij.",
             "pl": "Domyślnie wyłączone. Po włączeniu aplikacja zapisuje każdą otrzymaną lokalizację, każdy przeprowadzony na niej test walidacji oraz każdą zmianę stanu, we własnej tabeli z własnym okresem przechowywania. Przydatne do analizy powykonawczej; kosztuje trochę miejsca i nieco baterii."
           }
         },
@@ -3497,15 +3498,15 @@
         },
         "settings.filter.footer": {
           "translations": {
-            "cs": "Fixy méně přesné než limit, starší než maximální stáří nebo vzdálené od předchozího fixu méně než vzdálenost duplicit se zahazují.",
+            "cs": "Fixy, které jsou méně přesné než limit, starší než maximální stáří nebo blíž k předchozímu fixu než vzdálenost duplicit, se vyřazují.",
             "de": "Fixes, die ungenauer als das Limit sind, das maximale Alter überschreiten oder innerhalb des Duplikatabstands zum vorherigen Fix liegen, werden verworfen.",
             "en": "Fixes less accurate than the limit, older than the max age, or within the duplicate distance of the previous fix are discarded.",
-            "es": "Se descartan las posiciones GPS menos precisas que el límite, más antiguas que la edad máxima o situadas a menos de la distancia de duplicado respecto a la posición anterior.",
+            "es": "Se descartan las posiciones GPS menos precisas que el límite, las que superan la antigüedad máxima o las situadas a menos de la distancia de duplicado respecto a la posición anterior.",
             "fr": "Les points moins précis que la limite, plus anciens que l’âge maximal, ou situés à moins de la distance de doublon du point précédent sont écartés.",
-            "it": "I fix meno precisi del limite, più vecchi dell'età massima, o entro la distanza di duplicato dal fix precedente vengono scartati.",
+            "it": "I fix meno precisi del limite, più vecchi dell'età massima o entro la distanza duplicati dal fix precedente vengono scartati.",
             "ja": "上限より精度が低い測位、最大経過時間を超えた測位、直前の測位との距離が重複距離以内の測位は破棄されます。",
-            "nl": "Fixes die minder nauwkeurig zijn dan de limiet, ouder dan de maximale leeftijd, of binnen de duplicaatafstand van de vorige fix liggen, worden genegeerd.",
-            "pl": "Fixy mniej dokładne niż limit, starsze niż maksymalny wiek lub znajdujące się w odległości duplikatu od poprzedniego fixu są odrzucane."
+            "nl": "Fixes die minder nauwkeurig zijn dan de limiet, ouder zijn dan de maximale leeftijd of binnen de duplicaatafstand van de vorige fix liggen, worden geweigerd.",
+            "pl": "Fixy mniej dokładne niż limit, starsze niż maksymalny wiek lub leżące bliżej poprzedniego fixu niż odległość duplikatu są odrzucane."
           }
         },
         "settings.filter.maxAccuracy": {
@@ -3549,15 +3550,15 @@
         },
         "settings.motion.footer": {
           "translations": {
-            "cs": "Delší nehybnost brání kolísání na semaforech, ale drží GPS zapnuté déle po zastavení. Hrubé aktualizace (přesnost 3 km) stojí téměř nic a udržují aplikaci aktivní na pozadí — proto systémový indikátor polohy zůstává zapnutý ve stavu Stacionární. Jeho vypnutí ho skryje, ale iOS ho stejně zobrazí, kdykoli GPS zaznamenává na pozadí.",
+            "cs": "Delší nehybnost brání kolísání stavu na semaforech, ale po zastavení nechává GPS zapnuté déle. Hrubé aktualizace (přesnost 3 km) mají téměř nulovou spotřebu a udržují aplikaci aktivní na pozadí — proto systémový indikátor polohy svítí, i když jste v klidu. Vypnutí této volby indikátor skryje, ale iOS ho stejně zobrazí, kdykoli GPS zaznamenává na pozadí.",
             "de": "Eine längere Stillstandsdauer vermeidet Wechsel an Ampeln, hält das GPS aber nach dem Anhalten länger eingeschaltet. Grobe Aktualisierungen (Genauigkeit 3 km) kosten fast nichts und halten die App im Hintergrund aktiv — deshalb bleibt die Standortanzeige des Systems im Stillstand eingeschaltet. Das Deaktivieren blendet sie aus, aber iOS zeigt sie trotzdem an, sobald das GPS im Hintergrund aufzeichnet.",
-            "en": "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning it off hides it, but iOS still shows it whenever GPS is recording in the background.",
-            "es": "Una inmovilidad más larga evita las oscilaciones en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerse. Las actualizaciones de baja precisión (3 km) apenas consumen recursos y mantienen la app activa en segundo plano; por eso el indicador de ubicación del sistema permanece encendido en estado estacionario. Desactivarlo lo oculta, pero iOS lo sigue mostrando siempre que el GPS esté grabando en segundo plano.",
-            "fr": "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour grossières (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan — c’est pourquoi l’indicateur de localisation du système reste allumé à l’arrêt. Le désactiver le masque, mais iOS l’affiche quand même dès que le GPS enregistre en arrière-plan.",
-            "it": "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Gli aggiornamenti approssimativi (precisione 3 km) costano quasi nulla e mantengono l'app attiva in background — per questo l'indicatore di localizzazione del sistema resta acceso da stazionario. Disattivarlo lo nasconde, ma iOS lo mostra comunque ogni volta che il GPS registra in background.",
-            "ja": "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSが長く点いたままになります。粗い位置情報の更新（精度3km）はほとんど負荷がなく、バックグラウンドでアプリを維持します — これが静止中もシステムの位置情報インジケーターが点灯し続ける理由です。オフにすると非表示になりますが、GPSがバックグラウンドで記録している間はiOSが表示を続けます。",
+            "en": "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning off “Show location indicator” hides it, but iOS still shows it whenever GPS is recording in the background.",
+            "es": "Una inmovilidad más larga evita las oscilaciones en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerse. Las actualizaciones de baja precisión (3 km) apenas consumen recursos y mantienen la app activa en segundo plano; por eso el indicador de ubicación del sistema permanece encendido en estado estacionario. Desactivar esta opción lo oculta, pero iOS lo sigue mostrando siempre que el GPS esté registrando en segundo plano.",
+            "fr": "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour approximatives (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan — c’est pourquoi l’indicateur de localisation du système reste allumé à l’arrêt. Le désactiver le masque, mais iOS l’affiche quand même dès que le GPS enregistre en arrière-plan.",
+            "it": "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Gli aggiornamenti approssimativi (precisione 3 km) costano quasi nulla e mantengono l'app attiva in background — per questo l'indicatore di posizione del sistema resta acceso da stazionario. Disattivarlo lo nasconde, ma iOS lo mostra comunque ogni volta che il GPS registra in background.",
+            "ja": "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。粗い位置情報の更新（精度3km）はほとんど負荷がなく、バックグラウンドでAppを維持します。静止中もシステムの位置情報インジケータが表示され続けるのはこのためです。オフにすると非表示になりますが、GPSがバックグラウンドで記録している間はiOSが表示を続けます。",
             "nl": "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. Grove updates (nauwkeurigheid 3 km) kosten vrijwel niets en houden de app actief op de achtergrond — daarom blijft de locatie-indicator van het systeem aan bij stilstand. Uitschakelen verbergt deze, maar iOS toont hem nog steeds zodra de GPS op de achtergrond registreert.",
-            "pl": "Dłuższy czas bezruchu ogranicza przełączanie stanów na światłach, ale utrzymuje GPS włączony dłużej po zatrzymaniu. Przybliżone aktualizacje (dokładność 3 km) kosztują niemal nic i utrzymują aplikację aktywną w tle — dlatego systemowy wskaźnik lokalizacji pozostaje włączony w stanie stacjonarnym. Wyłączenie tej opcji ukrywa go, ale iOS i tak go pokazuje, gdy GPS rejestruje dane w tle."
+            "pl": "Dłuższy czas bezruchu ogranicza przełączanie stanów na światłach, ale utrzymuje GPS włączony dłużej po zatrzymaniu. Przybliżone aktualizacje (dokładność 3 km) kosztują niemal nic i utrzymują aplikację aktywną w tle — dlatego systemowy wskaźnik lokalizacji pozostaje włączony w bezruchu. Wyłączenie tej opcji ukrywa go, ale iOS i tak go pokazuje, gdy GPS rejestruje dane w tle."
           }
         },
         "settings.motion.keepCoarse": {
@@ -3566,11 +3567,11 @@
             "de": "Grobe Aktualisierungen im Stillstand beibehalten",
             "en": "Keep coarse updates while stationary",
             "es": "Mantener actualizaciones de baja precisión en estacionario",
-            "fr": "Garder des mises à jour grossières à l’arrêt",
+            "fr": "Garder des mises à jour approximatives à l’arrêt",
             "it": "Mantieni aggiornamenti approssimativi da stazionario",
             "ja": "静止中も粗い位置情報を維持",
             "nl": "Grove updates behouden bij stilstand",
-            "pl": "Zachowaj przybliżone dane w stanie stacjonarnym"
+            "pl": "Przybliżone aktualizacje w bezruchu"
           }
         },
         "settings.motion.minimumConfidence": {
@@ -3588,26 +3589,26 @@
         },
         "settings.motion.probeDuration": {
           "translations": {
-            "cs": "Doba sondování",
-            "de": "Sondierungsdauer",
+            "cs": "Doba zjišťování",
+            "de": "Prüfdauer",
             "en": "Probe duration",
-            "es": "Duración del sondeo",
-            "fr": "Durée de sondage",
-            "it": "Durata sondaggio",
-            "ja": "探査時間",
-            "nl": "Peilduur",
-            "pl": "Czas sondowania"
+            "es": "Duración de la comprobación",
+            "fr": "Durée de détection",
+            "it": "Durata verifica",
+            "ja": "移動判定の時間",
+            "nl": "Detectieduur",
+            "pl": "Czas wykrywania"
           }
         },
         "settings.motion.showIndicator": {
           "translations": {
             "cs": "Zobrazit indikátor polohy",
-            "de": "Standortanzeige anzeigen",
+            "de": "Standortanzeige einblenden",
             "en": "Show location indicator",
             "es": "Mostrar indicador de ubicación",
             "fr": "Afficher l’indicateur de localisation",
-            "it": "Mostra indicatore di localizzazione",
-            "ja": "位置情報インジケーターを表示",
+            "it": "Mostra indicatore di posizione",
+            "ja": "位置情報インジケータを表示",
             "nl": "Locatie-indicator tonen",
             "pl": "Pokaż wskaźnik lokalizacji"
           }
@@ -3669,7 +3670,7 @@
           "translations": {
             "cs": "Přesná poloha",
             "de": "Genauer Standort",
-            "en": "Precise location",
+            "en": "Precise Location",
             "es": "Ubicación precisa",
             "fr": "Position précise",
             "it": "Posizione esatta",
@@ -3745,7 +3746,7 @@
         },
         "settings.profiles.title": {
           "translations": {
-            "cs": "GPS profily",
+            "cs": "Profily GPS",
             "de": "GPS-Profile",
             "en": "GPS profiles",
             "es": "Perfiles GPS",
@@ -3812,11 +3813,11 @@
           "translations": {
             "cs": "Vyčištění selhalo: %@",
             "de": "Bereinigung fehlgeschlagen: %@",
-            "en": "Purge failed: %@",
+            "en": "Deletion failed: %@",
             "es": "Fallo en la purga: %@",
             "fr": "Échec de la purge : %@",
             "it": "Pulizia non riuscita: %@",
-            "ja": "パージに失敗しました：%@",
+            "ja": "削除に失敗しました：%@",
             "nl": "Opschonen mislukt: %@",
             "pl": "Czyszczenie nie powiodło się: %@"
           }
@@ -3828,7 +3829,7 @@
             "en": "This cannot be undone. Export first if you need the data.",
             "es": "Esta acción no se puede deshacer. Exporte primero los datos si los necesita.",
             "fr": "Cette action est irréversible. Exportez d’abord si vous avez besoin des données.",
-            "it": "Questa azione è irreversibile. Esportare prima i dati, se necessario.",
+            "it": "Questa azione è irreversibile. Esporta prima i dati, se necessario.",
             "ja": "この操作は取り消せません。データが必要な場合は先にエクスポートしてください。",
             "nl": "Dit kan niet ongedaan worden gemaakt. Exporteer eerst indien nodig.",
             "pl": "Tej operacji nie można cofnąć. Jeśli potrzebujesz tych danych, najpierw je wyeksportuj."
@@ -3838,13 +3839,13 @@
           "translations": {
             "cs": "Smazáno %@ vzorků.",
             "de": "%@ Messpunkte gelöscht.",
-            "en": "Deleted %@ samples.",
+            "en": "Samples deleted: %@",
             "es": "%@ muestras eliminadas.",
             "fr": "%@ échantillons supprimés.",
             "it": "%@ campioni eliminati.",
             "ja": "%@件のサンプルを削除しました。",
             "nl": "%@ meetpunten verwijderd.",
-            "pl": "Usunięto %@ próbek."
+            "pl": "Usunięto próbek: %@."
           }
         },
         "settings.purge.title": {
@@ -3853,6 +3854,7 @@
               "variations": {
                 "plural": {
                   "few": "Smazat vzorky starší než %lld dny?",
+                  "many": "Smazat vzorky starší než %lld dne?",
                   "one": "Smazat vzorky starší než %lld den?",
                   "other": "Smazat vzorky starší než %lld dní?"
                 }
@@ -3931,6 +3933,7 @@
               "variations": {
                 "plural": {
                   "few": "%lld dny",
+                  "many": "%lld dne",
                   "one": "%lld den",
                   "other": "%lld dní"
                 }
@@ -4106,7 +4109,7 @@
             "it": "Cambiamento significativo",
             "ja": "大幅な位置の変更",
             "nl": "Significante locatiewijziging",
-            "pl": "Znacząca zmiana lokalizacji"
+            "pl": "Znacząca zmiana"
           }
         },
         "source.visit": {
@@ -4155,7 +4158,7 @@
             "en": "Course",
             "es": "Rumbo",
             "fr": "Cap",
-            "it": "Rotta",
+            "it": "Direzione",
             "ja": "進行方向",
             "nl": "Koers",
             "pl": "Kurs"
@@ -4258,7 +4261,7 @@
             "de": "Ältester Messpunkt",
             "en": "Oldest sample",
             "es": "Muestra más antigua",
-            "fr": "Échantillon le plus ancien",
+            "fr": "Le plus ancien",
             "it": "Campione più vecchio",
             "ja": "最も古いサンプル",
             "nl": "Oudste meetpunt",
@@ -4298,7 +4301,7 @@
             "en": "Total stored",
             "es": "Total almacenado",
             "fr": "Total stocké",
-            "it": "Totale memorizzato",
+            "it": "Totale salvati",
             "ja": "総保存件数",
             "nl": "Totaal opgeslagen",
             "pl": "Zapisane łącznie"
@@ -4332,7 +4335,7 @@
         },
         "status.state.gpsProfile": {
           "translations": {
-            "cs": "GPS profil",
+            "cs": "Profil GPS",
             "de": "GPS-Profil",
             "en": "GPS profile",
             "es": "Perfil GPS",
@@ -4346,14 +4349,14 @@
         "status.state.stale": {
           "translations": {
             "cs": "Už chvíli nepřišel žádný nový fix. Pokud byla aplikace vynuceně ukončena, otevřete ji znovu pro obnovení sledování.",
-            "de": "Seit einiger Zeit kein neuer Fix. Wurde die App beendet, öffnen Sie sie erneut, um die Aufzeichnung fortzusetzen.",
+            "de": "Seit einiger Zeit kein neuer Fix. Falls Sie die App manuell beendet haben, öffnen Sie sie erneut, um die Aufzeichnung fortzusetzen.",
             "en": "No new fix for a while. If the app was force-quit, reopen it to resume tracking.",
             "es": "Sin nuevas posiciones GPS desde hace un tiempo. Si la app se cerró a la fuerza, vuelva a abrirla para reanudar el seguimiento.",
-            "fr": "Aucun nouveau point depuis un moment. Si l’app a été forcée à quitter, rouvrez-la pour reprendre l’enregistrement.",
-            "it": "Nessun nuovo fix da un po'. Se l'app è stata chiusa forzatamente, riaprirla per riprendere il monitoraggio.",
-            "ja": "しばらく新しい測位がありません。アプリが強制終了された場合は、再度開くと記録が再開します。",
-            "nl": "Al een tijdje geen nieuwe fix. Als de app geforceerd is afgesloten, open deze opnieuw om het traceren te hervatten.",
-            "pl": "Brak nowego fixu od dłuższego czasu. Jeśli aplikacja została wymuszenie zamknięta, otwórz ją ponownie, aby wznowić śledzenie."
+            "fr": "Aucun nouveau point depuis un moment. Si l’app a été fermée de force, rouvrez-la pour reprendre l’enregistrement.",
+            "it": "Nessun nuovo fix da un po'. Se l'app è stata chiusa forzatamente, riaprila per riprendere il monitoraggio.",
+            "ja": "しばらく新しい測位がありません。Appが強制終了された場合は、もう一度開くと記録を再開します。",
+            "nl": "Al een tijdje geen nieuwe fix. Als de app geforceerd is afgesloten, open deze dan opnieuw om het bijhouden te hervatten.",
+            "pl": "Brak nowego fixu od dłuższego czasu. Jeśli aplikacja została zamknięta ręcznie, otwórz ją ponownie, aby wznowić śledzenie."
           }
         },
         "status.tab": {
@@ -4364,7 +4367,7 @@
             "es": "Estado",
             "fr": "État",
             "it": "Stato",
-            "ja": "状態",
+            "ja": "ステータス",
             "nl": "Status",
             "pl": "Status"
           }
@@ -4410,15 +4413,15 @@
         },
         "status.tracking.on": {
           "translations": {
-            "cs": "Zapnuto — běží na pozadí a po restartu.",
-            "de": "Ein — läuft im Hintergrund und nach einem Neustart weiter.",
+            "cs": "Zapnuto — běží na pozadí a znovu se spustí, když aplikaci ukončí iOS nebo když se restartuje telefon.",
+            "de": "Ein — läuft im Hintergrund und nimmt die Aufzeichnung wieder auf, nachdem iOS die App beendet hat oder das iPhone neu gestartet wurde.",
             "en": "On — runs in the background and after restarts.",
-            "es": "Activado: funciona en segundo plano y tras reiniciar.",
-            "fr": "Activé — fonctionne en arrière-plan et après un redémarrage.",
-            "it": "Attivato — funziona in background e dopo un riavvio.",
-            "ja": "オン — バックグラウンドおよび再起動後も動作します。",
-            "nl": "Aan — werkt op de achtergrond en na een herstart.",
-            "pl": "Włączone — działa w tle i po ponownym uruchomieniu."
+            "es": "Activado: funciona en segundo plano y se reanuda después de que iOS cierre la app o de que se reinicie el teléfono.",
+            "fr": "Activé — fonctionne en arrière-plan, et se relance après un arrêt par iOS ou un redémarrage du téléphone.",
+            "it": "Attivato — funziona in background e riprende dopo che iOS chiude l'app o dopo il riavvio del telefono.",
+            "ja": "オン — バックグラウンドで動作します。iOSにAppを終了されても、デバイスを再起動しても復帰します。",
+            "nl": "Aan — werkt op de achtergrond en hervat het registreren nadat iOS de app heeft beëindigd of de telefoon opnieuw is opgestart.",
+            "pl": "Włączone — działa w tle i wznawia pracę po zamknięciu aplikacji przez iOS lub po restarcie telefonu."
           }
         },
         "status.tracking.toggle": {
@@ -4449,7 +4452,7 @@
         },
         "status.transitions.footer": {
           "translations": {
-            "cs": "Přechod „V pohybu → Stacionární“ vyžaduje %@ nehybnosti; jakýkoli pohyb okamžitě znovu zapne GPS.",
+            "cs": "Přechod z pohybu do klidu vyžaduje %@ nehybnosti; jakýkoli pohyb okamžitě znovu zapne GPS.",
             "de": "Der Übergang „In Bewegung“ → „Stationär“ erfordert %@ Stillstand; jede Bewegung schaltet das GPS sofort wieder ein.",
             "en": "Moving → stationary requires %@ of stillness; any motion switches GPS back on immediately.",
             "es": "El paso de «en movimiento» a «estacionario» exige %@ de inmovilidad; cualquier movimiento vuelve a activar el GPS de inmediato.",
@@ -4457,7 +4460,7 @@
             "it": "Il passaggio da in movimento a stazionario richiede %@ di immobilità; qualsiasi movimento riaccende subito il GPS.",
             "ja": "移動中→静止には%@の静止が必要です。動きがあれば直ちにGPSが再びオンになります。",
             "nl": "Overgang „in beweging” → „stilstaand” vereist %@ stilstand; elke beweging schakelt de GPS onmiddellijk weer in.",
-            "pl": "Przejście „W ruchu” → „Stacjonarny” wymaga %@ bezruchu; każdy ruch natychmiast włącza GPS z powrotem."
+            "pl": "Przejście „W ruchu” → „Bezruch” wymaga %@ bez wykrytego ruchu; każdy ruch natychmiast włącza GPS z powrotem."
           }
         },
         "status.transitions.title": {
@@ -4493,7 +4496,7 @@
             "en": "Needs attention",
             "es": "Requiere atención",
             "fr": "À vérifier",
-            "it": "Da verificare",
+            "it": "Richiede attenzione",
             "ja": "要確認",
             "nl": "Vereist aandacht",
             "pl": "Wymaga uwagi"
@@ -4594,13 +4597,13 @@
         },
         "warning.motionDenied.message": {
           "translations": {
-            "cs": "Bez aktivity pohybu se aplikace musí při detekci pohybu spoléhat na GPS, což spotřebovává více baterie.",
+            "cs": "Bez pohybové aktivity se aplikace musí při detekci pohybu spoléhat na GPS, což spotřebovává více baterie.",
             "de": "Ohne Bewegungsaktivität muss sich die App zur Bewegungserkennung auf das GPS verlassen, was mehr Akku verbraucht.",
             "en": "Without motion activity the app must rely on GPS to detect movement, which uses more battery.",
             "es": "Sin la actividad de movimiento, la app debe depender del GPS para detectar el movimiento, lo que consume más batería.",
-            "fr": "Sans l’activité physique, l’app doit s’appuyer sur le GPS pour détecter les déplacements, ce qui consomme plus de batterie.",
+            "fr": "Sans les données de mouvement, l’app doit s’appuyer sur le GPS pour détecter les déplacements, ce qui consomme plus de batterie.",
             "it": "Senza l'attività di movimento, l'app deve affidarsi al GPS per rilevare gli spostamenti, il che consuma più batteria.",
-            "ja": "モーションアクティビティがないと、アプリは移動の検出をGPSに頼らざるを得ず、バッテリー消費が増えます。",
+            "ja": "モーションアクティビティがないと、Appは移動の検出をGPSに頼らざるを得ず、バッテリー消費が増えます。",
             "nl": "Zonder bewegingsactiviteit moet de app op GPS vertrouwen om beweging te detecteren, wat meer batterij verbruikt.",
             "pl": "Bez danych o aktywności ruchowej aplikacja musi polegać na GPS do wykrywania ruchu, co zużywa więcej baterii."
           }
@@ -4620,11 +4623,11 @@
         },
         "warning.motionNotDetermined.message": {
           "translations": {
-            "cs": "Aktivita pohybu umožňuje aplikaci vypnout GPS, když jste v klidu.",
+            "cs": "Pohybová aktivita umožňuje aplikaci vypnout GPS, když jste v klidu.",
             "de": "Die Bewegungsaktivität ermöglicht es der App, das GPS auszuschalten, wenn Sie sich nicht bewegen.",
             "en": "Motion activity lets the app switch GPS off while you are still.",
             "es": "La actividad de movimiento permite que la app apague el GPS en caso de inmovilidad.",
-            "fr": "L’activité physique permet à l’app d’éteindre le GPS lorsque vous êtes immobile.",
+            "fr": "Les données de mouvement permettent à l’app d’éteindre le GPS lorsque vous êtes immobile.",
             "it": "L'attività di movimento consente all'app di spegnere il GPS in assenza di movimento.",
             "ja": "モーションアクティビティにより、静止中はGPSをオフに切り替えられます。",
             "nl": "Bewegingsactiviteit laat de app de GPS uitschakelen bij stilstand.",
@@ -4647,13 +4650,13 @@
         "warning.preciseOff.message": {
           "translations": {
             "cs": "Vzorky jsou přesné jen na několik kilometrů. V Nastavení zapněte Přesnou polohu.",
-            "de": "Messpunkte sind nur auf wenige Kilometer genau. Aktivieren Sie Genauer Standort in den Einstellungen.",
+            "de": "Messpunkte sind nur auf wenige Kilometer genau. Aktivieren Sie „Genauer Standort“ in den Einstellungen.",
             "en": "Samples are only accurate to a few kilometers. Enable Precise Location in Settings.",
-            "es": "Las muestras solo son precisas a unos pocos kilómetros. Active Ubicación precisa en Ajustes.",
+            "es": "Las muestras solo tienen una precisión de unos pocos kilómetros. Active Ubicación precisa en Ajustes.",
             "fr": "Les points ne sont précis qu’à quelques kilomètres. Activez la position précise dans Réglages.",
             "it": "I campioni sono precisi solo entro pochi chilometri. Attiva Posizione esatta nelle Impostazioni.",
             "ja": "サンプルの精度は数kmまで低下します。設定で正確な位置情報をオンにしてください。",
-            "nl": "Meetpunten zijn slechts tot enkele kilometers nauwkeurig. Schakel Precieze locatie in bij Instellingen.",
+            "nl": "Meetpunten zijn slechts tot op enkele kilometers nauwkeurig. Schakel Precieze locatie in bij Instellingen.",
             "pl": "Próbki są dokładne jedynie do kilku kilometrów. Włącz Dokładną lokalizację w Ustawieniach."
           }
         },
@@ -4661,7 +4664,7 @@
           "translations": {
             "cs": "Přesná poloha je vypnutá",
             "de": "Genauer Standort deaktiviert",
-            "en": "Precise location is off",
+            "en": "Precise Location is off",
             "es": "Ubicación precisa desactivada",
             "fr": "La position précise est désactivée",
             "it": "La posizione esatta è disattivata",
@@ -4673,12 +4676,12 @@
         "warning.whenInUse.message": {
           "translations": {
             "cs": "Sledování na pozadí se zastaví, jakmile je aplikace pozastavena. V Nastavení změňte přístup k poloze na „Vždy“.",
-            "de": "Die Aufzeichnung im Hintergrund stoppt, sobald die App in den Hintergrund wechselt. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“.",
+            "de": "Die Aufzeichnung im Hintergrund stoppt, sobald iOS die App anhält. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“.",
             "en": "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings.",
             "es": "El seguimiento en segundo plano se detiene en cuanto la app se suspende. Cambie el acceso a la ubicación a «Siempre» en Ajustes.",
             "fr": "Le suivi en arrière-plan s’arrête dès que l’app est suspendue. Passez l’accès à la position sur « Toujours » dans Réglages.",
             "it": "Il monitoraggio in background si interrompe non appena l'app viene sospesa. Imposta l'accesso alla posizione su «Sempre» nelle Impostazioni.",
-            "ja": "アプリがサスペンドされると、バックグラウンドでの追跡は直ちに停止します。設定で位置情報へのアクセスを「常に」に変更してください。",
+            "ja": "Appが一時停止されると、バックグラウンドでの追跡は停止します。設定で位置情報へのアクセスを「常に」に変更してください。",
             "nl": "Het bijhouden op de achtergrond stopt zodra de app wordt onderbroken. Wijzig locatietoegang naar „Altijd” in Instellingen.",
             "pl": "Śledzenie w tle zatrzymuje się, gdy tylko aplikacja zostanie zawieszona. Zmień dostęp do lokalizacji na „Zawsze” w Ustawieniach."
           }
@@ -4706,28 +4709,28 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": {
           "extractionState": "manual",
           "translations": {
-            "cs": "WhereIWas zaznamenává polohu průběžně, i na pozadí, aby se pohyb během zásahu neztratil. Data zůstávají v tomto zařízení až do exportu.",
-            "de": "WhereIWas zeichnet die Position fortlaufend auf, auch im Hintergrund, damit die Bewegungen während eines Einsatzes nie verloren gehen. Die Daten bleiben auf diesem Gerät, bis sie exportiert werden.",
-            "en": "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it.",
-            "es": "WhereIWas registra la posición de forma continua, también en segundo plano, para que los desplazamientos durante una intervención no se pierdan. Los datos permanecen en este dispositivo hasta que se exportan.",
-            "fr": "WhereIWas enregistre votre position en continu, y compris en arrière-plan, afin que vos déplacements pendant une intervention ne soient jamais perdus. Les données restent sur cet appareil jusqu’à ce que vous les exportiez.",
-            "it": "WhereIWas registra la posizione in modo continuo, anche in background, affinché gli spostamenti durante un intervento non vadano perduti. I dati restano su questo dispositivo fino all’esportazione.",
-            "ja": "WhereIWasはバックグラウンドを含めて位置を継続的に記録し、出動中の移動が失われないようにします。データはエクスポートするまでこのデバイス内に保存されます。",
-            "nl": "WhereIWas legt de positie doorlopend vast, ook op de achtergrond, zodat verplaatsingen tijdens een inzet niet verloren gaan. De gegevens blijven op dit apparaat totdat ze worden geëxporteerd.",
-            "pl": "WhereIWas rejestruje pozycję w sposób ciągły, także w tle, aby przemieszczenia podczas działań nie zostały utracone. Dane pozostają na tym urządzeniu do czasu ich wyeksportowania."
+            "cs": "WhereIWas zaznamenává vaši polohu na pozadí, i když je obrazovka zamčená, aby se neztratila žádná část trasy — ani během několika dní — a data zůstávají v tomto zařízení, dokud je sami neexportujete.",
+            "de": "WhereIWas zeichnet Ihren Standort im Hintergrund auf, auch bei gesperrtem Bildschirm, damit kein Teil Ihrer Wege verloren geht — auch über mehrere Tage hinweg — und alles bleibt auf diesem Gerät, bis Sie es exportieren.",
+            "en": "WhereIWas records your position in the background, including while the screen is locked, so that no part of your route is lost — even over several days — and it stays on this device until you export it.",
+            "es": "WhereIWas registra la posición en segundo plano, incluso con la pantalla bloqueada, para que no se pierda ninguna parte de sus desplazamientos, ni siquiera a lo largo de varios días; los datos permanecen en este dispositivo hasta que se exporten.",
+            "fr": "WhereIWas enregistre votre position en arrière-plan, y compris lorsque l’écran est verrouillé, afin qu’aucune partie de votre trajet ne soit perdue — même sur plusieurs jours — et tout reste sur cet appareil jusqu’à ce que vous l’exportiez.",
+            "it": "WhereIWas registra la tua posizione in background, anche a schermo bloccato, così nessun tratto del tuo percorso va perduto — nemmeno nell’arco di più giorni — e i dati restano su questo dispositivo finché non li esporti.",
+            "ja": "WhereIWasは、画面がロックされている間もバックグラウンドで位置情報を記録し、数日間に及ぶ移動でも経路が欠けないようにします。データはエクスポートするまでこのデバイス内に保存されます。",
+            "nl": "WhereIWas legt de positie vast op de achtergrond, ook als het scherm vergrendeld is, zodat er geen deel van de route verloren gaat — ook niet over meerdere dagen — en alles op dit apparaat blijft totdat u het exporteert.",
+            "pl": "WhereIWas zapisuje pozycję w tle, także przy zablokowanym ekranie, aby żaden fragment trasy nie został utracony — nawet przez kilka dni — a dane pozostają na tym urządzeniu do czasu ich wyeksportowania."
           }
         },
         "NSLocationWhenInUseUsageDescription": {
           "extractionState": "manual",
           "translations": {
             "cs": "WhereIWas zaznamenává polohu, aby vytvořil historii pohybu.",
-            "de": "WhereIWas zeichnet die Position auf, um den Bewegungsverlauf zu erstellen.",
-            "en": "WhereIWas records your position to build your location history.",
+            "de": "WhereIWas zeichnet Ihren Standort auf, um Ihren Standortverlauf zu erstellen.",
+            "en": "WhereIWas records your position while the app is open, so you can see your track on the map and export it as GPX or JSON.",
             "es": "WhereIWas registra la posición para crear el historial de desplazamientos.",
             "fr": "WhereIWas enregistre votre position pour constituer votre historique de déplacements.",
-            "it": "WhereIWas registra la posizione per costruire la cronologia degli spostamenti.",
-            "ja": "WhereIWasは移動履歴を作成するために位置を記録します。",
-            "nl": "WhereIWas legt de positie vast om de verplaatsingsgeschiedenis op te bouwen.",
+            "it": "WhereIWas registra la tua posizione per costruire la cronologia dei tuoi spostamenti.",
+            "ja": "WhereIWasは、移動履歴を作成するために位置情報を記録します。",
+            "nl": "WhereIWas legt de positie vast om de locatiegeschiedenis op te bouwen.",
             "pl": "WhereIWas rejestruje pozycję, aby utworzyć historię przemieszczeń."
           }
         },
@@ -4737,9 +4740,9 @@
             "cs": "Pohybová aktivita (chůze, jízda, nehybnost) slouží k zapnutí GPS pouze při pohybu, což šetří baterii.",
             "de": "Die Bewegungsaktivität (Gehen, Fahren, Stillstand) dient dazu, GPS nur bei tatsächlicher Bewegung einzuschalten, was den Akku schont.",
             "en": "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery.",
-            "es": "La actividad de movimiento (caminar, conducir, inmovilidad) sirve para activar el GPS solo cuando hay desplazamiento, lo que ahorra batería.",
-            "fr": "L’activité physique (marche, conduite, immobilité) sert à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie.",
-            "it": "L’attività di movimento (camminata, guida, immobilità) serve ad attivare il GPS solo quando ci si sposta, riducendo il consumo della batteria.",
+            "es": "La actividad de movimiento (caminata, conducción, inmovilidad) sirve para activar el GPS solo cuando hay desplazamiento, lo que ahorra batería.",
+            "fr": "Les données de mouvement (marche, conduite, immobilité) servent à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie.",
+            "it": "L’attività di movimento (camminata, guida, immobilità) serve ad attivare il GPS solo quando ti muovi, riducendo il consumo della batteria.",
             "ja": "モーションアクティビティ（歩行、運転、静止）は、実際に移動しているときだけGPSを有効にし、バッテリーの消費を抑えるために使用します。",
             "nl": "Bewegingsactiviteit (lopen, rijden, stilstand) wordt gebruikt om GPS alleen tijdens verplaatsing in te schakelen, wat de batterij spaart.",
             "pl": "Aktywność ruchowa (chód, jazda, bezruch) służy do włączania GPS tylko podczas przemieszczania się, co oszczędza baterię."
@@ -4752,17 +4755,17 @@
       "sourceLanguage": "en-US",
       "version": "1.0",
       "keys": {
-        "A full day of the deployment, street by street.": {
+        "A full day, street by street.": {
           "translations": {
-            "cs": "Celý den nasazení, ulici po ulici.",
-            "de-DE": "Ein ganzer Einsatztag, Straße für Straße.",
-            "en-US": "A full day of the deployment, street by street.",
-            "es-ES": "Un día completo del despliegue, calle por calle.",
-            "fr-FR": "Une journée entière de garde, rue par rue.",
-            "it": "Un'intera giornata di intervento, strada per strada.",
-            "ja": "出動した一日を、​街路に沿って​まるごと再現。",
-            "nl-NL": "Een volledige dag van de inzet, straat voor straat.",
-            "pl": "Cały dzień działań, ulica po ulicy."
+            "cs": "Celý den, ulici po ulici.",
+            "de-DE": "Ein ganzer Tag, Straße für Straße.",
+            "en-US": "A full day, street by street.",
+            "es-ES": "Un día completo, calle por calle.",
+            "fr-FR": "Une journée entière, rue par rue.",
+            "it": "Un'intera giornata, strada per strada.",
+            "ja": "まる一日を、​街路に沿って。",
+            "nl-NL": "Een volledige dag, straat voor straat.",
+            "pl": "Cały dzień, ulica po ulicy."
           }
         },
         "Every day, on the map": {
@@ -4822,25 +4825,25 @@
             "cs": "Zaznamenává i se zhasnutým displejem",
             "de-DE": "Zeichnet bei ausgeschaltetem Display auf",
             "en-US": "Records with the screen off",
-            "es-ES": "Graba con la pantalla apagada",
+            "es-ES": "Registra con la pantalla apagada",
             "fr-FR": "Enregistre écran éteint",
             "it": "Registra a schermo spento",
             "ja": "画面オフでも​記録を継続",
-            "nl-NL": "Neemt op met het scherm uit",
+            "nl-NL": "Registreert met het scherm uit",
             "pl": "Zapisuje z wygaszonym ekranem"
           }
         },
         "Stand still and it switches off. Move and it is back in seconds.": {
           "translations": {
-            "cs": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár vteřin.",
+            "cs": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár sekund.",
             "de-DE": "Im Stand schaltet es ab, bei Bewegung ist es in Sekunden zurück.",
             "en-US": "Stand still and it switches off. Move and it is back in seconds.",
             "es-ES": "Quédese quieto y se apaga. Muévase y vuelve en segundos.",
             "fr-FR": "À l'arrêt, il s'éteint. Au premier pas, il revient en quelques secondes.",
             "it": "Fermo, si spegne. Ti muovi, si riaccende in pochi secondi.",
             "ja": "静止すればオフ、​動けば数秒で復帰。",
-            "nl-NL": "Stilstaan schakelt het GPS uit. Bewegen zet het binnen seconden weer aan.",
-            "pl": "Stań w miejscu, a się wyłączy. Ruszaj się, a wraca w kilka sekund."
+            "nl-NL": "Stilstaan schakelt de GPS uit. Bewegen zet hem binnen seconden weer aan.",
+            "pl": "Stań w miejscu, a się wyłączy. Ruszaj się, a wróci w kilka sekund."
           }
         },
         "Survives termination, reboot and no signal.": {
@@ -4848,8 +4851,8 @@
             "cs": "Přežije ukončení, restart i výpadek signálu.",
             "de-DE": "Übersteht Beendigung, Neustart und fehlendes Netz.",
             "en-US": "Survives termination, reboot and no signal.",
-            "es-ES": "Resiste cierres, reinicios y sin cobertura.",
-            "fr-FR": "Résiste aux fermetures, redémarrages et coupures réseau.",
+            "es-ES": "Resiste cierres, reinicios y la falta de cobertura.",
+            "fr-FR": "Résiste aux arrêts iOS, redémarrages et coupures réseau.",
             "it": "Resiste a chiusure, riavvii e assenza di segnale.",
             "ja": "強制終了・再起動・​圏外でも途切れない。",
             "nl-NL": "Overleeft beëindiging, herstart en geen bereik.",
@@ -4878,7 +4881,7 @@
             "fr-FR": "Vos données ne partent que sur ordre",
             "it": "I tuoi dati escono quando decidi tu",
             "ja": "外に出すのは、​自分で​決めたときだけ",
-            "nl-NL": "U bepaalt wanneer uw gegevens vertrekken",
+            "nl-NL": "Uw gegevens gaan pas weg als u het zegt",
             "pl": "Ty decydujesz, kiedy dane opuszczają telefon"
           }
         }
@@ -4937,66 +4940,66 @@
       },
       "version/1.0.0": {
         "cs": {
-          "description": "WhereIWas zaznamenává úplnou a poctivou GPS trasu vašich přesunů — během celé směny, několikadenního nasazení i dlouhé cesty — a nevybije přitom baterii.\n\nV ČEM JE JINÝ\nVětšina záznamníků buď vybíjí baterii tím, že nechává GPS trvale zapnutou, nebo tiše ztratí hodiny dne, jakmile je iOS uspí. WhereIWas nedělá ani jedno. Naslouchá pohybovému koprocesoru, jehož spotřeba je téměř nulová, a GPS zapne teprve tehdy, když se skutečně pohybujete — přesnost pak přizpůsobí rychlosti: filtr vzdálenosti 10 m pěšky, 50 m v autě. Před vypnutím GPS vyčká dvě minuty nehybnosti, aby trasu nikdy nepřerušila červená na křižovatce.\n\nSTAVĚNO NA VYTRVALOST\n• Zaznamenává i při zhasnutém displeji a aplikaci na pozadí\n• Sám se znovu spustí a naváže po ukončení systémem iOS kvůli nedostatku paměti\n• Přežije restart zařízení, jakmile je odemknuto\n• Funguje zcela offline — bez signálu, bez serveru, bez účtu\n\nKAŽDÝ FIX, PLNĚ ZDOKUMENTOVANÝ\nKaždý uložený vzorek si nese souřadnice, nadmořskou výšku, vodorovnou i svislou přesnost, rychlost, kurz, časové razítko, rozpoznanou aktivitu (chůze, běh, jízda na kole, jízda autem, klid), stav baterie a platný GPS profil. Nepřesné, zastaralé, duplicitní a přeházené fixy se vyřadí ještě před zápisem.\n\nAUDITNÍ LOG\nZapněte volitelný auditní log a aplikace zaznamená, proč udělala to, co udělala: každý přijatý fix, každou kontrolu přesnosti s naměřenou hodnotou a použitým prahem, každou změnu stavu i každé vypnutí GPS. Když se ptáte, proč mezi 14:02 a 14:20 nic není, odpověď je právě tam. Exportovat lze do JSON nebo prostého textu.\n\nEXPORT ZAZNAMENANÉHO\nGPX 1.1 pro libovolný mapový nástroj, nebo JSON se všemi metadaty. Odeslat kamkoli přes standardní dialog sdílení. Exportovat lze dnešek, posledních sedm dní, vlastní rozsah dat, jednu relaci nebo úplně vše.\n\nVAŠE DATA ZŮSTÁVAJÍ VAŠE\nVše je uloženo v zařízení, v místní databázi. Žádný účet, žádný server, žádná analytika, žádná reklama, žádné sledování. Nic se nikam neodesílá. O tom, co telefon opustí a kdy, rozhodujete jen vy tím, že to sami exportujete.\n\nVE VAŠEM JAZYCE, VE VAŠICH JEDNOTKÁCH\nPřeloženo do angličtiny, francouzštiny, němčiny, španělštiny, italštiny, japonštiny, nizozemštiny, polštiny a češtiny. Vzdálenosti, rychlosti a nadmořské výšky mají vlastní nastavení — metrické, nebo imperiální — takže není nutné měnit jazyk telefonu.\n\nPOLOHA NA POZADÍ\nTrvalé používání GPS na pozadí může výrazně snížit výdrž baterie. WhereIWas je navržen tak, aby tuto cenu držel nízko — GPS běží jen během pohybu — a obrazovka stavu vždy ukazuje, co běží a který GPS profil je právě aktivní.\n\nVyžaduje iOS 17 nebo novější. Pro záznam na pozadí je nutné oprávnění k poloze „Vždy“. Důrazně se doporučuje oprávnění k pohybu: právě ono umožňuje šetřit baterii.",
-          "keywords": "trasa,gpx,záznamník,sledování,cesta,pozadí,offline,export,baterie,turistika,terén,deník",
+          "description": "WhereIWas zaznamenává úplnou a poctivou GPS trasu vašich přesunů — během celého pracovního dne, několika dní v terénu i dlouhé cesty — a nevybije přitom baterii.\n\nV ČEM JE JINÝ\nVětšina podobných aplikací buď vybíjí baterii tím, že nechává GPS trvale zapnuté, nebo tiše ztratí hodiny dne, jakmile je iOS uspí. WhereIWas nedělá ani jedno. Sleduje pohybový koprocesor, jehož spotřeba je téměř nulová, a GPS zapne teprve tehdy, když se skutečně pohybujete — přesnost pak přizpůsobí rychlosti: filtr vzdálenosti 10 m pěšky, 50 m v autě. Před vypnutím GPS vyčká dvě minuty nehybnosti, aby trasu nikdy nepřerušila červená na křižovatce.\n\nSTAVĚNO NA VYTRVALOST\n• Zaznamenává i při zhasnutém displeji a aplikaci na pozadí\n• Sám se znovu spustí a pokračuje v záznamu, když jej iOS ukončí kvůli nedostatku paměti\n• Přežije restart zařízení, jakmile je odemknuto\n• Funguje zcela offline — bez signálu, bez serveru, bez účtu\n\nKAŽDÝ FIX, PLNĚ ZDOKUMENTOVANÝ\nKaždý uložený vzorek si nese souřadnice, nadmořskou výšku, vodorovnou i svislou přesnost, rychlost, kurz, časovou značku, rozpoznanou aktivitu (chůze, běh, jízda na kole, jízda autem, klid), stav baterie a platný profil GPS. Nepřesné, zastaralé, duplicitní fixy i fixy v nesprávném pořadí se vyřadí ještě před zápisem.\n\nAUDITNÍ LOG\nZapněte volitelný auditní log a aplikace zaznamená, proč udělala to, co udělala: každý přijatý fix, každou kontrolu přesnosti s naměřenou hodnotou a použitým prahem, každou změnu stavu i každé vypnutí GPS. Když se ptáte, proč mezi 14:02 a 14:20 nic není, odpověď je právě tam. Exportovat lze do JSON nebo prostého textu.\n\nEXPORT ZAZNAMENANÉHO\nGPX 1.1 pro libovolný mapový nástroj, nebo JSON se všemi metadaty. Odešlete je kamkoli přes standardní dialog sdílení. Exportovat lze dnešek, posledních sedm dní, vlastní časové období, jednu relaci nebo úplně vše.\n\nVAŠE DATA ZŮSTÁVAJÍ VAŠE\nVše je uloženo v zařízení, v místní databázi. Žádný účet, žádný server, žádná analytika, žádná reklama, žádné sledování. Nic se nikam neodesílá. O tom, co telefon opustí a kdy, rozhodujete jen vy tím, že to sami exportujete.\n\nVE VAŠEM JAZYCE, VE VAŠICH JEDNOTKÁCH\nPřeloženo do angličtiny, francouzštiny, němčiny, španělštiny, italštiny, japonštiny, nizozemštiny, polštiny a češtiny. Vzdálenosti, rychlosti a nadmořské výšky mají vlastní nastavení — metrické, nebo imperiální — takže není nutné měnit jazyk telefonu.\n\nPOLOHA NA POZADÍ\nTrvalé používání GPS na pozadí může výrazně snížit výdrž baterie. WhereIWas je navržen tak, aby tuto cenu držel nízko — GPS běží jen během pohybu — a stavová obrazovka vždy ukazuje, co běží a který profil GPS je právě aktivní.\n\nVyžaduje iOS 17 nebo novější. Pro záznam na pozadí je nutné oprávnění k poloze „Vždy“. Důrazně se doporučuje oprávnění k pohybu: právě díky němu aplikace šetří baterii.",
+          "keywords": "trasa,gpx,záznamník,sledování,cesta,pozadí,offline,export,baterie,turistika,terén,deník,mapa,zásah",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "GPS běží jen tehdy, když se skutečně pohybujete — celá směna se vejde do baterie. Přežije ukončení i restart. Export GPX a JSON. Vše zůstává v iPhonu.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "de-DE": {
-          "description": "WhereIWas zeichnet einen vollständigen, ehrlichen GPS-Track Ihrer Wege auf — über eine ganze Schicht, einen mehrtägigen Einsatz oder eine lange Reise — ohne den Akku zu leeren.\n\nWAS DEN UNTERSCHIED MACHT\nDie meisten Tracker leeren den Akku, weil sie das GPS dauerhaft eingeschaltet lassen, oder verlieren still und leise Stunden des Tages, sobald iOS sie anhält. WhereIWas tut weder das eine noch das andere. Die App hört den Bewegungscoprozessor ab, der praktisch keine Energie kostet, und schaltet das GPS erst ein, sobald tatsächlich Bewegung stattfindet — und passt die Genauigkeit dann der Geschwindigkeit an: 10 m Distanzfilter zu Fuß, 50 m im Auto. Vor dem Abschalten wartet sie zwei Minuten Stillstand ab, damit eine rote Ampel den Track nie beendet.\n\nGEBAUT, UM DURCHZUHALTEN\n• Zeichnet bei ausgeschaltetem Display und im Hintergrund weiter auf\n• Startet sich selbst neu und setzt fort, nachdem iOS sie bei Speicherknappheit beendet hat\n• Übersteht einen Neustart, sobald das Gerät entsperrt wurde\n• Funktioniert vollständig offline — ohne Netz, ohne Server, ohne Konto\n\nJEDER FIX, VOLLSTÄNDIG DOKUMENTIERT\nJeder gespeicherte Messpunkt behält seine Koordinaten, Höhe, horizontale und vertikale Genauigkeit, Geschwindigkeit, Kurs, Zeitstempel, die erkannte Aktivität (Gehen, Laufen, Radfahren, Autofahren, Stillstand), den Akkustand und das geltende GPS-Profil. Ungenaue, veraltete, doppelte und zeitlich vertauschte Fixes werden aussortiert, bevor sie geschrieben werden.\n\nAUDIT-PROTOKOLL\nIst das optionale Audit-Protokoll eingeschaltet, hält die App fest, warum sie getan hat, was sie getan hat: jeden empfangenen Fix, jede Genauigkeitsprüfung mit gemessenem Wert und geltendem Schwellenwert, jeden Zustandswechsel und jedes Abschalten des GPS. Wer sich fragt, warum zwischen 14:02 und 14:20 eine Lücke klafft, findet dort die Antwort. Export als JSON oder als reiner Text.\n\nEXPORT DER AUFZEICHNUNGEN\nGPX 1.1 für jedes Kartenwerkzeug oder JSON mit allen Metadaten. Weitergabe überallhin über das übliche Teilen-Menü. Exportiert wird wahlweise der heutige Tag, die letzten sieben Tage, ein selbst gewählter Zeitraum, eine einzelne Aufzeichnung oder alles.\n\nIHRE DATEN BLEIBEN IHRE DATEN\nAlles wird auf dem Gerät in einer lokalen Datenbank gespeichert. Kein Konto, kein Server, keine Nutzungsanalyse, keine Werbung, kein Tracking. Nichts wird irgendwohin hochgeladen. Sie entscheiden selbst, was das iPhone verlässt und wann — indem Sie es exportieren.\n\nIN IHRER SPRACHE, IN IHREN EINHEITEN\nÜbersetzt in Englisch, Französisch, Deutsch, Spanisch, Italienisch, Japanisch, Niederländisch, Polnisch und Tschechisch. Entfernungen, Geschwindigkeiten und Höhen folgen einer eigenen Einstellung für metrische oder imperiale Einheiten — dafür muss die Sprache des iPhones nicht umgestellt werden.\n\nSTANDORT IM HINTERGRUND\nDie fortgesetzte Verwendung von GPS im Hintergrund kann die Batterielebensdauer drastisch verringern. WhereIWas ist darauf ausgelegt, diesen Verbrauch gering zu halten — das GPS läuft nur bei Bewegung — und der Statusbildschirm zeigt jederzeit, was gerade läuft und welches GPS-Profil aktiv ist.\n\nErfordert iOS 17 oder neuer. Für die Aufzeichnung im Hintergrund ist die Standortberechtigung „Immer“ erforderlich. Die Berechtigung für Bewegung und Fitness wird dringend empfohlen: Sie ist es, die den Akku schont.",
+          "description": "WhereIWas zeichnet einen vollständigen, ehrlichen GPS-Track Ihrer Wege auf — über einen ganzen Arbeitstag, mehrere Tage unterwegs oder eine lange Reise — ohne den Akku zu leeren.\n\nWAS DEN UNTERSCHIED MACHT\nDie meisten Tracker leeren den Akku, weil sie das GPS dauerhaft eingeschaltet lassen, oder verlieren still und leise Stunden des Tages, sobald iOS sie anhält. WhereIWas tut weder das eine noch das andere. Die App wertet den Bewegungscoprozessor aus, der praktisch keine Energie kostet, und schaltet das GPS erst ein, sobald tatsächlich Bewegung stattfindet — und passt die Genauigkeit dann der Geschwindigkeit an: 10 m Distanzfilter zu Fuß, 50 m im Auto. Vor dem Abschalten wartet sie zwei Minuten Stillstand ab, damit eine rote Ampel den Track nie beendet.\n\nGEBAUT, UM DURCHZUHALTEN\n• Zeichnet bei ausgeschaltetem Display und im Hintergrund weiter auf\n• Startet sich selbst neu und setzt die Aufzeichnung fort, nachdem iOS sie bei Speicherknappheit beendet hat\n• Übersteht einen Neustart des Geräts, sobald es wieder entsperrt wurde\n• Funktioniert vollständig offline — ohne Netz, ohne Server, ohne Konto\n\nJEDER FIX, VOLLSTÄNDIG DOKUMENTIERT\nJeder gespeicherte Messpunkt behält seine Koordinaten, Höhe, horizontale und vertikale Genauigkeit, Geschwindigkeit, Kurs, Zeitstempel, die erkannte Aktivität (Gehen, Laufen, Radfahren, Autofahren, Stillstand), den Akkustand und das geltende GPS-Profil. Ungenaue, veraltete, doppelte und zeitlich vertauschte Fixes werden aussortiert, bevor sie geschrieben werden.\n\nAUDIT-PROTOKOLL\nIst das optionale Audit-Protokoll eingeschaltet, hält die App fest, warum sie getan hat, was sie getan hat: jeden empfangenen Fix, jede Genauigkeitsprüfung mit gemessenem Wert und geltendem Schwellenwert, jeden Zustandswechsel und jedes Abschalten des GPS. Wer sich fragt, warum zwischen 14:02 und 14:20 eine Lücke klafft, findet dort die Antwort. Export als JSON oder als reiner Text.\n\nEXPORT DER AUFZEICHNUNGEN\nGPX 1.1 für jedes Kartenwerkzeug oder JSON mit allen Metadaten. Weitergabe überallhin über das übliche Teilen-Menü. Exportiert wird wahlweise der heutige Tag, die letzten sieben Tage, ein selbst gewählter Zeitraum, eine einzelne Aufzeichnung oder alles.\n\nIHRE DATEN BLEIBEN IHRE DATEN\nAlles wird auf dem Gerät in einer lokalen Datenbank gespeichert. Kein Konto, kein Server, keine Nutzungsanalyse, keine Werbung, kein Tracking. Nichts wird irgendwohin hochgeladen. Sie entscheiden selbst, was das iPhone verlässt und wann — indem Sie es exportieren.\n\nIN IHRER SPRACHE, IN IHREN EINHEITEN\nÜbersetzt in Englisch, Französisch, Deutsch, Spanisch, Italienisch, Japanisch, Niederländisch, Polnisch und Tschechisch. Entfernungen, Geschwindigkeiten und Höhen folgen einer eigenen Einstellung für metrische oder imperiale Einheiten — dafür muss die Sprache des iPhones nicht umgestellt werden.\n\nSTANDORT IM HINTERGRUND\nDie fortgesetzte Verwendung von GPS im Hintergrund kann die Akkulaufzeit drastisch verkürzen. WhereIWas ist darauf ausgelegt, diesen Verbrauch gering zu halten — das GPS läuft nur bei Bewegung — und der Statusbildschirm zeigt jederzeit, was gerade läuft und welches GPS-Profil aktiv ist.\n\nErfordert iOS 17 oder neuer. Für die Aufzeichnung im Hintergrund ist die Standortberechtigung „Immer“ erforderlich. Die Berechtigung „Bewegung & Fitness“ wird dringend empfohlen: Sie ist es, die den Akku schont.",
           "keywords": "tracker,gpx,tracking,route,strecke,hintergrund,offline,export,koordinaten,wegpunkt,einsatz,schicht",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "Das GPS läuft nur, wenn Sie sich bewegen — eine ganze Schicht passt in den Akku. Übersteht Beendigung und Neustart. Export als GPX und JSON. Alles bleibt auf dem iPhone.",
+          "promotionalText": "GPS läuft nur, wenn Sie sich bewegen — eine ganze Schicht passt in den Akku. Übersteht Beendigung und Geräteneustart. GPX- und JSON-Export. Alles bleibt auf dem iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "en-US": {
-          "description": "WhereIWas records a complete, honest GPS trail of where you have been — through a full shift, a multi-day deployment or a long trip — without flattening your battery.\n\nWHY IT IS DIFFERENT\nMost trackers either drain the battery by keeping GPS on permanently, or quietly lose hours of your day when iOS suspends them. WhereIWas does neither. It listens to the motion coprocessor, which costs almost no power, and switches GPS on only once you are actually moving — then scales accuracy to your speed: a 10 m filter on foot, 50 m in a car. It waits two minutes of stillness before switching GPS back off, so a red light never ends your track.\n\nBUILT TO SURVIVE\n• Keeps recording with the screen off and the app in the background\n• Relaunches itself and resumes after iOS terminates it under memory pressure\n• Survives a reboot, once you have unlocked the device\n• Works entirely offline — no signal, no server, no account needed\n\nEVERY FIX, FULLY DOCUMENTED\nEach stored point keeps its coordinates, altitude, horizontal and vertical accuracy, speed, course, timestamp, detected activity (walking, running, cycling, driving, still), battery level and the GPS profile in force. Inaccurate, stale, duplicate and out-of-order fixes are filtered out before they are written.\n\nAUDIT TRAIL\nTurn on the optional audit trail and the app records why it did what it did: every fix it received, every accuracy check it ran with the measured value and the threshold that applied, every state change and every time it stopped GPS. When you wonder why there is a gap between 14:02 and 14:20, the answer is in there. Export it as JSON or plain text.\n\nEXPORT WHAT YOU RECORDED\nGPX 1.1 for any mapping tool, or JSON with the full metadata. Send it anywhere through the standard share sheet. Export today, the last seven days, a date range you pick, a single recorded session, or everything.\n\nYOUR DATA STAYS YOURS\nEverything is stored on device, in a local database. No account, no server, no analytics, no advertising, no tracking. Nothing is uploaded anywhere. You decide what leaves the phone, and when, by exporting it yourself.\n\nIN YOUR LANGUAGE, IN YOUR UNITS\nTranslated into English, French, German, Spanish, Italian, Japanese, Dutch, Polish and Czech. Distances, speeds and altitudes follow a metric or imperial setting of their own, so you never have to change your phone's language to read miles.\n\nBACKGROUND LOCATION\nContinued use of GPS running in the background can dramatically decrease battery life. WhereIWas is built to keep that cost down — GPS runs only while you move — and the status screen always shows what is running and which GPS profile is in force.\n\nRequires iOS 17 or later. Always location permission is required for background recording. Motion permission is strongly recommended: it is what lets the app save your battery.",
+          "description": "WhereIWas records a complete, honest GPS trail of where you have been — through a day's work, several days in the field or a long trip — without flattening your battery.\n\nWHY IT IS DIFFERENT\nMost trackers either drain the battery by keeping GPS on permanently, or quietly lose hours of your day when iOS suspends them. WhereIWas does neither. It listens to the motion coprocessor, which costs almost no power, and switches GPS on only once you are actually moving — then scales accuracy to your speed: a 10 m filter on foot, 50 m in a car. It waits two minutes of stillness before switching GPS back off, so a red light never ends your track.\n\nBUILT TO SURVIVE\n• Keeps recording with the screen off and the app in the background\n• Relaunches itself and resumes after iOS terminates it under memory pressure\n• Survives a reboot, once you have unlocked the device\n• Works entirely offline — no signal, no server, no account needed\n\nEVERY FIX, FULLY DOCUMENTED\nEach stored point keeps its coordinates, altitude, horizontal and vertical accuracy, speed, course, timestamp, detected activity (walking, running, cycling, driving, still), battery level and the GPS profile in force. Inaccurate, stale, duplicate and out-of-order fixes are filtered out before they are written.\n\nAUDIT TRAIL\nTurn on the optional audit trail and the app records why it did what it did: every fix it received, every validation test it ran with the measured value and the threshold that applied, every state change and every time it stopped GPS. When you wonder why there is a gap between 14:02 and 14:20, the answer is in there. Export it as JSON or plain text.\n\nEXPORT WHAT YOU RECORDED\nGPX 1.1 for any mapping tool, or JSON with the full metadata. Send it anywhere through the standard share sheet. Export today, the last seven days, a date range you pick, a single recorded session, or everything.\n\nYOUR DATA STAYS YOURS\nEverything is stored on device, in a local database. No account, no server, no analytics, no advertising, no tracking. Nothing is uploaded anywhere. You decide what leaves the phone, and when, by exporting it yourself.\n\nIN YOUR LANGUAGE, IN YOUR UNITS\nTranslated into English, French, German, Spanish, Italian, Japanese, Dutch, Polish and Czech. Distances, speeds and altitudes follow a metric or imperial setting of their own, so you never have to change your phone's language to read miles.\n\nBACKGROUND LOCATION\nContinued use of GPS running in the background can dramatically decrease battery life. WhereIWas is built to keep that cost down — GPS runs only while you move — and the status screen always shows what is running and which GPS profile is in force.\n\nRequires iOS 17 or later. Always location permission is required for background recording. Motion permission is strongly recommended: it is what lets the app save your battery.",
           "keywords": "tracker,gpx,track,route,trail,background,offline,export,waypoint,geo,position,fieldwork,responder",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "GPS runs only when you actually move, so a full shift fits in your battery. Survives termination and reboot. GPX and JSON export. Everything stays on your iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "es-ES": {
-          "description": "WhereIWas registra un rastro GPS completo y fiel de por dónde se ha pasado — durante un turno entero, un despliegue de varios días o un viaje largo — sin agotar la batería.\n\nQUÉ LO HACE DISTINTO\nLa mayoría de los rastreadores agotan la batería manteniendo el GPS encendido de forma permanente, o pierden en silencio horas del día cuando iOS los suspende. WhereIWas no hace ni lo uno ni lo otro. Escucha al coprocesador de movimiento, cuyo coste energético es casi nulo, y solo enciende el GPS cuando hay movimiento real; después ajusta la precisión a la velocidad: filtro de distancia de 10 m a pie, de 50 m en coche. Espera dos minutos de inmovilidad antes de volver a apagar el GPS, para que un semáforo en rojo no corte nunca la traza.\n\nHECHO PARA AGUANTAR\n• Sigue registrando con la pantalla apagada y la app en segundo plano\n• Se reinicia y reanuda por sí solo después de que iOS lo cierre por falta de memoria\n• Sobrevive a un reinicio del dispositivo, una vez desbloqueado\n• Funciona totalmente sin conexión: sin cobertura, sin servidor y sin cuenta\n\nCADA POSICIÓN GPS, DOCUMENTADA AL DETALLE\nCada punto guardado conserva sus coordenadas, la altitud, la precisión horizontal y vertical, la velocidad, el rumbo, la marca de tiempo, la actividad detectada (a pie, corriendo, en bici, en coche, inmóvil), el nivel de batería y el perfil GPS vigente. Las posiciones GPS imprecisas, caducadas, duplicadas o fuera de orden se descartan antes de escribirlas.\n\nREGISTRO DE AUDITORÍA\nAl activar el registro de auditoría opcional, la app anota por qué hizo lo que hizo: cada posición GPS recibida, cada comprobación de precisión realizada con el valor medido y el umbral aplicado, cada cambio de estado y cada apagado del GPS. Cuando surja la duda de por qué no hay nada entre las 14:02 y las 14:20, la respuesta está ahí. Se exporta en JSON o en texto sin formato.\n\nEXPORTAR LO REGISTRADO\nGPX 1.1 para cualquier herramienta cartográfica, o JSON con todos los metadatos. Se envía a donde haga falta desde la hoja de compartir estándar. Se exporta el día de hoy, los últimos siete días, un intervalo de fechas a elección, una sesión concreta o todo.\n\nLOS DATOS SIGUEN SIENDO SUYOS\nTodo se guarda en el dispositivo, en una base de datos local. Sin cuenta, sin servidor, sin analíticas, sin publicidad y sin seguimiento. No se envía nada a ninguna parte. Usted decide qué sale del teléfono, y cuándo, exportándolo por su cuenta.\n\nEN SU IDIOMA, EN SUS UNIDADES\nTraducida al inglés, francés, alemán, español, italiano, japonés, neerlandés, polaco y checo. Las distancias, velocidades y altitudes siguen un ajuste propio, métrico o imperial, sin necesidad de cambiar el idioma del teléfono.\n\nUBICACIÓN EN SEGUNDO PLANO\nEl uso continuado del GPS en segundo plano puede reducir drásticamente la duración de la batería. WhereIWas está diseñado para limitar ese coste — el GPS solo funciona mientras hay movimiento — y la pantalla de estado muestra en todo momento qué se está ejecutando y qué perfil de GPS está en vigor.\n\nRequiere iOS 17 o posterior. El permiso de localización «Siempre» es imprescindible para registrar en segundo plano. El permiso de movimiento es muy recomendable: es lo que permite ahorrar batería.",
-          "keywords": "rastreador,gpx,ruta,recorrido,traza,ubicación,exportar,batería,offline,trayecto,campo,emergencias",
+          "description": "WhereIWas registra un rastro GPS completo y fiel de por dónde ha pasado — durante una jornada de trabajo, varios días sobre el terreno o un viaje largo — sin agotar la batería.\n\nQUÉ LO HACE DISTINTO\nLa mayoría de los rastreadores agotan la batería manteniendo el GPS encendido de forma permanente, o pierden en silencio horas del día cuando iOS los suspende. WhereIWas no hace ni lo uno ni lo otro. Se apoya en el coprocesador de movimiento, cuyo coste energético es casi nulo, y solo enciende el GPS cuando hay movimiento real; después ajusta la precisión a la velocidad: filtro de distancia de 10 m a pie, de 50 m en coche. Espera dos minutos de inmovilidad antes de volver a apagar el GPS, para que un semáforo en rojo no corte nunca la traza.\n\nHECHO PARA AGUANTAR\n• Sigue registrando con la pantalla apagada y la app en segundo plano\n• Se reinicia y reanuda por sí solo después de que iOS lo cierre por falta de memoria\n• Sobrevive a un reinicio del dispositivo, una vez desbloqueado\n• Funciona totalmente sin conexión: sin cobertura, sin servidor y sin cuenta\n\nCADA POSICIÓN GPS, DOCUMENTADA AL DETALLE\nCada punto guardado conserva sus coordenadas, la altitud, la precisión horizontal y vertical, la velocidad, el rumbo, la marca de tiempo, la actividad detectada (a pie, corriendo, en bici, en coche, inmóvil), el nivel de batería y el perfil GPS vigente. Las posiciones GPS imprecisas, caducadas, duplicadas o fuera de orden se descartan antes de escribirlas.\n\nREGISTRO DE AUDITORÍA\nAl activar el registro de auditoría opcional, la app anota por qué hizo lo que hizo: cada posición GPS recibida, cada comprobación de precisión realizada con el valor medido y el umbral aplicado, cada cambio de estado y cada apagado del GPS. Cuando surja la duda de por qué no hay nada entre las 14:02 y las 14:20, la respuesta está ahí. Puede exportarlo en JSON o en texto plano.\n\nEXPORTAR LO REGISTRADO\nGPX 1.1 para cualquier herramienta cartográfica, o JSON con todos los metadatos. Envíelo a donde haga falta desde la hoja de compartir estándar. Puede exportar el día de hoy, los últimos siete días, un intervalo de fechas a su elección, una sesión concreta o todo.\n\nLOS DATOS SIGUEN SIENDO SUYOS\nTodo se guarda en el dispositivo, en una base de datos local. Sin cuenta, sin servidor, sin analíticas, sin publicidad y sin seguimiento. No se envía nada a ninguna parte. Usted decide qué sale del teléfono, y cuándo, exportándolo por su cuenta.\n\nEN SU IDIOMA, EN SUS UNIDADES\nTraducida al inglés, francés, alemán, español, italiano, japonés, neerlandés, polaco y checo. Las distancias, velocidades y altitudes siguen un ajuste propio, métrico o imperial, sin necesidad de cambiar el idioma del teléfono.\n\nUBICACIÓN EN SEGUNDO PLANO\nEl uso continuado del GPS en segundo plano puede reducir drásticamente la duración de la batería. WhereIWas está diseñado para limitar ese coste — el GPS solo funciona mientras hay movimiento — y la pantalla de estado muestra en todo momento qué se está ejecutando y qué perfil de GPS está en vigor.\n\nRequiere iOS 17 o posterior. El permiso de ubicación «Siempre» es imprescindible para registrar en segundo plano. El permiso de movimiento es muy recomendable: es lo que permite ahorrar batería.",
+          "keywords": "rastreador,gpx,ruta,recorrido,traza,ubicación,exportar,batería,offline,trayecto,bombero,emergencia",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "El GPS solo funciona cuando usted se mueve: un turno entero cabe en la batería. Resiste cierres y reinicios. Exporta a GPX y JSON. Todo se queda en el iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "fr-FR": {
-          "description": "WhereIWas enregistre une trace GPS complète et honnête de vos déplacements — sur une garde entière, un engagement de plusieurs jours ou un long trajet — sans vider votre batterie.\n\nCE QUI CHANGE\nLa plupart des traceurs vident la batterie en laissant le GPS allumé en permanence, ou perdent silencieusement des heures de votre journée quand iOS les suspend. WhereIWas ne fait ni l'un ni l'autre. Il écoute le coprocesseur de mouvement, dont le coût énergétique est quasi nul, et n'allume le GPS que lorsque vous bougez réellement — puis adapte sa précision à votre vitesse : filtre de 10 m à pied, 50 m en voiture. Il attend deux minutes d'immobilité avant de rééteindre le GPS, pour qu'un feu rouge n'interrompe jamais votre trace.\n\nCONÇU POUR TENIR\n• Continue d'enregistrer écran éteint et application en arrière-plan\n• Se relance et reprend seul après une fermeture par iOS faute de mémoire\n• Survit à un redémarrage, une fois l'appareil déverrouillé\n• Fonctionne entièrement hors ligne — ni réseau, ni serveur, ni compte\n\nCHAQUE POINT, ENTIÈREMENT DOCUMENTÉ\nChaque point conservé garde ses coordonnées, son altitude, ses précisions horizontale et verticale, sa vitesse, son cap, son horodatage, l'activité détectée (marche, course, vélo, voiture, immobile), le niveau de batterie et le profil GPS en vigueur. Les points imprécis, périmés, en double ou hors séquence sont écartés avant écriture.\n\nJOURNAL D'AUDIT\nActivez le journal d'audit optionnel et l'application enregistre pourquoi elle a fait ce qu'elle a fait : chaque point reçu, chaque contrôle de précision effectué avec la valeur mesurée et le seuil appliqué, chaque changement d'état et chaque arrêt du GPS. Quand vous vous demandez pourquoi il n'y a rien entre 14 h 02 et 14 h 20, la réponse est dedans. Exportable en JSON ou en texte brut.\n\nEXPORTEZ VOS RELEVÉS\nGPX 1.1 pour n'importe quel outil cartographique, ou JSON avec toutes les métadonnées. Partage via la feuille de partage standard. Exportez la journée, les sept derniers jours, une plage de dates de votre choix, une session enregistrée ou la totalité.\n\nVOS DONNÉES RESTENT LES VÔTRES\nTout est stocké sur l'appareil, dans une base locale. Aucun compte, aucun serveur, aucune analyse d'usage, aucune publicité, aucun pistage. Rien n'est envoyé nulle part. Vous seul décidez ce qui quitte le téléphone, et quand, en l'exportant vous-même.\n\nDANS VOTRE LANGUE, DANS VOS UNITÉS\nTraduite en anglais, français, allemand, espagnol, italien, japonais, néerlandais, polonais et tchèque. Les distances, vitesses et altitudes suivent un réglage métrique ou impérial propre à l'app : inutile de changer la langue du téléphone pour lire des miles.\n\nLOCALISATION EN ARRIÈRE-PLAN\nL'utilisation continue du GPS en arrière-plan peut réduire fortement l'autonomie. WhereIWas est conçu pour limiter ce coût — le GPS ne tourne que lorsque vous bougez — et l'écran d'état indique en permanence ce qui tourne et quel profil GPS est appliqué.\n\nNécessite iOS 17 ou version ultérieure. L'autorisation de localisation « Toujours » est indispensable à l'enregistrement en arrière-plan. L'autorisation de mouvement est vivement recommandée : c'est elle qui permet d'économiser la batterie.",
+          "description": "WhereIWas enregistre une trace GPS complète et honnête de vos déplacements — sur une journée de travail, plusieurs jours sur le terrain ou un long trajet — sans vider votre batterie.\n\nCE QUI LE DISTINGUE\nLa plupart des traceurs vident la batterie en laissant le GPS allumé en permanence, ou perdent silencieusement des heures de votre journée quand iOS les suspend. WhereIWas ne fait ni l'un ni l'autre. Il écoute le coprocesseur de mouvement, dont le coût énergétique est quasi nul, et n'allume le GPS que lorsque vous bougez réellement — puis adapte sa précision à votre vitesse : filtre de 10 m à pied, 50 m en voiture. Il attend deux minutes d'immobilité avant de couper à nouveau le GPS, pour qu'un feu rouge n'interrompe jamais votre trace.\n\nCONÇU POUR TENIR\n• Continue d'enregistrer écran éteint et application en arrière-plan\n• Se relance et reprend seul après une fermeture par iOS faute de mémoire\n• Survit à un redémarrage, une fois l'appareil déverrouillé\n• Fonctionne entièrement hors ligne — ni réseau, ni serveur, ni compte\n\nCHAQUE POINT, ENTIÈREMENT DOCUMENTÉ\nChaque point conservé garde ses coordonnées, son altitude, ses précisions horizontale et verticale, sa vitesse, son cap, son horodatage, l'activité détectée (marche, course, vélo, conduite, immobilité), le niveau de batterie et le profil GPS en vigueur. Les points imprécis, périmés, en double ou hors séquence sont écartés avant écriture.\n\nJOURNAL D'AUDIT\nActivez le journal d'audit optionnel et l'application enregistre pourquoi elle a fait ce qu'elle a fait : chaque point reçu, chaque contrôle de précision effectué avec la valeur mesurée et le seuil appliqué, chaque changement d'état et chaque arrêt du GPS. Quand vous vous demandez pourquoi il n'y a rien entre 14 h 02 et 14 h 20, la réponse est dedans. Exportable en JSON ou en texte brut.\n\nEXPORTEZ VOS RELEVÉS\nGPX 1.1 pour n'importe quel outil cartographique, ou JSON avec toutes les métadonnées. Envoyez-le où vous voulez via la feuille de partage standard. Exportez la journée, les sept derniers jours, une plage de dates de votre choix, une session enregistrée ou la totalité.\n\nVOS DONNÉES RESTENT LES VÔTRES\nTout est stocké sur l'appareil, dans une base locale. Aucun compte, aucun serveur, aucune analyse d'usage, aucune publicité, aucun pistage. Rien n'est envoyé nulle part. Vous seul décidez ce qui quitte le téléphone, et quand, en l'exportant vous-même.\n\nDANS VOTRE LANGUE, DANS VOS UNITÉS\nTraduite en anglais, français, allemand, espagnol, italien, japonais, néerlandais, polonais et tchèque. Les distances, vitesses et altitudes suivent un réglage métrique ou impérial propre à l'app : inutile de changer la langue du téléphone pour lire des miles.\n\nLOCALISATION EN ARRIÈRE-PLAN\nL'utilisation continue du GPS en arrière-plan peut réduire fortement l'autonomie. WhereIWas est conçu pour limiter ce coût — le GPS ne tourne que lorsque vous bougez — et l'écran d'état indique en permanence ce qui tourne et quel profil GPS est appliqué.\n\nNécessite iOS 17 ou version ultérieure. L'autorisation de localisation « Toujours » est indispensable à l'enregistrement en arrière-plan. L'autorisation de mouvement est vivement recommandée : c'est elle qui permet d'économiser la batterie.",
           "keywords": "trace,gpx,parcours,itinéraire,arrière-plan,export,hors-ligne,position,batterie,terrain,secours",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "Le GPS ne tourne que lorsque vous bougez : une garde entière tient dans la batterie. Résiste aux fermetures et redémarrages. Export GPX et JSON. Tout reste sur l'iPhone.",
+          "promotionalText": "Le GPS ne tourne que lorsque vous bougez : toute une journée tient dans la batterie. Résiste aux arrêts iOS et redémarrages. Export GPX et JSON. Tout reste sur l'iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "it": {
-          "description": "WhereIWas registra una traccia GPS completa e onesta dei propri spostamenti — per un intero turno, un intervento di più giorni o un lungo viaggio — senza prosciugare la batteria.\n\nCOSA CAMBIA\nLa maggior parte dei localizzatori consuma la batteria tenendo il GPS sempre acceso, oppure perde silenziosamente ore di giornata quando iOS li sospende. WhereIWas non fa né l'una né l'altra cosa. Ascolta il coprocessore di movimento, il cui costo energetico è quasi nullo, e accende il GPS solo quando ci si muove davvero — poi adatta la precisione alla velocità: filtro di distanza di 10 m a piedi, 50 m in auto. Prima di rispegnere il GPS attende due minuti di immobilità, così un semaforo rosso non interrompe mai la traccia.\n\nCOSTRUITA PER RESISTERE\n• Continua a registrare a schermo spento e con l'app in background\n• Si riavvia e riprende da sola dopo una chiusura di iOS per carenza di memoria\n• Sopravvive a un riavvio, una volta sbloccato il dispositivo\n• Funziona completamente offline — nessuna rete, nessun server, nessun account\n\nOGNI FIX, INTERAMENTE DOCUMENTATO\nOgni campione conservato mantiene le sue coordinate, l'altitudine, la precisione orizzontale e verticale, la velocità, la direzione, la marca temporale, l'attività rilevata (camminata, corsa, bicicletta, auto, fermo), il livello della batteria e il profilo GPS in vigore. I fix imprecisi, scaduti, duplicati o fuori sequenza vengono scartati prima della scrittura.\n\nREGISTRO DI AUDIT\nAttivando il registro di audit opzionale, l'app annota perché ha fatto quello che ha fatto: ogni fix ricevuto, ogni controllo di precisione eseguito con il valore misurato e la soglia applicata, ogni cambio di stato e ogni spegnimento del GPS. Quando ci si chiede perché non c'è nulla tra le 14:02 e le 14:20, la risposta è lì dentro. Esportabile in JSON o in testo semplice.\n\nESPORTAZIONE DEI DATI REGISTRATI\nGPX 1.1 per qualsiasi strumento cartografico, oppure JSON con tutti i metadati. Da inviare ovunque tramite il pannello di condivisione standard. Si esporta la giornata di oggi, gli ultimi sette giorni, un intervallo di date a scelta, una singola sessione oppure tutto.\n\nI DATI RESTANO PROPRI\nTutto è archiviato sul dispositivo, in un database locale. Nessun account, nessun server, nessuna analisi d'uso, nessuna pubblicità, nessun tracciamento. Nulla viene inviato da nessuna parte. Solo l'utente decide cosa esce dal telefono, e quando, esportandolo di persona.\n\nNELLA TUA LINGUA, NELLE TUE UNITÀ\nTradotta in inglese, francese, tedesco, spagnolo, italiano, giapponese, olandese, polacco e ceco. Distanze, velocità e altitudini seguono un'impostazione dedicata, metrica o imperiale, senza dover cambiare la lingua del telefono.\n\nPOSIZIONE IN BACKGROUND\nL'uso continuato del GPS in background può ridurre drasticamente la durata della batteria. WhereIWas è progettata per contenere questo costo — il GPS funziona solo mentre ci si muove — e la schermata di stato mostra sempre che cosa è attivo e quale profilo GPS è in uso.\n\nRichiede iOS 17 o versioni successive. Per la registrazione in background è indispensabile l'autorizzazione alla posizione «Sempre». L'autorizzazione al movimento è vivamente consigliata: è ciò che permette di risparmiare batteria.",
-          "keywords": "traccia,gpx,percorso,itinerario,background,offline,esporta,batteria,posizione,terreno,soccorso",
+          "description": "WhereIWas registra una traccia GPS completa e onesta dei tuoi spostamenti — per una giornata di lavoro, più giorni sul campo o un lungo viaggio — senza prosciugare la batteria.\n\nPERCHÉ È DIVERSA\nQuasi tutti i localizzatori consumano la batteria tenendo il GPS sempre acceso, oppure perdono silenziosamente ore di giornata quando iOS li sospende. WhereIWas non fa né l'una né l'altra cosa. Ascolta il coprocessore di movimento, il cui costo energetico è quasi nullo, e accende il GPS solo quando ti muovi davvero — poi adatta la precisione alla velocità: filtro di distanza di 10 m a piedi, 50 m in auto. Prima di rispegnere il GPS attende due minuti di immobilità, così un semaforo rosso non interrompe mai la traccia.\n\nCOSTRUITA PER RESISTERE\n• Continua a registrare a schermo spento e con l'app in background\n• Si riavvia e riprende da sola dopo una chiusura di iOS per carenza di memoria\n• Sopravvive al riavvio del dispositivo, una volta che lo hai sbloccato\n• Funziona completamente offline — nessuna rete, nessun server, nessun account\n\nOGNI FIX, INTERAMENTE DOCUMENTATO\nOgni campione conservato mantiene le sue coordinate, l'altitudine, la precisione orizzontale e verticale, la velocità, la direzione, l'orario, l'attività rilevata (camminata, corsa, ciclismo, guida, immobilità), il livello della batteria e il profilo GPS in uso. I fix imprecisi, troppo vecchi, duplicati o fuori sequenza vengono scartati prima della scrittura.\n\nREGISTRO DI AUDIT\nAttivando il registro di audit opzionale, l'app annota perché ha fatto quello che ha fatto: ogni fix ricevuto, ogni controllo di precisione eseguito con il valore misurato e la soglia applicata, ogni cambio di stato e ogni spegnimento del GPS. Quando ti chiedi perché non c'è nulla tra le 14:02 e le 14:20, la risposta è lì dentro. Esportabile in JSON o in testo semplice.\n\nESPORTAZIONE DEI DATI REGISTRATI\nGPX 1.1 per qualsiasi strumento cartografico, oppure JSON con tutti i metadati. Invialo dove vuoi tramite il pannello di condivisione standard. Puoi esportare la giornata di oggi, gli ultimi sette giorni, un intervallo di date a tua scelta, una singola sessione registrata oppure tutto.\n\nI TUOI DATI RESTANO TUOI\nTutto è archiviato sul dispositivo, in un database locale. Nessun account, nessun server, nessuna analisi d'uso, nessuna pubblicità, nessun tracciamento. Nulla viene inviato da nessuna parte. Sei tu a decidere che cosa esce dal telefono, e quando, esportandolo di persona.\n\nNELLA TUA LINGUA, NELLE TUE UNITÀ\nTradotta in inglese, francese, tedesco, spagnolo, italiano, giapponese, olandese, polacco e ceco. Distanze, velocità e altitudini seguono un'impostazione dedicata, metrica o imperiale, senza dover cambiare la lingua del telefono.\n\nPOSIZIONE IN BACKGROUND\nL'uso continuato del GPS in background può ridurre drasticamente la durata della batteria. WhereIWas è progettata per contenere questo costo — il GPS funziona solo mentre ti muovi — e la schermata di stato mostra sempre che cosa è attivo e quale profilo GPS è in uso.\n\nRichiede iOS 17 o versioni successive. Per la registrazione in background è indispensabile l'autorizzazione alla posizione «Sempre». L'autorizzazione al movimento è vivamente consigliata: è ciò che permette all'app di risparmiare la batteria.",
+          "keywords": "traccia,gpx,percorso,itinerario,background,offline,esporta,batteria,posizione,cronologia,soccorso",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "Il GPS si accende solo quando ci si muove: un turno intero sta in una carica. Resiste a chiusure e riavvii. Esportazione GPX e JSON. Tutto resta sull'iPhone.",
+          "promotionalText": "Il GPS si accende solo quando ti muovi davvero: un turno intero sta in una carica. Resiste a chiusure e riavvii. Esportazione GPX e JSON. Tutto resta sul tuo iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "ja": {
-          "description": "WhereIWasは、どこにいたかを正確かつ余さず記録するGPSロガーです。1回の勤務でも、数日間の出動でも、長い旅でも、バッテリーを使い切ることなく軌跡を残します。\n\n【他のアプリとの違い】\n多くの位置情報アプリは、GPSを常時オンにしてバッテリーを消耗させるか、iOSにサスペンドされて何時間分もの記録を静かに失うかのどちらかです。WhereIWasはそのどちらでもありません。消費電力がほとんどないモーションコプロセッサを監視し、実際に動き始めたときだけGPSをオンにします。さらに精度は速度に合わせて切り替わり、徒歩では10m、自動車では50mの距離フィルタが適用されます。GPSを切るのは静止が2分続いてからなので、赤信号で軌跡が途切れることはありません。\n\n【止まらないための設計】\n・画面がオフでも、Appがバックグラウンドにあっても記録を継続\n・メモリ不足でiOSに終了させられても、自ら再起動して記録を再開\n・再起動後も、デバイスのロックを解除すれば記録を再開\n・完全にオフラインで動作。電波もサーバーもアカウントも不要\n\n【すべての測位を、余さず記録】\n保存される各地点には、座標、高度、水平精度と垂直精度、速度、進行方向、タイムスタンプ、検出された活動（歩行、走行、自転車、自動車、静止）、バッテリー残量、適用中のGPSプロファイルが含まれます。精度の低い測位、古い測位、重複した測位、順序の乱れた測位は、書き込む前に除外されます。\n\n【監査ログ】\n任意で監査ログをオンにすると、Appが何をなぜ行ったかが記録されます。受信したすべての測位、実行したすべての精度チェックとその測定値および適用されたしきい値、すべての状態遷移、GPSを停止したすべてのタイミングが残ります。14:02から14:20まで記録がないのはなぜか、その答えはこの中にあります。JSONまたはプレーンテキストで書き出せます。\n\n【記録の書き出し】\nあらゆる地図ツールで使えるGPX 1.1、またはメタデータをすべて含むJSON。標準の共有シートから、どこへでも送れます。今日、直近7日間、指定した期間、単一のセッション、またはすべてを選んで書き出せます。\n\n【データは手元にとどまります】\nすべてデバイス内のローカルデータベースに保存されます。アカウントもサーバーも、利用状況の解析も、広告も、トラッキングもありません。どこにもアップロードされません。何を、いつiPhoneの外に出すかは、自分でエクスポートして決めます。\n\n【あなたの言語で、あなたの単位で】\n英語、フランス語、ドイツ語、スペイン語、イタリア語、日本語、オランダ語、ポーランド語、チェコ語に対応。距離・速度・高度はメートル法とヤード・ポンド法から独立して選べるため、マイル表示のために端末の言語を変える必要はありません。\n\n【バックグラウンドでの位置情報の使用】\nバックグラウンドでGPSを継続的に使用すると、バッテリーの寿命が著しく短くなることがあります。WhereIWasはその負担を抑えるように作られており、GPSは動いている間しか作動しません。ステータス画面では、何が動作しているか、どのGPSプロファイルが適用されているかを常に確認できます。\n\niOS 17以降が必要です。バックグラウンドでの記録には、位置情報の「常に」の許可が必要です。モーションの許可も強くおすすめします。バッテリーを節約できるのは、この許可があるからです。",
+          "description": "WhereIWasは、どこにいたかを正確かつ余さず記録するGPSロガーです。一日の仕事でも、野外で過ごす数日間でも、長い旅でも、バッテリーを使い切ることなく軌跡を残します。\n\n【他のアプリとの違い】\n多くの位置情報アプリは、GPSを常時オンにしてバッテリーを消耗させるか、iOSに一時停止されて何時間分もの記録を静かに失うかのどちらかです。WhereIWasはそのどちらでもありません。消費電力がほとんどないモーションコプロセッサを監視し、実際に動き始めたときだけGPSをオンにします。さらに精度は速度に合わせて切り替わり、徒歩では10m、自動車では50mの距離フィルタが適用されます。GPSを切るのは静止が2分続いてからなので、赤信号で軌跡が途切れることはありません。\n\n【止まらないための設計】\n・画面がオフでも、Appがバックグラウンドにあっても記録を継続\n・メモリ不足でiOSに終了させられても、App自身が再起動して記録を再開\n・デバイスを再起動したあとも、ロックを解除すれば記録を再開\n・完全にオフラインで動作。電波もサーバーもアカウントも不要\n\n【すべての測位を、余さず記録】\n保存される各地点には、座標、高度、水平精度と垂直精度、速度、進行方向、タイムスタンプ、検出されたアクティビティ（ウォーキング、ランニング、サイクリング、運転、静止）、バッテリー残量、適用中のGPSプロファイルが含まれます。精度の低い測位、古い測位、重複した測位、順序の乱れた測位は、書き込む前に除外されます。\n\n【監査ログ】\n任意で監査ログをオンにすると、Appが何をなぜ行ったかが記録されます。受信したすべての測位、実行したすべての精度チェックとその測定値および適用されたしきい値、すべての状態遷移、GPSを停止したすべてのタイミングが残ります。14:02から14:20まで記録がないのはなぜか、その答えはこの中にあります。JSONまたはプレーンテキストで書き出せます。\n\n【記録の書き出し】\nあらゆる地図ツールで使えるGPX 1.1、またはメタデータをすべて含むJSON。標準の共有シートから、どこへでも送れます。今日、直近7日間、指定した期間、単一のセッション、またはすべてを選んで書き出せます。\n\n【データは手元にとどまります】\nすべてデバイス内のローカルデータベースに保存されます。アカウントもサーバーも、利用状況の解析も、広告も、トラッキングもありません。どこにもアップロードされません。何を、いつiPhoneの外に出すかは、自分でエクスポートして決めます。\n\n【あなたの言語で、あなたの単位で】\n英語、フランス語、ドイツ語、スペイン語、イタリア語、日本語、オランダ語、ポーランド語、チェコ語に対応。距離・速度・高度はメートル法とヤード・ポンド法から独立して選べるため、マイル表示のために端末の言語を変える必要はありません。\n\n【バックグラウンドでの位置情報の使用】\nバックグラウンドでGPSを継続的に使用すると、バッテリーの寿命が著しく短くなることがあります。WhereIWasはその負担を抑えるように作られており、GPSは動いている間しか作動しません。ステータス画面では、何が動作しているか、どのGPSプロファイルが適用されているかを常に確認できます。\n\niOS 17以降が必要です。バックグラウンドでの記録には、位置情報の「常に」の許可が必要です。モーションの許可も強くおすすめします。バッテリーを節約できるのは、この許可があるからです。",
           "keywords": "位置情報,ロガー,行動記録,軌跡,gpx,ログ,経路,ルート,オフライン,省電力,現在地,追跡,エクスポート,巡回,登山,位置履歴,トラッカー,防災,ツーリング,サイクリング",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "GPSが動くのは実際に移動している間だけ。丸一日の勤務もバッテリーが持ちます。強制終了や再起動でも記録は続き、GPXとJSONで書き出せます。データはすべてiPhoneの中に。",
+          "promotionalText": "GPSが動くのは実際に移動している間だけ。丸一日の勤務もバッテリーが持ちます。iOSにAppを終了されても、デバイスを再起動しても記録は続き、GPXとJSONで書き出せます。データはすべてiPhoneの中に。",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "nl-NL": {
-          "description": "WhereIWas legt een volledig en eerlijk GPS-spoor vast van elke afgelegde route — een hele dienst, een inzet van meerdere dagen of een lange reis — zonder de batterij leeg te trekken.\n\nWAT HET ANDERS MAAKT\nDe meeste trackers trekken de batterij leeg door het GPS permanent aan te laten staan, of verliezen ongemerkt uren van de dag zodra iOS ze onderbreekt. WhereIWas doet geen van beide. De app luistert naar de bewegingscoprocessor, die vrijwel geen energie kost, en schakelt het GPS pas in zodra er werkelijk beweging is — en past de nauwkeurigheid daarna aan de snelheid aan: een afstandsfilter van 10 m te voet, 50 m in de auto. Pas na twee minuten stilstand gaat het GPS weer uit, zodat een rood stoplicht nooit een spoor afbreekt.\n\nGEBOUWD OM TE OVERLEVEN\n• Blijft opnemen met het scherm uit en de app op de achtergrond\n• Start opnieuw en hervat het werk nadat iOS de app bij geheugentekort heeft beëindigd\n• Overleeft een herstart, zodra het apparaat is ontgrendeld\n• Werkt volledig offline — geen bereik, geen server, geen account nodig\n\nELKE FIX, VOLLEDIG GEDOCUMENTEERD\nElk bewaard meetpunt houdt zijn coördinaten, hoogte, horizontale en verticale nauwkeurigheid, snelheid, koers, tijdstempel, herkende activiteit (lopen, hardlopen, fietsen, autorijden, stilstaan), batterijniveau en het geldende GPS-profiel. Onnauwkeurige, verouderde, dubbele en niet-chronologische fixes worden weggefilterd voordat ze worden opgeslagen.\n\nAUDITLOGBOEK\nMet het optionele auditlogboek legt de app vast waarom ze deed wat ze deed: elke ontvangen fix, elke uitgevoerde nauwkeurigheidscontrole met de gemeten waarde en de toegepaste drempel, elke toestandswijziging en elke keer dat het GPS werd uitgeschakeld. Wie zich afvraagt waarom er een gat zit tussen 14.02 en 14.20 uur, vindt daar het antwoord. Exporteerbaar als JSON of als platte tekst.\n\nEXPORTEREN WAT IS OPGENOMEN\nGPX 1.1 voor elk kaartprogramma, of JSON met alle metagegevens. Delen gaat via het standaard deelvenster. Exporteren kan van vandaag, de afgelopen zeven dagen, een zelfgekozen periode, één opname of alles.\n\nDE GEGEVENS BLIJVEN WAAR ZE HOREN\nAlles wordt op het apparaat bewaard, in een lokale database. Geen account, geen server, geen gebruiksstatistieken, geen advertenties, geen tracking. Er wordt niets geüpload. Wat het toestel verlaat en wanneer, bepaalt de gebruiker zelf door het zelf te exporteren.\n\nIN UW TAAL, IN UW EENHEDEN\nVertaald in het Engels, Frans, Duits, Spaans, Italiaans, Japans, Nederlands, Pools en Tsjechisch. Afstanden, snelheden en hoogtes volgen een eigen instelling voor metrische of imperiale eenheden, zonder de taal van het toestel te wijzigen.\n\nLOCATIE OP DE ACHTERGROND\nVoortdurend gebruik van GPS op de achtergrond kan de levensduur van de batterij aanzienlijk verkorten. WhereIWas is gebouwd om die kosten laag te houden — het GPS draait alleen tijdens beweging — en het statusscherm toont doorlopend wat er draait en welk gps-profiel actief is.\n\nVereist iOS 17 of hoger. Voor opnemen op de achtergrond is de locatietoestemming „Altijd” vereist. De toestemming voor Beweging en fitness wordt sterk aangeraden: die maakt de batterijbesparing mogelijk.",
-          "keywords": "tracker,gpx,route,spoor,achtergrond,offline,export,coördinaten,logboek,hulpverlener,veldwerk",
+          "description": "WhereIWas legt een volledig en eerlijk GPS-spoor vast van elke afgelegde route — een hele werkdag, meerdere dagen op pad of een lange reis — zonder de batterij leeg te trekken.\n\nWAT HET ANDERS MAAKT\nDe meeste trackers trekken de batterij leeg door de GPS permanent aan te laten staan, of verliezen ongemerkt uren van de dag zodra iOS ze onderbreekt. WhereIWas doet geen van beide. De app luistert naar de bewegingscoprocessor, die vrijwel geen energie kost, en schakelt de GPS pas in zodra er werkelijk beweging is — en past de nauwkeurigheid daarna aan de snelheid aan: een afstandsfilter van 10 m te voet, 50 m in de auto. Pas na twee minuten stilstand gaat de GPS weer uit, zodat een rood stoplicht nooit een spoor afbreekt.\n\nGEBOUWD OM TE OVERLEVEN\n• Blijft opnemen met het scherm uit en de app op de achtergrond\n• Start zichzelf opnieuw en hervat het werk nadat iOS de app bij geheugentekort heeft beëindigd\n• Overleeft een herstart van het apparaat, zodra u het hebt ontgrendeld\n• Werkt volledig offline — geen bereik, geen server, geen account nodig\n\nELKE FIX, VOLLEDIG GEDOCUMENTEERD\nElk bewaard meetpunt bevat de coördinaten, hoogte, horizontale en verticale nauwkeurigheid, snelheid, koers, tijdstempel, herkende activiteit (lopen, hardlopen, fietsen, autorijden, stilstaan), batterijniveau en het geldende GPS-profiel. Onnauwkeurige, verouderde, dubbele en niet-chronologische fixes worden weggefilterd voordat ze worden opgeslagen.\n\nAUDITLOGBOEK\nMet het optionele auditlogboek legt de app vast waarom hij deed wat hij deed: elke ontvangen fix, elke uitgevoerde nauwkeurigheidscontrole met de gemeten waarde en de toegepaste drempel, elke statuswijziging en elke keer dat de GPS werd uitgeschakeld. Wie zich afvraagt waarom er een gat zit tussen 14.02 en 14.20 uur, vindt daar het antwoord. Exporteerbaar als JSON of als platte tekst.\n\nEXPORTEREN WAT IS OPGENOMEN\nGPX 1.1 voor elk kaartprogramma, of JSON met alle metagegevens. Delen gaat via het standaard deelvenster. Exporteren kan van vandaag, de afgelopen zeven dagen, een zelfgekozen periode, één opgenomen sessie of alles.\n\nDE GEGEVENS BLIJVEN WAAR ZE HOREN\nAlles wordt op het apparaat bewaard, in een lokale database. Geen account, geen server, geen gebruiksstatistieken, geen advertenties, geen tracking. Er wordt niets geüpload. Wat het toestel verlaat en wanneer, bepaalt u zelf door het te exporteren.\n\nIN UW TAAL, IN UW EENHEDEN\nVertaald in het Engels, Frans, Duits, Spaans, Italiaans, Japans, Nederlands, Pools en Tsjechisch. Afstanden, snelheden en hoogtes volgen een eigen instelling voor metrische of imperiale eenheden, zodat u de taal van het toestel niet hoeft te wijzigen om mijlen te lezen.\n\nLOCATIE OP DE ACHTERGROND\nVoortdurend gebruik van GPS op de achtergrond kan de levensduur van de batterij aanzienlijk verkorten. WhereIWas is gebouwd om die kosten laag te houden — de GPS draait alleen tijdens beweging — en het statusscherm toont doorlopend wat er draait en welk GPS-profiel actief is.\n\nVereist iOS 17 of hoger. Voor opnemen op de achtergrond is de locatietoestemming „Altijd” vereist. De toestemming voor Beweging en fitness wordt sterk aangeraden: die maakt de batterijbesparing mogelijk.",
+          "keywords": "tracker,gpx,track,route,spoor,achtergrond,offline,export,coördinaten,logboek,hulpverlener,veldwerk",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "Het GPS draait alleen tijdens beweging: een hele dienst past in één batterij. Overleeft beëindiging en herstart. Export naar GPX en JSON. Alles blijft op de iPhone.",
+          "promotionalText": "De GPS draait alleen tijdens beweging: een hele dienst past in één batterij. Overleeft beëindiging en herstart. Export naar GPX en JSON. Alles blijft op de iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "pl": {
-          "description": "WhereIWas zapisuje kompletny i uczciwy ślad GPS przebytej drogi — przez całą zmianę, kilkudniowe działania albo długą podróż — bez wyczerpywania baterii.\n\nCZYM SIĘ RÓŻNI\nWiększość rejestratorów albo zużywa baterię, trzymając GPS stale włączony, albo po cichu gubi godziny dnia, gdy iOS je zawiesi. WhereIWas nie robi ani jednego, ani drugiego. Nasłuchuje koprocesora ruchu, którego koszt energetyczny jest znikomy, i włącza GPS dopiero wtedy, gdy urządzenie faktycznie się porusza — a potem dopasowuje dokładność do prędkości: filtr odległości 10 m przy chodzeniu, 50 m w samochodzie. Przed ponownym wyłączeniem GPS czeka na dwie minuty bezruchu, więc czerwone światło nigdy nie kończy śladu.\n\nZBUDOWANY, BY PRZETRWAĆ\n• Nagrywa dalej przy wygaszonym ekranie i aplikacji w tle\n• Uruchamia się ponownie i wznawia pracę po zamknięciu przez iOS z powodu braku pamięci\n• Przetrwa restart urządzenia, gdy tylko zostanie ono odblokowane\n• Działa całkowicie offline — bez zasięgu, bez serwera, bez konta\n\nKAŻDY FIX W PEŁNI UDOKUMENTOWANY\nKażda zapisana próbka zachowuje współrzędne, wysokość, dokładność poziomą i pionową, prędkość, kurs, znacznik czasu, wykryty rodzaj aktywności (chód, bieg, jazda na rowerze, jazda samochodem, bezruch), poziom baterii oraz obowiązujący profil GPS. Niedokładne, przeterminowane, zduplikowane i nieuporządkowane w czasie fiksy są odfiltrowywane przed zapisem.\n\nDZIENNIK AUDYTU\nPo włączeniu opcjonalnego dziennika audytu aplikacja zapisuje, dlaczego zrobiła to, co zrobiła: każdy odebrany fix, każde sprawdzenie dokładności wraz ze zmierzoną wartością i zastosowanym progiem, każdą zmianę stanu i każde wyłączenie GPS. Gdy pojawia się pytanie, skąd luka między 14:02 a 14:20, odpowiedź jest właśnie tam. Dziennik można wyeksportować jako JSON lub zwykły tekst.\n\nEKSPORT ZAPISANYCH DANYCH\nGPX 1.1 dla dowolnego narzędzia mapowego albo JSON z pełnymi metadanymi. Wysyłka dokądkolwiek przez standardowy arkusz udostępniania. Eksportować można dzisiejszy dzień, ostatnie siedem dni, wybrany zakres dat, pojedynczą sesję albo wszystko.\n\nDANE POZOSTAJĄ WŁASNOŚCIĄ UŻYTKOWNIKA\nWszystko jest przechowywane na urządzeniu, w lokalnej bazie danych. Bez konta, bez serwera, bez analityki, bez reklam, bez śledzenia. Nic nie jest nigdzie wysyłane. O tym, co i kiedy opuszcza telefon, decyduje wyłącznie użytkownik, eksportując dane samodzielnie.\n\nW TWOIM JĘZYKU, W TWOICH JEDNOSTKACH\nPrzetłumaczona na angielski, francuski, niemiecki, hiszpański, włoski, japoński, niderlandzki, polski i czeski. Odległości, prędkości i wysokości mają własne ustawienie — metryczne albo imperialne — więc nie trzeba zmieniać języka telefonu.\n\nLOKALIZACJA W TLE\nCiągłe korzystanie z GPS działającego w tle może znacznie skrócić czas pracy baterii. WhereIWas został zbudowany tak, aby ten koszt ograniczyć — GPS działa tylko podczas ruchu — a ekran stanu zawsze pokazuje, co jest uruchomione i który profil GPS jest aktywny.\n\nWymaga systemu iOS 17 lub nowszego. Do nagrywania w tle konieczne jest uprawnienie lokalizacji „Zawsze”. Uprawnienie dostępu do ruchu jest zdecydowanie zalecane: to właśnie ono pozwala oszczędzać baterię.",
-          "keywords": "rejestrator,lokalizacja,śledzenie,gpx,tracker,historia,offline,eksport,podróż,ratownictwo,teren",
+          "description": "WhereIWas zapisuje kompletny i uczciwy ślad GPS przebytej drogi — przez cały dzień pracy, kilka dni w terenie albo długą podróż — bez wyczerpywania baterii.\n\nCZYM SIĘ RÓŻNI\nWiększość rejestratorów albo zużywa baterię, trzymając GPS stale włączony, albo po cichu gubi godziny dnia, gdy iOS je zawiesi. WhereIWas nie robi ani jednego, ani drugiego. Nasłuchuje koprocesora ruchu, którego koszt energetyczny jest znikomy, i włącza GPS dopiero wtedy, gdy urządzenie faktycznie się porusza — a potem dopasowuje dokładność do prędkości: filtr odległości 10 m przy chodzeniu, 50 m w samochodzie. Przed ponownym wyłączeniem GPS czeka na dwie minuty bezruchu, więc czerwone światło nigdy nie kończy śladu.\n\nZBUDOWANY, BY PRZETRWAĆ\n• Zapisuje dalej przy wygaszonym ekranie i aplikacji w tle\n• Uruchamia się ponownie i wznawia pracę po zamknięciu przez iOS z powodu braku pamięci\n• Przetrwa restart urządzenia, gdy tylko zostanie ono odblokowane\n• Działa całkowicie offline — bez zasięgu, bez serwera, bez konta\n\nKAŻDY FIX W PEŁNI UDOKUMENTOWANY\nKażda zapisana próbka zachowuje współrzędne, wysokość, dokładność poziomą i pionową, prędkość, kurs, znacznik czasu, wykryty rodzaj aktywności (chód, bieg, jazda na rowerze, jazda samochodem, bezruch), poziom baterii oraz obowiązujący profil GPS. Niedokładne, przestarzałe, zduplikowane i nieuporządkowane w czasie fixy są odfiltrowywane przed zapisem.\n\nDZIENNIK AUDYTU\nPo włączeniu opcjonalnego dziennika audytu aplikacja zapisuje, dlaczego zrobiła to, co zrobiła: każdy odebrany fix, każde sprawdzenie dokładności wraz ze zmierzoną wartością i zastosowanym progiem, każdą zmianę stanu i każde wyłączenie GPS. Gdy pojawia się pytanie, skąd luka między 14:02 a 14:20, odpowiedź jest właśnie tam. Dziennik można wyeksportować jako JSON lub zwykły tekst.\n\nEKSPORT ZAPISANYCH DANYCH\nGPX 1.1 dla dowolnego narzędzia mapowego albo JSON z pełnymi metadanymi. Można je wysłać dokądkolwiek przez systemowe menu udostępniania. Eksportować można dzisiejszy dzień, ostatnie siedem dni, wybrany zakres dat, pojedynczą sesję albo wszystko.\n\nDANE POZOSTAJĄ WŁASNOŚCIĄ UŻYTKOWNIKA\nWszystko jest przechowywane na urządzeniu, w lokalnej bazie danych. Bez konta, bez serwera, bez analityki, bez reklam, bez śledzenia. Nic nie jest nigdzie wysyłane. O tym, co i kiedy opuszcza telefon, decyduje wyłącznie użytkownik, eksportując dane samodzielnie.\n\nW TWOIM JĘZYKU, W TWOICH JEDNOSTKACH\nPrzetłumaczona na angielski, francuski, niemiecki, hiszpański, włoski, japoński, niderlandzki, polski i czeski. Odległości, prędkości i wysokości mają własne ustawienie — metryczne albo imperialne — więc nie trzeba zmieniać języka telefonu.\n\nLOKALIZACJA W TLE\nCiągłe korzystanie z GPS działającego w tle może znacznie skrócić czas pracy baterii. WhereIWas został zbudowany tak, aby ten koszt ograniczyć — GPS działa tylko podczas ruchu — a ekran stanu zawsze pokazuje, co jest uruchomione i który profil GPS jest aktywny.\n\nWymaga systemu iOS 17 lub nowszego. Do zapisu w tle konieczne jest uprawnienie lokalizacji „Zawsze”. Uprawnienie dostępu do ruchu jest zdecydowanie zalecane: to właśnie ono pozwala oszczędzać baterię.",
+          "keywords": "rejestrator,lokalizacja,śledzenie,gpx,tracker,historia,offline,eksport,podróż,ratownictwo,teren,ślad",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "GPS działa tylko podczas ruchu, więc cała zmiana mieści się w baterii. Przetrwa zamknięcie i restart. Eksport GPX i JSON. Wszystko zostaje na iPhonie.",
+          "promotionalText": "GPS działa tylko podczas ruchu, więc bateria wystarcza na całą zmianę. Przetrwa zamknięcie i restart. Eksport GPX i JSON. Wszystko zostaje na iPhonie.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         }
       }

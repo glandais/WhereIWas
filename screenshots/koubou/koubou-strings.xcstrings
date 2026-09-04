@@ -1,60 +1,60 @@
 {
   "sourceLanguage": "en-US",
   "strings": {
-    "A full day of the deployment, street by street.": {
+    "A full day, street by street.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Celý den nasazení, ulici po ulici."
+            "value": "Celý den, ulici po ulici."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ein ganzer Einsatztag, Straße für Straße."
+            "value": "Ein ganzer Tag, Straße für Straße."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "A full day of the deployment, street by street."
+            "value": "A full day, street by street."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un día completo del despliegue, calle por calle."
+            "value": "Un día completo, calle por calle."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Une journée entière de garde, rue par rue."
+            "value": "Une journée entière, rue par rue."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un'intera giornata di intervento, strada per strada."
+            "value": "Un'intera giornata, strada per strada."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "出動した一日を、​街路に沿って​まるごと再現。"
+            "value": "まる一日を、​街路に沿って。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Een volledige dag van de inzet, straat voor straat."
+            "value": "Een volledige dag, straat voor straat."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cały dzień działań, ulica po ulicy."
+            "value": "Cały dzień, ulica po ulicy."
           }
         }
       }
@@ -314,7 +314,7 @@
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Graba con la pantalla apagada"
+            "value": "Registra con la pantalla apagada"
           }
         },
         "fr-FR": {
@@ -338,7 +338,7 @@
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Neemt op met het scherm uit"
+            "value": "Registreert met het scherm uit"
           }
         },
         "pl": {
@@ -354,7 +354,7 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár vteřin."
+            "value": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár sekund."
           }
         },
         "de-DE": {
@@ -396,13 +396,13 @@
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stilstaan schakelt het GPS uit. Bewegen zet het binnen seconden weer aan."
+            "value": "Stilstaan schakelt de GPS uit. Bewegen zet hem binnen seconden weer aan."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stań w miejscu, a się wyłączy. Ruszaj się, a wraca w kilka sekund."
+            "value": "Stań w miejscu, a się wyłączy. Ruszaj się, a wróci w kilka sekund."
           }
         }
       }
@@ -430,13 +430,13 @@
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Resiste cierres, reinicios y sin cobertura."
+            "value": "Resiste cierres, reinicios y la falta de cobertura."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Résiste aux fermetures, redémarrages et coupures réseau."
+            "value": "Résiste aux arrêts iOS, redémarrages et coupures réseau."
           }
         },
         "it": {
@@ -570,7 +570,7 @@
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "U bepaalt wanneer uw gegevens vertrekken"
+            "value": "Uw gegevens gaan pas weg als u het zegt"
           }
         },
         "pl": {

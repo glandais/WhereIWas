@@ -7,55 +7,55 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas zaznamenává polohu průběžně, i na pozadí, aby se pohyb během zásahu neztratil. Data zůstávají v tomto zařízení až do exportu."
+            "value": "WhereIWas zaznamenává vaši polohu na pozadí, i když je obrazovka zamčená, aby se neztratila žádná část trasy — ani během několika dní — a data zůstávají v tomto zařízení, dokud je sami neexportujete."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas zeichnet die Position fortlaufend auf, auch im Hintergrund, damit die Bewegungen während eines Einsatzes nie verloren gehen. Die Daten bleiben auf diesem Gerät, bis sie exportiert werden."
+            "value": "WhereIWas zeichnet Ihren Standort im Hintergrund auf, auch bei gesperrtem Bildschirm, damit kein Teil Ihrer Wege verloren geht — auch über mehrere Tage hinweg — und alles bleibt auf diesem Gerät, bis Sie es exportieren."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it."
+            "value": "WhereIWas records your position in the background, including while the screen is locked, so that no part of your route is lost — even over several days — and it stays on this device until you export it."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas registra la posición de forma continua, también en segundo plano, para que los desplazamientos durante una intervención no se pierdan. Los datos permanecen en este dispositivo hasta que se exportan."
+            "value": "WhereIWas registra la posición en segundo plano, incluso con la pantalla bloqueada, para que no se pierda ninguna parte de sus desplazamientos, ni siquiera a lo largo de varios días; los datos permanecen en este dispositivo hasta que se exporten."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas enregistre votre position en continu, y compris en arrière-plan, afin que vos déplacements pendant une intervention ne soient jamais perdus. Les données restent sur cet appareil jusqu’à ce que vous les exportiez."
+            "value": "WhereIWas enregistre votre position en arrière-plan, y compris lorsque l’écran est verrouillé, afin qu’aucune partie de votre trajet ne soit perdue — même sur plusieurs jours — et tout reste sur cet appareil jusqu’à ce que vous l’exportiez."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas registra la posizione in modo continuo, anche in background, affinché gli spostamenti durante un intervento non vadano perduti. I dati restano su questo dispositivo fino all’esportazione."
+            "value": "WhereIWas registra la tua posizione in background, anche a schermo bloccato, così nessun tratto del tuo percorso va perduto — nemmeno nell’arco di più giorni — e i dati restano su questo dispositivo finché non li esporti."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWasはバックグラウンドを含めて位置を継続的に記録し、出動中の移動が失われないようにします。データはエクスポートするまでこのデバイス内に保存されます。"
+            "value": "WhereIWasは、画面がロックされている間もバックグラウンドで位置情報を記録し、数日間に及ぶ移動でも経路が欠けないようにします。データはエクスポートするまでこのデバイス内に保存されます。"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas legt de positie doorlopend vast, ook op de achtergrond, zodat verplaatsingen tijdens een inzet niet verloren gaan. De gegevens blijven op dit apparaat totdat ze worden geëxporteerd."
+            "value": "WhereIWas legt de positie vast op de achtergrond, ook als het scherm vergrendeld is, zodat er geen deel van de route verloren gaat — ook niet over meerdere dagen — en alles op dit apparaat blijft totdat u het exporteert."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas rejestruje pozycję w sposób ciągły, także w tle, aby przemieszczenia podczas działań nie zostały utracone. Dane pozostają na tym urządzeniu do czasu ich wyeksportowania."
+            "value": "WhereIWas zapisuje pozycję w tle, także przy zablokowanym ekranie, aby żaden fragment trasy nie został utracony — nawet przez kilka dni — a dane pozostają na tym urządzeniu do czasu ich wyeksportowania."
           }
         }
       }
@@ -72,13 +72,13 @@
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas zeichnet die Position auf, um den Bewegungsverlauf zu erstellen."
+            "value": "WhereIWas zeichnet Ihren Standort auf, um Ihren Standortverlauf zu erstellen."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas records your position to build your location history."
+            "value": "WhereIWas records your position while the app is open, so you can see your track on the map and export it as GPX or JSON."
           }
         },
         "es": {
@@ -96,19 +96,19 @@
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas registra la posizione per costruire la cronologia degli spostamenti."
+            "value": "WhereIWas registra la tua posizione per costruire la cronologia dei tuoi spostamenti."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWasは移動履歴を作成するために位置を記録します。"
+            "value": "WhereIWasは、移動履歴を作成するために位置情報を記録します。"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas legt de positie vast om de verplaatsingsgeschiedenis op te bouwen."
+            "value": "WhereIWas legt de positie vast om de locatiegeschiedenis op te bouwen."
           }
         },
         "pl": {
@@ -143,19 +143,19 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "La actividad de movimiento (caminar, conducir, inmovilidad) sirve para activar el GPS solo cuando hay desplazamiento, lo que ahorra batería."
+            "value": "La actividad de movimiento (caminata, conducción, inmovilidad) sirve para activar el GPS solo cuando hay desplazamiento, lo que ahorra batería."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "L’activité physique (marche, conduite, immobilité) sert à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie."
+            "value": "Les données de mouvement (marche, conduite, immobilité) servent à n’activer le GPS que lorsque vous vous déplacez, ce qui économise la batterie."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "L’attività di movimento (camminata, guida, immobilità) serve ad attivare il GPS solo quando ci si sposta, riducendo il consumo della batteria."
+            "value": "L’attività di movimento (camminata, guida, immobilità) serve ad attivare il GPS solo quando ti muovi, riducendo il consumo della batteria."
           }
         },
         "ja": {

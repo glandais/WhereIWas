@@ -72,8 +72,8 @@ targets:
         UIBackgroundModes:
           - location
           - processing
-        NSLocationAlwaysAndWhenInUseUsageDescription: "WhereIWas records your position continuously, including in the background, so that your movements during a deployment are never lost. Data stays on this device until you export it."
-        NSLocationWhenInUseUsageDescription: "WhereIWas records your position to build your location history."
+        NSLocationAlwaysAndWhenInUseUsageDescription: "WhereIWas records your position in the background, including while the screen is locked, so that no part of your route is lost — even over several days — and it stays on this device until you export it."
+        NSLocationWhenInUseUsageDescription: "WhereIWas records your position while the app is open, so you can see your track on the map and export it as GPX or JSON."
         NSMotionUsageDescription: "Motion activity (walking, driving, still) is used to switch GPS on only when you are moving, which saves battery."
         BGTaskSchedulerPermittedIdentifiers:
           - io.github.glandais.whereiwas.maintenance
