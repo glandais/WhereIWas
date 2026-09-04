@@ -102,8 +102,12 @@ public final class MotionMonitor: MotionMonitoring {
         }
 
         if CMPedometer.isStepCountingAvailable() {
-            pedometer.startUpdates(from: Date()) { [weak self] data, error in
-                // Pedometer callbacks arrive on a private serial queue.
+            // `@Sendable` is load-bearing: without it the closure inherits this
+            // class's `@MainActor` isolation, and the runtime check the compiler
+            // inserts for an Objective-C caller traps (`EXC_BREAKPOINT` in
+            // `dispatch_assert_queue`) — CMPedometer calls back on a private
+            // serial queue, never on main.
+            pedometer.startUpdates(from: Date()) { @Sendable [weak self] data, error in
                 let steps = data?.numberOfSteps.intValue
                 let timestamp = data?.endDate ?? Date()
                 let errorCode = (error as NSError?).map { ($0.domain, $0.code) }
