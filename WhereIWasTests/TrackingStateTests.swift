@@ -47,6 +47,7 @@ private extension TrackingStateMachine {
         var m = TrackingStateMachine.at(.moving, settings: settings)
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .low))
         _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.gpsFix(speed: 0))    // corroborates: data still arriving
         _ = m.handle(.stillnessTimerFired)
         precondition(m.phase == .stationary)
         precondition(!m.settledStationary)
@@ -493,6 +494,7 @@ struct TrackingStateStationaryTests {
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         #expect(m.stillnessTimerArmed)
         #expect(!m.settledStationary, "the classifier describes the phone, not the car")
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
         // The unknown reports that follow can still bring tracking back.
@@ -527,6 +529,7 @@ struct TrackingStateStationaryTests {
         _ = m.handle(.gpsFix(speed: 15))
         _ = m.handle(.gpsFix(speed: 15))
         #expect(m.activeProfile?.label == "automotive")
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
@@ -613,12 +616,71 @@ struct TrackingStateMovingTests {
     func timerFires() {
         var m = TrackingStateMachine.at(.moving)
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         let effects = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
         #expect(effects.withoutLogs == [.stopGPS])
         #expect(!m.stillnessTimerArmed)
         #expect(m.activeProfile == nil)
         #expect(m.lastTransition == TrackingTransition(from: .moving, to: .stationary, input: .stillnessTimerFired))
+    }
+
+    /// The bug this guards: on a ride, one fix at a red light armed the
+    /// countdown, iOS then suspended the app, and 120 s later the timer fired
+    /// on evidence nobody had renewed — STATIONARY in the middle of a 11 km
+    /// ride, GPS off.
+    @Test("A timer that fires on nothing goes PROBING, not STATIONARY")
+    func uncorroboratedTimerProbes() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 0.1))
+        #expect(m.stillnessTimerArmed)
+        #expect(!m.stillnessCorroborated)
+
+        let effects = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .probing, "silence is not stillness")
+        #expect(effects.withoutLogs == [.startGPS(.probing), .startProbeTimer(seconds: 45)])
+        #expect(!m.stillnessTimerArmed)
+        #expect(!m.stillnessCorroborated)
+    }
+
+    /// And the probe settles it either way: still nothing moving, STATIONARY.
+    @Test("The probe that follows an uncorroborated timer still settles")
+    func uncorroboratedTimerThenProbeSettles() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 0.1))
+        _ = m.handle(.stillnessTimerFired)
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        #expect(m.settledStationary)
+    }
+
+    /// A second still reading is what tells the machine data is still coming.
+    @Test("Two still readings corroborate the countdown",
+          arguments: [TrackingInput.gpsFix(speed: 0), .motionActivity(kind: .stationary, confidence: .high)])
+    func secondStillReadingCorroborates(_ second: TrackingInput) {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 0.1))
+        #expect(m.handle(second).isEmpty, "the timer is already running")
+        #expect(m.stillnessCorroborated)
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .stationary)
+    }
+
+    /// Corroboration belongs to one countdown: cancelling drops it.
+    @Test("Cancelling the timer forgets the corroboration")
+    func disarmForgetsCorroboration() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.gpsFix(speed: 0))
+        #expect(m.stillnessCorroborated)
+        _ = m.handle(.gpsFix(speed: 2))
+        #expect(!m.stillnessTimerArmed)
+        #expect(!m.stillnessCorroborated)
+
+        _ = m.handle(.gpsFix(speed: 0))
+        #expect(m.stillnessTimerArmed)
+        #expect(!m.stillnessCorroborated, "the new countdown starts unproven")
     }
 
     @Test("Stillness timer expiry without an armed timer is ignored (stale timer)")
@@ -657,6 +719,7 @@ struct TrackingStateMovingTests {
         let e2 = m.handle(.gpsFix(speed: 2))
         #expect(!e2.contains(.cancelStillnessTimer))
         #expect(m.stillnessTimerArmed)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
     }
@@ -775,6 +838,7 @@ struct TrackingStateProfileTests {
         var m = TrackingStateMachine.at(.moving)
         _ = m.handle(.motionActivity(kind: .automotive, confidence: .high))
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
         #expect(m.phase == .stationary)
         _ = m.handle(.significantChange)
@@ -815,6 +879,7 @@ struct TrackingStateScenarioTests {
         // A brief walking blip cancels the countdown.
         _ = step(.motionActivity(kind: .walking, confidence: .medium))
         #expect(!m.stillnessTimerArmed)
+        _ = step(.motionActivity(kind: .stationary, confidence: .high))
         _ = step(.motionActivity(kind: .stationary, confidence: .high))
         _ = step(.stillnessTimerFired)
         #expect(m.phase == .stationary)

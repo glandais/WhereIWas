@@ -10,6 +10,10 @@ import Foundation
 ///    │                   ▼  │                                           stationary
 ///    └────────disable────┴──┴───────────────────────────────────────────────┘
 /// ```
+///
+/// A stillness timer that fires without a second still reading behind it goes
+/// back to PROBING rather than STATIONARY: see
+/// ``TrackingStateMachine/stillnessCorroborated``.
 public enum TrackingPhase: String, Codable, Sendable, Hashable, CaseIterable {
     /// User switched tracking off. Nothing runs, nothing is monitored.
     case disabled
@@ -141,6 +145,14 @@ public struct TrackingStateMachine: Sendable, Equatable {
     public private(set) var activeProfile: GPSProfile?
     /// Whether a stillness timer is currently armed (MOVING only).
     public private(set) var stillnessTimerArmed = false
+    /// Whether a *second* still reading arrived since the timer was armed.
+    ///
+    /// One reading arms the countdown; it is the next one that proves the app
+    /// was still being fed while it ran. Without that, a timer that fires says
+    /// only that nothing arrived — which is what an app suspended mid-ride
+    /// looks like, and is no more evidence of stillness than the fix-less
+    /// probe window ``settledStationary`` already refuses to trust.
+    public private(set) var stillnessCorroborated = false
     /// Whether a probe timer is currently armed (PROBING only).
     public private(set) var probeTimerArmed = false
     /// Number of fixes received during the current PROBING window.
@@ -196,6 +208,14 @@ public struct TrackingStateMachine: Sendable, Equatable {
         case .stillnessTimerFired:
             guard phase == .moving, stillnessTimerArmed else { return [] }
             stillnessTimerArmed = false
+            guard stillnessCorroborated else {
+                // Silence, not stillness: go and measure rather than declare.
+                // PROBING costs one `probeTimeout` of GPS and ends in
+                // STATIONARY anyway if nothing is moving.
+                stillnessCorroborated = false
+                return transition(to: .probing, input: input)
+            }
+            stillnessCorroborated = false
             return transition(to: .stationary, input: input)
 
         case .probeTimerFired:
@@ -337,14 +357,21 @@ public struct TrackingStateMachine: Sendable, Equatable {
     }
 
     private mutating func armStillnessTimer() -> [TrackingEffect] {
-        guard !stillnessTimerArmed else { return [] }
+        guard !stillnessTimerArmed else {
+            // Already counting down. A second still reading is the whole
+            // corroboration: it says data is still reaching us.
+            stillnessCorroborated = true
+            return []
+        }
         stillnessTimerArmed = true
+        stillnessCorroborated = false
         return [.startStillnessTimer(seconds: settings.stillnessTimeout)]
     }
 
     private mutating func disarmStillnessTimer() -> [TrackingEffect] {
         guard stillnessTimerArmed else { return [] }
         stillnessTimerArmed = false
+        stillnessCorroborated = false
         return [.cancelStillnessTimer]
     }
 

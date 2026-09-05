@@ -80,7 +80,8 @@ stateDiagram-v2
     moving --> moving : gpsFix(speed) → startGPS(new profile) if profile changed
     moving --> moving : motionActivity(stationary, conf ≥ min) | gpsFix(speed < stillSpeedThreshold) → startStillnessTimer
     moving --> moving : motionActivity(moving) | gpsFix(fast) → cancelStillnessTimer
-    moving --> stationary : stillnessTimerFired / stopGPS
+    moving --> stationary : stillnessTimerFired, corroborated / stopGPS
+    moving --> probing : stillnessTimerFired, uncorroborated / startGPS(probing)
     probing --> disabled : disable
     stationary --> disabled : disable
     moving --> disabled : disable / stopGPS, stopMotionUpdates, stopSignificantChange
@@ -105,6 +106,7 @@ The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedPr
 
   What this costs, stated plainly: while settled, the pedometer is the only *fast* way back, and it needs ten real steps (`TrackingCoordinator.motionHintStepThreshold`) — a driver who never walks depends on CoreMotion classifying `automotive`, or on a significant change (~500 m). That trade is the point of the rule; if it ever proves too coarse, the fix is a bound on how long a settle may last, not a return to probing on every flap.
 * **Toward STATIONARY is hysteretic**: from MOVING only via the stillness timer (`stillnessTimeout`, 120 s default) which is armed by a credible `stationary` activity or a fix slower than `stillSpeedThreshold` (0.3 m/s) and cancelled by any moving activity or a fast fix (unless the classifier currently says stationary — GPS speed jitter must not defeat CoreMotion).
+* **A timer that fires must have been fed.** Arming takes one still reading; reaching STATIONARY takes a *second* one, arriving while the countdown ran (`stillnessCorroborated`, set by any further arm attempt and cleared on cancel and on each fresh arming). Without it the timer's firing says only that nothing arrived, which is exactly what a suspended app looks like: one fix at a red light armed the countdown, iOS suspended the process, and 120 s later the machine declared STATIONARY in the middle of a ride and switched GPS off. Uncorroborated, `stillnessTimerFired` goes to PROBING instead — one `probeTimeout` of GPS, which settles into STATIONARY anyway when nothing is moving. This is the same rule `settledStationary` already applies to a probe window that saw no fix: an absence of evidence is not evidence of stillness.
 * **Significant change / visits never jump to MOVING**: they are ~500 m accuracy and also fire when *arriving*. They open a PROBING window; a real fix decides.
 * **`enable` → PROBING**: on user toggle and on every relaunch we want a first fix and speed reading immediately.
 * `startGPS(profile)` is re-emitted whenever the computed profile changes while MOVING (speed tier or activity changed); the engine diffs against `currentProfile` and reconfigures in place (no stop/start). The tier comes from `GPSProfile.speedTier` — `0` slow or unknown, `1` above 2.5 m/s, `2` above 7 m/s, `3` above 12.5 m/s — which is also what the confirmation above compares. The top tier carries no profile of its own for a slow label (2 and 3 both mean "vehicle" there); it exists so that a `cycling` label crossing 12.5 m/s, which *does* change the profile, is a tier change the machine acts on. `profileSpeed` follows every fix the machine sees, STATIONARY included (coarse updates still arrive there), so a drive's speed never leaks into the profile of the walk that follows.
