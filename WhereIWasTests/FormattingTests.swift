@@ -143,6 +143,8 @@ struct AuditSummaryTests {
         ("gps.started", ["walking"]),
         ("gps.changed", ["automotive"]),
         ("gps.stopped", []),
+        ("background.session.started", []),
+        ("background.session.ended", []),
         ("fix.accepted", []),
         ("store.insert", ["12"]),
         ("store.insertFailed", ["12"])

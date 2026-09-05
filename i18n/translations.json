@@ -288,6 +288,40 @@
             "pl": "Eksport: %1$@ jako %2$@"
           }
         },
+        "audit.background.session.ended": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Relace aktivity na pozadí uzavřena",
+            "de": "Hintergrund-Aktivitätssitzung geschlossen",
+            "en": {
+              "value": "Background activity session closed",
+              "state": "new"
+            },
+            "es": "Sesión de actividad en segundo plano cerrada",
+            "fr": "Session d'activité en arrière-plan fermée",
+            "it": "Sessione di attività in background chiusa",
+            "ja": "バックグラウンド活動セッションを終了",
+            "nl": "Achtergrondactiviteitssessie gesloten",
+            "pl": "Sesja aktywności w tle zamknięta"
+          }
+        },
+        "audit.background.session.started": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Relace aktivity na pozadí otevřena",
+            "de": "Hintergrund-Aktivitätssitzung geöffnet",
+            "en": {
+              "value": "Background activity session opened",
+              "state": "new"
+            },
+            "es": "Sesión de actividad en segundo plano abierta",
+            "fr": "Session d'activité en arrière-plan ouverte",
+            "it": "Sessione di attività in background aperta",
+            "ja": "バックグラウンド活動セッションを開始",
+            "nl": "Achtergrondactiviteitssessie geopend",
+            "pl": "Sesja aktywności w tle otwarta"
+          }
+        },
         "audit.category.effect": {
           "translations": {
             "cs": "Efekt",

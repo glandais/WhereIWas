@@ -353,6 +353,12 @@ enum Formatting {
                           defaultValue: "GPS profile changed to \(profileName(arg(0)))")
         case "gps.stopped":
             return String(localized: "audit.gps.stopped", defaultValue: "GPS updates stopped")
+        case "background.session.started":
+            return String(localized: "audit.background.session.started",
+                          defaultValue: "Background activity session opened")
+        case "background.session.ended":
+            return String(localized: "audit.background.session.ended",
+                          defaultValue: "Background activity session closed")
         case "location.significantChange":
             return String(localized: "audit.location.significantChange", defaultValue: "Significant location change")
         case "location.visit.arrival":

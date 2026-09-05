@@ -139,12 +139,12 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             return
         }
         applyBackgroundFlags()
+        // Before `apply(profile:)`, so the session the `gps.started` /
+        // `gps.changed` trace reports is the one the updates actually run
+        // under.
+        openBackgroundSession(for: profile)
         apply(profile: profile)
         currentProfile = profile
-        if backgroundSession == nil {
-            backgroundSession = CLBackgroundActivitySession()
-            hasBackgroundActivitySession = true
-        }
         logger.info("startGPS \(profile.label, privacy: .public) filter=\(profile.distanceFilter)")
     }
 
@@ -156,9 +156,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         } else {
             stopUpdates()
         }
-        backgroundSession?.invalidate()
-        backgroundSession = nil
-        hasBackgroundActivitySession = false
+        closeBackgroundSession(reason: "stopGPS")
         if wasOn {
             logger.info("stopGPS coarse=\(self.settings.keepCoarseUpdatesWhileStationary)")
         }
@@ -214,9 +212,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     public func stopAll() {
         currentProfile = nil
         stopUpdates()
-        backgroundSession?.invalidate()
-        backgroundSession = nil
-        hasBackgroundActivitySession = false
+        closeBackgroundSession(reason: "stopAll")
         stopSignificantChangeMonitoring()
         scheduleFlush()
     }
@@ -266,6 +262,38 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
 
     // MARK: - Private helpers
 
+    /// Opens the `CLBackgroundActivitySession` that keeps the process
+    /// running while high-accuracy GPS does, and records that it exists.
+    ///
+    /// The trail carries the session because nothing else proves it: when it
+    /// is missing, iOS suspends the app between two wake-ups and the fixes
+    /// arrive in short bursts minutes apart, which reads in the export like
+    /// GPS that simply stopped reporting.
+    private func openBackgroundSession(for profile: GPSProfile) {
+        guard backgroundSession == nil else { return }
+        backgroundSession = CLBackgroundActivitySession()
+        hasBackgroundActivitySession = true
+        audit.record(AuditEvent(timestamp: Date(),
+                                category: .location,
+                                severity: .info,
+                                name: "background.session.started",
+                                details: [AuditDetail("profile", profile.label)]))
+    }
+
+    /// Invalidates the session, if one is held. `reason` is machine text:
+    /// which call site dropped it.
+    private func closeBackgroundSession(reason: String) {
+        guard backgroundSession != nil else { return }
+        backgroundSession?.invalidate()
+        backgroundSession = nil
+        hasBackgroundActivitySession = false
+        audit.record(AuditEvent(timestamp: Date(),
+                                category: .location,
+                                severity: .info,
+                                name: "background.session.ended",
+                                details: [AuditDetail("reason", reason)]))
+    }
+
     private func applyBackgroundFlags() {
         // Setting `allowsBackgroundLocationUpdates` without the location
         // background mode throws an ObjC exception; project.yml declares it.
@@ -286,7 +314,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                               AuditDetail("to", profile.label),
                                               AuditDetail("desiredAccuracy", profile.desiredAccuracy.rawValue),
                                               AuditDetail("distanceFilter", profile.distanceFilter),
-                                              AuditDetail("activityType", String(describing: profile.activityType))]))
+                                              AuditDetail("activityType", String(describing: profile.activityType)),
+                                              AuditDetail("backgroundSession", hasBackgroundActivitySession)]))
             manager.desiredAccuracy = profile.desiredAccuracy.clAccuracy
             manager.distanceFilter = profile.distanceFilter <= 0 ? kCLDistanceFilterNone : profile.distanceFilter
             manager.activityType = profile.activityType.clActivityType
@@ -428,6 +457,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
 
         var details = TrackingCoordinator.details(for: fix)
         details.append(AuditDetail("source", LocationSource.gps.rawValue))
+        details.append(AuditDetail("backgroundSession", hasBackgroundActivitySession))
         if let profile = appliedProfile {
             details.append(AuditDetail("profile", profile.label))
             details.append(AuditDetail("desiredAccuracy", profile.desiredAccuracy.rawValue))
