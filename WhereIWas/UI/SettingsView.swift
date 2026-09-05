@@ -184,7 +184,7 @@ struct SettingsView: View {
             Text("settings.profiles.title")
         } footer: {
             Text(verbatim: String(localized: "settings.profiles.footer",
-                                  defaultValue: "Distance filter per activity. Speed above \(Formatting.speed(GPSProfile.vehicleSpeedThreshold)) always selects the driving profile; unknown activity above \(Formatting.speed(GPSProfile.runningSpeedThreshold)) uses the running filter."))
+                                  defaultValue: "Distance filter per activity. With an unknown activity, speed decides: the running filter above \(Formatting.speed(GPSProfile.runningSpeedThreshold)), the driving one above \(Formatting.speed(GPSProfile.vehicleSpeedThreshold)). Cycling and running keep their own filter up to \(Formatting.speed(GPSProfile.cyclingVehicleSpeedThreshold))."))
         }
     }
 
@@ -313,7 +313,9 @@ private struct ProfileTable: View {
             Row(id: "automotive", activity: .automotive, title: String(localized: "activity.driving", defaultValue: "Driving"), speed: nil),
             Row(id: "unknown", activity: .unknown, title: String(localized: "settings.profiles.unknownNoSpeed", defaultValue: "Unknown, no speed"), speed: nil),
             Row(id: "unknown-fast", activity: .unknown, title: String(localized: "settings.profiles.unknownSpeed", defaultValue: "Unknown, \(Formatting.speed(4))"), speed: 4),
-            Row(id: "any-vehicle", activity: .walking, title: String(localized: "settings.profiles.anySpeed", defaultValue: "Any, \(Formatting.speed(12))"), speed: 12)
+            // 15 m/s clears the cycling override too, so the row is true of
+            // every activity, as its title says.
+            Row(id: "any-vehicle", activity: .walking, title: String(localized: "settings.profiles.anySpeed", defaultValue: "Any, \(Formatting.speed(15))"), speed: 15)
         ]
     }
 

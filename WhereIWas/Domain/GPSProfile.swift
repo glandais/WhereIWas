@@ -77,14 +77,31 @@ public struct GPSProfile: Codable, Sendable, Hashable {
     public static let runningSpeedThreshold: Double = 2.5
     public static let vehicleSpeedThreshold: Double = 7.0
 
-    /// Which of the three speed tiers a reading falls in: `0` for no speed or
+    /// Speed (m/s) above which even an explicit `cycling` / `running` label
+    /// is treated as a vehicle. 12.5 m/s is 45 km/h.
+    ///
+    /// ``vehicleSpeedThreshold`` is 25 km/h, which any cyclist holds on the
+    /// flat and doubles downhill, so applying it to a `cycling` label put the
+    /// ride on the driving profile — `bestForNavigation` and a 50 m filter —
+    /// for much of its length. A classifier that says `cycling` therefore
+    /// keeps the ride profile up to a speed a bicycle cannot hold; above it
+    /// the label is wrong often enough (a bike on a car rack, a classifier
+    /// that has not caught up with the drive that just started) that speed
+    /// wins again.
+    public static let cyclingVehicleSpeedThreshold: Double = 12.5
+
+    /// Which of the four speed tiers a reading falls in: `0` for no speed or
     /// a slow one, `1` above ``runningSpeedThreshold``, `2` above
-    /// ``vehicleSpeedThreshold``.
+    /// ``vehicleSpeedThreshold``, `3` above ``cyclingVehicleSpeedThreshold``.
     ///
     /// Only the tier matters to the table, so the state machine compares tiers
     /// rather than speeds when it decides whether a reading is worth acting on.
+    /// The top tier exists for that comparison alone: it is where a `cycling`
+    /// label stops holding its profile, and without it a ride that turns into
+    /// a drive would stay on the ride profile.
     public static func speedTier(_ speed: Double?) -> Int {
         guard let s = speed, s >= 0 else { return 0 }
+        if s >= cyclingVehicleSpeedThreshold { return 3 }
         if s >= vehicleSpeedThreshold { return 2 }
         if s >= runningSpeedThreshold { return 1 }
         return 0
@@ -105,15 +122,18 @@ public struct GPSProfile: Codable, Sendable, Hashable {
     /// * `unknown`/`stationary` (we are MOVING anyway, e.g. after a significant
     ///   change) → the speed decides using the thresholds above; with no
     ///   speed → best / `settings.unknownDistanceFilter` (10 m).
-    /// * A high speed always wins over a "slow" activity label: walking at
-    ///   9 m/s is a vehicle with a wrong label.
+    /// * A high speed wins over a "slow" activity label: walking at 9 m/s is
+    ///   a vehicle with a wrong label. `cycling` and `running` are not slow
+    ///   labels: they hold their profile up to
+    ///   ``cyclingVehicleSpeedThreshold``.
     public static func profile(for activity: ActivityKind,
                                speed: Double?,
                                settings: TrackingSettings = TrackingSettings()) -> GPSProfile {
         let validSpeed: Double? = (speed ?? -1) >= 0 ? speed : nil
 
-        // Speed overrides a wrong "slow" classification.
-        if let s = validSpeed, s >= vehicleSpeedThreshold {
+        // Speed overrides a wrong "slow" classification. A wheeled activity
+        // gets a higher bar: 25 km/h is an ordinary cycling speed.
+        if let s = validSpeed, s >= vehicleOverride(for: activity) {
             return automotive(settings)
         }
 
@@ -152,6 +172,14 @@ public struct GPSProfile: Codable, Sendable, Hashable {
                               distanceFilter: settings.unknownDistanceFilter,
                               activityType: .other,
                               label: "slow-unknown")
+        }
+    }
+
+    /// The speed above which `activity` is overridden as a vehicle.
+    private static func vehicleOverride(for activity: ActivityKind) -> Double {
+        switch activity {
+        case .cycling, .running: return cyclingVehicleSpeedThreshold
+        case .walking, .automotive, .unknown, .stationary: return vehicleSpeedThreshold
         }
     }
 

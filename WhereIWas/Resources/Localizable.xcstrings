@@ -14191,55 +14191,55 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtr vzdálenosti podle aktivity. Rychlost nad %1$@ vždy vybere profil pro řízení; neznámá aktivita nad %2$@ použije filtr pro běh."
+            "value" : "Filtr vzdálenosti podle aktivity. U neznámé aktivity rozhoduje rychlost: nad %1$@ filtr pro běh, nad %2$@ filtr pro řízení. Jízda na kole a běh si ponechají vlastní filtr až do %3$@."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Distanzfilter je Aktivität. Eine Geschwindigkeit über %1$@ wählt immer das Fahrprofil; eine unbekannte Aktivität über %2$@ verwendet den Filter für Laufen."
+            "value" : "Distanzfilter je Aktivität. Bei unbekannter Aktivität entscheidet die Geschwindigkeit: über %1$@ der Filter für Laufen, über %2$@ der fürs Fahren. Radfahren und Laufen behalten ihren eigenen Filter bis %3$@."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Distance filter per activity. Speed above %1$@ always selects the driving profile; unknown activity above %2$@ uses the running filter."
+            "value" : "Distance filter per activity. With an unknown activity, speed decides: the running filter above %1$@, the driving one above %2$@. Cycling and running keep their own filter up to %3$@."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtro de distancia por actividad. Una velocidad superior a %1$@ selecciona siempre el perfil de conducción; una actividad desconocida por encima de %2$@ usa el filtro de carrera."
+            "value" : "Filtro de distancia por actividad. Con una actividad desconocida decide la velocidad: el filtro de carrera por encima de %1$@ y el de conducción por encima de %2$@. El ciclismo y la carrera conservan su filtro hasta %3$@."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtre de distance par activité. Une vitesse supérieure à %1$@ sélectionne toujours le profil automobile ; une activité inconnue au-dessus de %2$@ utilise le filtre course à pied."
+            "value" : "Filtre de distance par activité. Pour une activité inconnue, c'est la vitesse qui décide : le filtre course à pied au-dessus de %1$@, le filtre automobile au-dessus de %2$@. Le vélo et la course conservent leur filtre jusqu'à %3$@."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtro di distanza per attività. Una velocità superiore a %1$@ seleziona sempre il profilo auto; un'attività sconosciuta sopra %2$@ utilizza il filtro corsa."
+            "value" : "Filtro di distanza per attività. Con un'attività sconosciuta decide la velocità: il filtro corsa sopra %1$@, quello auto sopra %2$@. Bicicletta e corsa mantengono il proprio filtro fino a %3$@."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクティビティごとの距離フィルタです。速度が%1$@を超えると常に自動車のプロファイルが選択され、不明なアクティビティで%2$@を超えるとランニングのフィルタが使用されます。"
+            "value" : "アクティビティごとの距離フィルタです。アクティビティが不明な場合は速度で決まり、%1$@を超えるとランニング、%2$@を超えると自動車のフィルタになります。自転車とランニングは%3$@までそれぞれのフィルタを維持します。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Afstandsfilter per activiteit. Een snelheid boven %1$@ selecteert altijd het autoprofiel; een onbekende activiteit boven %2$@ gebruikt het hardloopfilter."
+            "value" : "Afstandsfilter per activiteit. Bij een onbekende activiteit beslist de snelheid: boven %1$@ het hardloopfilter, boven %2$@ het autofilter. Fietsen en hardlopen behouden hun eigen filter tot %3$@."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filtr odległości zależny od aktywności. Prędkość powyżej %1$@ zawsze wybiera profil samochodowy; nieznana aktywność powyżej %2$@ używa filtru dla biegu."
+            "value" : "Filtr odległości zależny od aktywności. Przy nieznanej aktywności decyduje prędkość: powyżej %1$@ filtr dla biegu, powyżej %2$@ filtr samochodowy. Jazda na rowerze i bieg zachowują własny filtr do %3$@."
           }
         }
       }

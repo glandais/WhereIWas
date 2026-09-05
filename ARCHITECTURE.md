@@ -107,20 +107,29 @@ The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedPr
 * **Toward STATIONARY is hysteretic**: from MOVING only via the stillness timer (`stillnessTimeout`, 120 s default) which is armed by a credible `stationary` activity or a fix slower than `stillSpeedThreshold` (0.3 m/s) and cancelled by any moving activity or a fast fix (unless the classifier currently says stationary — GPS speed jitter must not defeat CoreMotion).
 * **Significant change / visits never jump to MOVING**: they are ~500 m accuracy and also fire when *arriving*. They open a PROBING window; a real fix decides.
 * **`enable` → PROBING**: on user toggle and on every relaunch we want a first fix and speed reading immediately.
-* `startGPS(profile)` is re-emitted whenever the computed profile changes while MOVING (speed tier or activity changed); the engine diffs against `currentProfile` and reconfigures in place (no stop/start). The tier comes from `GPSProfile.speedTier` — `0` slow or unknown, `1` above 2.5 m/s, `2` above 7 m/s — which is also what the confirmation above compares. `profileSpeed` follows every fix the machine sees, STATIONARY included (coarse updates still arrive there), so a drive's speed never leaks into the profile of the walk that follows.
+* `startGPS(profile)` is re-emitted whenever the computed profile changes while MOVING (speed tier or activity changed); the engine diffs against `currentProfile` and reconfigures in place (no stop/start). The tier comes from `GPSProfile.speedTier` — `0` slow or unknown, `1` above 2.5 m/s, `2` above 7 m/s, `3` above 12.5 m/s — which is also what the confirmation above compares. The top tier carries no profile of its own for a slow label (2 and 3 both mean "vehicle" there); it exists so that a `cycling` label crossing 12.5 m/s, which *does* change the profile, is a tier change the machine acts on. `profileSpeed` follows every fix the machine sees, STATIONARY included (coarse updates still arrive there), so a drive's speed never leaks into the profile of the walk that follows.
 
 ### GPS profile table (`Domain/GPSProfile.swift`, pure)
 
 | Activity | desiredAccuracy | distanceFilter | activityType |
 |---|---|---|---|
 | walking | best | 10 m | fitness |
-| running / cycling | best | 20 m | fitness |
+| running / cycling, speed < 12.5 m/s | best | 20 m | fitness |
 | automotive | bestForNavigation | 50 m | automotiveNavigation |
 | unknown / stationary, no speed | best | 10 m | other |
 | unknown, speed ≥ 2.5 m/s | best | 20 m | fitness |
-| any, speed ≥ 7 m/s | bestForNavigation | 50 m | automotiveNavigation (speed overrides a wrong label) |
+| walking / unknown / stationary, speed ≥ 7 m/s | bestForNavigation | 50 m | automotiveNavigation (speed overrides a wrong label) |
+| running / cycling, speed ≥ 12.5 m/s | bestForNavigation | 50 m | automotiveNavigation |
 
 Probing: best / 0 m. Stationary coarse: threeKilometers / 3000 m.
+
+Speed overrides a *slow* label at `vehicleSpeedThreshold` (7 m/s), because walking at 9 m/s is a vehicle
+with a wrong label. `cycling` and `running` are not slow labels: 7 m/s is 25 km/h, a speed any cyclist
+holds on the flat and doubles downhill, so applying that bar there put entire rides on the driving
+profile — `bestForNavigation` and a 50 m filter, which drops most of a ride's shape. They keep their own
+profile up to `cyclingVehicleSpeedThreshold` (12.5 m/s, 45 km/h), above which a bicycle label is wrong
+often enough — a bike on a car rack, a classifier that has not caught up with the drive that just
+started — that speed wins again.
 
 ### Sample filter (`Domain/LocationFilter.swift`, pure)
 Check order: `horizontalAccuracy <= 0` → invalid; `> maxHorizontalAccuracy` (50 m) → poor; timestamp > 5 s in the future → future; older than `maxSampleAge` (30 s) → stale (CoreLocation replays cached fixes on `startUpdatingLocation`); not after previous accepted → outOfOrder; within `duplicateDistance` (0 m = identical coords) of previous → duplicate; latitude, longitude *and* `horizontalAccuracy` strictly equal to one of the last `LocationFilter.recentCapacity` (10) accepted fixes, with no valid speed → cachedRepeat (iOS replays a cached network fix with a fresh timestamp, which the previous-fix-only duplicate check misses whenever a real fix lands in between; `LocationEngine` keeps the ring, filled from GPS fixes only — `handleCoarse` neither runs the check nor feeds it, since an event fix is ~500 m wide and speed-less. A twin older than `LocationFilter.recentWindow` (600 s) no longer counts, so a receiver whose whole input is one repeated solution is never silenced indefinitely.) Every sample keeps latitude/longitude/altitude/h+v accuracy/speed/speedAccuracy/course/timestamp plus the annotation (activity, confidence, phase, battery level/state, session, profile label, source).

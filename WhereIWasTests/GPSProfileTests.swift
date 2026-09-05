@@ -65,16 +65,35 @@ struct GPSProfileSpeedTests {
     func thresholds() {
         #expect(GPSProfile.runningSpeedThreshold == 2.5)
         #expect(GPSProfile.vehicleSpeedThreshold == 7.0)
+        #expect(GPSProfile.cyclingVehicleSpeedThreshold == 12.5)
         #expect(GPSProfile.runningSpeedThreshold < GPSProfile.vehicleSpeedThreshold)
+        #expect(GPSProfile.vehicleSpeedThreshold < GPSProfile.cyclingVehicleSpeedThreshold)
     }
 
     @Test("Vehicle speed overrides a slow activity label",
-          arguments: [ActivityKind.walking, .running, .cycling, .unknown, .stationary])
+          arguments: [ActivityKind.walking, .unknown, .stationary])
     func speedOverridesLabel(kind: ActivityKind) {
         let p = GPSProfile.profile(for: kind, speed: 9)
         #expect(p.desiredAccuracy == .bestForNavigation)
         #expect(p.distanceFilter == 50)
         #expect(p.activityType == .automotiveNavigation)
+    }
+
+    /// 25 km/h is an ordinary cycling speed, so it must not turn a ride into
+    /// a drive; 45 km/h is not one a bicycle holds, so it must.
+    @Test("A wheeled label holds its profile until the higher threshold",
+          arguments: [ActivityKind.cycling, .running])
+    func wheeledLabelSurvivesVehicleSpeed(kind: ActivityKind) {
+        let fast = GPSProfile.profile(for: kind, speed: 9)
+        #expect(fast.label == kind.rawValue)
+        #expect(fast.desiredAccuracy == .best)
+        #expect(fast.distanceFilter == 20)
+        #expect(fast.activityType == .fitness)
+
+        let vehicle = GPSProfile.profile(for: kind, speed: 13)
+        #expect(vehicle.label == "automotive")
+        #expect(vehicle.desiredAccuracy == .bestForNavigation)
+        #expect(vehicle.distanceFilter == 50)
     }
 
     @Test("Sub-vehicle speed does not override an explicit activity label")
@@ -103,7 +122,10 @@ struct GPSProfileSpeedTests {
         for speed in stride(from: 0.0, through: 60.0, by: 0.5) {
             let p = GPSProfile.profile(for: kind, speed: speed)
             #expect(p.desiredAccuracy <= .best)
-            if speed >= GPSProfile.vehicleSpeedThreshold || kind == .automotive {
+            let override = kind == .cycling || kind == .running
+                ? GPSProfile.cyclingVehicleSpeedThreshold
+                : GPSProfile.vehicleSpeedThreshold
+            if speed >= override || kind == .automotive {
                 #expect(p.desiredAccuracy == .bestForNavigation)
             } else {
                 #expect(p.desiredAccuracy == .best)
@@ -213,9 +235,9 @@ struct AppliedProfileTests {
         #expect(engine.appliedProfile == nil)
     }
 
-    @Test("speedTier maps a reading onto the three tiers the table uses",
+    @Test("speedTier maps a reading onto the four tiers the table uses",
           arguments: [(nil as Double?, 0), (-1, 0), (0, 0), (2.49, 0),
-                      (2.5, 1), (6.99, 1), (7.0, 2), (30, 2)])
+                      (2.5, 1), (6.99, 1), (7.0, 2), (12.49, 2), (12.5, 3), (30, 3)])
     func speedTier(speed: Double?, tier: Int) {
         #expect(GPSProfile.speedTier(speed) == tier)
     }
@@ -224,7 +246,7 @@ struct AppliedProfileTests {
     /// comparing tiers is a faithful stand-in for comparing profiles, whatever
     /// the classifier says.
     @Test("Two speeds in the same tier yield the same profile, for every activity",
-          arguments: [(0.5, 2.0), (3.0, 6.5), (8.0, 30.0)], ActivityKind.allCases)
+          arguments: [(0.5, 2.0), (3.0, 6.5), (8.0, 12.0), (13.0, 30.0)], ActivityKind.allCases)
     func sameTierSameProfile(speeds: (Double, Double), activity: ActivityKind) {
         #expect(GPSProfile.profile(for: activity, speed: speeds.0)
                 == GPSProfile.profile(for: activity, speed: speeds.1))
