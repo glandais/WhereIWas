@@ -10,7 +10,8 @@ import UIKit
 ///   (`allowsBackgroundLocationUpdates`, no automatic pausing, indicator on);
 /// * apply a ``GPSProfile`` in place (`startGPS`) or drop to coarse / off
 ///   (`stopGPS`) while holding a `CLBackgroundActivitySession` whenever
-///   high-accuracy GPS runs;
+///   high-accuracy GPS runs — re-asserting `startUpdatingLocation()` on every
+///   request, since that is what keeps the process alive in the background;
 /// * keep significant-change + visit monitoring armed while tracking is
 ///   enabled, because those two are what relaunch a terminated app;
 /// * run every `CLLocation` through the pure ``LocationFilter``, annotate
@@ -135,9 +136,10 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     // MARK: GPS control
 
     public func startGPS(profile: GPSProfile) {
-        if currentProfile == profile, appliedProfile == profile {
-            return
-        }
+        // No early return on an unchanged profile: the coordinator asking for
+        // GPS again — typically on a background wake-up — is exactly when the
+        // request has to be re-asserted. `apply(profile:)` stays quiet in the
+        // trail when nothing changed.
         applyBackgroundFlags()
         // Before `apply(profile:)`, so the session the `gps.started` /
         // `gps.changed` trace reports is the one the updates actually run
@@ -320,9 +322,19 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             manager.distanceFilter = profile.distanceFilter <= 0 ? kCLDistanceFilterNone : profile.distanceFilter
             manager.activityType = profile.activityType.clActivityType
         }
-        if appliedProfile == nil {
-            manager.startUpdatingLocation()
-        }
+        // Unconditionally, even when the profile did not change and the
+        // manager is already updating.
+        //
+        // "Reconfigure in place, never stop/start" was true of the *manager*
+        // but not of the process: `startUpdatingLocation()` is also what
+        // registers the background location activity that keeps the app
+        // running, and it was called once per launch. A ride showed what that
+        // costs — the last call was 34 hours and three rides old, the app was
+        // woken every five minutes by a significant change, ran for ten
+        // seconds and was suspended again, and 5.5 km came back as 19 fixes
+        // instead of 113. The call is idempotent while updates are running:
+        // it re-asserts the request without cold-starting the receiver.
+        manager.startUpdatingLocation()
         appliedProfile = profile
     }
 
