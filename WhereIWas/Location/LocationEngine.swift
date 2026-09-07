@@ -669,13 +669,34 @@ extension LocationEngine: CLLocationManagerDelegate {
     }
 
     nonisolated public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        // Read off the manager here: it is not `Sendable`, so only the value
+        // crosses into the actor.
+        let allowsBackground = manager.allowsBackgroundLocationUpdates
         MainActor.assumeIsolated {
-            // Should never happen (pausesLocationUpdatesAutomatically = false).
+            // Not supposed to happen: `pausesLocationUpdatesAutomatically` is
+            // false. It stayed a `logger.warning` on that assumption, which
+            // meant an export could never show it — and an export is all a
+            // ride leaves behind. Record it: if CoreLocation is pausing us
+            // anyway, that is the answer to where the fixes went.
             logger.warning("CoreLocation paused updates")
+            audit.record(AuditEvent(timestamp: Date(),
+                                    category: .location,
+                                    severity: .warning,
+                                    name: "location.updates.paused",
+                                    details: [AuditDetail("profile", appliedProfile?.label ?? "off"),
+                                              AuditDetail("backgroundSession", hasBackgroundActivitySession),
+                                              AuditDetail("allowsBackgroundUpdates", allowsBackground)]))
         }
     }
 
     nonisolated public func locationManagerDidResumeLocationUpdates(_ manager: CLLocationManager) {
-        MainActor.assumeIsolated { logger.info("CoreLocation resumed updates") }
+        MainActor.assumeIsolated {
+            logger.info("CoreLocation resumed updates")
+            audit.record(AuditEvent(timestamp: Date(),
+                                    category: .location,
+                                    severity: .info,
+                                    name: "location.updates.resumed",
+                                    details: [AuditDetail("profile", appliedProfile?.label ?? "off")]))
+        }
     }
 }

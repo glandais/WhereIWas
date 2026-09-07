@@ -64,6 +64,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
     @ObservationIgnored private var stillnessTask: Task<Void, Never>?
     @ObservationIgnored private var probeTask: Task<Void, Never>?
     @ObservationIgnored private var sessionTask: Task<Void, Never>?
+    @ObservationIgnored private var heartbeatTask: Task<Void, Never>?
     @ObservationIgnored private var currentSessionID: UUID?
     @ObservationIgnored private var fixesSinceStatsRefresh = 0
     @ObservationIgnored private var lastFixSource: LocationSource?
@@ -365,6 +366,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         if !effects.isEmpty {
             refreshStatus()
         }
+        updateHeartbeat()
     }
 
     private func recordTransition(_ transition: TrackingTransition, reason: String) {
@@ -411,6 +413,64 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
             guard !Task.isCancelled, let self else { return }
             self.stillnessTask = nil
             self.handle(.stillnessTimerFired)
+        }
+    }
+
+    /// Interval between two `app.heartbeat` rows. Long enough to be free,
+    /// short enough that the five-minute holes seen in a ride export cannot
+    /// hide one.
+    static let heartbeatInterval: TimeInterval = 30
+
+    /// Runs a heartbeat while GPS does, and only while the trail is on.
+    ///
+    /// A trail records what happens; nothing records that the app was there
+    /// to see it. So an export cannot distinguish "the receiver reported
+    /// nothing" from "the process was not executing" — the whole question a
+    /// ride keeps raising. A row every 30 seconds turns the second case into
+    /// a hole with a measurable edge: the last heartbeat before it is when
+    /// execution actually stopped.
+    private func updateHeartbeat() {
+        let wanted = audit.isEnabled && machine.phase.isGPSActive
+        if wanted, heartbeatTask == nil {
+            heartbeatTask = Task { [weak self] in
+                while !Task.isCancelled {
+                    do {
+                        try await Task.sleep(for: .seconds(Self.heartbeatInterval))
+                    } catch {
+                        return
+                    }
+                    guard let self, !Task.isCancelled else { return }
+                    self.recordHeartbeat()
+                }
+            }
+        } else if !wanted {
+            heartbeatTask?.cancel()
+            heartbeatTask = nil
+        }
+    }
+
+    private func recordHeartbeat() {
+        let now = Date()
+        var details = [AuditDetail("phase", machine.phase.rawValue),
+                       AuditDetail("profile", machine.activeProfile?.label ?? "off"),
+                       AuditDetail("appState", Self.applicationStateName())]
+        if let fix = engine.lastFix {
+            details.append(AuditDetail("secondsSinceLastFix", now.timeIntervalSince(fix.timestamp)))
+        }
+        audit.record(AuditEvent(timestamp: now,
+                                category: .lifecycle,
+                                severity: .debug,
+                                name: "app.heartbeat",
+                                details: details))
+    }
+
+    /// Machine text, like every other detail value.
+    static func applicationStateName() -> String {
+        switch UIApplication.shared.applicationState {
+        case .active: return "active"
+        case .inactive: return "inactive"
+        case .background: return "background"
+        @unknown default: return "unknown"
         }
     }
 
@@ -599,6 +659,9 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         machine.settings = effective
         engine.apply(settings: effective)
         (audit as? AuditLog)?.apply(settings: effective)
+        // Turning the trail on is what starts the heartbeat, and it may
+        // happen with no effect to piggy-back on.
+        updateHeartbeat()
     }
 
     // MARK: - Annotation
@@ -685,12 +748,29 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
 
     /// Flush buffered samples: the process may be suspended or killed soon.
     public func applicationDidEnterBackground() async {
+        recordAppState("app.background")
         await engine.flush()
     }
 
     public func applicationWillEnterForeground() {
+        recordAppState("app.foreground")
         refreshStatus()
         scheduleStatsRefresh()
+    }
+
+    /// Where the process went, in the trail.
+    ///
+    /// Without it, a gap in the trail is unreadable: an app in the background
+    /// still recording, an app iOS suspended and one the user killed all look
+    /// like the same silence. The heartbeat below says which.
+    private func recordAppState(_ name: String) {
+        audit.record(AuditEvent(timestamp: Date(),
+                                category: .lifecycle,
+                                severity: .info,
+                                name: name,
+                                details: [AuditDetail("phase", machine.phase.rawValue),
+                                          AuditDetail("profile", machine.activeProfile?.label ?? "off")]))
+        updateHeartbeat()
     }
 
     // MARK: - Helpers

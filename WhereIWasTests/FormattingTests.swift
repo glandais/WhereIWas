@@ -127,6 +127,11 @@ struct AuditSummaryTests {
     @Test(arguments: [
         ("app.launched", [String]()),
         ("app.relaunched", []),
+        ("app.background", []),
+        ("app.foreground", []),
+        ("app.heartbeat", []),
+        ("location.updates.paused", []),
+        ("location.updates.resumed", []),
         ("audit.enabled", []),
         ("audit.exported", ["12", "text"]),
         ("maintenance.purge", ["5", "3"]),

@@ -268,6 +268,12 @@ enum Formatting {
             return String(localized: "audit.app.launched", defaultValue: "Launched normally")
         case "app.relaunched":
             return String(localized: "audit.app.relaunched", defaultValue: "Relaunched by a location event")
+        case "app.background":
+            return String(localized: "audit.app.background", defaultValue: "Moved to the background")
+        case "app.foreground":
+            return String(localized: "audit.app.foreground", defaultValue: "Back in the foreground")
+        case "app.heartbeat":
+            return String(localized: "audit.app.heartbeat", defaultValue: "Still running")
         case "audit.enabled":
             return String(localized: "audit.audit.enabled", defaultValue: "Audit trail enabled")
         case "audit.exported":
@@ -359,6 +365,12 @@ enum Formatting {
         case "background.session.ended":
             return String(localized: "audit.background.session.ended",
                           defaultValue: "Background activity session closed")
+        case "location.updates.paused":
+            return String(localized: "audit.location.updatesPaused",
+                          defaultValue: "CoreLocation paused location updates")
+        case "location.updates.resumed":
+            return String(localized: "audit.location.updatesResumed",
+                          defaultValue: "CoreLocation resumed location updates")
         case "location.significantChange":
             return String(localized: "audit.location.significantChange", defaultValue: "Significant location change")
         case "location.visit.arrival":

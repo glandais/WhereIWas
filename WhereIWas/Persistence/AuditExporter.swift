@@ -23,9 +23,26 @@ enum AuditExporter {
         var format: String = "whereiwas.audit"
         var version: Int = 1
         var exportedAt: Date
+        var app: AppBuild = .current
         var eventCount: Int
         var settings: TrackingSettings
         var events: [AuditEvent]
+    }
+
+    /// Which build wrote the file.
+    ///
+    /// An export used to say only `format` and `version`, so reading one back
+    /// meant assuming which build produced it — and the assumption is exactly
+    /// what a fix under test needs proven.
+    struct AppBuild: Codable, Sendable, Equatable {
+        var version: String
+        var build: String
+        var system: String
+
+        static let current = AppBuild(
+            version: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "?",
+            build: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "?",
+            system: ProcessInfo.processInfo.operatingSystemVersionString)
     }
 
     static func json(_ events: [AuditEvent],
@@ -45,6 +62,8 @@ enum AuditExporter {
                      exportedAt: Date = Date()) -> String {
         var out = "WhereIWas audit trail\n"
         out += "exported: \(GPXExporter.iso(exportedAt))\n"
+        let app = AppBuild.current
+        out += "app: \(app.version) (\(app.build)) on \(app.system)\n"
         out += "events: \(events.count)\n"
         out += "recording: accepted=\(settings.auditLogsAcceptedFixes) rejected=\(settings.auditLogsRejectedFixes)"
         out += " checks=\(settings.auditLogsFilterChecks) motion=\(settings.auditLogsMotionEvents)"

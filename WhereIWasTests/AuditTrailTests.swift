@@ -275,6 +275,17 @@ struct AuditExporterTests {
         #expect(envelope.eventCount == 1)
         #expect(envelope.settings.auditRetentionDays == 3)
         #expect(envelope.events == sample)
+        // Which build wrote the file: reading an export back must not mean
+        // guessing whether the fix under test was in it.
+        #expect(envelope.app == AuditExporter.AppBuild.current)
+        #expect(!envelope.app.build.isEmpty)
+    }
+
+    @Test("The text export names the build too")
+    func textExportNamesTheBuild() {
+        let text = AuditExporter.text(sample, settings: TrackingSettings(), exportedAt: now)
+        let app = AuditExporter.AppBuild.current
+        #expect(text.contains("app: \(app.version) (\(app.build))"))
     }
 
     @Test("Text export shows the event, its data and its tests")

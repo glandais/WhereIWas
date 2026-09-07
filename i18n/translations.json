@@ -220,6 +220,57 @@
             "pl": "Inne"
           }
         },
+        "audit.app.background": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Přešla na pozadí",
+            "de": "In den Hintergrund gewechselt",
+            "en": {
+              "value": "Moved to the background",
+              "state": "new"
+            },
+            "es": "Pasó a segundo plano",
+            "fr": "Passée en arrière-plan",
+            "it": "Passata in background",
+            "ja": "バックグラウンドに移行",
+            "nl": "Naar de achtergrond gegaan",
+            "pl": "Przeszła w tło"
+          }
+        },
+        "audit.app.foreground": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Zpět v popředí",
+            "de": "Wieder im Vordergrund",
+            "en": {
+              "value": "Back in the foreground",
+              "state": "new"
+            },
+            "es": "De vuelta en primer plano",
+            "fr": "Revenue au premier plan",
+            "it": "Di nuovo in primo piano",
+            "ja": "フォアグラウンドに復帰",
+            "nl": "Weer op de voorgrond",
+            "pl": "Z powrotem na pierwszym planie"
+          }
+        },
+        "audit.app.heartbeat": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Stále běží",
+            "de": "Läuft weiterhin",
+            "en": {
+              "value": "Still running",
+              "state": "new"
+            },
+            "es": "Sigue en ejecución",
+            "fr": "Toujours en cours d'exécution",
+            "it": "Ancora in esecuzione",
+            "ja": "実行中",
+            "nl": "Draait nog",
+            "pl": "Nadal działa"
+          }
+        },
         "audit.app.launched": {
           "extractionState": "extracted_with_value",
           "translations": {
@@ -1488,6 +1539,40 @@
             "ja": "大幅な位置の変更",
             "nl": "Significante locatiewijziging",
             "pl": "Znacząca zmiana lokalizacji"
+          }
+        },
+        "audit.location.updatesPaused": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "CoreLocation pozastavil aktualizace polohy",
+            "de": "CoreLocation hat die Standortaktualisierungen angehalten",
+            "en": {
+              "value": "CoreLocation paused location updates",
+              "state": "new"
+            },
+            "es": "CoreLocation pausó las actualizaciones de ubicación",
+            "fr": "CoreLocation a suspendu les mises à jour de position",
+            "it": "CoreLocation ha sospeso gli aggiornamenti di posizione",
+            "ja": "CoreLocationが位置情報の更新を一時停止",
+            "nl": "CoreLocation heeft locatie-updates gepauzeerd",
+            "pl": "CoreLocation wstrzymał aktualizacje położenia"
+          }
+        },
+        "audit.location.updatesResumed": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "CoreLocation obnovil aktualizace polohy",
+            "de": "CoreLocation hat die Standortaktualisierungen fortgesetzt",
+            "en": {
+              "value": "CoreLocation resumed location updates",
+              "state": "new"
+            },
+            "es": "CoreLocation reanudó las actualizaciones de ubicación",
+            "fr": "CoreLocation a repris les mises à jour de position",
+            "it": "CoreLocation ha ripreso gli aggiornamenti di posizione",
+            "ja": "CoreLocationが位置情報の更新を再開",
+            "nl": "CoreLocation heeft locatie-updates hervat",
+            "pl": "CoreLocation wznowił aktualizacje położenia"
           }
         },
         "audit.maintenance.purge": {
