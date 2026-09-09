@@ -431,7 +431,7 @@ final class DemoTrackingController: TrackingControlling {
                                      details: [AuditDetail("from", "automotive"),
                                                AuditDetail("to", "stationary-coarse"),
                                                AuditDetail("desiredAccuracy", "threeKilometers"),
-                                               AuditDetail("distanceFilter", 3_000.0),
+                                               AuditDetail("distanceFilter", GPSProfile.stationaryCoarse.distanceFilter),
                                                AuditDetail("activityType", "other")],
                                      phase: .stationary, batteryLevel: battery))
             events.append(AuditEvent(timestamp: parked,

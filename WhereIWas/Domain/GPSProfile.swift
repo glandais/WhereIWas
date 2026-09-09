@@ -65,8 +65,16 @@ public struct GPSProfile: Codable, Sendable, Hashable {
 
     /// A near-free profile the engine may use instead of stopping updates
     /// entirely (see ``TrackingSettings/keepCoarseUpdatesWhileStationary``).
+    ///
+    /// No distance filter, on purpose. Since iOS 16.4 an app that calls both
+    /// `startUpdatingLocation()` and `startMonitoringSignificantLocationChanges()`
+    /// may be suspended in the background when it asks for *both* a coarse
+    /// accuracy *and* a distance filter — and this engine always monitors
+    /// significant changes. Dropping the filter breaks that conjunction; the
+    /// three-kilometre accuracy is what keeps the profile near-free, and it
+    /// is enough on its own to make the fixes rare.
     public static let stationaryCoarse = GPSProfile(desiredAccuracy: .threeKilometers,
-                                                    distanceFilter: 3_000,
+                                                    distanceFilter: 0,
                                                     activityType: .other,
                                                     label: "stationary-coarse")
 

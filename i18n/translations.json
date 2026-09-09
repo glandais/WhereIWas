@@ -1327,6 +1327,23 @@
             "pl": "Aktualizacje GPS zatrzymane"
           }
         },
+        "audit.indicator.forced": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Systémový indikátor polohy ponechán zapnutý",
+            "de": "Systemanzeige für Standort bleibt an",
+            "en": {
+              "value": "System location indicator kept on",
+              "state": "new"
+            },
+            "es": "Indicador de ubicación del sistema siempre visible",
+            "fr": "Indicateur de localisation du système maintenu affiché",
+            "it": "Indicatore di posizione di sistema sempre attivo",
+            "ja": "システムの位置情報インジケータを常時表示",
+            "nl": "Systeemlocatie-indicator blijft aan",
+            "pl": "Systemowy wskaźnik lokalizacji stale widoczny"
+          }
+        },
         "audit.indicator.hidden": {
           "extractionState": "extracted_with_value",
           "translations": {

@@ -144,7 +144,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         // Before `apply(profile:)`, so the session the `gps.started` /
         // `gps.changed` trace reports is the one the updates actually run
         // under.
-        openBackgroundSession(for: profile)
+        openBackgroundSession(reason: profile.label)
         apply(profile: profile)
         currentProfile = profile
         logger.info("startGPS \(profile.label, privacy: .public) filter=\(profile.distanceFilter)")
@@ -158,7 +158,13 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         } else {
             stopUpdates()
         }
-        closeBackgroundSession(reason: "stopGPS")
+        // The session is deliberately *not* closed here. A
+        // `CLBackgroundActivitySession` can only be *started* from the
+        // foreground; one created while the process is already in the
+        // background joins nothing and confers no background location
+        // powers, so dropping it at every STATIONARY meant the next ride —
+        // which starts in the background — ran without a session at all.
+        // Hold it for as long as the trail is on; `stopAll()` releases it.
         if wasOn {
             logger.info("stopGPS coarse=\(self.settings.keepCoarseUpdatesWhileStationary)")
         }
@@ -203,6 +209,10 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     /// long enough for the coordinator to run `.enable` (→ PROBING → GPS).
     public func rearmAfterLaunch() {
         startSignificantChangeMonitoring()
+        // Before any GPS: the session has to exist from the moment the trail
+        // is on, not from the first MOVING, because by then the process is
+        // already in the background and it would be too late to start one.
+        openBackgroundSession(reason: "rearm")
         if currentProfile == nil, settings.keepCoarseUpdatesWhileStationary {
             apply(profile: .stationaryCoarse)
         }
@@ -244,18 +254,18 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                 stopUpdates()
             }
         }
-        // The indicator flag is read by CoreLocation continuously, so a change
-        // takes effect without restarting the updates.
+        // `showsLocationIndicator` is no longer honoured: the indicator is
+        // held on. The setting is still persisted and still shown, and the
+        // trail says so rather than staying silent about a toggle that now
+        // does nothing.
         if old.showsLocationIndicator != settings.showsLocationIndicator {
-            manager.showsBackgroundLocationIndicator = settings.showsLocationIndicator
             audit.record(AuditEvent(timestamp: Date(),
                                     category: .location,
                                     severity: .info,
-                                    name: settings.showsLocationIndicator
-                                        ? "indicator.shown"
-                                        : "indicator.hidden",
-                                    details: [AuditDetail("showsLocationIndicator",
-                                                          settings.showsLocationIndicator)]))
+                                    name: "indicator.forced",
+                                    details: [AuditDetail("requested",
+                                                          settings.showsLocationIndicator),
+                                              AuditDetail("effective", true)]))
         }
         if buffer.count >= settings.insertBatchSize {
             scheduleFlush()
@@ -271,7 +281,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     /// is missing, iOS suspends the app between two wake-ups and the fixes
     /// arrive in short bursts minutes apart, which reads in the export like
     /// GPS that simply stopped reporting.
-    private func openBackgroundSession(for profile: GPSProfile) {
+    private func openBackgroundSession(reason: String) {
         guard backgroundSession == nil else { return }
         backgroundSession = CLBackgroundActivitySession()
         hasBackgroundActivitySession = true
@@ -279,7 +289,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                                 category: .location,
                                 severity: .info,
                                 name: "background.session.started",
-                                details: [AuditDetail("profile", profile.label)]))
+                                details: [AuditDetail("reason", reason)]))
     }
 
     /// Invalidates the session, if one is held. `reason` is machine text:
@@ -302,7 +312,11 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         if !manager.allowsBackgroundLocationUpdates {
             manager.allowsBackgroundLocationUpdates = true
         }
-        manager.showsBackgroundLocationIndicator = settings.showsLocationIndicator
+        // Unconditionally true, and not `settings.showsLocationIndicator`.
+        // Hiding the indicator is a documented way of being suspended in the
+        // background since iOS 16.4 — the very symptom this engine exists to
+        // avoid — so the setting does not get to ask for it.
+        manager.showsBackgroundLocationIndicator = true
     }
 
     private func apply(profile: GPSProfile) {

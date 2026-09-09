@@ -181,7 +181,9 @@ struct GPSProfilePresetTests {
     @Test("Stationary coarse preset is the cheapest possible")
     func stationaryCoarse() {
         #expect(GPSProfile.stationaryCoarse.desiredAccuracy == .threeKilometers)
-        #expect(GPSProfile.stationaryCoarse.distanceFilter == 3_000)
+        // No filter: coarse accuracy *and* a distance filter is the iOS 16.4
+        // combination that gets a significant-change app suspended.
+        #expect(GPSProfile.stationaryCoarse.distanceFilter == 0)
         #expect(GPSProfile.stationaryCoarse.label == "stationary-coarse")
         for kind in ActivityKind.allCases {
             #expect(GPSProfile.profile(for: kind, speed: nil) != GPSProfile.stationaryCoarse)

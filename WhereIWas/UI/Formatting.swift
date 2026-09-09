@@ -351,6 +351,8 @@ enum Formatting {
             return String(localized: "audit.indicator.shown", defaultValue: "System location indicator shown")
         case "indicator.hidden":
             return String(localized: "audit.indicator.hidden", defaultValue: "System location indicator hidden")
+        case "indicator.forced":
+            return String(localized: "audit.indicator.forced", defaultValue: "System location indicator kept on")
         case "gps.started":
             return String(localized: "audit.gps.started",
                           defaultValue: "GPS updates started with profile \(profileName(arg(0)))")

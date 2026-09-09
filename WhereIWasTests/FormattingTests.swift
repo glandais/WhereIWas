@@ -145,6 +145,7 @@ struct AuditSummaryTests {
         ("monitoring.started", []),
         ("indicator.shown", []),
         ("indicator.hidden", []),
+        ("indicator.forced", []),
         ("gps.started", ["walking"]),
         ("gps.changed", ["automotive"]),
         ("gps.stopped", []),
