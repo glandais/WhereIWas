@@ -215,6 +215,13 @@ public protocol LocationStoring: Sendable {
     func appendAudit(_ events: [AuditEvent]) async throws
     /// Read the audit trail back, newest first.
     func auditEvents(matching query: AuditQuery) async throws -> [AuditEvent]
+    /// One page of the trail, newest first, skipping `offset` *stored* rows.
+    ///
+    /// The export reads the trail this way rather than in one call: seven
+    /// days of it is far larger than the app may hold in memory at once.
+    func auditEventPage(matching query: AuditQuery,
+                        offset: Int,
+                        pageSize: Int) async throws -> AuditPage
     /// Total number of stored audit events.
     func auditCount() async throws -> Int
     /// Delete audit events older than `date`; returns how many went.

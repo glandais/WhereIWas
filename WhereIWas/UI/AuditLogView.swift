@@ -28,10 +28,24 @@ struct AuditLogView: View {
         return "\(categories)|\(minimumSeverity.rawValue)|\(exportFormat.rawValue)"
     }
 
-    private var query: AuditQuery {
+    /// What the list shows. Capped: the trail can hold tens of thousands of
+    /// rows and the screen is read by scrolling, not by exhausting it.
+    private var listQuery: AuditQuery {
         AuditQuery(categories: selectedCategories.isEmpty ? nil : selectedCategories,
                    minimumSeverity: minimumSeverity,
                    limit: 1_000)
+    }
+
+    /// What the export writes: the same filters, no cap.
+    ///
+    /// The list's cap has no business here. A ride that used to fit in a
+    /// thousand rows now fills them in half an hour — the export was silently
+    /// keeping the last 36 minutes of a two-hour ride, which is precisely the
+    /// span someone exporting the trail after an incident needs to see.
+    private var exportQuery: AuditQuery {
+        AuditQuery(categories: selectedCategories.isEmpty ? nil : selectedCategories,
+                   minimumSeverity: minimumSeverity,
+                   limit: 0)
     }
 
     var body: some View {
@@ -45,7 +59,7 @@ struct AuditLogView: View {
         .navigationTitle("audit.title")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbar }
-        .task(id: query) { await load() }
+        .task(id: listQuery) { await load() }
         .refreshable { await load() }
         .confirmationDialog("audit.clear.title",
                             isPresented: $showClearConfirmation, titleVisibility: .visible) {
@@ -92,7 +106,7 @@ struct AuditLogView: View {
                     }
                 } footer: {
                     Text(verbatim: String(localized: "audit.export.footer",
-                                          defaultValue: "Written to a temporary folder: \(events.count) events plus the settings in force at export time."))
+                                          defaultValue: "Written to a temporary folder: the whole trail matching the filters, not only the rows listed above, plus the settings in force at export time."))
                 }
             }
             Section {
@@ -186,7 +200,7 @@ struct AuditLogView: View {
         isLoading = true
         defer { isLoading = false }
         do {
-            events = try await controller.auditEvents(matching: query)
+            events = try await controller.auditEvents(matching: listQuery)
             storedCount = try await controller.auditCount()
             loadError = nil
         } catch {
@@ -198,7 +212,7 @@ struct AuditLogView: View {
         isExporting = true
         defer { isExporting = false }
         do {
-            exportURL = try await controller.exportAudit(format: exportFormat, query: query)
+            exportURL = try await controller.exportAudit(format: exportFormat, query: exportQuery)
             exportedFor = exportKey
             loadError = nil
         } catch {

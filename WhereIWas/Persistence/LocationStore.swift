@@ -256,6 +256,28 @@ actor LocationStore: LocationStoring {
         return events
     }
 
+    func auditEventPage(matching query: AuditQuery, offset: Int, pageSize: Int) throws -> AuditPage {
+        // Unlike `auditEvents(matching:)`, the window is a window over the
+        // *stored* rows: `limit` there is applied after the in-memory category
+        // filter so a page stays full, which cannot be paged over. Here the
+        // caller walks the trail by offset and filters each page, so it sees
+        // every match without ever holding more than one page.
+        let minSeverity = query.minimumSeverity.rawValue
+        let start = query.interval?.start ?? Date.distantPast
+        let end = query.interval?.end ?? Date.distantFuture
+        var descriptor = FetchDescriptor<AuditEventLog>(
+            predicate: #Predicate { $0.severityRaw >= minSeverity && $0.timestamp >= start && $0.timestamp <= end },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
+        descriptor.fetchOffset = offset
+        descriptor.fetchLimit = pageSize
+        let rows = try modelContext.fetch(descriptor)
+        var events = rows.map(\.event)
+        if let categories = query.categories {
+            events = events.filter { categories.contains($0.category) }
+        }
+        return AuditPage(events: events, scanned: rows.count)
+    }
+
     func auditCount() throws -> Int {
         try modelContext.fetchCount(FetchDescriptor<AuditEventLog>())
     }

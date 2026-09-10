@@ -256,16 +256,47 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         return try await store.auditCount()
     }
 
+    /// How many stored rows an export reads at a time. Small enough that a
+    /// page is cheap to hold, large enough that a seven-day trail is a few
+    /// hundred round trips rather than tens of thousands.
+    private static let auditExportPageSize = 2_000
+
     /// Writes the audit trail to a shareable file.
+    ///
+    /// Read and written one page at a time. `query.limit == 0` means the whole
+    /// trail, which no longer has to fit in memory: the export used to load
+    /// every matching event *and* render them into one `Data`, and the trail
+    /// now fills a thousand rows in half an hour of riding.
     public func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL {
-        let events = try await auditEvents(matching: query)
-        let url = try AuditExporter.write(events, settings: settings, format: format)
+        // Close the window at the export instant. The app keeps recording
+        // while the file is being written, and paging by offset over a table
+        // that is growing at the head would skip or repeat rows.
+        var query = query
+        let end = Date()
+        query.interval = DateInterval(start: query.interval?.start ?? .distantPast,
+                                      end: min(query.interval?.end ?? end, end))
+        var offset = 0
+        var written = 0
+        let (url, count) = try await AuditExporter.write(settings: settings, format: format) {
+            if query.limit > 0, written >= query.limit { return nil }
+            let page = try await self.store.auditEventPage(matching: query,
+                                                           offset: offset,
+                                                           pageSize: Self.auditExportPageSize)
+            guard page.scanned > 0 else { return nil }
+            offset += page.scanned
+            var events = page.events
+            if query.limit > 0, written + events.count > query.limit {
+                events = Array(events.prefix(query.limit - written))
+            }
+            written += events.count
+            return events
+        }
         audit.record(AuditEvent(timestamp: Date(),
                                 category: .export,
                                 severity: .info,
                                 name: "audit.exported",
-                                arguments: [String(events.count), format.rawValue],
-                                details: [AuditDetail("count", events.count),
+                                arguments: [String(count), format.rawValue],
+                                details: [AuditDetail("count", count),
                                           AuditDetail("format", format.rawValue)]))
         return url
     }

@@ -165,6 +165,22 @@ public struct AuditEvent: Codable, Sendable, Hashable, Identifiable {
 }
 
 /// Filter applied when reading the audit trail back.
+/// One page of the audit trail, read for a streaming export.
+///
+/// `scanned` counts the rows the store actually read, before the category
+/// filter ran over them: the filter is applied in memory, so a page can come
+/// back with no events and still not be the end of the trail. Only
+/// `scanned == 0` means there is nothing left.
+public struct AuditPage: Sendable, Equatable {
+    public var events: [AuditEvent]
+    public var scanned: Int
+
+    public init(events: [AuditEvent], scanned: Int) {
+        self.events = events
+        self.scanned = scanned
+    }
+}
+
 public struct AuditQuery: Sendable, Hashable {
     /// Only these categories; `nil` means all of them.
     public var categories: Set<AuditCategory>?

@@ -240,6 +240,60 @@ struct AuditLogTests {
         let stored = try await store.auditEvents(matching: AuditQuery())
         #expect(stored.map(\.name) == ["before"])
     }
+
+    @Test("Paging walks the whole trail, newest first, without gaps or repeats")
+    func pagingCoversTheTrail() async throws {
+        let store = try makeStore()
+        let base = Date(timeIntervalSince1970: 1_700_000_000)
+        let events = (0..<25).map {
+            AuditEvent(timestamp: base.addingTimeInterval(Double($0)),
+                       category: .state, severity: .info, name: "e\($0)")
+        }
+        try await store.appendAudit(events)
+
+        var seen: [String] = []
+        var offset = 0
+        while true {
+            let page = try await store.auditEventPage(matching: AuditQuery(limit: 0),
+                                                      offset: offset, pageSize: 7)
+            if page.scanned == 0 { break }
+            offset += page.scanned
+            seen += page.events.map(\.name)
+        }
+        #expect(seen == events.reversed().map(\.name))
+    }
+
+    @Test("A page filtered empty is not the end of the trail")
+    func filteredEmptyPageIsNotTheEnd() async throws {
+        let store = try makeStore()
+        let base = Date(timeIntervalSince1970: 1_700_000_000)
+        // Ten state events, then one location event older than all of them:
+        // paging with a location filter must scan past the ten to find it.
+        var events = (0..<10).map {
+            AuditEvent(timestamp: base.addingTimeInterval(Double(10 - $0)),
+                       category: .state, severity: .info, name: "state\($0)")
+        }
+        events.append(AuditEvent(timestamp: base,
+                                 category: .location, severity: .info, name: "fix.accepted"))
+        try await store.appendAudit(events)
+
+        let query = AuditQuery(categories: [.location], limit: 0)
+        let first = try await store.auditEventPage(matching: query, offset: 0, pageSize: 5)
+        #expect(first.events.isEmpty)
+        // The page carried rows, so the caller keeps going — the bug this
+        // guards is stopping on an empty page and losing the tail.
+        #expect(first.scanned == 5)
+
+        var seen: [AuditEvent] = []
+        var offset = 0
+        while true {
+            let page = try await store.auditEventPage(matching: query, offset: offset, pageSize: 5)
+            if page.scanned == 0 { break }
+            offset += page.scanned
+            seen += page.events
+        }
+        #expect(seen.map(\.name) == ["fix.accepted"])
+    }
 }
 
 // MARK: - Export
@@ -306,6 +360,79 @@ struct AuditExporterTests {
         defer { try? FileManager.default.removeItem(at: url) }
         #expect(url.pathExtension == "txt")
         #expect(FileManager.default.fileExists(atPath: url.path))
+    }
+
+    /// `n` events, distinct and ordered, to page over.
+    private func many(_ n: Int) -> [AuditEvent] {
+        (0..<n).map { i in
+            AuditEvent(timestamp: now.addingTimeInterval(Double(-i)),
+                       category: .location,
+                       severity: .info,
+                       name: "fix.accepted",
+                       details: [AuditDetail("index", i)])
+        }
+    }
+
+    @Test("A streamed JSON export decodes as the same envelope as a whole-array one")
+    func streamedJSONMatchesWholeArray() async throws {
+        var settings = TrackingSettings()
+        settings.auditRetentionDays = 5
+        let events = many(7)
+        var pages = [Array(events[0..<3]), Array(events[3..<7])].makeIterator()
+        let (url, count) = try await AuditExporter.write(settings: settings,
+                                                        format: .json,
+                                                        name: "stream-test",
+                                                        exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: url) }
+
+        #expect(count == 7)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let streamed = try decoder.decode(AuditExporter.Envelope.self,
+                                          from: try Data(contentsOf: url))
+        let whole = try decoder.decode(AuditExporter.Envelope.self,
+                                       from: try AuditExporter.json(events, settings: settings, exportedAt: now))
+        #expect(streamed.events == whole.events)
+        #expect(streamed.eventCount == whole.eventCount)
+        #expect(streamed.format == whole.format)
+        #expect(streamed.version == whole.version)
+        #expect(streamed.app == whole.app)
+        #expect(streamed.exportedAt == whole.exportedAt)
+        #expect(streamed.settings.auditRetentionDays == 5)
+        // No scratch file left behind.
+        #expect(!FileManager.default.fileExists(atPath: url.deletingPathExtension()
+            .appendingPathExtension("part").path))
+    }
+
+    @Test("An empty streamed JSON export is still valid JSON")
+    func streamedJSONEmpty() async throws {
+        var pages = [[AuditEvent]]().makeIterator()
+        let (url, count) = try await AuditExporter.write(settings: TrackingSettings(),
+                                                        format: .json,
+                                                        name: "stream-empty",
+                                                        exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: url) }
+        #expect(count == 0)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let envelope = try decoder.decode(AuditExporter.Envelope.self, from: try Data(contentsOf: url))
+        #expect(envelope.events.isEmpty)
+        #expect(envelope.eventCount == 0)
+    }
+
+    @Test("A streamed text export matches the whole-array one byte for byte")
+    func streamedTextMatchesWholeArray() async throws {
+        let settings = TrackingSettings()
+        let events = many(5)
+        var pages = [Array(events[0..<2]), Array(events[2..<5])].makeIterator()
+        let (url, count) = try await AuditExporter.write(settings: settings,
+                                                        format: .text,
+                                                        name: "stream-text",
+                                                        exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: url) }
+        #expect(count == 5)
+        let streamed = try String(contentsOf: url, encoding: .utf8)
+        #expect(streamed == AuditExporter.text(events, settings: settings, exportedAt: now))
     }
 }
 

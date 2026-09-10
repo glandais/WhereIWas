@@ -3996,183 +3996,57 @@
     "audit.export.footer" : {
       "localizations" : {
         "cs" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Uloženo do dočasné složky: %lld události a nastavení platná v době exportu."
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Uloženo do dočasné složky: %lld události a nastavení platná v době exportu."
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Uloženo do dočasné složky: %lld událost a nastavení platná v době exportu."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Uloženo do dočasné složky: %lld událostí a nastavení platná v době exportu."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uloženo do dočasné složky: celý záznam odpovídající filtrům, nejen řádky uvedené výše, a nastavení platná v době exportu."
           }
         },
         "de" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "In einen temporären Ordner geschrieben: %lld Ereignis, plus die zum Exportzeitpunkt geltenden Einstellungen."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "In einen temporären Ordner geschrieben: %lld Ereignisse, plus die zum Exportzeitpunkt geltenden Einstellungen."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In einen temporären Ordner geschrieben: das gesamte Protokoll, das den Filtern entspricht — nicht nur die oben aufgeführten Zeilen — plus die zum Exportzeitpunkt geltenden Einstellungen."
           }
         },
         "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Written to a temporary folder: %lld event plus the settings in force at export time."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Written to a temporary folder: %lld events plus the settings in force at export time."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Written to a temporary folder: the whole trail matching the filters, not only the rows listed above, plus the settings in force at export time."
           }
         },
         "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Escrito en una carpeta temporal: %lld evento, más los ajustes vigentes en el momento de la exportación."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Escrito en una carpeta temporal: %lld eventos, más los ajustes vigentes en el momento de la exportación."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escrito en una carpeta temporal: todo el registro que coincide con los filtros, no solo las filas mostradas arriba, más los ajustes vigentes en el momento de la exportación."
           }
         },
         "fr" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Écrit dans un dossier temporaire : %lld événement, plus les réglages en vigueur au moment de l’export."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Écrit dans un dossier temporaire : %lld événements, plus les réglages en vigueur au moment de l’export."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Écrit dans un dossier temporaire : tout le journal correspondant aux filtres, pas seulement les lignes affichées ci-dessus, plus les réglages en vigueur au moment de l’export."
           }
         },
         "it" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Scritto in una cartella temporanea: %lld evento, più le impostazioni in vigore al momento dell'esportazione."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Scritto in una cartella temporanea: %lld eventi, più le impostazioni in vigore al momento dell'esportazione."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scritto in una cartella temporanea: l'intero registro corrispondente ai filtri, non solo le righe elencate sopra, più le impostazioni in vigore al momento dell'esportazione."
           }
         },
         "ja" : {
-          "variations" : {
-            "plural" : {
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "一時フォルダに書き出されます：イベント%lld件と、エクスポート時点の設定。"
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一時フォルダに書き出されます：フィルタに一致する記録全体（上に表示された行だけではありません）と、エクスポート時点の設定。"
           }
         },
         "nl" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Geschreven naar een tijdelijke map: %lld gebeurtenis, plus de instellingen die golden op het moment van exporteren."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Geschreven naar een tijdelijke map: %lld gebeurtenissen, plus de instellingen die golden op het moment van exporteren."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschreven naar een tijdelijke map: het volledige logboek dat aan de filters voldoet, niet alleen de hierboven getoonde regels, plus de instellingen die golden op het moment van exporteren."
           }
         },
         "pl" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Zapisano w folderze tymczasowym: %lld zdarzenia oraz ustawienia obowiązujące w chwili eksportu."
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Zapisano w folderze tymczasowym: %lld zdarzeń oraz ustawienia obowiązujące w chwili eksportu."
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Zapisano w folderze tymczasowym: %lld zdarzenie oraz ustawienia obowiązujące w chwili eksportu."
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "Zapisano w folderze tymczasowym: %lld zdarzenia oraz ustawienia obowiązujące w chwili eksportu."
-                }
-              }
-            }
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zapisano w folderze tymczasowym: cały dziennik pasujący do filtrów, nie tylko wiersze widoczne powyżej, oraz ustawienia obowiązujące w chwili eksportu."
           }
         }
       }

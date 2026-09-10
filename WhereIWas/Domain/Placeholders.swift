@@ -22,6 +22,15 @@ public actor InMemoryLocationStore: LocationStoring {
         return events
     }
 
+    public func auditEventPage(matching query: AuditQuery,
+                               offset: Int,
+                               pageSize: Int) async throws -> AuditPage {
+        let ordered = audit.sorted { $0.timestamp > $1.timestamp }
+        guard offset < ordered.count else { return AuditPage(events: [], scanned: 0) }
+        let rows = Array(ordered[offset..<min(offset + pageSize, ordered.count)])
+        return AuditPage(events: rows.filter(query.matches), scanned: rows.count)
+    }
+
     public func auditCount() async throws -> Int { audit.count }
 
     public func purgeAudit(olderThan date: Date) async throws -> Int {
