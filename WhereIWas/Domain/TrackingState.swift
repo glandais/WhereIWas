@@ -255,8 +255,28 @@ public struct TrackingStateMachine: Sendable, Equatable {
                                          confidence: ActivityConfidence,
                                          input: TrackingInput) -> [TrackingEffect] {
         guard phase != .disabled else { return [] }
-        lastActivity = kind
-        lastActivityConfidence = confidence
+        // `unknown` is not an observation, it is the absence of one:
+        // CoreMotion is saying "I cannot tell", never "this is no longer
+        // cycling". Letting it overwrite an explicit label is what put a ride
+        // on the driving profile — a 110-minute ride flapped
+        // `cycling` → `unknown` every ten to thirty seconds, and each flap
+        // dropped the profile back onto the speed table, where 25 km/h reads
+        // as a car: 69 % of that ride ran on `bestForNavigation` with a 50 m
+        // filter, at 5.5 %/h of battery.
+        //
+        // Keeping the label is what makes `cyclingVehicleSpeedThreshold`
+        // (12.5 m/s, the speed above which even a `cycling` label yields to a
+        // vehicle) apply at all: it was never reached, because by the time a
+        // fix arrived the label was already gone. A ride that really turns
+        // into a drive is still caught — by that threshold, or by the
+        // classifier eventually saying `automotive`, which does overwrite.
+        //
+        // The phase logic below reads `kind`, not `lastActivity`, so a
+        // confident `unknown` still opens PROBING exactly as before.
+        if kind != .unknown {
+            lastActivity = kind
+            lastActivityConfidence = confidence
+        }
         let credible = confidence >= settings.minimumActivityConfidence
         if kind.impliesMotion {
             settledStationary = false

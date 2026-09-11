@@ -848,6 +848,55 @@ struct TrackingStateProfileTests {
         #expect(m.phase == .moving)
         #expect(e.startGPSProfiles == [GPSProfile.profile(for: .stationary, speed: 1)])
     }
+
+    @Test("A confident unknown does not erase the cycling label the ride is on")
+    func unknownDoesNotEraseAnExplicitLabel() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.motionActivity(kind: .cycling, confidence: .high))
+        #expect(m.lastActivity == .cycling)
+        _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.lastActivity == .cycling)
+
+        // 8 m/s is 29 km/h: over `vehicleSpeedThreshold`, so the speed table
+        // alone would call it a car. The remembered label keeps the ride
+        // profile — and since that is the profile already applied, the right
+        // assertion is that nothing is re-applied at all. Before the fix each
+        // of these flaps emitted a startGPS onto `automotive`, 202 times over
+        // one ride.
+        let effects = m.handle(.gpsFix(speed: 8)) + m.handle(.gpsFix(speed: 8))
+        #expect(!effects.startGPSProfiles.contains { $0.label == "automotive" })
+        #expect(effects.startGPSProfiles.isEmpty)
+        #expect(GPSProfile.profile(for: m.lastActivity, speed: 8).label == "cycling")
+    }
+
+    @Test("A ride that really becomes a drive still switches, on speed or on the label")
+    func aRealDriveStillWins() {
+        var onSpeed = TrackingStateMachine.at(.moving)
+        _ = onSpeed.handle(.motionActivity(kind: .cycling, confidence: .high))
+        _ = onSpeed.handle(.motionActivity(kind: .unknown, confidence: .high))
+        // 20 m/s is 72 km/h, past `cyclingVehicleSpeedThreshold`.
+        _ = onSpeed.handle(.gpsFix(speed: 20))
+        let bySpeed = onSpeed.handle(.gpsFix(speed: 20))
+        #expect(bySpeed.startGPSProfiles.last?.label == "automotive")
+
+        var onLabel = TrackingStateMachine.at(.moving)
+        _ = onLabel.handle(.motionActivity(kind: .cycling, confidence: .high))
+        let byLabel = onLabel.handle(.motionActivity(kind: .automotive, confidence: .high))
+        #expect(onLabel.lastActivity == .automotive)
+        #expect(byLabel.startGPSProfiles.last?.label == "automotive")
+    }
+
+    @Test("Ignoring unknown for the profile leaves the phase logic alone")
+    func unknownStillDrivesThePhase() {
+        // From STATIONARY, a confident unknown still opens PROBING: the phase
+        // switch reads the incoming kind, not the remembered one.
+        var m = TrackingStateMachine.at(.stationary)
+        _ = m.handle(.motionActivity(kind: .cycling, confidence: .high))
+        m = TrackingStateMachine.at(.stationary, settings: m.settings)
+        let e = m.handle(.motionActivity(kind: .unknown, confidence: .high))
+        #expect(m.phase == .probing)
+        #expect(!e.isEmpty)
+    }
 }
 
 // MARK: - Scenarios
