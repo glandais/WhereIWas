@@ -234,21 +234,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     }
 
     public func apply(settings: TrackingSettings) {
-        let old = self.settings
         self.settings = settings
-        // `showsLocationIndicator` is no longer honoured: the indicator is
-        // held on. The setting is still persisted and still shown, and the
-        // trail says so rather than staying silent about a toggle that now
-        // does nothing.
-        if old.showsLocationIndicator != settings.showsLocationIndicator {
-            audit.record(AuditEvent(timestamp: Date(),
-                                    category: .location,
-                                    severity: .info,
-                                    name: "indicator.forced",
-                                    details: [AuditDetail("requested",
-                                                          settings.showsLocationIndicator),
-                                              AuditDetail("effective", true)]))
-        }
         if buffer.count >= settings.insertBatchSize {
             scheduleFlush()
         }
@@ -294,10 +280,10 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         if !manager.allowsBackgroundLocationUpdates {
             manager.allowsBackgroundLocationUpdates = true
         }
-        // Unconditionally true, and not `settings.showsLocationIndicator`.
-        // Hiding the indicator is a documented way of being suspended in the
-        // background since iOS 16.4 — the very symptom this engine exists to
-        // avoid — so the setting does not get to ask for it.
+        // Unconditionally true. Hiding the indicator is a documented way of
+        // being suspended in the background since iOS 16.4 — the very symptom
+        // this engine exists to avoid — so it is not the user's to turn off,
+        // and the setting that used to ask is gone.
         manager.showsBackgroundLocationIndicator = true
     }
 

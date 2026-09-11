@@ -3678,19 +3678,6 @@
             "pl": "Czas wykrywania"
           }
         },
-        "settings.motion.showIndicator": {
-          "translations": {
-            "cs": "Zobrazit indikátor polohy",
-            "de": "Standortanzeige einblenden",
-            "en": "Show location indicator",
-            "es": "Mostrar indicador de ubicación",
-            "fr": "Afficher l’indicateur de localisation",
-            "it": "Mostra indicatore di posizione",
-            "ja": "位置情報インジケータを表示",
-            "nl": "Locatie-indicator tonen",
-            "pl": "Pokaż wskaźnik lokalizacji"
-          }
-        },
         "settings.motion.stillness": {
           "translations": {
             "cs": "Nehybnost před vypnutím GPS",

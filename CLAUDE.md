@@ -287,8 +287,10 @@ unchecked, since CoreMotion, background location, significant changes and visits
 - The blue location indicator is **expected for as long as tracking is on**, STATIONARY included:
   the `CLBackgroundActivitySession` is held from `rearmAfterLaunch()` to `stopAll()` and always
   shows it, and `showsBackgroundLocationIndicator` is forced true because hiding it is a documented
-  way for iOS to suspend the app. The `showsLocationIndicator` setting is still persisted and still
-  shown but no longer honoured; the engine records `indicator.forced` when it is toggled.
+  way for iOS to suspend the app. There is no setting for it: the `showsLocationIndicator` toggle
+  was removed once it stopped being honoured. `Formatting` still translates the `indicator.shown`,
+  `indicator.hidden` and `indicator.forced` codes, because trails written before the removal are
+  still inside the seven-day retention window.
 - The audit trail is opt-in and off by default; it turns over much faster than the samples and has
   its own retention (`auditRetentionDays`, 7 days).
 - Simulator: no background relaunch, no CoreMotion activity, no visits.

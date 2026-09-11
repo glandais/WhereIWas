@@ -37,12 +37,6 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     public var minimumActivityConfidence: ActivityConfidence = .medium
 
 
-    /// When `true` (default), CoreLocation shows the system location
-    /// indicator while the app may use location in the background. Turning it
-    /// off only hides it in the coarse/STATIONARY case: the
-    /// `CLBackgroundActivitySession` held while GPS is on always shows it.
-    public var showsLocationIndicator: Bool = true
-
     // MARK: Display
 
     /// Unit system the UI formats distances, speeds, altitudes and accuracies
@@ -137,7 +131,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
 
     private enum CodingKeys: String, CodingKey {
         case stillnessTimeout, probeTimeout, movingSpeedThreshold, movingFixConfirmations, stillSpeedThreshold
-        case minimumActivityConfidence, showsLocationIndicator
+        case minimumActivityConfidence
         case unitSystem
         case walkingDistanceFilter, runningCyclingDistanceFilter, automotiveDistanceFilter, unknownDistanceFilter
         case maxHorizontalAccuracy, maxSampleAge, duplicateDistance
@@ -155,7 +149,6 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         movingFixConfirmations = try c.decodeIfPresent(Int.self, forKey: .movingFixConfirmations) ?? d.movingFixConfirmations
         stillSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .stillSpeedThreshold) ?? d.stillSpeedThreshold
         minimumActivityConfidence = try c.decodeIfPresent(ActivityConfidence.self, forKey: .minimumActivityConfidence) ?? d.minimumActivityConfidence
-        showsLocationIndicator = try c.decodeIfPresent(Bool.self, forKey: .showsLocationIndicator) ?? d.showsLocationIndicator
         unitSystem = try c.decodeIfPresent(UnitSystem.self, forKey: .unitSystem) ?? d.unitSystem
         walkingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .walkingDistanceFilter) ?? d.walkingDistanceFilter
         runningCyclingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .runningCyclingDistanceFilter) ?? d.runningCyclingDistanceFilter

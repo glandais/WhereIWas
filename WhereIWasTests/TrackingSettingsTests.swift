@@ -30,7 +30,6 @@ struct TrackingSettingsDefaultTests {
         #expect(s.movingFixConfirmations == 2)
         #expect(s.stillSpeedThreshold == 0.3)
         #expect(s.minimumActivityConfidence == .medium)
-        #expect(s.showsLocationIndicator)
         #expect(s.unitSystem == UnitSystem.deviceDefault)
         #expect(s.walkingDistanceFilter == 10)
         #expect(s.runningCyclingDistanceFilter == 20)
@@ -71,7 +70,6 @@ struct TrackingSettingsCodableTests {
         s.movingFixConfirmations = 4
         s.stillSpeedThreshold = 0.05
         s.minimumActivityConfidence = .high
-        s.showsLocationIndicator = false
         s.unitSystem = UnitSystem.deviceDefault == .metric ? .imperial : .metric
         s.walkingDistanceFilter = 1
         s.runningCyclingDistanceFilter = 2
@@ -145,7 +143,7 @@ struct TrackingSettingsCodableTests {
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         let expectedKeys: Set<String> = [
             "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "movingFixConfirmations", "stillSpeedThreshold",
-            "minimumActivityConfidence", "showsLocationIndicator",
+            "minimumActivityConfidence",
             "unitSystem",
             "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter", "unknownDistanceFilter",
             "maxHorizontalAccuracy", "maxSampleAge", "duplicateDistance",
@@ -173,7 +171,6 @@ struct TrackingSettingsPersistenceTests {
         var s = TrackingSettings()
         s.stillnessTimeout = 300
         s.minimumActivityConfidence = .low
-        s.showsLocationIndicator = false
         s.save(to: box.defaults)
         #expect(box.defaults.data(forKey: TrackingSettings.userDefaultsKey) != nil)
         #expect(TrackingSettings.load(from: box.defaults) == s)

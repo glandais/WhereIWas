@@ -121,7 +121,6 @@ struct SettingsView: View {
                 Text("settings.confidence.medium").tag(ActivityConfidence.medium)
                 Text("settings.confidence.high").tag(ActivityConfidence.high)
             }
-            Toggle("settings.motion.showIndicator", isOn: settings.showsLocationIndicator)
         } header: {
             Text("settings.motion.title")
         } footer: {
