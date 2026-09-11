@@ -434,43 +434,34 @@ final class DemoTrackingController: TrackingControlling {
                                      arguments: ["moving", "stationary"],
                                      details: [AuditDetail("from", "moving"), AuditDetail("to", "stationary"),
                                                AuditDetail("input", "stillness timer"),
-                                               AuditDetail("reason", "stillnessTimerFired")],
+                                               AuditDetail("reason", "stillness timer")],
                                      phase: .stationary, batteryLevel: battery))
         }
 
+        // Built through the same producers the app uses — `details(for:)` for
+        // the fix's own fields and `LocationFilter.trace` for the checks — so
+        // a detail added to a real fix lands on the demo card too. Typing them
+        // out by hand is how this file came to describe a screen the app no
+        // longer produced.
         events.append(AuditEvent(timestamp: last.fix.timestamp,
                                  category: .location, severity: .debug,
                                  name: "fix.accepted",
-                                 details: [AuditDetail("latitude", last.fix.latitude, decimals: 6),
-                                           AuditDetail("longitude", last.fix.longitude, decimals: 6),
-                                           AuditDetail("horizontalAccuracy", last.fix.horizontalAccuracy),
-                                           AuditDetail("speed", last.fix.speed),
-                                           AuditDetail("source", "gps"),
-                                           AuditDetail("profile", "automotive"),
-                                           AuditDetail("check.horizontalAccuracy.valid",
-                                                       "passed (\(fmt(last.fix.horizontalAccuracy)) vs > 0 m)"),
-                                           AuditDetail("check.horizontalAccuracy.withinLimit",
-                                                       "passed (\(fmt(last.fix.horizontalAccuracy)) vs <= 50.00 m)"),
-                                           AuditDetail("check.timestamp.notInFuture", "passed"),
-                                           AuditDetail("check.timestamp.notStale", "passed (0.24 s vs <= 30.00 s)"),
-                                           AuditDetail("check.coordinate.notDuplicate",
-                                                       "passed (\(fmt(previous.fix.distance(to: last.fix))) vs > 0.00 m)")],
+                                 details: fixDetails(last.fix, previous: previous.fix,
+                                                     profile: drivingProfile),
                                  phase: .moving, batteryLevel: battery))
 
         // The card the audit trail sells: a fix the filter threw away, with the
         // reason and every check it ran.
-        events.append(AuditEvent(timestamp: last.fix.timestamp.addingTimeInterval(-6),
+        var rejected = previous.fix
+        rejected.horizontalAccuracy = 94.0
+        rejected.timestamp = last.fix.timestamp.addingTimeInterval(-6)
+        var rejectedDetails = fixDetails(rejected, previous: last.fix, profile: drivingProfile)
+        rejectedDetails.append(AuditDetail("rejection", "poorAccuracy(94.0 m)"))
+        events.append(AuditEvent(timestamp: rejected.timestamp,
                                  category: .filter, severity: .info,
                                  name: "fix.rejected",
                                  arguments: ["poorAccuracy", "94.0"],
-                                 details: [AuditDetail("latitude", previous.fix.latitude, decimals: 6),
-                                           AuditDetail("longitude", previous.fix.longitude, decimals: 6),
-                                           AuditDetail("horizontalAccuracy", 94.0),
-                                           AuditDetail("rejection", "poorAccuracy(94.0 m)"),
-                                           AuditDetail("check.horizontalAccuracy.valid", "passed (94.00 vs > 0 m)"),
-                                           AuditDetail("check.horizontalAccuracy.withinLimit",
-                                                       "failed (94.00 vs <= 50.00 m)"),
-                                           AuditDetail("check.timestamp.notStale", "skipped")],
+                                 details: rejectedDetails,
                                  phase: .moving, batteryLevel: battery))
 
         events.append(AuditEvent(timestamp: departure.addingTimeInterval(-6),
@@ -478,10 +469,11 @@ final class DemoTrackingController: TrackingControlling {
                                  name: "gps.changed",
                                  arguments: ["automotive"],
                                  details: [AuditDetail("from", "probing"),
-                                           AuditDetail("to", "automotive"),
-                                           AuditDetail("desiredAccuracy", "bestForNavigation"),
-                                           AuditDetail("distanceFilter", 50.0),
-                                           AuditDetail("activityType", "automotiveNavigation")],
+                                           AuditDetail("to", drivingProfile.label),
+                                           AuditDetail("desiredAccuracy", drivingProfile.desiredAccuracy.rawValue),
+                                           AuditDetail("distanceFilter", drivingProfile.distanceFilter),
+                                           AuditDetail("activityType", String(describing: drivingProfile.activityType)),
+                                           AuditDetail("backgroundSession", true)],
                                  phase: .moving, batteryLevel: 0.88))
         events.append(AuditEvent(timestamp: departure.addingTimeInterval(-8),
                                  category: .state, severity: .info,
@@ -489,7 +481,7 @@ final class DemoTrackingController: TrackingControlling {
                                  arguments: ["probing", "moving"],
                                  details: [AuditDetail("from", "probing"), AuditDetail("to", "moving"),
                                            AuditDetail("input", "activity automotive/high"),
-                                           AuditDetail("reason", "motionActivity")],
+                                           AuditDetail("reason", "activity automotive/high")],
                                  phase: .moving, batteryLevel: 0.88))
         events.append(AuditEvent(timestamp: departure.addingTimeInterval(-12),
                                  category: .motion, severity: .debug,
@@ -528,6 +520,40 @@ final class DemoTrackingController: TrackingControlling {
     }
 
     /// Two decimals, locale-independent: audit payloads are machine text.
+    /// The profile a demo drive runs on, from the real table rather than a
+    /// literal: `automotive` is what `GPSProfile.profile(for:speed:)` returns
+    /// for a driving classification.
+    private static var drivingProfile: GPSProfile {
+        GPSProfile.profile(for: .automotive, speed: nil)
+    }
+
+    /// A fix's audit details, assembled the way `LocationEngine` assembles
+    /// them: `TrackingCoordinator.details(for:)`, then the source and session,
+    /// then the profile, then the distance, then every check
+    /// `LocationFilter.trace` runs. Nothing here is typed out, so a detail the
+    /// app starts recording shows up on the demo card without anyone
+    /// remembering to add it.
+    private static func fixDetails(_ fix: LocationFix,
+                                   previous: LocationFix,
+                                   profile: GPSProfile) -> [AuditDetail] {
+        var details = TrackingCoordinator.details(for: fix)
+        details.append(AuditDetail("source", LocationSource.gps.rawValue))
+        details.append(AuditDetail("backgroundSession", true))
+        details.append(AuditDetail("profile", profile.label))
+        details.append(AuditDetail("desiredAccuracy", profile.desiredAccuracy.rawValue))
+        details.append(AuditDetail("distanceFilter", profile.distanceFilter))
+        details.append(AuditDetail("distanceFromPrevious", fix.distance(to: previous)))
+        let trace = LocationFilter.trace(fix, previous: previous, now: fix.timestamp)
+        for check in trace.checks {
+            var value = check.verdict.rawValue
+            if let measured = check.measured { value += " (\(measured)" }
+            if let limit = check.limit { value += " vs \(limit)" }
+            if check.measured != nil { value += ")" }
+            details.append(AuditDetail("check.\(check.name)", value))
+        }
+        return details
+    }
+
     private static func fmt(_ value: Double) -> String {
         String(format: "%.2f", locale: nil, value)
     }

@@ -38,7 +38,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
 
     public private(set) var authorization: LocationAuthorization
     public private(set) var hasFullAccuracy: Bool
-    /// High-accuracy profile in force; `nil` while GPS is off or coarse.
+    /// High-accuracy profile in force; `nil` while GPS is off.
     public private(set) var currentProfile: GPSProfile?
     public private(set) var lastFix: LocationFix?
     /// The last accepted fixes, oldest first, feeding the filter's

@@ -10922,55 +10922,55 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPS je vypnuté nebo v hrubém režimu. Čeká se na pohyb, významnou změnu polohy nebo návštěvu."
+            "value" : "GPS je vypnuté. Čeká se na pohyb, významnou změnu polohy nebo návštěvu."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Das GPS ist aus oder läuft nur grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch."
+            "value" : "Das GPS ist aus. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPS is off or coarse. Waiting for motion, a significant location change or a visit."
+            "value" : "GPS is off. Waiting for motion, a significant location change or a visit."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El GPS está desactivado o en modo impreciso. A la espera de movimiento, un cambio significativo de ubicación o una visita."
+            "value" : "El GPS está desactivado. A la espera de movimiento, un cambio significativo de ubicación o una visita."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le GPS est éteint ou en mode approximatif. En attente d’un mouvement, d’un changement de position significatif ou d’une visite."
+            "value" : "Le GPS est éteint. En attente d’un mouvement, d’un changement de position significatif ou d’une visite."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il GPS è spento o in modalità approssimativa. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita."
+            "value" : "Il GPS è spento. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPSはオフまたは粗い状態です。動き、大幅な位置の変更、訪問のいずれかを待機しています。"
+            "value" : "GPSはオフです。動き、大幅な位置の変更、訪問のいずれかを待機しています。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De GPS is uitgeschakeld of grof. Wachten op beweging, een significante locatiewijziging of een bezoek."
+            "value" : "De GPS is uitgeschakeld. Wachten op beweging, een significante locatiewijziging of een bezoek."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "GPS jest wyłączony lub działa w trybie przybliżonym. Oczekiwanie na ruch, znaczącą zmianę lokalizacji lub wizytę."
+            "value" : "GPS jest wyłączony. Oczekiwanie na ruch, znaczącą zmianę lokalizacji lub wizytę."
           }
         }
       }

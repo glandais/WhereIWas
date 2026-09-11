@@ -6,6 +6,51 @@ recorded as they are made; open questions are listed at the end and removed once
 
 `screenshots/README.md` describes what the pipeline does today.
 
+## D19 — the card that was arguing against itself (2026-09-11)
+
+Card 2 sells "GPS runs only while you move / Stand still and it switches off", and the phone in it
+showed `GPS profile — Stationary (coarse)`. The card was quietly contradicting its own headline:
+the GPS was not switching off, it was being turned down. That is no longer true of the app —
+`GPSProfile.stationaryCoarse` and `keepCoarseUpdatesWhileStationary` are gone (`93fc161`), because
+the coarse profile was recording a parked phone 95 times an hour and had never once been what
+brought the app out of STATIONARY — so the card now says `GPS off` and means it.
+
+Three things were false on that card and had to be fixed *before* capturing, not after:
+
+- the `GPS profile` row, which followed from the code change;
+- `phase.stationary.explanation`, which read "GPS is off **or coarse**. Waiting for motion…" in all
+  nine languages — a string that had gone false without a compiler anywhere to say so;
+- `DemoTrackingController`'s stationary fixtures, which still applied the coarse profile and
+  emitted a `gps.changed` towards `stationary-coarse`. It is now `nil` and a `gps.stopped`.
+
+The other four cards were checked and left alone: card 4 is the only other one that could have
+drifted, and it shows the audit **list**, whose rows are summaries.
+
+**The audit fixtures stopped being literals.** Looking for what else had gone stale turned up the
+drift this ledger keeps warning about: `74f883b` had added a `backgroundSession` detail to every
+`fix.accepted` and `gps.changed` and the demo had not followed, a real `fix.accepted` carries ten
+details the demo did not have (`timestamp`, `altitude`, `verticalAccuracy`, `course`,
+`desiredAccuracy`, `distanceFilter`, `distanceFromPrevious` and two more checks), and a real
+`state.transition` writes `reason` equal to its `input` ("activity automotive/high") where the demo
+wrote `reason: "motionActivity"`.
+
+None of it reached a card — no card opens `AuditEventDetailView`, so the detail screen is exactly
+the part of the demo data nothing captures and nothing tests. Copying the missing details in by
+hand would have fixed this instance and left the mechanism intact, so the fixtures now go through
+the producers instead: `TrackingCoordinator.details(for:)` for a fix's own fields,
+`LocationFilter.trace` for the checks, `GPSProfile.profile(for:speed:)` for the driving profile.
+A detail added to a real fix now lands on the demo screen without anyone remembering to add it.
+
+This does not change any card — the list rows are summaries, built from `arguments`, which did not
+move — so the uploaded set stands. It changes what the detail screen would show if a card ever
+opened one.
+
+**Uploaded.** 45 assets replaced in one app-scoped fan-out, every one `COMPLETE`, and the store was
+read back rather than trusted: five cards per locale, the five expected names, no duplicates.
+Version 1.0.0 was in `PREPARE_FOR_SUBMISSION` throughout. The `--replace --dry-run` first pass
+printed 45 deletions and 45 uploads over the nine locale directories, which is the check that a
+locale has not gone missing.
+
 ## Where things stand (2026-09-04, fourth entry)
 
 Card 5 was reframed and the whole set re-rendered. Two changes:

@@ -561,7 +561,7 @@ extension TrackingPhase {
     var explanation: String {
         switch self {
         case .disabled: return String(localized: "phase.off.explanation", defaultValue: "Tracking is switched off. Nothing is recorded.")
-        case .stationary: return String(localized: "phase.stationary.explanation", defaultValue: "GPS is off or coarse. Waiting for motion, a significant location change or a visit.")
+        case .stationary: return String(localized: "phase.stationary.explanation", defaultValue: "GPS is off. Waiting for motion, a significant location change or a visit.")
         case .probing: return String(localized: "phase.probing.explanation", defaultValue: "GPS is on briefly to confirm whether you are moving.")
         case .moving: return String(localized: "phase.moving.explanation", defaultValue: "GPS is on, tuned to your current speed and activity.")
         }

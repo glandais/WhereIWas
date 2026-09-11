@@ -3010,15 +3010,15 @@
         },
         "phase.stationary.explanation": {
           "translations": {
-            "cs": "GPS je vypnuté nebo v hrubém režimu. Čeká se na pohyb, významnou změnu polohy nebo návštěvu.",
-            "de": "Das GPS ist aus oder läuft nur grob. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch.",
-            "en": "GPS is off or coarse. Waiting for motion, a significant location change or a visit.",
-            "es": "El GPS está desactivado o en modo impreciso. A la espera de movimiento, un cambio significativo de ubicación o una visita.",
-            "fr": "Le GPS est éteint ou en mode approximatif. En attente d’un mouvement, d’un changement de position significatif ou d’une visite.",
-            "it": "Il GPS è spento o in modalità approssimativa. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita.",
-            "ja": "GPSはオフまたは粗い状態です。動き、大幅な位置の変更、訪問のいずれかを待機しています。",
-            "nl": "De GPS is uitgeschakeld of grof. Wachten op beweging, een significante locatiewijziging of een bezoek.",
-            "pl": "GPS jest wyłączony lub działa w trybie przybliżonym. Oczekiwanie na ruch, znaczącą zmianę lokalizacji lub wizytę."
+            "cs": "GPS je vypnuté. Čeká se na pohyb, významnou změnu polohy nebo návštěvu.",
+            "de": "Das GPS ist aus. Wartet auf Bewegung, eine signifikante Standortänderung oder einen Besuch.",
+            "en": "GPS is off. Waiting for motion, a significant location change or a visit.",
+            "es": "El GPS está desactivado. A la espera de movimiento, un cambio significativo de ubicación o una visita.",
+            "fr": "Le GPS est éteint. En attente d’un mouvement, d’un changement de position significatif ou d’une visite.",
+            "it": "Il GPS è spento. In attesa di un movimento, di un cambiamento significativo di posizione o di una visita.",
+            "ja": "GPSはオフです。動き、大幅な位置の変更、訪問のいずれかを待機しています。",
+            "nl": "De GPS is uitgeschakeld. Wachten op beweging, een significante locatiewijziging of een bezoek.",
+            "pl": "GPS jest wyłączony. Oczekiwanie na ruch, znaczącą zmianę lokalizacji lub wizytę."
           }
         },
         "precise.off": {
