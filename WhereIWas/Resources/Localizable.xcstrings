@@ -11093,64 +11093,6 @@
         }
       }
     },
-    "profile.stationaryCoarse" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "V klidu (hrubý)"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stationär (grob)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stationary (coarse)"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estacionario (impreciso)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À l’arrêt (approximatif)"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stazionario (approssimativo)"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "静止（粗い）"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stilstaand (grof)"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bezruch (przybliżony)"
-          }
-        }
-      }
-    },
     "profile.unknown" : {
       "comment" : "GPS profile name; the subject is the profile, not the activity",
       "localizations" : {
@@ -13606,113 +13548,55 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delší nehybnost brání kolísání stavu na semaforech, ale po zastavení nechává GPS zapnuté déle. Hrubé aktualizace (přesnost 3 km) mají téměř nulovou spotřebu a udržují aplikaci aktivní na pozadí — proto systémový indikátor polohy svítí, i když jste v klidu. Vypnutí této volby indikátor skryje, ale iOS ho stejně zobrazí, kdykoli GPS zaznamenává na pozadí."
+            "value" : "Delší nehybnost brání přepínání na semaforech, ale po zastavení nechává GPS déle zapnutou. Systémový indikátor polohy zůstává svítit po celou dobu sledování: jeho skrytí je doložený způsob, jak iOS uspí aplikaci na pozadí."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Eine längere Stillstandsdauer vermeidet Wechsel an Ampeln, hält das GPS aber nach dem Anhalten länger eingeschaltet. Grobe Aktualisierungen (Genauigkeit 3 km) kosten fast nichts und halten die App im Hintergrund aktiv — deshalb bleibt die Standortanzeige des Systems im Stillstand eingeschaltet. Das Deaktivieren blendet sie aus, aber iOS zeigt sie trotzdem an, sobald das GPS im Hintergrund aufzeichnet."
+            "value" : "Eine längere Stillstandsdauer vermeidet Wechsel an Ampeln, hält das GPS aber nach dem Anhalten länger eingeschaltet. Die Systemanzeige für den Standort bleibt an, solange aufgezeichnet wird: sie auszublenden ist ein belegter Weg, wie iOS die App im Hintergrund anhält."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. Coarse updates (3 km accuracy) cost almost nothing and keep the app alive in the background — which is why the system location indicator stays on while stationary. Turning off “Show location indicator” hides it, but iOS still shows it whenever GPS is recording in the background."
+            "value" : "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. The system location indicator stays on for as long as tracking runs: hiding it is a documented way for iOS to suspend the app in the background."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Una inmovilidad más larga evita las oscilaciones en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerse. Las actualizaciones de baja precisión (3 km) apenas consumen recursos y mantienen la app activa en segundo plano; por eso el indicador de ubicación del sistema permanece encendido en estado estacionario. Desactivar esta opción lo oculta, pero iOS lo sigue mostrando siempre que el GPS esté registrando en segundo plano."
+            "value" : "Una inmovilidad más larga evita los cambios en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerte. El indicador de ubicación del sistema permanece visible mientras se registra: ocultarlo es una forma documentada de que iOS suspenda la app en segundo plano."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Les mises à jour approximatives (précision 3 km) ne coûtent presque rien et maintiennent l’app active en arrière-plan — c’est pourquoi l’indicateur de localisation du système reste allumé à l’arrêt. Le désactiver le masque, mais iOS l’affiche quand même dès que le GPS enregistre en arrière-plan."
+            "value" : "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. L’indicateur de localisation du système reste allumé tant que le suivi tourne : le masquer est une cause documentée de suspension de l’app en arrière-plan par iOS."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Gli aggiornamenti approssimativi (precisione 3 km) costano quasi nulla e mantengono l'app attiva in background — per questo l'indicatore di posizione del sistema resta acceso da stazionario. Disattivarlo lo nasconde, ma iOS lo mostra comunque ogni volta che il GPS registra in background."
+            "value" : "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. L'indicatore di posizione di sistema resta acceso per tutta la registrazione: nasconderlo è un modo documentato perché iOS sospenda l'app in background."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。粗い位置情報の更新（精度3km）はほとんど負荷がなく、バックグラウンドでAppを維持します。静止中もシステムの位置情報インジケータが表示され続けるのはこのためです。オフにすると非表示になりますが、GPSがバックグラウンドで記録している間はiOSが表示を続けます。"
+            "value" : "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。記録中はシステムの位置情報インジケータが表示され続けます。これを非表示にすると、iOSがバックグラウンドでAppを停止させる原因になることが知られています。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. Grove updates (nauwkeurigheid 3 km) kosten vrijwel niets en houden de app actief op de achtergrond — daarom blijft de locatie-indicator van het systeem aan bij stilstand. Uitschakelen verbergt deze, maar iOS toont hem nog steeds zodra de GPS op de achtergrond registreert."
+            "value" : "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. De systeemlocatie-indicator blijft aan zolang er wordt vastgelegd: hem verbergen is een gedocumenteerde manier waarop iOS de app op de achtergrond onderbreekt."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dłuższy czas bezruchu ogranicza przełączanie stanów na światłach, ale utrzymuje GPS włączony dłużej po zatrzymaniu. Przybliżone aktualizacje (dokładność 3 km) kosztują niemal nic i utrzymują aplikację aktywną w tle — dlatego systemowy wskaźnik lokalizacji pozostaje włączony w bezruchu. Wyłączenie tej opcji ukrywa go, ale iOS i tak go pokazuje, gdy GPS rejestruje dane w tle."
-          }
-        }
-      }
-    },
-    "settings.motion.keepCoarse" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hrubé aktualizace při nehybnosti"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grobe Aktualisierungen im Stillstand beibehalten"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep coarse updates while stationary"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantener actualizaciones de baja precisión en estacionario"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Garder des mises à jour approximatives à l’arrêt"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mantieni aggiornamenti approssimativi da stazionario"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "静止中も粗い位置情報を維持"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grove updates behouden bij stilstand"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Przybliżone aktualizacje w bezruchu"
+            "value" : "Dłuższy czas bezruchu zapobiega przełączaniu na światłach, ale dłużej utrzymuje GPS po zatrzymaniu. Systemowy wskaźnik lokalizacji świeci przez cały czas rejestrowania: jego ukrycie to udokumentowany powód, dla którego iOS wstrzymuje aplikację w tle."
           }
         }
       }

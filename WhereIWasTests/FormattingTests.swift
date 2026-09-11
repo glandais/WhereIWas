@@ -60,7 +60,7 @@ struct AuditSummaryTests {
     /// Every effect the state machine can order.
     @Test(arguments: [
         TrackingEffect.startGPS(.probing),
-        .startGPS(.stationaryCoarse),
+        .startGPS(GPSProfile.profile(for: .automotive, speed: nil)),
         .stopGPS,
         .startStillnessTimer(seconds: 120),
         .cancelStillnessTimer,

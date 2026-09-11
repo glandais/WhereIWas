@@ -490,7 +490,6 @@ enum Formatting {
     static func profileName(_ label: String) -> String {
         switch label {
         case "probing": return String(localized: "common.probing", defaultValue: "Probing")
-        case "stationary-coarse": return String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)")
         case "walking": return String(localized: "activity.walking", defaultValue: "Walking")
         case "running": return String(localized: "activity.running", defaultValue: "Running")
         case "cycling": return String(localized: "activity.cycling", defaultValue: "Cycling")

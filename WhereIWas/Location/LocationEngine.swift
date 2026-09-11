@@ -51,8 +51,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
 
     // MARK: Extra observable state (superset of the protocol)
 
-    /// Profile actually applied to the manager, including
-    /// ``GPSProfile/stationaryCoarse``; `nil` when updates are stopped.
+    /// Profile actually applied to the manager; `nil` when updates are
+    /// stopped.
     public private(set) var appliedProfile: GPSProfile?
     /// `true` between `startSignificantChangeMonitoring` and its stop.
     public private(set) var isMonitoringSignificantChanges = false
@@ -153,11 +153,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     public func stopGPS() {
         let wasOn = currentProfile != nil
         currentProfile = nil
-        if settings.keepCoarseUpdatesWhileStationary {
-            apply(profile: .stationaryCoarse)
-        } else {
-            stopUpdates()
-        }
+        stopUpdates()
         // The session is deliberately *not* closed here. A
         // `CLBackgroundActivitySession` can only be *started* from the
         // foreground; one created while the process is already in the
@@ -165,9 +161,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         // powers, so dropping it at every STATIONARY meant the next ride —
         // which starts in the background — ran without a session at all.
         // Hold it for as long as the trail is on; `stopAll()` releases it.
-        if wasOn {
-            logger.info("stopGPS coarse=\(self.settings.keepCoarseUpdatesWhileStationary)")
-        }
+        if wasOn { logger.info("stopGPS") }
         scheduleFlush()
     }
 
@@ -213,9 +207,6 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         // is on, not from the first MOVING, because by then the process is
         // already in the background and it would be too late to start one.
         openBackgroundSession(reason: "rearm")
-        if currentProfile == nil, settings.keepCoarseUpdatesWhileStationary {
-            apply(profile: .stationaryCoarse)
-        }
         logger.info("re-armed after launch")
     }
 
@@ -245,15 +236,6 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     public func apply(settings: TrackingSettings) {
         let old = self.settings
         self.settings = settings
-        // Coarse-mode toggle while stationary.
-        if currentProfile == nil, isMonitoringSignificantChanges,
-           old.keepCoarseUpdatesWhileStationary != settings.keepCoarseUpdatesWhileStationary {
-            if settings.keepCoarseUpdatesWhileStationary {
-                apply(profile: .stationaryCoarse)
-            } else {
-                stopUpdates()
-            }
-        }
         // `showsLocationIndicator` is no longer honoured: the indicator is
         // held on. The setting is still persisted and still shown, and the
         // trail says so rather than staying silent about a toggle that now

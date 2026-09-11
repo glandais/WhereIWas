@@ -60,9 +60,7 @@ public enum TrackingEffect: Sendable, Equatable {
     /// profile. Sent again whenever the profile changes; the engine should
     /// diff against its current profile and reconfigure in place.
     case startGPS(GPSProfile)
-    /// Stop high-accuracy updates. The engine may downgrade to
-    /// ``GPSProfile/stationaryCoarse`` instead of stopping entirely, see
-    /// ``TrackingSettings/keepCoarseUpdatesWhileStationary``.
+    /// Stop location updates entirely.
     case stopGPS
     /// Start (or restart) the stillness countdown.
     case startStillnessTimer(seconds: TimeInterval)

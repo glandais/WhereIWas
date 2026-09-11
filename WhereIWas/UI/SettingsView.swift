@@ -121,7 +121,6 @@ struct SettingsView: View {
                 Text("settings.confidence.medium").tag(ActivityConfidence.medium)
                 Text("settings.confidence.high").tag(ActivityConfidence.high)
             }
-            Toggle("settings.motion.keepCoarse", isOn: settings.keepCoarseUpdatesWhileStationary)
             Toggle("settings.motion.showIndicator", isOn: settings.showsLocationIndicator)
         } header: {
             Text("settings.motion.title")
@@ -329,9 +328,6 @@ private struct ProfileTable: View {
             ProfileRow(title: String(localized: "common.probing", defaultValue: "Probing"),
                        systemImage: TrackingPhase.probing.systemImage,
                        profile: .probing)
-            ProfileRow(title: String(localized: "profile.stationaryCoarse", defaultValue: "Stationary (coarse)"),
-                       systemImage: TrackingPhase.stationary.systemImage,
-                       profile: .stationaryCoarse)
         }
     }
 }

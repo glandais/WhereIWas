@@ -679,7 +679,13 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
             && motion.authorization != .denied
             && motion.authorization != .restricted
         if !motionUsable {
-            s.keepCoarseUpdatesWhileStationary = true
+            // Coarse stationary updates used to be forced on here, as the
+            // fallback for a device that cannot report activity. They are
+            // gone: they woke the app 95 times an hour to re-record a phone
+            // lying on a table and never once brought it out of STATIONARY —
+            // significant change and visits did. Without motion the strategy
+            // is those two plus a longer probe, which is what the app already
+            // tells the user a denied motion permission costs.
             s.probeTimeout = settings.probeTimeout * 2
         }
         return s

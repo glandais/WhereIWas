@@ -165,7 +165,7 @@ public final class NoopLocationEngine: LocationEngineProtocol {
 
     public func stopGPS() {
         currentProfile = nil
-        appliedProfile = settings.keepCoarseUpdatesWhileStationary ? .stationaryCoarse : nil
+        appliedProfile = nil
         calls.append("stopGPS")
     }
 

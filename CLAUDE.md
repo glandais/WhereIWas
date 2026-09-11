@@ -284,10 +284,11 @@ unchecked, since CoreMotion, background location, significant changes and visits
   purge also runs at launch and from Settings.
 - Motion permission denied degrades the strategy to GPS + significant change: tracking still works,
   battery suffers.
-- The blue location indicator is **expected** while STATIONARY: `keepCoarseUpdatesWhileStationary`
-  keeps `startUpdatingLocation` running, so the Status screen says "Stationary (coarse)" rather
-  than "GPS off". `showsLocationIndicator` (Settings, on by default) hides it, but only in that
-  case — the `CLBackgroundActivitySession` held during PROBING/MOVING always shows it.
+- The blue location indicator is **expected for as long as tracking is on**, STATIONARY included:
+  the `CLBackgroundActivitySession` is held from `rearmAfterLaunch()` to `stopAll()` and always
+  shows it, and `showsBackgroundLocationIndicator` is forced true because hiding it is a documented
+  way for iOS to suspend the app. The `showsLocationIndicator` setting is still persisted and still
+  shown but no longer honoured; the engine records `indicator.forced` when it is toggled.
 - The audit trail is opt-in and off by default; it turns over much faster than the samples and has
   its own retention (`auditRetentionDays`, 7 days).
 - Simulator: no background relaunch, no CoreMotion activity, no visits.

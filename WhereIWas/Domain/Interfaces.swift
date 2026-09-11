@@ -268,10 +268,8 @@ public protocol LocationEngineProtocol: AnyObject {
     var hasFullAccuracy: Bool { get }
     /// Profile currently applied, `nil` when high-accuracy GPS is off.
     var currentProfile: GPSProfile? { get }
-    /// Profile actually pushed to CoreLocation, ``GPSProfile/stationaryCoarse``
-    /// included. `nil` only when no location updates run at all — so it is
-    /// what the status screen shows, `currentProfile` being blind to the
-    /// coarse mode that keeps the blue indicator on.
+    /// Profile actually pushed to CoreLocation. `nil` when no location
+    /// updates run at all — which is what the status screen shows.
     var appliedProfile: GPSProfile? { get }
     /// Last accepted fix (from any source), in memory.
     var lastFix: LocationFix? { get }

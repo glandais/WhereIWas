@@ -178,18 +178,6 @@ struct GPSProfilePresetTests {
         #expect(GPSProfile.probing.label == "probing")
     }
 
-    @Test("Stationary coarse preset is the cheapest possible")
-    func stationaryCoarse() {
-        #expect(GPSProfile.stationaryCoarse.desiredAccuracy == .threeKilometers)
-        // No filter: coarse accuracy *and* a distance filter is the iOS 16.4
-        // combination that gets a significant-change app suspended.
-        #expect(GPSProfile.stationaryCoarse.distanceFilter == 0)
-        #expect(GPSProfile.stationaryCoarse.label == "stationary-coarse")
-        for kind in ActivityKind.allCases {
-            #expect(GPSProfile.profile(for: kind, speed: nil) != GPSProfile.stationaryCoarse)
-        }
-    }
-
     @Test("AccuracyLevel ordering: more precise sorts first")
     func accuracyOrdering() {
         let ordered: [AccuracyLevel] = [.bestForNavigation, .best, .tenMeters, .hundredMeters, .kilometer, .threeKilometers]
@@ -208,32 +196,20 @@ struct GPSProfilePresetTests {
     }
 }
 
-/// The status screen reads `appliedProfile`, not `currentProfile`: with coarse
-/// updates on, CoreLocation keeps running while STATIONARY (and the system
-/// location indicator with it), which "GPS off" would deny.
+/// The status screen reads `appliedProfile`, not `currentProfile`: they used to
+/// differ, because STATIONARY downgraded to a coarse profile rather than
+/// stopping. It no longer does, and `stopGPS` means GPS off.
 @MainActor
-@Suite("Applied profile · coarse mode")
+@Suite("Applied profile")
 struct AppliedProfileTests {
-    @Test("stopGPS keeps the coarse profile applied when the option is on")
-    func coarseStaysApplied() {
+    @Test("stopGPS stops: nothing stays applied while STATIONARY")
+    func stopGPSAppliesNothing() {
         let engine = NoopLocationEngine()
         engine.startGPS(profile: .probing)
         #expect(engine.appliedProfile == .probing)
 
         engine.stopGPS()
         #expect(engine.currentProfile == nil)
-        #expect(engine.appliedProfile == .stationaryCoarse)
-    }
-
-    @Test("stopGPS applies nothing when coarse updates are off")
-    func coarseDisabled() {
-        let engine = NoopLocationEngine()
-        var settings = TrackingSettings()
-        settings.keepCoarseUpdatesWhileStationary = false
-        engine.apply(settings: settings)
-
-        engine.startGPS(profile: .probing)
-        engine.stopGPS()
         #expect(engine.appliedProfile == nil)
     }
 
@@ -262,9 +238,4 @@ struct AppliedProfileTests {
                 != GPSProfile.profile(for: .unknown, speed: fast))
     }
 
-    @Test("The coarse profile shows a human label, never its technical one")
-    func coarseDisplayName() {
-        #expect(GPSProfile.stationaryCoarse.displayName != GPSProfile.stationaryCoarse.label)
-        #expect(!GPSProfile.stationaryCoarse.displayName.isEmpty)
-    }
 }

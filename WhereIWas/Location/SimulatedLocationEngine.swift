@@ -69,7 +69,7 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
     public func stopGPS() {
         calls.append("stopGPS")
         currentProfile = nil
-        appliedProfile = settings.keepCoarseUpdatesWhileStationary ? .stationaryCoarse : nil
+        appliedProfile = nil
         hasBackgroundActivitySession = false
         Task { await flush() }
     }
@@ -87,9 +87,6 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
     public func rearmAfterLaunch() {
         calls.append("rearmAfterLaunch")
         startSignificantChangeMonitoring()
-        if currentProfile == nil, settings.keepCoarseUpdatesWhileStationary {
-            appliedProfile = .stationaryCoarse
-        }
     }
 
     public func stopAll() {

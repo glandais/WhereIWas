@@ -85,11 +85,10 @@ final class DemoTrackingController: TrackingControlling {
         status = TrackingStatus(
             isEnabled: true,
             phase: scenario == .moving ? .moving : .stationary,
-            // Parked, the engine holds no high-accuracy profile at all; what
-            // CoreLocation is still running is the near-free coarse one, which
-            // is why the screen reads "Stationary (coarse)" and not "GPS off".
+            // Parked, location updates are off entirely: the screen reads
+            // "GPS off", which is now the truth.
             activeProfile: scenario == .moving ? driving : nil,
-            appliedProfile: scenario == .moving ? driving : .stationaryCoarse,
+            appliedProfile: scenario == .moving ? driving : nil,
             lastActivity: scenario == .moving ? .automotive : .stationary,
             lastActivityConfidence: .high,
             lastFix: lastFix,
@@ -426,13 +425,8 @@ final class DemoTrackingController: TrackingControlling {
             let parked = last.fix.timestamp.addingTimeInterval(90)
             events.append(AuditEvent(timestamp: parked.addingTimeInterval(2),
                                      category: .location, severity: .info,
-                                     name: "gps.changed",
-                                     arguments: ["stationary-coarse"],
-                                     details: [AuditDetail("from", "automotive"),
-                                               AuditDetail("to", "stationary-coarse"),
-                                               AuditDetail("desiredAccuracy", "threeKilometers"),
-                                               AuditDetail("distanceFilter", GPSProfile.stationaryCoarse.distanceFilter),
-                                               AuditDetail("activityType", "other")],
+                                     name: "gps.stopped",
+                                     details: [AuditDetail("from", "automotive")],
                                      phase: .stationary, batteryLevel: battery))
             events.append(AuditEvent(timestamp: parked,
                                      category: .state, severity: .info,
