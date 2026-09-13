@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>WhereIWas GPS Logger — the GPS only runs while you move</title>
-  <meta name="description" content="An iPhone location logger built for long shifts: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
+  <meta name="description" content="An iPhone location logger built for a day’s work in the field: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
   <link rel="canonical" href="https://glandais.github.io/WhereIWas/">
   <link rel="icon" type="image/png" sizes="180x180" href="assets/appicon-180.png">
   <link rel="apple-touch-icon" href="assets/appicon-180.png">
   <meta name="theme-color" content="#EDEFF6">
   <meta property="og:type" content="website">
   <meta property="og:title" content="WhereIWas GPS Logger">
-  <meta property="og:description" content="An iPhone location logger built for long shifts: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
+  <meta property="og:description" content="An iPhone location logger built for a day’s work in the field: the GPS receiver runs only while you actually move, the track survives termination and reboot, and every point is exportable as GPX or JSON. Nothing leaves the device.">
   <meta property="og:url" content="https://glandais.github.io/WhereIWas/">
   <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -21,6 +21,7 @@
       <a class="wordmark" href="./"><b>WhereIWas</b> <span>GPS Logger</span></a>
       <nav class="nav" aria-label="Primary">
         <a href="./" aria-current="page">Overview</a>
+        <a href="./how-it-works/">How it works</a>
         <a href="support/">Support</a>
         <a href="privacy/">Privacy</a>
       </nav>
@@ -33,20 +34,20 @@
       <h1>The GPS only runs while you move.</h1>
       <p>
         WhereIWas keeps a complete record of where you have been through a
-        twelve-hour shift, a multi-day deployment or a long drive — and gives
-        you back the battery that a permanently-on tracker would have spent.
+        day’s work, several days in the field or a long trip — and gives you
+        back the battery that a permanently-on tracker would have spent.
       </p>
     </section>
 
     <section class="container">
       <div class="shift">
         <div class="shift__head">
-          <h2 class="shift__title">A twelve-hour shift</h2>
+          <h2 class="shift__title">A twelve-hour day</h2>
           <p class="shift__stat">receiver on <b>5 h 50</b> of 12 h</p>
         </div>
       <svg class="shift__chart" viewBox="0 0 720 152" role="img" aria-labelledby="shift-title shift-desc" preserveAspectRatio="xMidYMid meet">
-        <title id="shift-title">GPS activity over a twelve-hour shift</title>
-        <desc id="shift-desc">Across a twelve-hour shift the GPS receiver is on for five hours and fifty minutes, in five stretches that line up with the periods of detected movement and run a few minutes past the end of each one. It is off for the remaining six hours and ten minutes.</desc>
+        <title id="shift-title">GPS activity over a twelve-hour day</title>
+        <desc id="shift-desc">Across a twelve-hour day the GPS receiver is on for five hours and fifty minutes, in five stretches that line up with the periods of detected movement and run a few minutes past the end of each one. It is off for the remaining six hours and ten minutes.</desc>
         <rect x="0" y="22" width="720" height="30" fill="var(--paper-sink)"/>
         <rect x="19" y="22" width="56" height="30" fill="var(--accent)"/>
         <rect x="159" y="22" width="66" height="30" fill="var(--accent)"/>
@@ -129,6 +130,8 @@
             Going toward movement is immediate; going back to rest is slow and
             has to be earned, twice over. That asymmetry is why the trace has no
             holes at the start of a trip — nor at the restart of one.
+            <a href="how-it-works/">The whole mechanism is written down</a>:
+            every signal, every threshold, every transition.
           </p>
           <div class="note">
             <p>
@@ -314,6 +317,7 @@
       <span>WhereIWas GPS Logger — an app by Gabriel Landais. Requires iOS 17 or later.</span>
       <nav aria-label="Footer">
         <a href="./">Overview</a>
+        <a href="./how-it-works/">How it works</a>
         <a href="support/">Support</a>
         <a href="privacy/">Privacy</a>
         <a href="https://github.com/glandais/WhereIWas">Source</a>

@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>How it works — WhereIWas GPS Logger</title>
+  <meta name="description" content="The mechanism in full: the signals WhereIWas listens to, the five phases of its state machine, the receiver profiles, the checks every fix has to pass, and what happens when iOS terminates or reboots the device.">
+  <link rel="canonical" href="https://glandais.github.io/WhereIWas/how-it-works/">
+  <link rel="icon" type="image/png" sizes="180x180" href="../assets/appicon-180.png">
+  <link rel="apple-touch-icon" href="../assets/appicon-180.png">
+  <meta name="theme-color" content="#EDEFF6">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="How WhereIWas works">
+  <meta property="og:description" content="The mechanism in full: the signals WhereIWas listens to, the five phases of its state machine, the receiver profiles, the checks every fix has to pass, and what happens when iOS terminates or reboots the device.">
+  <meta property="og:url" content="https://glandais.github.io/WhereIWas/how-it-works/">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="container masthead__inner">
+      <a class="wordmark" href="../"><b>WhereIWas</b> <span>GPS Logger</span></a>
+      <nav class="nav" aria-label="Primary">
+        <a href="../">Overview</a>
+        <a href="../how-it-works/" aria-current="page">How it works</a>
+        <a href="../support/">Support</a>
+        <a href="../privacy/">Privacy</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="doc-head container">
+      <p class="doc-meta">Mechanism — WhereIWas GPS Logger — iOS 17 or later</p>
+      <h1>How it works</h1>
+      <p>
+        A tracker that switches its own receiver off is asking to be trusted
+        about when it switches it back on. This page is that answer in full:
+        the signals, the machine they drive, the thresholds, the checks a fix
+        has to pass, and what happens when iOS kills the app anyway. Every
+        number here is a default you can change.
+      </p>
+      <ul class="toc">
+        <li><a href="#signals">Signals</a></li>
+        <li><a href="#machine">The machine</a></li>
+        <li><a href="#stop">A stop</a></li>
+        <li><a href="#rules">Why not simpler</a></li>
+        <li><a href="#receiver">Receiver profiles</a></li>
+        <li><a href="#filter">The filter</a></li>
+        <li><a href="#point">A stored point</a></li>
+        <li><a href="#survival">Termination</a></li>
+        <li><a href="#audit">Audit trail</a></li>
+        <li><a href="#battery">Battery</a></li>
+        <li><a href="#storage">Storage</a></li>
+      </ul>
+    </section>
+
+    <section class="sheet container" id="signals">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Signals</h2>
+        <div class="sheet__body">
+          <h2>Six inputs, one of them expensive.</h2>
+          <p>
+            Everything the app decides comes from the list below. Five of the
+            six are served by the motion coprocessor or by the system's own
+            low-power location machinery, which run whether or not an app asks
+            them to — reading them costs essentially nothing. The sixth is the
+            GPS receiver, and it is the entire battery bill.
+          </p>
+          <div class="scroll-x">
+            <table class="spec">
+              <caption>What the app listens to, and what each signal is worth</caption>
+              <thead>
+                <tr><th scope="col">Signal</th><th scope="col">What it says</th><th scope="col">Cost</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Motion activity</th><td>Still, walking, running, cycling or in a vehicle, with a confidence of low, medium or high</td><td>free</td></tr>
+                <tr><th scope="row">Pedometer</th><td>Steps taken. Ten of them count as a hint worth waking the receiver for</td><td>free</td></tr>
+                <tr><th scope="row">Significant change</th><td>You have moved roughly 500 m. Also fires on arrival, and relaunches a terminated app</td><td>free</td></tr>
+                <tr><th scope="row">Visits</th><td>iOS thinks you arrived somewhere or left it. Also relaunches a terminated app</td><td>free</td></tr>
+                <tr><th scope="row">Timers</th><td>A stillness countdown or a probe window elapsed</td><td>free</td></tr>
+                <tr><th scope="row">GPS fix</th><td>A position, its accuracy, a speed and a course</td><td>8–12 %/h at best accuracy</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Two of those signals — significant changes and visits — are also
+            the only reason a terminated app ever runs again, so they stay
+            registered for as long as tracking is on, even while nothing else
+            is. See <a href="#survival">termination and reboot</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="machine">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">The machine</h2>
+        <div class="sheet__body">
+          <h2>Five phases, and the arrows between them.</h2>
+          <p>
+            The decision itself is a pure state machine: signals in, effects
+            out, no clock of its own and no framework underneath it — which is
+            why the whole of it can be driven by tests, timers included. Each
+            phase says exactly what the receiver is doing.
+          </p>
+
+          <figure class="diagram">
+            <div class="diagram__frame">
+              <svg viewBox="0 0 720 450" role="img" aria-labelledby="fsm-title fsm-desc">
+                <title id="fsm-title">The four tracking phases and the transitions between them</title>
+                <desc id="fsm-desc">Stationary leads to Probing on a hint, a significant change or a visit. Probing leads to Moving on two fixes at or above 0.7 metres per second or a confident moving activity, and back to Stationary after 45 seconds with no evidence of movement. Moving leads to Just stopped after 120 seconds of stillness seen twice. Just stopped leads back to Moving on a fix at speed or a confident activity, and on to Stationary after five minutes in which nothing moves.</desc>
+                <defs>
+                  <marker id="fsm-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-mid)"/>
+                  </marker>
+                </defs>
+
+                <!-- nodes -->
+                <rect x="200" y="16"  width="236" height="58" rx="4" fill="var(--paper-sink)" stroke="var(--rule-strong)"/>
+                <text x="318" y="44" text-anchor="middle" class="fsm__name">Stationary</text>
+                <text x="318" y="60" text-anchor="middle" class="fsm__sub">receiver off · listening for free</text>
+
+                <rect x="200" y="134" width="236" height="58" rx="4" fill="var(--accent-2)" stroke="var(--rule-strong)"/>
+                <text x="318" y="162" text-anchor="middle" class="fsm__name">Probing</text>
+                <text x="318" y="178" text-anchor="middle" class="fsm__sub">best accuracy · up to 45 s</text>
+
+                <rect x="200" y="252" width="236" height="58" rx="4" fill="var(--accent)" stroke="var(--rule-strong)"/>
+                <text x="318" y="280" text-anchor="middle" class="fsm__name">Moving</text>
+                <text x="318" y="296" text-anchor="middle" class="fsm__sub">profile follows your speed</text>
+
+                <rect x="200" y="370" width="236" height="58" rx="4" fill="var(--accent)" fill-opacity="0.45" stroke="var(--rule-strong)"/>
+                <text x="318" y="398" text-anchor="middle" class="fsm__name">Just stopped</text>
+                <text x="318" y="414" text-anchor="middle" class="fsm__sub">50 m filter · up to 5 min</text>
+
+                <!-- forward edges -->
+                <path d="M250,74 V128"  stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <path d="M250,192 V246" stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <path d="M250,310 V364" stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <text x="266" y="96"  class="fsm__edge">a hint, a significant</text>
+                <text x="266" y="110" class="fsm__edge">change or a visit</text>
+                <text x="266" y="214" class="fsm__edge">two fixes ≥ 0.7 m/s, or</text>
+                <text x="266" y="228" class="fsm__edge">a confident activity</text>
+                <text x="266" y="332" class="fsm__edge">120 s of stillness,</text>
+                <text x="266" y="346" class="fsm__edge">seen twice, not once</text>
+
+                <!-- back edges -->
+                <path d="M436,163 H500 V45 H442" stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <text x="514" y="98"  class="fsm__edge">45 s and no</text>
+                <text x="514" y="112" class="fsm__edge">sign of movement</text>
+
+                <path d="M200,399 H130 V45 H196" stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <text x="118" y="216" text-anchor="end" class="fsm__edge">5 minutes and</text>
+                <text x="118" y="230" text-anchor="end" class="fsm__edge">nothing moves</text>
+
+                <path d="M436,399 H560 V281 H442" stroke="var(--ink-mid)" fill="none" marker-end="url(#fsm-arrow)"/>
+                <text x="574" y="326" class="fsm__edge">a fix at speed,</text>
+                <text x="574" y="340" class="fsm__edge">or a confident</text>
+                <text x="574" y="354" class="fsm__edge">activity</text>
+              </svg>
+            </div>
+            <figcaption>
+              Green means the receiver is on; the pale green of <em>Just
+              stopped</em> means it is on but rationed. A fifth phase, Off, sits
+              outside the loop: switching tracking off leaves any phase for it,
+              switching it on — including after a relaunch — enters Probing.
+            </figcaption>
+          </figure>
+
+          <p>
+            The diagram draws the loop. The full set of edges is short enough
+            to write down:
+          </p>
+          <div class="scroll-x">
+            <table class="spec">
+              <caption>Every transition</caption>
+              <thead>
+                <tr><th scope="col">From</th><th scope="col">On</th><th scope="col">To</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Stationary</th><td>a moving activity at medium confidence or better</td><td>Moving</td></tr>
+                <tr><th scope="row">Stationary</th><td>ten steps, a significant change, a visit, or a low-confidence movement</td><td>Probing</td></tr>
+                <tr><th scope="row">Probing</th><td>two consecutive fixes at 0.7 m/s or more, or a confident moving activity</td><td>Moving</td></tr>
+                <tr><th scope="row">Probing</th><td>45 s with no evidence of movement</td><td>Stationary, or Just stopped if a trip was running</td></tr>
+                <tr><th scope="row">Moving</th><td>speed crosses a tier</td><td>Moving, new profile</td></tr>
+                <tr><th scope="row">Moving</th><td>120 s of stillness, corroborated by a second reading</td><td>Just stopped</td></tr>
+                <tr><th scope="row">Moving</th><td>120 s of stillness on a single reading</td><td>Probing</td></tr>
+                <tr><th scope="row">Just stopped</th><td>a fix at speed, or a confident moving activity</td><td>Moving</td></tr>
+                <tr><th scope="row">Just stopped</th><td>a hint, a significant change or a visit</td><td>Probing</td></tr>
+                <tr><th scope="row">Just stopped</th><td>5 minutes in which nothing moves</td><td>Stationary</td></tr>
+                <tr><th scope="row">any</th><td>tracking switched off</td><td>Off</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="stop">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">A stop</h2>
+        <div class="sheet__body">
+          <h2>Half an hour, drawn to scale.</h2>
+          <p>
+            One trip is enough to show where the time goes: three minutes of
+            nothing, a probe that lasts three quarters of a minute, a trip, and
+            a stop that takes seven minutes to be believed.
+          </p>
+
+          <figure class="diagram">
+            <div class="diagram__frame">
+              <svg viewBox="0 0 720 190" role="img" aria-labelledby="trip-title trip-desc">
+                <title id="trip-title">Phases and receiver state over half an hour</title>
+                <desc id="trip-desc">For the first three minutes the phase is Stationary and the receiver is off. The first steps open a 45-second probe, then the phase is Moving for sixteen minutes. Movement ends at minute twenty, but the phase stays Moving for the two minutes of the stillness countdown, then Just stopped for five minutes with the receiver still on, and only at minute twenty-seven does it return to Stationary and the receiver go off.</desc>
+
+                <text x="0" y="18" class="shift__band">Phase</text>
+                <rect x="0" y="26" width="720" height="32" fill="var(--paper-sink)"/>
+                <rect x="72" y="26" width="18"  height="32" fill="var(--accent-2)"/>
+                <rect x="90" y="26" width="438" height="32" fill="var(--accent)"/>
+                <rect x="528" y="26" width="120" height="32" fill="var(--accent)" fill-opacity="0.45"/>
+                <rect x="0" y="26" width="720" height="32" fill="none" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="8" y="46" class="chart__inband">Stationary</text>
+                <text x="100" y="46" class="chart__inband">Moving</text>
+                <text x="536" y="46" class="chart__inband">Just stopped</text>
+                <text x="712" y="46" text-anchor="end" class="chart__inband">Stationary</text>
+
+                <text x="0" y="80" class="shift__band">GPS receiver</text>
+                <rect x="0" y="88" width="720" height="14" fill="var(--paper-sink)"/>
+                <rect x="72" y="88" width="576" height="14" fill="var(--accent)"/>
+                <rect x="0" y="88" width="720" height="14" fill="none" stroke="var(--rule-strong)" stroke-width="1"/>
+
+                <line x1="0" y1="112" x2="720" y2="112" stroke="var(--rule-strong)" stroke-width="1"/>
+                <line x1="0" y1="112" x2="0" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="0" y="136" text-anchor="start" class="shift__tick">0</text>
+                <line x1="144" y1="112" x2="144" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="144" y="136" text-anchor="middle" class="shift__tick">6</text>
+                <line x1="288" y1="112" x2="288" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="288" y="136" text-anchor="middle" class="shift__tick">12</text>
+                <line x1="432" y1="112" x2="432" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="432" y="136" text-anchor="middle" class="shift__tick">18</text>
+                <line x1="576" y1="112" x2="576" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="576" y="136" text-anchor="middle" class="shift__tick">24</text>
+                <line x1="719.5" y1="112" x2="719.5" y2="121" stroke="var(--rule-strong)" stroke-width="1"/>
+                <text x="720" y="136" text-anchor="end" class="shift__tick">30 min</text>
+
+                <line x1="72" y1="22" x2="72" y2="150" stroke="var(--ink-mid)" stroke-width="1" stroke-dasharray="2 3"/>
+                <text x="78" y="164" class="shift__tick">ten steps</text>
+                <line x1="480" y1="22" x2="480" y2="150" stroke="var(--ink-mid)" stroke-width="1" stroke-dasharray="2 3"/>
+                <text x="474" y="164" text-anchor="end" class="shift__tick">you stop; the trip ends 120 s later</text>
+              </svg>
+            </div>
+            <div class="shift__legend">
+              <span><i class="swatch swatch--idle"></i> receiver off</span>
+              <span><i class="swatch swatch--probe"></i> probing, best accuracy</span>
+              <span><i class="swatch swatch--gps"></i> moving, profile by speed</span>
+              <span><i class="swatch swatch--settle"></i> just stopped, 50 m filter</span>
+            </div>
+            <figcaption>
+              The receiver runs for 24 of these 30 minutes, and 16 of them are
+              the trip itself. The 45-second probe at the start and the
+              five-minute watch at the end are what the reliability costs.
+            </figcaption>
+          </figure>
+
+          <p>
+            Set off again at minute 25 — inside the watch — and the departure
+            is on the trail from its first 50 m, because the receiver never
+            stopped. Set off at minute 35, and the app is waiting on the motion
+            coprocessor or on a significant change instead, which is the
+            expensive case described under <a href="#survival">termination</a>.
+          </p>
+          <div class="note">
+            <p>
+              A phone that never moved never pays for that watch: it is only
+              armed once a trip has actually been running. Sitting still all
+              morning costs nothing but the free signals.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="rules">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Why not simpler</h2>
+        <div class="sheet__body">
+          <h2>Five rules a day in the field wrote.</h2>
+          <p>
+            Each of these makes the machine more complicated than it looks like
+            it needs to be, and each replaced something simpler that failed on
+            a recorded day.
+          </p>
+          <ol class="states">
+            <li>
+              <b class="states__name">Two fixes, not one</b>
+              <span class="states__note">CoreLocation sometimes puts a large speed on a fix that has not moved. One such reading used to be enough to declare a trip and switch to the driving profile, so it now takes two consecutive fixes at or above 0.7 m/s; any slower or speed-less fix breaks the streak. The same confirmation gates a change of profile, so a single spurious reading cannot widen the distance filter mid-walk.</span>
+            </li>
+            <li>
+              <b class="states__name">A timer that fires must have been fed</b>
+              <span class="states__note">Arming the 120-second stillness countdown takes one still reading; reaching the end of it takes a second one, arriving while it ran. Without that, a timer firing says only that nothing arrived since it was armed — which is exactly what a suspended app looks like. One recorded stillness timer fired 1224 seconds after being armed. Uncorroborated, it opens a probe instead of ending the trip.</span>
+            </li>
+            <li>
+              <b class="states__name">A confirmed stop silences the classifier's flapping</b>
+              <span class="states__note">While a phone sits still, the activity classifier alternates between "stationary, low confidence" and "unknown, high confidence". Treating each flap as a reason to look woke the receiver 259 times in one recorded day. Once a stop is confirmed, a confident <em>unknown</em> no longer reopens a probe — until a step, a significant change, a visit, a moving activity or any fix with real speed clears it.</span>
+            </li>
+            <li>
+              <b class="states__name">…but three cases are deliberately excluded from that</b>
+              <span class="states__note">A phone on a car seat is genuinely stationary to the coprocessor while the car drives on, so a stop is never confirmed from inside a trip. A probe window that saw no fix at all — a garage, a basement, a cold receiver — is absence of evidence, not evidence of stillness. And a measured GPS speed refutes the guess outright. Absence of evidence is never promoted to evidence.</span>
+            </li>
+            <li>
+              <b class="states__name">Significant changes and visits never declare movement</b>
+              <span class="states__note">They are accurate to about 500 m and they fire on arrival as well as departure. They open a probe; a real fix decides. Nothing but GPS speed or the classifier is allowed to say "moving".</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="receiver">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Receiver profiles</h2>
+        <div class="sheet__body">
+          <h2>The receiver is configured, not merely switched on.</h2>
+          <p>
+            While moving, the app picks an accuracy and a distance filter from
+            the activity and the speed. The distance filter is what actually
+            rations fixes — asking iOS for a coarser accuracy mostly does not,
+            since it delivers whatever its receiver has already computed. In one
+            recorded day a request for kilometre accuracy still returned fixes
+            with a median accuracy of 6 m.
+          </p>
+          <div class="scroll-x">
+            <table class="spec">
+              <caption>Accuracy and distance filter by activity and speed</caption>
+              <thead>
+                <tr><th scope="col">Activity and speed</th><th scope="col">Accuracy</th><th scope="col">Filter</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Walking</th><td>Best</td><td class="num">10 m</td></tr>
+                <tr><th scope="row">Running or cycling, below 12.5 m/s</th><td>Best</td><td class="num">20 m</td></tr>
+                <tr><th scope="row">Driving</th><td>Navigation</td><td class="num">50 m</td></tr>
+                <tr><th scope="row">Unknown, no speed</th><td>Best</td><td class="num">10 m</td></tr>
+                <tr><th scope="row">Unknown, at or above 2.5 m/s</th><td>Best</td><td class="num">20 m</td></tr>
+                <tr><th scope="row">Walking or unknown, at or above 7 m/s</th><td>Navigation</td><td class="num">50 m</td></tr>
+                <tr><th scope="row">Running or cycling, at or above 12.5 m/s</th><td>Navigation</td><td class="num">50 m</td></tr>
+                <tr><th scope="row">Probing</th><td>Best</td><td class="num">0 m</td></tr>
+                <tr><th scope="row">Just stopped</th><td>Hundred metres</td><td class="num">50 m</td></tr>
+                <tr><th scope="row">Stationary</th><td colspan="2">no updates at all</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Speed overrides a <em>slow</em> label at 7 m/s, because walking at
+            9 m/s is a vehicle with a wrong label. Cycling and running are not
+            slow labels: 7 m/s is 25 km/h, a speed any cyclist holds on the flat
+            and doubles downhill, and applying that bar to them put entire rides
+            on the driving profile. They keep their own filter up to 12.5 m/s —
+            45 km/h — above which a bicycle label is wrong often enough (a bike
+            on a car rack, a classifier that has not caught up with the drive
+            that just started) that speed wins again.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="filter">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">The filter</h2>
+        <div class="sheet__body">
+          <h2>Every fix is doubted before it is kept.</h2>
+          <p>
+            A position arriving from CoreLocation is a claim, not a fact. Seven
+            checks run in order, and the first failure decides — no fix is
+            written after failing one:
+          </p>
+          <ol class="states">
+            <li>
+              <b class="states__name">Invalid accuracy</b>
+              <span class="states__note">A horizontal accuracy of zero or less means iOS has no idea. Dropped.</span>
+            </li>
+            <li>
+              <b class="states__name">Poor accuracy</b>
+              <span class="states__note">Worse than 50 m. Dropped — a point you cannot place within a city block is worse than a gap, because it looks like a position.</span>
+            </li>
+            <li>
+              <b class="states__name">Future timestamp</b>
+              <span class="states__note">More than five seconds ahead of now. Dropped.</span>
+            </li>
+            <li>
+              <b class="states__name">Stale</b>
+              <span class="states__note">Older than 30 seconds. CoreLocation replays cached fixes the moment updates restart, so this check is what stops a departure being drawn from where you were an hour ago.</span>
+            </li>
+            <li>
+              <b class="states__name">Out of order</b>
+              <span class="states__note">Not later than the last accepted fix. Dropped.</span>
+            </li>
+            <li>
+              <b class="states__name">Duplicate</b>
+              <span class="states__note">Within the duplicate distance of the previous fix — by default zero, meaning identical coordinates.</span>
+            </li>
+            <li>
+              <b class="states__name">Cached repeat</b>
+              <span class="states__note">Latitude, longitude <em>and</em> accuracy exactly equal to one of the last ten accepted fixes, with no valid speed. iOS replays a cached network fix with a fresh timestamp, which the previous-fix check misses whenever a real fix lands in between. A twin older than ten minutes no longer counts, so a receiver whose whole input is one repeated solution is never silenced for good.</span>
+            </li>
+          </ol>
+          <p>
+            The ~500 m positions that arrive with a significant change or a
+            visit skip all of this — they are not GPS fixes, they carry no
+            speed, and the accuracy limit would simply delete them. They are
+            stored with their source recorded, so a reader can always tell one
+            from a real fix.
+          </p>
+          <div class="note">
+            <p>
+              Every threshold above is a slider in Settings, and the app runs
+              exactly the table it shows you. With the audit trail on, each
+              check is recorded with the value measured and the threshold it was
+              measured against — see <a href="#audit">the audit trail</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="point">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">A stored point</h2>
+        <div class="sheet__body">
+          <h2>Enough context to argue with a track.</h2>
+          <p>
+            A coordinate on its own cannot be checked. Each accepted fix is
+            annotated, at the moment it is written, with everything needed to
+            interpret it afterwards.
+          </p>
+          <div class="scroll-x">
+            <table class="spec">
+              <caption>What each sample holds</caption>
+              <thead>
+                <tr><th scope="col">Group</th><th scope="col">Fields</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Position</th><td>latitude, longitude, altitude, timestamp</td></tr>
+                <tr><th scope="row">Quality</th><td>horizontal accuracy, vertical accuracy, speed accuracy, source (GPS fix, significant change or visit)</td></tr>
+                <tr><th scope="row">Motion</th><td>speed, course, detected activity, confidence of that detection</td></tr>
+                <tr><th scope="row">Context</th><td>phase the app was in, receiver profile in force, battery level and charging state, recording session</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Both export formats carry the lot: GPX 1.1 puts speed, course,
+            accuracy, activity and battery in an extension namespace that
+            ordinary mapping tools ignore, and the JSON export is the whole
+            record with ISO-8601 timestamps. You choose the span — today, the
+            last seven days, a date range, one session, or everything — and the
+            map screen draws the same selection before you send it.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="survival">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Termination</h2>
+        <div class="sheet__body">
+          <h2>iOS will kill the app. The contract is what happens next.</h2>
+          <p>
+            Memory pressure, a crash, a reboot: the process goes away without
+            warning, and the only thing that brings it back is a registration
+            made before it did. Four rules cover that.
+          </p>
+          <ol class="states">
+            <li>
+              <b class="states__name">Two registrations stay armed</b>
+              <span class="states__note">Significant location changes and visits are monitored for as long as tracking is enabled, in every phase including Stationary. Both relaunch a terminated app, with a flag in the launch options saying why.</span>
+            </li>
+            <li>
+              <b class="states__name">Relaunch is handled before any screen exists</b>
+              <span class="states__note">At launch, before the first view is created, the app reads its persisted "tracking on" flag and — in the same run-loop turn, not after an await — creates the location manager, re-arms monitoring, starts the motion updates and enters Probing. The event that caused the relaunch is only delivered to a manager that exists by the time launch returns, and the app has a few seconds of background time to get there.</span>
+            </li>
+            <li>
+              <b class="states__name">The background session is held throughout</b>
+              <span class="states__note">A background activity session is taken when tracking is switched on and released only when it is switched off — not around each trip. It can only be started from the foreground, so releasing it at every stop meant the next trip, which begins in the background, ran with no session at all. It is also what puts the blue indicator in the status bar, and the reason there is no setting to hide it: hiding it is a documented way for iOS to suspend the app.</span>
+            </li>
+            <li>
+              <b class="states__name">The system's own pausing is off</b>
+              <span class="states__note">iOS will silently pause location updates when it decides you are stationary, and it has no obligation to resume them until the app is foregrounded. That is exactly the decision this app makes itself — with a way back. So automatic pausing is disabled, and when a pause or resume is reported anyway it goes into the audit trail, precisely because the assumption is what is in doubt.</span>
+            </li>
+          </ol>
+          <p>
+            And if the app is relaunched for a location event while tracking is
+            off — a stale registration the system still held — it unregisters on
+            the spot, so iOS stops waking it.
+          </p>
+          <h3>What that still cannot cover</h3>
+          <ul class="limits">
+            <li>
+              <b>Between a reboot and the first unlock, nothing runs.</b> File
+              protection keeps the database unreadable until the device is
+              unlocked once. The registrations survive the reboot; the first
+              event after first unlock brings the app back.
+            </li>
+            <li>
+              <b>Force quit stops everything.</b> Swiped out of the app
+              switcher, an app gets no background events at all until it is
+              opened again. The status screen warns when the last fix is more
+              than 30 minutes old.
+            </li>
+            <li>
+              <b>A wake from termination costs up to ~500 m.</b> That is the
+              resolution of a significant change. Within five minutes of a stop
+              the watch covers it; beyond that, it is what the first movement
+              costs.
+            </li>
+            <li>
+              <b>Without motion permission the app leans on GPS.</b> Probing
+              windows double in length, tracking still works, the battery pays
+              for it.
+            </li>
+            <li>
+              <b>The maintenance task is a suggestion.</b> Low Power Mode or
+              Background App Refresh off may mean it never runs; the purge also
+              happens at launch and on demand from Settings.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="audit">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Audit trail</h2>
+        <div class="sheet__body">
+          <h2>Optional, and the only honest answer to "why is there a gap?"</h2>
+          <p>
+            Turned on, the app records not just what it kept but what it saw and
+            what it decided. Three kinds of rows:
+          </p>
+          <ul>
+            <li><b>Data received</b> — every fix, significant change and visit with its raw coordinates, accuracy, speed and timestamp; every motion report with its confidence.</li>
+            <li><b>Tests performed</b> — each check of the filter with the value measured, the threshold, and a verdict of passed, failed, skipped or not applicable. The trail re-runs the real filter to produce them, and a test asserts the two agree across a grid of inputs, so the trail cannot describe a decision the filter did not make.</li>
+            <li><b>Decisions taken</b> — state transitions with their cause, every effect executed, profile changes, permission changes, writes, purges and exports.</li>
+          </ul>
+          <p>
+            A heartbeat row is written every 30 seconds while the receiver is
+            running. It records nothing about tracking — only that the process
+            was executing. Without it an export cannot tell "the receiver
+            reported nothing" from "the app was suspended", which is the
+            difference between a bug and an operating system.
+          </p>
+          <p>
+            No event stores prose. Each is a stable code with its parameters
+            (<code>fix.rejected</code>, then <code>poorAccuracy</code> and
+            <code>88.0</code>), formatted independently of locale; the sentence
+            you read is built at display time in your language. So a trail
+            exported on a French phone and read on an English one says the same
+            thing, and nothing has to be parsed back out of English.
+          </p>
+          <div class="note">
+            <p>
+              Off by default, and free while off: a disabled trail never even
+              builds the event. On, events are buffered and written in batches
+              off the main thread. It keeps its own retention — seven days,
+              against thirty for the samples — because it turns over far faster.
+              Exports are gzipped by default: a week of trail is tens of
+              megabytes of text and deflates about sixteen to one.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="battery">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Battery</h2>
+        <div class="sheet__body">
+          <h2>The arithmetic, stated plainly.</h2>
+          <p>
+            GPS at best accuracy costs roughly 8–12 % of an iPhone battery per
+            hour. Motion activity, the pedometer, significant changes and visits
+            are served by the coprocessor and are, for practical purposes, free.
+            Everything in the design follows from those two facts: the receiver
+            runs in Moving, Probing and Just stopped, and nowhere else; its
+            profile is scaled to your speed; 120 seconds of hysteresis stops it
+            flapping at traffic lights; and a stop pays up to five minutes on a
+            wide filter rather than lose the restart.
+          </p>
+          <p>
+            Expect someone who walks three hours and drives two over a
+            twelve-hour day to spend roughly 40–50 % of the battery on
+            tracking. A day at a desk costs almost nothing, because almost
+            nothing runs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sheet container" id="storage">
+      <div class="sheet__grid">
+        <h2 class="sheet__label">Storage</h2>
+        <div class="sheet__body">
+          <h2>One database file, four tables, no server.</h2>
+          <p>
+            Samples, recording sessions, state transitions and audit events, in
+            a SQLite database inside the app's own container. Fixes are written
+            in batches of twenty and flushed on every state change, on
+            going to the background, on switching tracking off and before any
+            export, so an unexpected termination costs at most the handful of
+            points still in the buffer.
+          </p>
+          <p>
+            Each sample carries a monotonic sequence number and a copy of its
+            session id rather than a link to it — deliberately, so purging tens
+            of thousands of rows never touches the session records. Retention is
+            thirty days by default for samples and seven for the audit trail;
+            the purge runs from a background maintenance task, at every launch,
+            and from Settings on demand.
+          </p>
+          <p>
+            Nothing is uploaded, because there is nowhere to upload it to: no
+            account, no server, no analytics, no third-party dependency, no
+            networking code in the app at all. <a href="../privacy/">The privacy
+            policy</a> says the same thing in the form a policy has to take.
+          </p>
+          <h3>Reading the code</h3>
+          <p>
+            Everything on this page is in the repository, and the file to start
+            from is <code>ARCHITECTURE.md</code>: the module map, the state
+            machine, the profile table and the relaunch contract, with the
+            reasoning that is only summarised here.
+          </p>
+          <dl class="contact">
+            <dt>Source code</dt>
+            <dd><a href="https://github.com/glandais/WhereIWas">github.com/glandais/WhereIWas</a></dd>
+            <dt>Questions and bug reports</dt>
+            <dd><a href="https://github.com/glandais/WhereIWas/issues">github.com/glandais/WhereIWas/issues</a></dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer__inner">
+      <span>WhereIWas GPS Logger — an app by Gabriel Landais. Requires iOS 17 or later.</span>
+      <nav aria-label="Footer">
+        <a href="../">Overview</a>
+        <a href="../how-it-works/">How it works</a>
+        <a href="../support/">Support</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="https://github.com/glandais/WhereIWas">Source</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

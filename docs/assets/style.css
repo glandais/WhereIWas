@@ -508,6 +508,77 @@ a:hover { text-decoration-color: currentColor; }
 
 .footer nav { display: flex; gap: 1.25rem; }
 
+/* ---------- diagrams ---------- */
+
+.diagram { margin: 0 0 1.25rem; padding: 0; }
+
+.diagram__frame {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.diagram__frame svg {
+  width: 100%;
+  min-width: 32rem;
+  height: auto;
+}
+
+.diagram figcaption {
+  margin-top: 0.75rem;
+  font-size: var(--fs-tiny);
+  color: var(--ink-mid);
+}
+
+.chart__inband {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-variation-settings: 'wdth' 92, 'wght' 500;
+  fill: var(--ink);
+}
+
+.swatch--probe  { background: var(--accent-2); }
+.swatch--settle {
+  background: #9AF6C4;
+  background: color-mix(in srgb, var(--accent) 45%, var(--paper));
+}
+
+.fsm__name {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-variation-settings: 'wdth' 88, 'wght' 600;
+  fill: var(--ink);
+}
+
+.fsm__sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--ink-mid);
+}
+
+.fsm__edge {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  fill: var(--ink-mid);
+}
+
+code { font-family: var(--font-mono); font-size: 0.875em; }
+
+/* ---------- on this page ---------- */
+
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-tiny);
+  color: var(--ink-mid);
+}
+
+.toc li { margin: 0; }
+
 /* ---------- responsive ---------- */
 
 @media (max-width: 46rem) {
