@@ -36,11 +36,8 @@ xcodegen generate
 ./scripts/xcb.sh test
 ```
 
-`scripts/xcb.sh` wraps `xcodebuild` and pins it to the single simulator the
-project uses, so a build never boots a device of its own choosing.
-`WhereIWas.xcodeproj` is generated and not committed. Background behaviour
-(relaunch after termination, reboot, visits, motion activity) can only be tested
-on a device — see `ARCHITECTURE.md` §7.
+`WhereIWas.xcodeproj` is generated and gitignored. See `CLAUDE.md` for the
+full build, simulator and release workflow.
 
 ## Licence
 

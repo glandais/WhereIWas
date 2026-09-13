@@ -1,4 +1,4 @@
-# App Store screenshot cards — Koubou sources (LEDGER D1/D13/D14).
+# App Store screenshot cards — Koubou sources.
 #
 # Run from the repository root:
 #   kou generate screenshots/koubou/config.yaml --output json

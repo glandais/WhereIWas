@@ -126,7 +126,7 @@ let cities: [CitySpec] = [
             c(41.88800, 12.45700), c(41.88650, 12.45400), c(41.88500, 12.45600)
         ])
     ]),
-    // Tokyo is the dense-tile case (LEDGER D8): a 4 km drive, not a 10 km one,
+    // Tokyo is the dense-tile case: a 4 km drive, not a 10 km one,
     // so the map card is not a hairline across a wall of labels.
     CitySpec(languageCode: "ja", city: "Tokyo", segments: [
         SegmentSpec(mode: .walking, waypoints: [        // Tokyo Station / Marunouchi

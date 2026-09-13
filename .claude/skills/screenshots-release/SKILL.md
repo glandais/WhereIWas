@@ -20,8 +20,7 @@ Five cards, in upload order (files upload alphabetically, hence the numbering):
 | 4 | `04-audit-trail` | Audit trail | every fix, accepted or rejected, with the reason |
 | 5 | `05-export` | Export, scrolled to sessions | the data is yours to take |
 
-`screenshots/LEDGER.md` records why the set looks like this; `screenshots/README.md` documents the
-pipeline. Read the ledger before changing a card's meaning, the README before changing a template.
+`screenshots/README.md` documents the pipeline. Read it before changing a template.
 
 ## Work out how much has to be redone
 
@@ -83,7 +82,7 @@ kou generate screenshots/koubou/config.yaml        # all nine locales, ~2 min
 ```
 
 Sources are `screenshots/koubou/`: `config.yaml`, five templates, and `koubou-strings.xcstrings`
-holding one set of nine translations (LEDGER D13 — one template set, never a template per
+holding one set of nine translations (one template set, never a template per
 language). Renders land in `out/`, gitignored.
 
 - **Headline and subtitle copy lives in the string catalog**, not in the templates. Translate
@@ -176,8 +175,7 @@ asc localizations list --version "VERSION_ID" --output table     # confirm nine 
 
 `screenshots/IPHONE_65/` is committed — it is the record of what the store was given. Commit it
 with whatever produced it (templates, copy, capture-script change) and say in the body what
-changed and why. Update `screenshots/LEDGER.md`: it carries the decisions and their open
-questions, and a card that has just gone stale belongs there.
+changed and why.
 
 Never `git add -A`. The working tree usually holds work in progress that is not yours.
 
@@ -192,7 +190,7 @@ Never `git add -A`. The working tree usually holds work in progress that is not 
 - **The status-bar clock is drawn by the system, not the app.** `-AppleLanguages` relanguages the
   app only, so the capture script moves the simulator's own locale per locale and restores it on
   exit. Do not add `--time` back to `status_bar override`: it renders with a format of its own and
-  printed "09:41" under an en-US system. See LEDGER D16.
+  printed "09:41" under an en-US system.
 - **A card can be truthful when captured and false a week later.** The audit trail's rows, the
   Status counters, any string that moves above the fold — a UI change is a screenshot change.
   `git log --oneline <last screenshot commit>..HEAD -- WhereIWas/UI WhereIWas/Resources` is the

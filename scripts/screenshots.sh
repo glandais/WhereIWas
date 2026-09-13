@@ -62,7 +62,7 @@ done < <(awk '
 # markets: the bundle ships short language codes because none of them needs a
 # region variant (`de` covers de-AT and de-CH too), but ASC files screenshots
 # under its own per-market codes. Falling back to a guess here is exactly how
-# a tenth market would silently land in Paris's directory (LEDGER D12), so an
+# a tenth market would silently land in Paris's directory, so an
 # unmapped language is a hard failure, not a default.
 asc_locale_for() {
   case "$1" in
@@ -259,5 +259,5 @@ for locale in sys.argv[2:]:
 PY
 
 echo "▸ done: $OUT_ROOT/<locale>/NN-*.png, ${#CARDS[@]} cards × ${#locales[@]} locales."
-echo "▸ next: frame these into marketing cards with Koubou (see the koubou skill"
-echo "   and screenshots/LEDGER.md D1/D14), output to screenshots/IPHONE_65/<locale>/."
+echo "▸ next: frame these into marketing cards with Koubou (see the koubou skill),"
+echo "   output to screenshots/IPHONE_65/<locale>/."

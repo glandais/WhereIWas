@@ -240,7 +240,7 @@ struct UnitSystemFormattingTests {
     /// treating "," as a decimal point is right in French and wrong in
     /// English, where "1,234 m" would come back as 1.234. That matters because
     /// the simulator's system locale is not a constant — `scripts/screenshots.sh`
-    /// moves it per capture (see LEDGER D16) and restores it on exit, so a
+    /// moves it per capture and restores it on exit, so a
     /// run interrupted mid-flight leaves the device in another language.
     private func magnitude(_ text: String) throws -> Double {
         let locale = Locale.current
