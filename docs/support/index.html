@@ -76,14 +76,12 @@
               position in the background should say so.
             </p>
             <p>
-              You will also see it while the app is idle, because it keeps a
-              coarse three-kilometre update stream open when you are stationary:
-              that stream is what stops iOS terminating the app between trips.
-              <b>Show location indicator</b> in Settings hides it for that idle
-              case; it cannot hide it while you are actually being recorded, and
-              nothing in the app can. If you would rather have no coarse stream
-              at all, turn <b>Keep coarse updates while stationary</b> off and
-              accept being terminated — and relaunched — more often.
+              You will see it while the app is idle too, and there is no setting
+              to hide it. What holds it up is the background session the app
+              keeps for as long as tracking is on, and that session is what lets
+              the next trip — which starts with the app in the background — be
+              recorded at all. Releasing it between trips is a documented way of
+              having iOS suspend the app instead.
             </p>
           </div>
         </div>
@@ -116,11 +114,14 @@
           <p>
             Check Motion &amp; Fitness permission first — without it the app
             has to use GPS to detect movement, which is the expensive way to do
-            it. Then check whether coarse updates while stationary are on: they
-            make iOS far less likely to terminate the app, at a small constant
-            cost. The receiver itself is what costs, so a day of driving costs
-            far more than a day at a desk; the status screen shows which
-            receiver profile is in force at any moment.
+            it. Then look at <b>Watch after a stop</b> in Settings: five
+            minutes by default, and it is what stops a set of traffic lights
+            costing you the rest of the trip. It runs on a wide filter and costs
+            little, but on a day of many short stops it adds up — lower it, or
+            set it to zero to switch the receiver off the moment you do. The
+            receiver itself is what costs, so a day of driving costs far more
+            than a day at a desk; the status screen shows which receiver profile
+            is in force at any moment.
           </p>
 
           <h3>Tracking stopped and did not come back</h3>
@@ -134,8 +135,11 @@
           <p>
             GPX exports are plain GPX 1.1 with extra data in an extension
             namespace; tools that do not understand the extensions ignore them
-            and read the track normally. If a file fails to open anywhere, send
-            it with a bug report.
+            and read the track normally. An audit-trail export arrives
+            compressed — <b>.json.gz</b> or <b>.txt.gz</b>, since a week of
+            trail is tens of megabytes of text — which Files, Finder and any
+            gzip reader open; the export sheet has a switch to turn that off. If a file fails to open anywhere, send it with a bug
+            report.
           </p>
         </div>
       </div>
