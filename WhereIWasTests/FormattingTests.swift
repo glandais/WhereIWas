@@ -86,6 +86,13 @@ struct AuditSummaryTests {
                 "untranslated profile: \(profile.label)")
     }
 
+    /// The two profiles that name a phase rather than an activity.
+    @Test(arguments: [GPSProfile.probing, .settling()])
+    func everyPhaseProfileIsNamed(_ profile: GPSProfile) {
+        #expect(Formatting.profileName(profile.label) != profile.label,
+                "untranslated profile: \(profile.label)")
+    }
+
     @Test(arguments: [
         MotionEvent.activity(kind: .walking, confidence: .high, timestamp: .now),
         .steps(count: 42, timestamp: .now),

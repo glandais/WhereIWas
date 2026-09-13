@@ -17,6 +17,13 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     /// falling back to STATIONARY. Default 45 s.
     public var probeTimeout: TimeInterval = 45
 
+    /// How long GPS keeps watching on the cheap ``GPSProfile/settling(_:)``
+    /// profile after a trip stops, before STATIONARY switches it off.
+    /// Default 300 s. `0` disables SETTLING: a stop switches GPS off at once,
+    /// which is what the app did before, and what cost two rides 0.9 km and
+    /// 0.8 km of their restart on 2026-09-12.
+    public var settlingTimeout: TimeInterval = 300
+
     /// GPS speed (m/s) at or above which a fix counts as "moving" while
     /// PROBING. Default 0.7 m/s (~2.5 km/h).
     public var movingSpeedThreshold: Double = 0.7
@@ -50,6 +57,10 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     public var runningCyclingDistanceFilter: Double = 20
     public var automotiveDistanceFilter: Double = 50
     public var unknownDistanceFilter: Double = 10
+    /// Filter of the SETTLING window. Wide on purpose: it is what keeps a
+    /// stopped phone from spending battery, and a departure crosses it in
+    /// seconds anyway.
+    public var settlingDistanceFilter: Double = 50
 
     // MARK: Sample filter
 
@@ -130,10 +141,12 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     // MARK: Decoding with defaults for missing keys
 
     private enum CodingKeys: String, CodingKey {
-        case stillnessTimeout, probeTimeout, movingSpeedThreshold, movingFixConfirmations, stillSpeedThreshold
+        case stillnessTimeout, probeTimeout, settlingTimeout
+        case movingSpeedThreshold, movingFixConfirmations, stillSpeedThreshold
         case minimumActivityConfidence
         case unitSystem
-        case walkingDistanceFilter, runningCyclingDistanceFilter, automotiveDistanceFilter, unknownDistanceFilter
+        case walkingDistanceFilter, runningCyclingDistanceFilter, automotiveDistanceFilter
+        case unknownDistanceFilter, settlingDistanceFilter
         case maxHorizontalAccuracy, maxSampleAge, duplicateDistance
         case retentionDays, insertBatchSize
         case auditEnabled, auditMinimumSeverity, auditLogsAcceptedFixes, auditLogsRejectedFixes
@@ -145,6 +158,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         let d = TrackingSettings()
         stillnessTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .stillnessTimeout) ?? d.stillnessTimeout
         probeTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .probeTimeout) ?? d.probeTimeout
+        settlingTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .settlingTimeout) ?? d.settlingTimeout
         movingSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .movingSpeedThreshold) ?? d.movingSpeedThreshold
         movingFixConfirmations = try c.decodeIfPresent(Int.self, forKey: .movingFixConfirmations) ?? d.movingFixConfirmations
         stillSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .stillSpeedThreshold) ?? d.stillSpeedThreshold
@@ -154,6 +168,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         runningCyclingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .runningCyclingDistanceFilter) ?? d.runningCyclingDistanceFilter
         automotiveDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .automotiveDistanceFilter) ?? d.automotiveDistanceFilter
         unknownDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .unknownDistanceFilter) ?? d.unknownDistanceFilter
+        settlingDistanceFilter = try c.decodeIfPresent(Double.self, forKey: .settlingDistanceFilter) ?? d.settlingDistanceFilter
         maxHorizontalAccuracy = try c.decodeIfPresent(Double.self, forKey: .maxHorizontalAccuracy) ?? d.maxHorizontalAccuracy
         maxSampleAge = try c.decodeIfPresent(TimeInterval.self, forKey: .maxSampleAge) ?? d.maxSampleAge
         duplicateDistance = try c.decodeIfPresent(Double.self, forKey: .duplicateDistance) ?? d.duplicateDistance

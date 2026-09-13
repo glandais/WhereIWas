@@ -73,17 +73,21 @@ stateDiagram-v2
     [*] --> disabled
     disabled --> probing : enable / startSignificantChange, startMotionUpdates, startGPS(probing), startProbeTimer
     probing --> moving : movingFixConfirmations × gpsFix(speed ≥ movingSpeedThreshold) | motionActivity(moving, conf ≥ min)
-    probing --> stationary : probeTimerFired (settles if it saw a fix) | motionActivity(stationary, high) after ≥1 fix
+    probing --> stationary : probeTimerFired (settles if it saw a fix) | motionActivity(stationary, high) after ≥1 fix — via settling when a trip was running
     probing --> probing : significantChange | visit  (restart probe timer)
     stationary --> moving : motionActivity(moving, conf ≥ min)
     stationary --> probing : significantChange | visit | motionHint | motionActivity(moving, low conf) | motionActivity(unknown, conf ≥ min) unless settled
     moving --> moving : gpsFix(speed) → startGPS(new profile) if profile changed
     moving --> moving : motionActivity(stationary, conf ≥ min) | gpsFix(speed < stillSpeedThreshold) → startStillnessTimer
     moving --> moving : motionActivity(moving) | gpsFix(fast) → cancelStillnessTimer
-    moving --> stationary : stillnessTimerFired, corroborated / stopGPS
+    moving --> settling : stillnessTimerFired, corroborated / startGPS(settling), startProbeTimer(settlingTimeout)
+    settling --> stationary : probeTimerFired / stopGPS
+    settling --> moving : movingFixConfirmations × gpsFix(fast) | motionActivity(moving, conf ≥ min)
+    settling --> probing : motionHint | significantChange | visit | motionActivity(moving, low conf)
     moving --> probing : stillnessTimerFired, uncorroborated / startGPS(probing)
     probing --> disabled : disable
     stationary --> disabled : disable
+    settling --> disabled : disable
     moving --> disabled : disable / stopGPS, stopMotionUpdates, stopSignificantChange
 ```
 
@@ -93,6 +97,7 @@ stateDiagram-v2
 |---|---|---|
 | `disabled` | off | nothing |
 | `stationary` | off | CoreMotion activity, pedometer, significant change, visits |
+| `settling` | `GPSProfile.settling` (hundredMeters, filter `settlingDistanceFilter`, 50 m) for `settlingTimeout` (300 s) | everything except stillness, which cannot shorten the window |
 | `probing` | `GPSProfile.probing` (best, filter 0) for at most `probeTimeout` (45 s) | everything |
 | `moving` | `GPSProfile.profile(for:speed:settings:)` | everything |
 
@@ -105,6 +110,11 @@ The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedPr
   The three exclusions are not details. A phone lying on a car seat is genuinely stationary *to CoreMotion* while the car drives on, so settling from MOVING would silence the very reports that bring tracking back. A probe window that saw **no** fix (indoors, a parking garage, a cold receiver) is an absence of evidence in either direction, not evidence of stillness. And a measured GPS speed is a direct refutation of the guess the settle encodes.
 
   What this costs, stated plainly: while settled, the pedometer is the only *fast* way back, and it needs ten real steps (`TrackingCoordinator.motionHintStepThreshold`) — a driver who never walks depends on CoreMotion classifying `automotive`, or on a significant change (~500 m). That trade is the point of the rule; if it ever proves too coarse, the fix is a bound on how long a settle may last, not a return to probing on every flap.
+* **A trip never ends in the dark.** `recentlyMoved` is set on entering MOVING and cleared only on reaching STATIONARY; while it holds, every decision that would switch GPS off lands in SETTLING instead — a `settlingTimeout` window on a wide distance filter whose only job is to catch the departure. Nothing shortens it: a `stationary` report is not news there (we know we stopped, that is why we are settling) and it does not set `settledStationary` either, which would make the restart *after* the window slower than if the window had never run. Only the timer reaches STATIONARY, and it settles on the same rule a probe window does — fixes seen and none of them moving.
+
+  What it buys, measured on 2026-09-12: two rides lost 941 m and 779 m because GPS went off the instant the stop was decided. The stops were real, the restarts were not seen for 211 s and 182 s — a bicycle produces no steps for the pedometer, CoreMotion needs minutes to say `cycling`, and significant change needs ~500 m. This is the bound on a settle the `settledStationary` rule above says it would take. `settlingTimeout = 0` restores the old behaviour.
+
+  The window is not free: a stop pays up to five minutes of rationed GPS, and the phone that never moved never pays it (`recentlyMoved` stays false through the PROBING windows classifier noise opens all day). Accuracy is not the knob — iOS delivers what its receiver already has, 6 m median fixes for a `threeKilometers` request in one recorded day — so the distance filter is what rations, and the fixes it does deliver are stored like any other: the departure is traced from its first 50 m, not from the MOVING transition that follows.
 * **Toward STATIONARY is hysteretic**: from MOVING only via the stillness timer (`stillnessTimeout`, 120 s default) which is armed by a credible `stationary` activity or a fix slower than `stillSpeedThreshold` (0.3 m/s) and cancelled by any moving activity or a fast fix (unless the classifier currently says stationary — GPS speed jitter must not defeat CoreMotion).
 * **A timer that fires must have been fed.** Arming takes one still reading; reaching STATIONARY takes a *second* one, arriving while the countdown ran (`stillnessCorroborated`, set by any further arm attempt and cleared on cancel and on each fresh arming). Without it the timer's firing says only that nothing arrived, which is exactly what a suspended app looks like: one fix at a red light armed the countdown, iOS suspended the process, and 120 s later the machine declared STATIONARY in the middle of a ride and switched GPS off. Uncorroborated, `stillnessTimerFired` goes to PROBING instead — one `probeTimeout` of GPS, which settles into STATIONARY anyway when nothing is moving. This is the same rule `settledStationary` already applies to a probe window that saw no fix: an absence of evidence is not evidence of stillness.
 * **Significant change / visits never jump to MOVING**: they are ~500 m accuracy and also fire when *arriving*. They open a PROBING window; a real fix decides.
@@ -123,7 +133,7 @@ The status screen reads `TrackingStatus.appliedProfile` (the engine's `appliedPr
 | walking / unknown / stationary, speed ≥ 7 m/s | bestForNavigation | 50 m | automotiveNavigation (speed overrides a wrong label) |
 | running / cycling, speed ≥ 12.5 m/s | bestForNavigation | 50 m | automotiveNavigation |
 
-Probing: best / 0 m. Stationary: no updates at all.
+Probing: best / 0 m. Settling: hundredMeters / 50 m. Stationary: no updates at all.
 
 Speed overrides a *slow* label at `vehicleSpeedThreshold` (7 m/s), because walking at 9 m/s is a vehicle
 with a wrong label. `cycling` and `running` are not slow labels: 7 m/s is 25 km/h, a speed any cyclist
@@ -187,7 +197,7 @@ Info.plist (generated from `project.yml`): `UIBackgroundModes = [location, proce
 ### Honest limitations
 * **Reboot**: nothing runs until the user unlocks the device once (data protection). After first unlock, significant-change/visit registrations survive the reboot and relaunch the app in the background on the first event. Between reboot and first unlock, and between unlock and the first significant change (≈500 m of movement or a visit), **no samples are recorded**. There is no API to change that.
 * **Force quit by the user** (swipe up in the app switcher): iOS stops delivering background events until the user opens the app again. Surfaced in the UI: `TrackingStatus.isStale(now:threshold:)` warns when the last accepted fix is older than 30 minutes, alongside the other rows of `TrackingStatus.warnings`.
-* **Stationary for long**: while STATIONARY we stop GPS by design. If the process is later terminated, we depend on significant change / visit to relaunch. First movement after a long stop may lose up to ~500 m / a few minutes before PROBING starts. What keeps the process alive across a stop is the held `CLBackgroundActivitySession`, not location updates, so CoreMotion callbacks usually still arrive and the gap is small.
+* **Stationary for long**: while STATIONARY we stop GPS by design. If the process is later terminated, we depend on significant change / visit to relaunch. First movement after a long stop may lose up to ~500 m / a few minutes before PROBING starts — but only after the SETTLING window has expired: a departure within `settlingTimeout` of the stop is caught by a fix. What keeps the process alive across a stop is the held `CLBackgroundActivitySession`, not location updates, so CoreMotion callbacks usually still arrive and the gap is small.
 * **The system location indicator** (the blue pill around the clock) is on for as long as tracking is enabled: the session is held throughout, and `showsBackgroundLocationIndicator` is forced true because hiding it is a documented way for iOS to suspend the app in the background. There is no setting for it: the `showsLocationIndicator` toggle was removed once it stopped being honoured. `Formatting` still translates the `indicator.shown` / `indicator.hidden` / `indicator.forced` codes, for trails written before the removal.
 * **Low Power Mode / Background App Refresh off**: `BGProcessingTask` may never run (purge falls back to launch + Settings). Location background mode still works.
 * **Precise location off** (`reducedAccuracy`): samples are ~1–3 km. The status screen flags it; we still record.
@@ -195,7 +205,7 @@ Info.plist (generated from `project.yml`): `UIBackgroundModes = [location, proce
 * Simulator: no background relaunch, no CoreMotion activity, no visits. Everything below "how to test" is device-only.
 
 ### Battery strategy summary
-GPS at best accuracy costs roughly 8–12 %/h; CoreMotion activity updates, pedometer, significant change and visits are essentially free (the motion coprocessor). So: GPS only in MOVING/PROBING, profile scaled to speed (a car does not need a 10 m filter), 120 s stillness hysteresis to avoid flapping at traffic lights. Expected: a responder walking 3 h and driving 2 h in a 12 h shift ≈ 40–50 % battery for tracking.
+GPS at best accuracy costs roughly 8–12 %/h; CoreMotion activity updates, pedometer, significant change and visits are essentially free (the motion coprocessor). So: GPS only in MOVING/PROBING/SETTLING, profile scaled to speed (a car does not need a 10 m filter), 120 s stillness hysteresis to avoid flapping at traffic lights, and a stop that ends a trip paying up to `settlingTimeout` (300 s) on a 50 m filter rather than losing the restart. Expected: a responder walking 3 h and driving 2 h in a 12 h shift ≈ 40–50 % battery for tracking.
 
 
 ### 5.1 Screenshot mode (`SCREENSHOTS`, never in a Release binary)
@@ -245,7 +255,7 @@ Not covered: there is no suite for `TrackingCoordinator` itself, although `Simul
 
 Device (mandatory for background behaviour):
 1. Install a Debug build, grant Always + Precise + Motion.
-2. Enable tracking, lock the phone, walk 10 min, drive 10 min, sit 10 min. Check the transition log in the Status screen: probing → moving (walking) → moving (automotive) → stationary after 120 s.
+2. Enable tracking, lock the phone, walk 10 min, drive 10 min, sit 10 min. Check the transition log in the Status screen: probing → moving (walking) → moving (automotive) → settling after 120 s → stationary 300 s later. Then set off again before those 300 s are up: the trail must pick you up within a few dozen metres, without a `stationary` row in between.
 3. Termination: with tracking on, run `xcrun devicectl device process terminate` (or let iOS kill it by opening a few heavy apps), then move > 500 m. The app must relaunch (Console.app filter `subsystem:io.github.glandais.whereiwas`) and a `enable/relaunch` transition appears.
 4. Reboot: reboot, unlock once, leave the app closed, move > 500 m: same expectation.
 5. Force quit: swipe the app away, move: nothing should be recorded (expected iOS behaviour); reopen the app: tracking resumes automatically.

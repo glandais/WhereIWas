@@ -19,10 +19,21 @@ private extension TrackingStateMachine {
             // Two fixes: leaving PROBING on speed alone needs a streak.
             _ = m.handle(.gpsFix(speed: 1.5))
             _ = m.handle(.gpsFix(speed: 1.5))
+        case .settling:
+            _ = m.handle(.enable)
+            _ = m.handle(.gpsFix(speed: 1.5))
+            _ = m.handle(.gpsFix(speed: 1.5))
+            // Two still readings, so the countdown is corroborated and the
+            // stop is real; a trip that stops lands in SETTLING.
+            _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+            _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+            _ = m.handle(.stillnessTimerFired)
         case .stationary:
             _ = m.handle(.enable)
             // The probe window saw no fix, so this machine is *not* settled:
             // use `settledStationary()` for the other side of that rule.
+            // Nothing ever moved either, so there is no trip to settle out of
+            // and the machine goes straight to GPS off.
             _ = m.handle(.probeTimerFired)
         }
         precondition(m.phase == phase)
@@ -49,6 +60,8 @@ private extension TrackingStateMachine {
         _ = m.handle(.gpsFix(speed: 0))
         _ = m.handle(.gpsFix(speed: 0))    // corroborates: data still arriving
         _ = m.handle(.stillnessTimerFired)
+        precondition(m.phase == .settling)
+        _ = m.handle(.probeTimerFired)     // the settling window expires unused
         precondition(m.phase == .stationary)
         precondition(!m.settledStationary)
         return m
@@ -90,12 +103,13 @@ struct TrackingStateInitialTests {
         #expect(m.lastTransition == nil)
     }
 
-    @Test("isGPSActive is true only for probing and moving")
+    @Test("isGPSActive is false only for disabled and stationary")
     func gpsActive() {
         #expect(!TrackingPhase.disabled.isGPSActive)
         #expect(!TrackingPhase.stationary.isGPSActive)
         #expect(TrackingPhase.probing.isGPSActive)
         #expect(TrackingPhase.moving.isGPSActive)
+        #expect(TrackingPhase.settling.isGPSActive, "GPS runs, rationed")
     }
 
     @Test("Disabled machine ignores every non-enable input",
@@ -496,6 +510,7 @@ struct TrackingStateStationaryTests {
         #expect(!m.settledStationary, "the classifier describes the phone, not the car")
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
+        _ = m.handle(.probeTimerFired)     // through the settling window
         #expect(m.phase == .stationary)
         // The unknown reports that follow can still bring tracking back.
         _ = m.handle(.motionActivity(kind: .unknown, confidence: .high))
@@ -532,6 +547,7 @@ struct TrackingStateStationaryTests {
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
+        _ = m.handle(.probeTimerFired)
         #expect(m.phase == .stationary)
         _ = m.handle(.gpsFix(speed: 0))    // coarse updates keep arriving
         #expect(m.profileSpeed == 0)
@@ -612,17 +628,24 @@ struct TrackingStateMovingTests {
         #expect(!m.stillnessTimerArmed)
     }
 
-    @Test("Stillness timer expiry goes STATIONARY and stops GPS")
+    /// A trip that stops does not switch GPS off: it settles first, and only
+    /// the settling window's own expiry reaches STATIONARY.
+    @Test("Stillness timer expiry goes SETTLING, and the window then goes STATIONARY")
     func timerFires() {
         var m = TrackingStateMachine.at(.moving)
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         let effects = m.handle(.stillnessTimerFired)
-        #expect(m.phase == .stationary)
-        #expect(effects.withoutLogs == [.stopGPS])
+        #expect(m.phase == .settling)
+        #expect(effects.withoutLogs == [.startGPS(.settling()), .startProbeTimer(seconds: 300)])
         #expect(!m.stillnessTimerArmed)
+        #expect(m.activeProfile == .settling())
+        #expect(m.lastTransition == TrackingTransition(from: .moving, to: .settling, input: .stillnessTimerFired))
+
+        let end = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        #expect(end.withoutLogs == [.stopGPS])
         #expect(m.activeProfile == nil)
-        #expect(m.lastTransition == TrackingTransition(from: .moving, to: .stationary, input: .stillnessTimerFired))
     }
 
     /// The bug this guards: on a ride, one fix at a red light armed the
@@ -651,6 +674,10 @@ struct TrackingStateMovingTests {
         _ = m.handle(.stillnessTimerFired)
         _ = m.handle(.gpsFix(speed: 0))
         _ = m.handle(.probeTimerFired)
+        // Still a trip that stopped, so the settle goes through the window.
+        #expect(m.phase == .settling)
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.probeTimerFired)
         #expect(m.phase == .stationary)
         #expect(m.settledStationary)
     }
@@ -664,7 +691,7 @@ struct TrackingStateMovingTests {
         #expect(m.handle(second).isEmpty, "the timer is already running")
         #expect(m.stillnessCorroborated)
         _ = m.handle(.stillnessTimerFired)
-        #expect(m.phase == .stationary)
+        #expect(m.phase == .settling, "corroborated: the stop is real, so it settles")
     }
 
     /// Corroboration belongs to one countdown: cancelling drops it.
@@ -721,7 +748,7 @@ struct TrackingStateMovingTests {
         #expect(m.stillnessTimerArmed)
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
-        #expect(m.phase == .stationary)
+        #expect(m.phase == .settling)
     }
 
     @Test("Fix between still and moving thresholds leaves the timer untouched")
@@ -756,6 +783,190 @@ struct TrackingStateMovingTests {
         var m = TrackingStateMachine.at(.moving)
         #expect(m.handle(.probeTimerFired).isEmpty)
         #expect(m.phase == .moving)
+    }
+}
+
+// MARK: - Settling
+
+/// The window between a stop and GPS going off.
+///
+/// Its reason to exist, measured on 2026-09-12: two rides lost 941 m and 779 m
+/// because the machine switched GPS off the instant it decided the ride had
+/// stopped. The stops were real — the bicycle had not moved for four minutes —
+/// but the restarts were invisible for 211 s and 182 s, because a bicycle
+/// produces no steps for the pedometer and CoreMotion needs minutes to say
+/// `cycling`, while significant change needs ~500 m.
+@Suite("TrackingStateMachine · settling")
+struct TrackingStateSettlingTests {
+    @Test("A stop that ends a trip settles instead of switching GPS off")
+    func stopSettles() {
+        var m = TrackingStateMachine.at(.settling)
+        #expect(m.phase == .settling)
+        #expect(m.activeProfile == .settling())
+        #expect(m.probeTimerArmed)
+        #expect(m.recentlyMoved)
+    }
+
+    @Test("The settling profile is rationed by its distance filter, not by accuracy")
+    func profileShape() {
+        var s = TrackingSettings()
+        s.settlingDistanceFilter = 80
+        let p = GPSProfile.settling(s)
+        #expect(p.distanceFilter == 80)
+        #expect(p.label == "settling")
+        #expect(p.activityType == .other)
+
+        var m = TrackingStateMachine.at(.moving, settings: s)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        let e = m.handle(.stillnessTimerFired)
+        #expect(e.startGPSProfiles == [p])
+    }
+
+    /// The 14:23 loss: `stationary/high` cut GPS while the rider was already
+    /// pedalling again, and nothing noticed for three minutes.
+    @Test("No stillness report shortens the window",
+          arguments: [ActivityConfidence.low, .medium, .high])
+    func stationaryDoesNotShorten(_ confidence: ActivityConfidence) {
+        var m = TrackingStateMachine.at(.settling)
+        let e = m.handle(.motionActivity(kind: .stationary, confidence: confidence))
+        #expect(m.phase == .settling)
+        #expect(e.isEmpty)
+        #expect(!m.settledStationary, "settling here would slow the restart down further")
+    }
+
+    @Test("A confident unknown is not news either")
+    func unknownIgnored() {
+        var m = TrackingStateMachine.at(.settling)
+        #expect(m.handle(.motionActivity(kind: .unknown, confidence: .high)).isEmpty)
+        #expect(m.phase == .settling)
+    }
+
+    /// What the window is for: the departure arrives as fixes through a wide
+    /// filter, and two of them are a confirmed restart.
+    @Test("Confirmed movement during the window returns to MOVING")
+    func departureResumes() {
+        var m = TrackingStateMachine.at(.settling)
+        #expect(m.handle(.gpsFix(speed: 4)).isEmpty, "one fix is not a departure")
+        #expect(m.phase == .settling)
+        let e = m.handle(.gpsFix(speed: 4))
+        #expect(m.phase == .moving)
+        #expect(e.contains(.cancelProbeTimer))
+        #expect(m.lastTransition == TrackingTransition(from: .settling, to: .moving,
+                                                       input: .gpsFix(speed: 4)))
+    }
+
+    @Test("A credible moving activity ends the window at once")
+    func activityResumes() {
+        var m = TrackingStateMachine.at(.settling)
+        _ = m.handle(.motionActivity(kind: .cycling, confidence: .high))
+        #expect(m.phase == .moving)
+        #expect(m.activeProfile?.label == "cycling")
+    }
+
+    @Test("Physical hints and coarse wake-ups open a PROBING window",
+          arguments: [TrackingInput.motionHint, .significantChange, .visit,
+                      .motionActivity(kind: .cycling, confidence: .low)])
+    func hintsProbe(_ input: TrackingInput) {
+        var m = TrackingStateMachine.at(.settling)
+        let e = m.handle(input)
+        #expect(m.phase == .probing)
+        #expect(e.startGPSProfiles == [.probing])
+        #expect(e.contains(.startProbeTimer(seconds: 45)))
+    }
+
+    @Test("An unused window expires into STATIONARY and switches GPS off")
+    func windowExpires() {
+        var m = TrackingStateMachine.at(.settling)
+        let e = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        #expect(e.withoutLogs == [.stopGPS])
+        #expect(!m.recentlyMoved)
+        #expect(!m.probeTimerArmed)
+    }
+
+    @Test("A window that saw fixes and no movement settles; one that saw none does not")
+    func expirySettles() {
+        var m = TrackingStateMachine.at(.settling)
+        _ = m.handle(.gpsFix(speed: 0))
+        _ = m.handle(.probeTimerFired)
+        #expect(m.settledStationary)
+
+        var blind = TrackingStateMachine.at(.settling)
+        _ = blind.handle(.probeTimerFired)
+        #expect(!blind.settledStationary, "no fix is no evidence, indoors or suspended")
+    }
+
+    @Test("The window runs once per trip, not once per stop decision")
+    func onlyOneWindowPerTrip() {
+        var m = TrackingStateMachine.at(.settling)
+        _ = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary)
+        // A probe window that finds nothing now goes straight back to GPS off.
+        _ = m.handle(.motionHint)
+        #expect(m.phase == .probing)
+        _ = m.handle(.probeTimerFired)
+        #expect(m.phase == .stationary, "nothing moved, so there is no trip to settle out of")
+    }
+
+    @Test("A new trip earns a new window")
+    func newTripNewWindow() {
+        var m = TrackingStateMachine.at(.settling)
+        _ = m.handle(.probeTimerFired)
+        _ = m.handle(.motionActivity(kind: .cycling, confidence: .high))
+        #expect(m.phase == .moving)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .settling)
+    }
+
+    /// The other shape the loss took: an uncorroborated timer probes, the
+    /// probe then decides STATIONARY — and that decision ends a trip too.
+    @Test("The PROBING route to STATIONARY settles as well",
+          arguments: [TrackingInput.probeTimerFired,
+                      .motionActivity(kind: .stationary, confidence: .high)])
+    func probingRouteSettles(_ input: TrackingInput) {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.gpsFix(speed: 0.1))
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .probing)
+        _ = m.handle(.gpsFix(speed: 0))       // the probe saw something
+        _ = m.handle(input)
+        #expect(m.phase == .settling)
+    }
+
+    @Test("settlingTimeout = 0 restores the old behaviour: a stop switches GPS off")
+    func disabledByZero() {
+        var s = TrackingSettings()
+        s.settlingTimeout = 0
+        var m = TrackingStateMachine.at(.moving, settings: s)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        let e = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .stationary)
+        #expect(e.withoutLogs == [.stopGPS])
+    }
+
+    @Test("The window uses the configured timeout")
+    func customTimeout() {
+        var s = TrackingSettings()
+        s.settlingTimeout = 90
+        var m = TrackingStateMachine.at(.moving, settings: s)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        let e = m.handle(.stillnessTimerFired)
+        #expect(e.contains(.startProbeTimer(seconds: 90)))
+    }
+
+    @Test("Disabling during the window stops everything")
+    func disableDuringWindow() {
+        var m = TrackingStateMachine.at(.settling)
+        let e = m.handle(.disable)
+        #expect(m.phase == .disabled)
+        #expect(e.contains(.cancelProbeTimer))
+        #expect(e.contains(.stopGPS))
+        #expect(!m.recentlyMoved)
     }
 }
 
@@ -840,6 +1051,7 @@ struct TrackingStateProfileTests {
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
         _ = m.handle(.stillnessTimerFired)
+        _ = m.handle(.probeTimerFired)
         #expect(m.phase == .stationary)
         _ = m.handle(.significantChange)
         _ = m.handle(.gpsFix(speed: 1))          // first of the streak
@@ -931,6 +1143,10 @@ struct TrackingStateScenarioTests {
         _ = step(.motionActivity(kind: .stationary, confidence: .high))
         _ = step(.motionActivity(kind: .stationary, confidence: .high))
         _ = step(.stillnessTimerFired)
+        // Parking a car is the end of a trip, so GPS keeps watching a while.
+        #expect(m.phase == .settling)
+        #expect(m.activeProfile == .settling())
+        _ = step(.probeTimerFired)
         #expect(m.phase == .stationary)
 
         // Relaunch-style significant change with no real motion.
@@ -938,16 +1154,18 @@ struct TrackingStateScenarioTests {
         #expect(m.phase == .probing)
         _ = step(.gpsFix(speed: 0))
         _ = step(.probeTimerFired)
+        // Nothing moved since the last stop, so no second settling window.
         #expect(m.phase == .stationary)
 
         _ = step(.disable)
         #expect(m.phase == .disabled)
 
-        #expect(log.map(\.to) == [.probing, .moving, .stationary, .probing, .stationary, .disabled])
+        #expect(log.map(\.to) == [.probing, .moving, .settling, .stationary,
+                                  .probing, .stationary, .disabled])
     }
 
     @Test("Every reachable phase can be disabled and returns to a clean state",
-          arguments: [TrackingPhase.probing, .moving, .stationary])
+          arguments: [TrackingPhase.probing, .moving, .stationary, .settling])
     func disableFromAnywhere(phase: TrackingPhase) {
         var m = TrackingStateMachine.at(phase)
         let effects = m.handle(.disable)

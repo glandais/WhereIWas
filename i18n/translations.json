@@ -3008,6 +3008,32 @@
             "pl": "GPS jest włączany na krótko, aby potwierdzić, czy się poruszasz."
           }
         },
+        "phase.settling": {
+          "translations": {
+            "cs": "Po zastavení",
+            "de": "Gerade angehalten",
+            "en": "Just stopped",
+            "es": "Recién detenido",
+            "fr": "Arrêt récent",
+            "it": "Appena fermo",
+            "ja": "停止直後",
+            "nl": "Net gestopt",
+            "pl": "Po zatrzymaniu"
+          }
+        },
+        "phase.settling.explanation": {
+          "translations": {
+            "cs": "Právě jste zastavili. GPS zůstává zapnutá v úsporném režimu, aby okamžitě zachytila rozjezd.",
+            "de": "Sie haben gerade angehalten. Das GPS bleibt sparsam aktiv, damit ein Weiterfahren sofort bemerkt wird.",
+            "en": "You have just stopped. GPS stays on, rationed, so setting off again is noticed at once.",
+            "es": "Acabas de detenerte. El GPS sigue encendido, racionado, para detectar al instante que vuelves a moverte.",
+            "fr": "Vous venez de vous arrêter. Le GPS reste allumé, au ralenti, pour repérer un redémarrage immédiatement.",
+            "it": "Ti sei appena fermato. Il GPS resta acceso a basso regime, per accorgersi subito della ripartenza.",
+            "ja": "停止した直後です。再出発をすぐ検知できるよう、GPSは間隔を広げたまま動作しています。",
+            "nl": "Je bent net gestopt. De gps blijft zuinig aan, zodat opnieuw vertrekken meteen wordt opgemerkt.",
+            "pl": "Postój dopiero się zaczął. GPS pozostaje włączony w trybie oszczędnym, aby od razu wykryć ruszenie."
+          }
+        },
         "phase.stationary.explanation": {
           "translations": {
             "cs": "GPS je vypnuté. Čeká se na pohyb, významnou změnu polohy nebo návštěvu.",
@@ -3047,6 +3073,21 @@
             "ja": "オン",
             "nl": "Aan",
             "pl": "Włączona"
+          }
+        },
+        "profile.settling": {
+          "comment": "GPS profile name: rationed updates after a stop, watching for a departure",
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Pohotovost",
+            "de": "Bereitschaft",
+            "en": "Standby",
+            "es": "En espera",
+            "fr": "Veille",
+            "it": "In attesa",
+            "ja": "待機",
+            "nl": "Stand-by",
+            "pl": "Czuwanie"
           }
         },
         "profile.unknown": {
@@ -3641,15 +3682,15 @@
         },
         "settings.motion.footer": {
           "translations": {
-            "cs": "Delší nehybnost brání přepínání na semaforech, ale po zastavení nechává GPS déle zapnutou. Systémový indikátor polohy zůstává svítit po celou dobu sledování: jeho skrytí je doložený způsob, jak iOS uspí aplikaci na pozadí.",
-            "de": "Eine längere Stillstandsdauer vermeidet Wechsel an Ampeln, hält das GPS aber nach dem Anhalten länger eingeschaltet. Die Systemanzeige für den Standort bleibt an, solange aufgezeichnet wird: sie auszublenden ist ein belegter Weg, wie iOS die App im Hintergrund anhält.",
-            "en": "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. The system location indicator stays on for as long as tracking runs: hiding it is a documented way for iOS to suspend the app in the background.",
-            "es": "Una inmovilidad más larga evita los cambios en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerte. El indicador de ubicación del sistema permanece visible mientras se registra: ocultarlo es una forma documentada de que iOS suspenda la app en segundo plano.",
-            "fr": "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. L’indicateur de localisation du système reste allumé tant que le suivi tourne : le masquer est une cause documentée de suspension de l’app en arrière-plan par iOS.",
-            "it": "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. L'indicatore di posizione di sistema resta acceso per tutta la registrazione: nasconderlo è un modo documentato perché iOS sospenda l'app in background.",
-            "ja": "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。記録中はシステムの位置情報インジケータが表示され続けます。これを非表示にすると、iOSがバックグラウンドでAppを停止させる原因になることが知られています。",
-            "nl": "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. De systeemlocatie-indicator blijft aan zolang er wordt vastgelegd: hem verbergen is een gedocumenteerde manier waarop iOS de app op de achtergrond onderbreekt.",
-            "pl": "Dłuższy czas bezruchu zapobiega przełączaniu na światłach, ale dłużej utrzymuje GPS po zatrzymaniu. Systemowy wskaźnik lokalizacji świeci przez cały czas rejestrowania: jego ukrycie to udokumentowany powód, dla którego iOS wstrzymuje aplikację w tle."
+            "cs": "Delší nehybnost brání přepínání na semaforech, ale po zastavení nechává GPS déle zapnutou. Poté zůstává GPS ještě po nastavenou dobu zapnutá v úsporném režimu, takže rozjezd je vidět během několika sekund, a ne až po minutách, které potřebuje detekce pohybu. Systémový indikátor polohy zůstává svítit po celou dobu sledování: jeho skrytí je doložený způsob, jak iOS uspí aplikaci na pozadí.",
+            "de": "Eine längere Stillstandsdauer vermeidet Wechsel an Ampeln, hält das GPS aber nach dem Anhalten länger eingeschaltet. Danach bleibt das GPS für die hier eingestellte Dauer sparsam aktiv, sodass ein Weiterfahren in Sekunden erkannt wird statt erst nach den Minuten, die die Bewegungserkennung braucht. Die Systemanzeige für den Standort bleibt an, solange aufgezeichnet wird: sie auszublenden ist ein belegter Weg, wie iOS die App im Hintergrund anhält.",
+            "en": "Longer stillness avoids flapping at traffic lights but keeps GPS on longer after you stop. It then keeps watching at low power for the time set here, so setting off again is seen within seconds instead of the minutes motion detection needs. The system location indicator stays on for as long as tracking runs: hiding it is a documented way for iOS to suspend the app in the background.",
+            "es": "Una inmovilidad más larga evita los cambios en los semáforos, pero mantiene el GPS encendido más tiempo tras detenerte. Después sigue vigilando a baja potencia durante el tiempo indicado aquí, de modo que reanudar la marcha se detecta en segundos y no en los minutos que necesita la detección de movimiento. El indicador de ubicación del sistema permanece visible mientras se registra: ocultarlo es una forma documentada de que iOS suspenda la app en segundo plano.",
+            "fr": "Une immobilité plus longue évite les basculements aux feux rouges, mais garde le GPS allumé plus longtemps après l’arrêt. Il continue ensuite de veiller au ralenti pendant la durée réglée ici, si bien qu’un redémarrage est vu en quelques secondes au lieu des minutes qu’il faut à la détection de mouvement. L’indicateur de localisation du système reste allumé tant que le suivi tourne : le masquer est une cause documentée de suspension de l’app en arrière-plan par iOS.",
+            "it": "Un'immobilità più lunga evita i cambi di stato ai semafori, ma tiene il GPS acceso più a lungo dopo l'arresto. Resta poi in ascolto a basso consumo per il tempo impostato qui, così la ripartenza si nota in pochi secondi invece che nei minuti richiesti dal rilevamento del movimento. L'indicatore di posizione di sistema resta acceso per tutta la registrazione: nasconderlo è un modo documentato perché iOS sospenda l'app in background.",
+            "ja": "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。その後もここで設定した時間だけGPSが省電力のまま監視を続けるため、再出発は動作検出が要する数分ではなく数秒で分かります。記録中はシステムの位置情報インジケータが表示され続けます。これを非表示にすると、iOSがバックグラウンドでAppを停止させる原因になることが知られています。",
+            "nl": "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. Daarna blijft de gps zuinig meekijken gedurende de hier ingestelde tijd, zodat opnieuw vertrekken binnen seconden wordt gezien in plaats van na de minuten die bewegingsdetectie nodig heeft. De systeemlocatie-indicator blijft aan zolang er wordt vastgelegd: hem verbergen is een gedocumenteerde manier waarop iOS de app op de achtergrond onderbreekt.",
+            "pl": "Dłuższy czas bezruchu zapobiega przełączaniu na światłach, ale dłużej utrzymuje GPS po zatrzymaniu. Następnie GPS czuwa w trybie oszczędnym przez ustawiony tutaj czas, dzięki czemu ruszenie widać w kilka sekund, a nie po minutach potrzebnych detekcji ruchu. Systemowy wskaźnik lokalizacji świeci przez cały czas rejestrowania: jego ukrycie to udokumentowany powód, dla którego iOS wstrzymuje aplikację w tle."
           }
         },
         "settings.motion.minimumConfidence": {
@@ -3676,6 +3717,32 @@
             "ja": "移動判定の時間",
             "nl": "Detectieduur",
             "pl": "Czas wykrywania"
+          }
+        },
+        "settings.motion.settling": {
+          "translations": {
+            "cs": "Sledování po zastavení",
+            "de": "Nachlauf nach Halt",
+            "en": "Watch after a stop",
+            "es": "Vigilancia tras parar",
+            "fr": "Veille après un arrêt",
+            "it": "Attesa dopo la sosta",
+            "ja": "停止後の監視",
+            "nl": "Waken na stop",
+            "pl": "Czuwanie po postoju"
+          }
+        },
+        "settings.motion.settling.off": {
+          "translations": {
+            "cs": "Vypnuto",
+            "de": "Aus",
+            "en": "Off",
+            "es": "Desactivada",
+            "fr": "Désactivée",
+            "it": "Disattivata",
+            "ja": "オフ",
+            "nl": "Uit",
+            "pl": "Wyłączone"
           }
         },
         "settings.motion.stillness": {

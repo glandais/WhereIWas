@@ -63,6 +63,21 @@ public struct GPSProfile: Codable, Sendable, Hashable {
                                            activityType: .other,
                                            label: "probing")
 
+    /// Profile used while SETTLING: the trip has just stopped and we are
+    /// waiting to see whether it resumes.
+    ///
+    /// Accuracy is deliberately not the knob here: iOS delivers what its
+    /// receiver already has, so asking for `hundredMeters` still returned 6 m
+    /// median fixes in a recorded day — the distance filter is the only thing
+    /// that actually rations them. A wide one (50 m) means a parked phone
+    /// costs almost nothing, while a departure crosses it within seconds.
+    public static func settling(_ settings: TrackingSettings = TrackingSettings()) -> GPSProfile {
+        GPSProfile(desiredAccuracy: .hundredMeters,
+                   distanceFilter: settings.settlingDistanceFilter,
+                   activityType: .other,
+                   label: "settling")
+    }
+
     // MARK: - Pure table
 
     /// Speed tiers (m/s) used when the activity classifier is `unknown`.

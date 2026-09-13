@@ -507,6 +507,9 @@ enum Formatting {
         case "unknown":
             return String(localized: "profile.unknown", defaultValue: "Unknown",
                           comment: "GPS profile name; the subject is the profile, not the activity")
+        case "settling":
+            return String(localized: "profile.settling", defaultValue: "Standby",
+                          comment: "GPS profile name: rationed updates after a stop, watching for a departure")
         default: return label
         }
     }
@@ -535,6 +538,7 @@ extension TrackingPhase {
         switch self {
         case .disabled: return String(localized: "phase.off", defaultValue: "Off")
         case .stationary: return String(localized: "common.stationary", defaultValue: "Stationary")
+        case .settling: return String(localized: "phase.settling", defaultValue: "Just stopped")
         case .probing: return String(localized: "common.probing", defaultValue: "Probing")
         case .moving: return String(localized: "phase.moving", defaultValue: "Moving")
         }
@@ -544,6 +548,7 @@ extension TrackingPhase {
         switch self {
         case .disabled: return "pause.circle"
         case .stationary: return "zzz"
+        case .settling: return "location"
         case .probing: return "dot.radiowaves.left.and.right"
         case .moving: return "location.fill"
         }
@@ -553,6 +558,7 @@ extension TrackingPhase {
         switch self {
         case .disabled: return .secondary
         case .stationary: return .orange
+        case .settling: return .teal
         case .probing: return .blue
         case .moving: return .green
         }
@@ -562,6 +568,7 @@ extension TrackingPhase {
         switch self {
         case .disabled: return String(localized: "phase.off.explanation", defaultValue: "Tracking is switched off. Nothing is recorded.")
         case .stationary: return String(localized: "phase.stationary.explanation", defaultValue: "GPS is off. Waiting for motion, a significant location change or a visit.")
+        case .settling: return String(localized: "phase.settling.explanation", defaultValue: "You have just stopped. GPS stays on, rationed, so setting off again is noticed at once.")
         case .probing: return String(localized: "phase.probing.explanation", defaultValue: "GPS is on briefly to confirm whether you are moving.")
         case .moving: return String(localized: "phase.moving.explanation", defaultValue: "GPS is on, tuned to your current speed and activity.")
         }

@@ -116,6 +116,12 @@ struct SettingsView: View {
             Stepper(value: settings.probeTimeout, in: 15...180, step: 15) {
                 LabeledContent("settings.motion.probeDuration", value: Formatting.duration(controller.settings.probeTimeout))
             }
+            Stepper(value: settings.settlingTimeout, in: 0...1800, step: 60) {
+                LabeledContent("settings.motion.settling",
+                               value: controller.settings.settlingTimeout == 0
+                                   ? String(localized: "settings.motion.settling.off", defaultValue: "Off")
+                                   : Formatting.duration(controller.settings.settlingTimeout))
+            }
             Picker("settings.motion.minimumConfidence", selection: settings.minimumActivityConfidence) {
                 Text("settings.confidence.low").tag(ActivityConfidence.low)
                 Text("settings.confidence.medium").tag(ActivityConfidence.medium)
@@ -327,6 +333,9 @@ private struct ProfileTable: View {
             ProfileRow(title: String(localized: "common.probing", defaultValue: "Probing"),
                        systemImage: TrackingPhase.probing.systemImage,
                        profile: .probing)
+            ProfileRow(title: String(localized: "phase.settling", defaultValue: "Just stopped"),
+                       systemImage: TrackingPhase.settling.systemImage,
+                       profile: .settling(settings))
         }
     }
 }

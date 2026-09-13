@@ -67,7 +67,9 @@ extension TrackingStatus {
     func isStale(now: Date = .now, threshold: TimeInterval = 30 * 60) -> Bool {
         guard isEnabled, phase != .disabled else { return false }
         guard let last = lastFix?.timestamp else { return stats.totalSamples > 0 }
-        return now.timeIntervalSince(last) > threshold && phase != .stationary
+        // SETTLING counts as stationary here: its whole point is that nothing
+        // is moving and the wide filter has nothing to deliver.
+        return now.timeIntervalSince(last) > threshold && phase != .stationary && phase != .settling
     }
 }
 

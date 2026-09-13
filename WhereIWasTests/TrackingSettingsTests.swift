@@ -142,10 +142,12 @@ struct TrackingSettingsCodableTests {
         let data = try JSONEncoder().encode(TrackingSettings())
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         let expectedKeys: Set<String> = [
-            "stillnessTimeout", "probeTimeout", "movingSpeedThreshold", "movingFixConfirmations", "stillSpeedThreshold",
+            "stillnessTimeout", "probeTimeout", "settlingTimeout",
+            "movingSpeedThreshold", "movingFixConfirmations", "stillSpeedThreshold",
             "minimumActivityConfidence",
             "unitSystem",
-            "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter", "unknownDistanceFilter",
+            "walkingDistanceFilter", "runningCyclingDistanceFilter", "automotiveDistanceFilter",
+            "unknownDistanceFilter", "settlingDistanceFilter",
             "maxHorizontalAccuracy", "maxSampleAge", "duplicateDistance",
             "retentionDays", "insertBatchSize",
             "auditEnabled", "auditMinimumSeverity", "auditRetentionDays",

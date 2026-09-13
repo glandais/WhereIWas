@@ -1,31 +1,40 @@
 import Foundation
 
-/// The four phases of the tracking state machine.
+/// The five phases of the tracking state machine.
 ///
 /// ```
 /// disabled ──enable──▶ probing ──(2 fixes ≥ moving | activity moving)──▶ moving
 ///    ▲                   │  ▲                                              │
 ///    │                   │  │ significantChange / visit / low-conf hint     │ stillnessTimerFired
 ///    │       probeTimerFired│  │                                              ▼
-///    │                   ▼  │                                           stationary
+///    │                   ▼  │                                    settling ──probeTimerFired──▶ stationary
 ///    └────────disable────┴──┴───────────────────────────────────────────────┘
 /// ```
 ///
 /// A stillness timer that fires without a second still reading behind it goes
 /// back to PROBING rather than STATIONARY: see
 /// ``TrackingStateMachine/stillnessCorroborated``.
+///
+/// A stop that ends a trip does not switch GPS off at once: it goes through
+/// SETTLING, a bounded window on a cheap profile whose only job is to catch
+/// the departure. See ``TrackingStateMachine/recentlyMoved``.
 public enum TrackingPhase: String, Codable, Sendable, Hashable, CaseIterable {
     /// User switched tracking off. Nothing runs, nothing is monitored.
     case disabled
-    /// GPS off (or coarse). Waiting for CoreMotion / significant-change / visit.
+    /// GPS off. Waiting for CoreMotion / significant-change / visit.
     case stationary
+    /// The trip has just stopped. GPS stays on with a wide distance filter for
+    /// `settlingTimeout`, so starting again is seen in seconds rather than in
+    /// the minutes CoreMotion takes to classify a restart.
+    case settling
     /// GPS briefly on at best accuracy to confirm whether we are really moving.
     case probing
     /// GPS on with a speed/activity dependent ``GPSProfile``.
     case moving
 
-    /// `true` while high-accuracy GPS should be running.
-    public var isGPSActive: Bool { self == .probing || self == .moving }
+    /// `true` while GPS should be running — at best accuracy in PROBING and
+    /// MOVING, on the cheap ``GPSProfile/settling(_:)`` profile in SETTLING.
+    public var isGPSActive: Bool { self == .probing || self == .moving || self == .settling }
 }
 
 /// Everything that can happen to the state machine. The coordinator
@@ -111,6 +120,11 @@ public struct TrackingTransition: Sendable, Equatable {
 /// * Going **to STATIONARY** from MOVING always goes through the stillness
 ///   timer (hysteresis). From PROBING it happens when the probe timer fires
 ///   or when the classifier confidently says `stationary`.
+/// * Going **to STATIONARY after a trip** goes through SETTLING first: GPS
+///   stays on with a wide distance filter for `settlingTimeout` so a restart
+///   is caught by a fix instead of waiting for CoreMotion. The window is
+///   fixed — no `stationary` report shortens it — because the reports that
+///   would shorten it are exactly the ones that were wrong.
 /// * Once we have settled — the classifier said `stationary` with high
 ///   confidence, or a whole probe window found nothing — a confident
 ///   `unknown` no longer reopens PROBING (the classifier flaps between the
@@ -151,13 +165,23 @@ public struct TrackingStateMachine: Sendable, Equatable {
     /// looks like, and is no more evidence of stillness than the fix-less
     /// probe window ``settledStationary`` already refuses to trust.
     public private(set) var stillnessCorroborated = false
-    /// Whether a probe timer is currently armed (PROBING only).
+    /// Whether a probe timer is currently armed. PROBING arms it for
+    /// `probeTimeout`, SETTLING for `settlingTimeout`: both are "a window that
+    /// ends in STATIONARY unless something moves", so they share the timer.
     public private(set) var probeTimerArmed = false
     /// Number of fixes received during the current PROBING window.
     public private(set) var probeFixCount = 0
     /// Consecutive PROBING fixes at or above ``TrackingSettings/movingSpeedThreshold``.
     /// Reset by any slower fix and on every PROBING entry and exit.
     public private(set) var fastFixStreak = 0
+    /// `true` between entering MOVING and reaching STATIONARY: a trip is in
+    /// progress or has just ended.
+    ///
+    /// It is what makes a stop go through SETTLING rather than straight to
+    /// GPS off. The phone that has been sitting on a desk all morning —
+    /// PROBING windows opening and expiring on classifier noise — never sets
+    /// it, and keeps costing nothing.
+    public private(set) var recentlyMoved = false
     /// `true` once the classifier said `stationary` with high confidence and
     /// nothing has contradicted it since. While set, a confident `unknown`
     /// report is classifier noise rather than the device being handled.
@@ -193,7 +217,9 @@ public struct TrackingStateMachine: Sendable, Equatable {
             // override a classifier that had settled on "stationary".
             if phase != .disabled { settledStationary = false }
             switch phase {
-            case .stationary:
+            case .stationary, .settling:
+                // From SETTLING too: the cheap profile is watching for a
+                // departure, and best accuracy decides one faster.
                 return transition(to: .probing, input: input)
             case .moving:
                 return disarmStillnessTimer()
@@ -217,8 +243,16 @@ public struct TrackingStateMachine: Sendable, Equatable {
             return transition(to: .stationary, input: input)
 
         case .probeTimerFired:
-            guard phase == .probing, probeTimerArmed else { return [] }
+            guard phase == .probing || phase == .settling, probeTimerArmed else { return [] }
             probeTimerArmed = false
+            if phase == .settling {
+                // The window is over and nothing moved through it. Whether the
+                // classifier ever said so is beside the point: a whole
+                // `settlingTimeout` of fixes that did not move is the same
+                // evidence a probe window gives, only longer.
+                settledStationary = probeFixCount > 0
+                return transition(to: .stationary, input: input)
+            }
             // A probe window that saw fixes and none of them moved is at least
             // as good a settle as the classifier's own verdict — without it,
             // every window ending on the timer rather than on a
@@ -231,7 +265,7 @@ public struct TrackingStateMachine: Sendable, Equatable {
         case .significantChange, .visit:
             if phase != .disabled { settledStationary = false }
             switch phase {
-            case .stationary:
+            case .stationary, .settling:
                 return transition(to: .probing, input: input)
             case .probing:
                 // Extend the probing window: something is happening.
@@ -278,10 +312,15 @@ public struct TrackingStateMachine: Sendable, Equatable {
         let credible = confidence >= settings.minimumActivityConfidence
         if kind.impliesMotion {
             settledStationary = false
-        } else if kind == .stationary && confidence == .high && phase != .moving {
+        } else if kind == .stationary && confidence == .high
+                    && phase != .moving && phase != .settling {
             // Not from MOVING: a phone lying on a car seat is genuinely
             // stationary to CoreMotion while the car drives on, and settling
             // there would silence the `unknown` reports that bring us back.
+            // Not from SETTLING either, and for the same reason twice over:
+            // the classifier saying "stationary" is what opened the window,
+            // and letting it settle would make the restart that follows the
+            // window slower than if the window had never run.
             settledStationary = true
         }
 
@@ -299,6 +338,17 @@ public struct TrackingStateMachine: Sendable, Equatable {
                 // significant change and visits still open a window.
                 guard !settledStationary else { return [] }
                 return transition(to: .probing, input: input)
+            }
+            return []
+
+        case .settling:
+            // Moving again ends the window; nothing else does. A `stationary`
+            // report is not news here — we know we stopped, that is why we are
+            // settling — and acting on it is what cut GPS for three minutes
+            // while a ride resumed.
+            if kind.impliesMotion {
+                return credible ? transition(to: .moving, input: input)
+                                : transition(to: .probing, input: input)
             }
             return []
 
@@ -341,7 +391,12 @@ public struct TrackingStateMachine: Sendable, Equatable {
         }
 
         switch phase {
-        case .probing:
+        case .probing, .settling:
+            // SETTLING counts fixes the same way: its fixes come through a
+            // wide distance filter, so one arriving at all already means the
+            // device travelled — but a speed still has to confirm it, and the
+            // fixes are stored either way, so the window records the departure
+            // it is there to catch.
             probeFixCount += 1
             if let s = valid, s >= settings.movingSpeedThreshold {
                 fastFixStreak += 1
@@ -393,9 +448,9 @@ public struct TrackingStateMachine: Sendable, Equatable {
         return [.cancelStillnessTimer]
     }
 
-    private mutating func armProbeTimer() -> [TrackingEffect] {
+    private mutating func armProbeTimer(seconds: TimeInterval? = nil) -> [TrackingEffect] {
         probeTimerArmed = true
-        return [.startProbeTimer(seconds: settings.probeTimeout)]
+        return [.startProbeTimer(seconds: seconds ?? settings.probeTimeout)]
     }
 
     private mutating func disarmProbeTimer() -> [TrackingEffect] {
@@ -434,18 +489,28 @@ public struct TrackingStateMachine: Sendable, Equatable {
 
     /// Perform a phase change: exit effects of the old phase, entry effects
     /// of the new one, plus a log line. `prefix`/`suffix` wrap them.
-    private mutating func transition(to next: TrackingPhase,
+    private mutating func transition(to requested: TrackingPhase,
                                      input: TrackingInput,
                                      prefix: [TrackingEffect] = [],
                                      suffix: [TrackingEffect] = []) -> [TrackingEffect] {
         let previous = phase
+        // A trip never ends in the dark. Whatever decided the stop — a
+        // corroborated stillness timer, an expired probe window, a confident
+        // `stationary` — switching GPS off at that instant leaves the restart
+        // to CoreMotion, which takes minutes on a bicycle (no steps to count)
+        // and to significant change, which takes ~500 m. Two rides lost 0.9 km
+        // and 0.8 km that way on 2026-09-12. So a stop that ends a trip lands
+        // in SETTLING; only the window's own expiry reaches STATIONARY.
+        let next: TrackingPhase = (requested == .stationary && recentlyMoved
+                                   && previous != .settling && settings.settlingTimeout > 0)
+            ? .settling : requested
         var effects = prefix
 
         // Exit.
         switch previous {
         case .moving:
             effects += disarmStillnessTimer()
-        case .probing:
+        case .probing, .settling:
             effects += disarmProbeTimer()
             probeFixCount = 0
             fastFixStreak = 0
@@ -464,13 +529,21 @@ public struct TrackingStateMachine: Sendable, Equatable {
             effects.append(.startGPS(.probing))
             effects += armProbeTimer()
         case .moving:
+            recentlyMoved = true
             let profile = GPSProfile.profile(for: lastActivity, speed: profileSpeed, settings: settings)
             activeProfile = profile
             effects.append(.startGPS(profile))
+        case .settling:
+            let profile = GPSProfile.settling(settings)
+            activeProfile = profile
+            effects.append(.startGPS(profile))
+            effects += armProbeTimer(seconds: settings.settlingTimeout)
         case .stationary:
+            recentlyMoved = false
             activeProfile = nil
             effects.append(.stopGPS)
         case .disabled:
+            recentlyMoved = false
             activeProfile = nil
             lastSpeed = nil
             profileSpeed = nil
