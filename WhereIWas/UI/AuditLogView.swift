@@ -17,7 +17,10 @@ struct AuditLogView: View {
     @State private var loadError: String?
     @State private var exportURL: URL?
     @State private var exportedFor: String?
-    @State private var exportFormat: AuditExportFormat = .text
+    @State private var exportFormat: AuditExportFormat = .json
+    /// Gzip the export. On by default: a week of trail is tens of megabytes,
+    /// and every share target handles a `.gz` better than it handles that.
+    @State private var compressExport = true
     @State private var isExporting = false
     @State private var showClearConfirmation = false
 
@@ -25,7 +28,7 @@ struct AuditLogView: View {
     /// not offered after the filters or the format changed.
     private var exportKey: String {
         let categories = selectedCategories.map(\.rawValue).sorted().joined(separator: ",")
-        return "\(categories)|\(minimumSeverity.rawValue)|\(exportFormat.rawValue)"
+        return "\(categories)|\(minimumSeverity.rawValue)|\(exportFormat.rawValue)|\(compressExport)"
     }
 
     /// What the list shows. Capped: the trail can hold tens of thousands of
@@ -177,6 +180,9 @@ struct AuditLogView: View {
                         Text(verbatim: format.displayName).tag(format)
                     }
                 }
+                Toggle(String(localized: "audit.export.compress", defaultValue: "Compress (.gz)",
+                              comment: "Export option: gzip the exported audit file"),
+                       isOn: $compressExport)
                 Button(String(localized: "audit.export.action", defaultValue: "Export",
                               comment: "Menu action that exports the audit trail; a verb"),
                        systemImage: "square.and.arrow.up") {
@@ -212,7 +218,9 @@ struct AuditLogView: View {
         isExporting = true
         defer { isExporting = false }
         do {
-            exportURL = try await controller.exportAudit(format: exportFormat, query: exportQuery)
+            exportURL = try await controller.exportAudit(format: exportFormat,
+                                                        compressed: compressExport,
+                                                        query: exportQuery)
             exportedFor = exportKey
             loadError = nil
         } catch {

@@ -276,9 +276,9 @@ final class PreviewTrackingController: TrackingControlling {
         settings.auditEnabled ? Self.previewAuditEvents(now: Date()).count : 0
     }
 
-    func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL {
+    func exportAudit(format: AuditExportFormat, compressed: Bool, query: AuditQuery) async throws -> URL {
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("whereiwas-audit-preview.\(format.fileExtension)")
+            .appendingPathComponent(format.fileName("whereiwas-audit-preview", compressed: false))
         try Data("preview".utf8).write(to: url)
         return url
     }

@@ -620,8 +620,9 @@ final class DemoTrackingController: TrackingControlling {
 
     func auditCount() async throws -> Int { settings.auditEnabled ? 1_284 : 0 }
 
-    func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL {
-        try AuditExporter.write(auditEvents.filter(query.matches), settings: settings, format: format)
+    func exportAudit(format: AuditExportFormat, compressed: Bool, query: AuditQuery) async throws -> URL {
+        try AuditExporter.write(auditEvents.filter(query.matches), settings: settings,
+                                format: format, compressed: compressed)
     }
 
     func clearAudit() async -> Int { 0 }

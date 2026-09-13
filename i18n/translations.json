@@ -1150,6 +1150,21 @@
             "pl": "Eksportuj"
           }
         },
+        "audit.export.compress": {
+          "comment": "Export option: gzip the exported audit file",
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Komprimovat (.gz)",
+            "de": "Komprimieren (.gz)",
+            "en": "Compress (.gz)",
+            "es": "Comprimir (.gz)",
+            "fr": "Compresser (.gz)",
+            "it": "Comprimi (.gz)",
+            "ja": "圧縮する（.gz）",
+            "nl": "Comprimeren (.gz)",
+            "pl": "Kompresuj (.gz)"
+          }
+        },
         "audit.export.footer": {
           "translations": {
             "cs": "Uloženo do dočasné složky: celý záznam odpovídající filtrům, nejen řádky uvedené výše, a nastavení platná v době exportu.",
@@ -3077,7 +3092,6 @@
         },
         "profile.settling": {
           "comment": "GPS profile name: rationed updates after a stop, watching for a departure",
-          "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Pohotovost",
             "de": "Bereitschaft",

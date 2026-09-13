@@ -1,3 +1,4 @@
+import Compression
 import Foundation
 import SwiftData
 import Testing
@@ -433,6 +434,143 @@ struct AuditExporterTests {
         #expect(count == 5)
         let streamed = try String(contentsOf: url, encoding: .utf8)
         #expect(streamed == AuditExporter.text(events, settings: settings, exportedAt: now))
+    }
+
+    // MARK: Compression
+
+    /// A gzip file, not a bare deflate stream: magic `1f 8b`, method 8, and a
+    /// trailer carrying the CRC-32 and the uncompressed size. Without those,
+    /// `gunzip` and Finder refuse the file the user just shared.
+    @Test("A compressed export is a real gzip file")
+    func compressedIsGzip() async throws {
+        let events = many(40)
+        var pages = [events].makeIterator()
+        let (url, count) = try await AuditExporter.write(settings: TrackingSettings(),
+                                                        format: .json,
+                                                        compressed: true,
+                                                        name: "stream-gz",
+                                                        exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: url) }
+        #expect(count == 40)
+        #expect(url.lastPathComponent.hasSuffix(".json.gz"))
+
+        let raw = try Data(contentsOf: url)
+        #expect(Array(raw.prefix(4)) == [0x1F, 0x8B, 0x08, 0x00])
+
+        let plain = try Gzip.inflate(raw)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let envelope = try decoder.decode(AuditExporter.Envelope.self, from: plain)
+        #expect(envelope.events == events)
+        #expect(envelope.eventCount == 40)
+
+        // The trailer must describe what was compressed, not what came out.
+        let size = raw.suffix(4).reversed().reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+        #expect(size == UInt32(plain.count))
+        #expect(raw.count < plain.count / 4, "a trail of repeated rows deflates hard")
+    }
+
+    /// The check value every CRC-32 implementation is measured against.
+    @Test("The gzip trailer carries the standard CRC-32")
+    func crcCheckValue() throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("crc-check-\(UUID().uuidString).gz")
+        defer { try? FileManager.default.removeItem(at: url) }
+        let writer = try AuditFileWriter(url: url, compressed: true)
+        try writer.write(Data("123456789".utf8))
+        try writer.finish()
+
+        let raw = try Data(contentsOf: url)
+        let crc = raw.suffix(8).prefix(4).reversed().reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+        #expect(crc == 0xCBF4_3926)
+        #expect(try Gzip.inflate(raw) == Data("123456789".utf8))
+    }
+
+    @Test("Writing without compression is unchanged, and both name the file for what it is")
+    func uncompressedUnchanged() async throws {
+        let events = many(6)
+        var pages = [events].makeIterator()
+        let (plainURL, _) = try await AuditExporter.write(settings: TrackingSettings(),
+                                                         format: .text,
+                                                         name: "stream-plain",
+                                                         exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: plainURL) }
+        #expect(plainURL.lastPathComponent.hasSuffix(".txt"))
+        #expect(!plainURL.lastPathComponent.hasSuffix(".gz"))
+        #expect(try String(contentsOf: plainURL, encoding: .utf8)
+                == AuditExporter.text(events, settings: TrackingSettings(), exportedAt: now))
+
+        var again = [events].makeIterator()
+        let (gzURL, _) = try await AuditExporter.write(settings: TrackingSettings(),
+                                                      format: .text,
+                                                      compressed: true,
+                                                      name: "stream-plain-gz",
+                                                      exportedAt: now) { again.next() }
+        defer { try? FileManager.default.removeItem(at: gzURL) }
+        #expect(gzURL.lastPathComponent.hasSuffix(".txt.gz"))
+        #expect(try Gzip.inflate(Data(contentsOf: gzURL))
+                == Data(AuditExporter.text(events, settings: TrackingSettings(), exportedAt: now).utf8))
+    }
+
+    /// An empty file still has to be a valid, if empty, gzip stream.
+    @Test("An empty compressed export inflates to valid JSON")
+    func emptyCompressed() async throws {
+        var pages = [[AuditEvent]]().makeIterator()
+        let (url, count) = try await AuditExporter.write(settings: TrackingSettings(),
+                                                        format: .json,
+                                                        compressed: true,
+                                                        name: "stream-gz-empty",
+                                                        exportedAt: now) { pages.next() }
+        defer { try? FileManager.default.removeItem(at: url) }
+        #expect(count == 0)
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let envelope = try decoder.decode(AuditExporter.Envelope.self,
+                                          from: try Gzip.inflate(Data(contentsOf: url)))
+        #expect(envelope.events.isEmpty)
+    }
+}
+
+/// Reads a gzip file back, so the tests check the writer against the format
+/// rather than against itself.
+private enum Gzip {
+    struct Malformed: Error {}
+
+    static func inflate(_ data: Data) throws -> Data {
+        guard data.count > 18, data[0] == 0x1F, data[1] == 0x8B, data[2] == 0x08 else {
+            throw Malformed()
+        }
+        // FLG == 0, so the deflate stream starts right after the ten-byte
+        // header and ends eight bytes before the file does.
+        guard data[3] == 0 else { throw Malformed() }
+        let deflated = data.dropFirst(10).dropLast(8)
+
+        var stream = compression_stream(dst_ptr: UnsafeMutablePointer<UInt8>(bitPattern: -1)!,
+                                        dst_size: 0,
+                                        src_ptr: UnsafePointer<UInt8>(bitPattern: -1)!,
+                                        src_size: 0,
+                                        state: nil)
+        guard compression_stream_init(&stream, COMPRESSION_STREAM_DECODE, COMPRESSION_ZLIB)
+                == COMPRESSION_STATUS_OK else { throw Malformed() }
+        defer { compression_stream_destroy(&stream) }
+
+        let bufferSize = 64 * 1024
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+        defer { buffer.deallocate() }
+        var out = Data()
+        return try Data(deflated).withUnsafeBytes { raw -> Data in
+            guard let base = raw.bindMemory(to: UInt8.self).baseAddress else { throw Malformed() }
+            stream.src_ptr = base
+            stream.src_size = raw.count
+            while true {
+                stream.dst_ptr = buffer
+                stream.dst_size = bufferSize
+                let status = compression_stream_process(&stream, Int32(COMPRESSION_STREAM_FINALIZE.rawValue))
+                guard status != COMPRESSION_STATUS_ERROR else { throw Malformed() }
+                out.append(buffer, count: bufferSize - stream.dst_size)
+                if status == COMPRESSION_STATUS_END { return out }
+            }
+        }
     }
 }
 

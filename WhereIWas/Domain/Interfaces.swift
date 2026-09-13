@@ -429,8 +429,10 @@ public protocol TrackingControlling: AnyObject, Observable, Sendable {
     func auditEvents(matching query: AuditQuery) async throws -> [AuditEvent]
     /// Number of audit events currently stored.
     func auditCount() async throws -> Int
-    /// Write the audit trail to a shareable file.
-    func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL
+    /// Write the audit trail to a shareable file, gzipped when asked — a
+    /// week of trail is tens of megabytes of text and deflates by about ten
+    /// to one.
+    func exportAudit(format: AuditExportFormat, compressed: Bool, query: AuditQuery) async throws -> URL
     /// Delete the whole audit trail; returns how many events went.
     @discardableResult
     func clearAudit() async -> Int

@@ -10,6 +10,12 @@ public enum AuditExportFormat: String, Codable, Sendable, CaseIterable, Identifi
     public var id: String { rawValue }
     public var fileExtension: String { self == .json ? "json" : "txt" }
     public var label: String { self == .json ? "JSON" : "Plain text" }
+
+    /// The name an export lands under. A compressed one keeps the format's
+    /// own extension in front of `.gz`, so the file still says what it holds.
+    public func fileName(_ base: String, compressed: Bool) -> String {
+        "\(base).\(fileExtension)\(compressed ? ".gz" : "")"
+    }
 }
 
 /// Renders the audit trail to a shareable file.
@@ -94,21 +100,31 @@ enum AuditExporter {
     static func write(_ events: [AuditEvent],
                       settings: TrackingSettings,
                       format: AuditExportFormat,
+                      compressed: Bool = false,
                       name: String = "WhereIWas-audit",
                       exportedAt: Date = Date(),
                       to directory: URL = FileManager.default.temporaryDirectory) throws -> URL {
-        let stamp = GPXExporter.iso(exportedAt)
-            .replacingOccurrences(of: ":", with: "")
-            .replacingOccurrences(of: ".", with: "")
-        let url = directory.appendingPathComponent("\(name)-\(stamp).\(format.fileExtension)")
+        let url = directory.appendingPathComponent(
+            format.fileName("\(name)-\(stamp(exportedAt))", compressed: compressed))
+        let body: Data
         switch format {
         case .json:
-            try json(events, settings: settings, exportedAt: exportedAt).write(to: url, options: .atomic)
+            body = try json(events, settings: settings, exportedAt: exportedAt)
         case .text:
-            try Data(text(events, settings: settings, exportedAt: exportedAt).utf8)
-                .write(to: url, options: .atomic)
+            body = Data(text(events, settings: settings, exportedAt: exportedAt).utf8)
         }
+        let writer = try AuditFileWriter(url: url, compressed: compressed)
+        try writer.write(body)
+        try writer.finish()
         return url
+    }
+
+    /// The timestamp in a file name: an ISO instant with the characters a file
+    /// system would rather not see taken out.
+    private static func stamp(_ date: Date) -> String {
+        GPXExporter.iso(date)
+            .replacingOccurrences(of: ":", with: "")
+            .replacingOccurrences(of: ".", with: "")
     }
 
     // MARK: Streaming
@@ -127,39 +143,38 @@ enum AuditExporter {
     /// controller) where a scratch file would be ceremony.
     static func write(settings: TrackingSettings,
                       format: AuditExportFormat,
+                      compressed: Bool = false,
                       name: String = "WhereIWas-audit",
                       exportedAt: Date = Date(),
                       to directory: URL = FileManager.default.temporaryDirectory,
                       isolation: isolated (any Actor)? = #isolation,
                       nextPage: () async throws -> [AuditEvent]?) async throws -> (url: URL, count: Int) {
-        let stamp = GPXExporter.iso(exportedAt)
-            .replacingOccurrences(of: ":", with: "")
-            .replacingOccurrences(of: ".", with: "")
-        let url = directory.appendingPathComponent("\(name)-\(stamp).\(format.fileExtension)")
-        let scratch = directory.appendingPathComponent("\(name)-\(stamp).part")
+        let base = "\(name)-\(stamp(exportedAt))"
+        let url = directory.appendingPathComponent(format.fileName(base, compressed: compressed))
+        let scratch = directory.appendingPathComponent("\(base).part")
         defer { try? FileManager.default.removeItem(at: scratch) }
 
+        // The scratch file holds the events uncompressed: the count they carry
+        // is only known once the last page has been read, and it belongs in
+        // the header. Compression happens on the way out, so the file the user
+        // gets is written once and the large one never exists.
         let count = try await writeBody(to: scratch, format: format, nextPage: nextPage)
 
-        try? FileManager.default.removeItem(at: url)
-        guard FileManager.default.createFile(atPath: url.path, contents: nil) else {
-            throw CocoaError(.fileWriteUnknown)
-        }
-        let out = try FileHandle(forWritingTo: url)
-        defer { try? out.close() }
-        try out.write(contentsOf: Data(header(settings: settings,
-                                              format: format,
-                                              exportedAt: exportedAt,
-                                              count: count).utf8))
+        let out = try AuditFileWriter(url: url, compressed: compressed)
+        try out.write(Data(header(settings: settings,
+                                  format: format,
+                                  exportedAt: exportedAt,
+                                  count: count).utf8))
         let body = try FileHandle(forReadingFrom: scratch)
         defer { try? body.close() }
         while let chunk = try body.read(upToCount: 256 * 1024), !chunk.isEmpty {
-            try out.write(contentsOf: chunk)
+            try out.write(chunk)
         }
-        try out.write(contentsOf: Data(footer(settings: settings,
-                                              format: format,
-                                              exportedAt: exportedAt,
-                                              count: count).utf8))
+        try out.write(Data(footer(settings: settings,
+                                  format: format,
+                                  exportedAt: exportedAt,
+                                  count: count).utf8))
+        try out.finish()
         return (url, count)
     }
 

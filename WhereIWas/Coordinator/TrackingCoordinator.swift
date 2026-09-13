@@ -267,7 +267,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
     /// trail, which no longer has to fit in memory: the export used to load
     /// every matching event *and* render them into one `Data`, and the trail
     /// now fills a thousand rows in half an hour of riding.
-    public func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL {
+    public func exportAudit(format: AuditExportFormat, compressed: Bool, query: AuditQuery) async throws -> URL {
         // Close the window at the export instant. The app keeps recording
         // while the file is being written, and paging by offset over a table
         // that is growing at the head would skip or repeat rows.
@@ -277,7 +277,9 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                       end: min(query.interval?.end ?? end, end))
         var offset = 0
         var written = 0
-        let (url, count) = try await AuditExporter.write(settings: settings, format: format) {
+        let (url, count) = try await AuditExporter.write(settings: settings,
+                                                         format: format,
+                                                         compressed: compressed) {
             if query.limit > 0, written >= query.limit { return nil }
             let page = try await self.store.auditEventPage(matching: query,
                                                            offset: offset,
@@ -297,7 +299,8 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 name: "audit.exported",
                                 arguments: [String(count), format.rawValue],
                                 details: [AuditDetail("count", count),
-                                          AuditDetail("format", format.rawValue)]))
+                                          AuditDetail("format", format.rawValue),
+                                          AuditDetail("compressed", compressed ? "true" : "false")]))
         return url
     }
 

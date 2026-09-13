@@ -251,9 +251,9 @@ public final class NoopTrackingController: TrackingControlling {
     @discardableResult
     public func clearAudit() async -> Int { 0 }
 
-    public func exportAudit(format: AuditExportFormat, query: AuditQuery) async throws -> URL {
+    public func exportAudit(format: AuditExportFormat, compressed: Bool, query: AuditQuery) async throws -> URL {
         let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent("whereiwas-audit-empty.\(format.fileExtension)")
+            .appendingPathComponent(format.fileName("whereiwas-audit-empty", compressed: false))
         try Data().write(to: url)
         return url
     }
