@@ -800,7 +800,7 @@ struct TrackingStateMovingTests {
 struct TrackingStateSettlingTests {
     @Test("A stop that ends a trip settles instead of switching GPS off")
     func stopSettles() {
-        var m = TrackingStateMachine.at(.settling)
+        let m = TrackingStateMachine.at(.settling)
         #expect(m.phase == .settling)
         #expect(m.activeProfile == .settling())
         #expect(m.probeTimerArmed)

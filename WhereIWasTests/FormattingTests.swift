@@ -132,7 +132,7 @@ struct AuditSummaryTests {
 
     /// The codes the producers write directly, with the arguments they carry.
     @Test(arguments: [
-        ("app.launched", [String]()),
+        ("app.launched", []),
         ("app.relaunched", []),
         ("app.background", []),
         ("app.foreground", []),
@@ -161,7 +161,7 @@ struct AuditSummaryTests {
         ("fix.accepted", []),
         ("store.insert", ["12"]),
         ("store.insertFailed", ["12"])
-    ])
+    ] as [(String, [String])])
     func everyCodeHasASentence(_ event: (name: String, arguments: [String])) {
         #expect(hasSentence(event.name, event.arguments), "no sentence for \(event.name)")
     }
