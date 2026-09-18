@@ -19,7 +19,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         if ScreenshotMode.isActive { return true }
         #endif
         let launchedForLocation = launchOptions?[.location] != nil
-        AppEnvironment.shared.bootstrap(launchedForLocation: launchedForLocation)
+        let launchOptionKeys = (launchOptions?.keys.map(\.rawValue) ?? []).sorted()
+        AppEnvironment.shared.bootstrap(launchedForLocation: launchedForLocation,
+                                        launchOptionKeys: launchOptionKeys)
         return true
     }
 

@@ -225,6 +225,36 @@ struct AuditLogTests {
         #expect(try await store.auditCount() == 0)
     }
 
+    @Test("A transition or a heartbeat writes the batch without waiting for it to fill")
+    func edgeEventsFlushAtOnce() async throws {
+        let store = try makeStore()
+        var settings = TrackingSettings()
+        settings.auditEnabled = true
+        let log = AuditLog(store: store, settings: settings)
+
+        log.record(AuditEvent(timestamp: Date(), category: .motion, severity: .info,
+                              name: "motion.activity"))
+        for _ in 0..<20 { await Task.yield() }
+        #expect(try await store.auditCount() == 0)
+
+        log.record(AuditEvent(timestamp: Date(), category: .state, severity: .info,
+                              name: "state.transition"))
+        var stored = 0
+        for _ in 0..<200 where stored < 2 {
+            try await Task.sleep(for: .milliseconds(5))
+            stored = try await store.auditCount()
+        }
+        #expect(stored == 2)
+
+        log.record(AuditEvent(timestamp: Date(), category: .lifecycle, severity: .debug,
+                              name: "app.heartbeat"))
+        for _ in 0..<200 where stored < 3 {
+            try await Task.sleep(for: .milliseconds(5))
+            stored = try await store.auditCount()
+        }
+        #expect(stored == 3)
+    }
+
     @Test("Turning the trail off flushes what was buffered and stops recording")
     func disablingFlushesAndStops() async throws {
         let store = try makeStore()

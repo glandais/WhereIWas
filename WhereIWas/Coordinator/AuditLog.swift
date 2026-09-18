@@ -13,9 +13,9 @@ import OSLog
 /// - `record` is an `@autoclosure`, so a disabled log costs one boolean test
 ///   and the event is never even constructed.
 /// - Events land in an in-memory ring buffer (instant rendering for the audit
-///   screen) and in a pending batch that is flushed to SQLite by size or on
-///   demand (phase change, backgrounding), so a termination loses at most the
-///   current batch.
+///   screen) and in a pending batch that is flushed to SQLite by size, on
+///   backgrounding, and on every event that marks an edge (``flushesAtOnce``):
+///   a termination loses at most the rows recorded since the last edge.
 /// - Missing `phase` / `batteryLevel` are filled in from a context closure the
 ///   coordinator installs, so producers do not have to thread state around.
 @MainActor
@@ -24,6 +24,23 @@ public final class AuditLog: AuditRecording {
     public static let ringCapacity = 400
     /// Flush to storage once this many events are pending.
     public static let flushBatchSize = 40
+
+    /// Whether `event` is written without waiting for the batch to fill.
+    ///
+    /// A process that is killed takes its pending batch with it, and a quiet
+    /// phase can sit on a part-filled batch for hours. On 2026-09-17 five
+    /// exports ended on the same `→ settling` row with the next launch hours
+    /// later: the `settling → stationary` transition and the heartbeats after
+    /// it had been recorded, then lost, and the trail read as a process that
+    /// died mid-window. Transitions and heartbeats are the rows that say where
+    /// execution stood, so they cannot wait: one write per 30 s while GPS
+    /// runs, next to the receiver's cost.
+    static func flushesAtOnce(_ event: AuditEvent) -> Bool {
+        event.category == .state
+            || event.name == "app.heartbeat"
+            || event.name == "app.launched"
+            || event.name == "app.relaunched"
+    }
 
     private let store: any LocationStoring
     private let logger = Logger(subsystem: "io.github.glandais.whereiwas", category: "audit")
@@ -67,7 +84,7 @@ public final class AuditLog: AuditRecording {
             ring.removeFirst(ring.count - Self.ringCapacity)
         }
         pending.append(event)
-        if pending.count >= Self.flushBatchSize {
+        if pending.count >= Self.flushBatchSize || Self.flushesAtOnce(event) {
             flushSoon()
         }
     }

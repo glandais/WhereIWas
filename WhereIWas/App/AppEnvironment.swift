@@ -71,11 +71,12 @@ final class AppEnvironment {
     /// Order matters: BGTask registration must happen before launch
     /// completes, and the coordinator must re-arm `CLLocationManager` in
     /// this same turn so the launch location event is delivered.
-    func bootstrap(launchedForLocation: Bool) {
+    func bootstrap(launchedForLocation: Bool, launchOptionKeys: [String] = []) {
         guard !bootstrapped else { return }
         bootstrapped = true
         maintenance.register()
-        coordinator.bootstrap(launchedForLocation: launchedForLocation)
+        coordinator.bootstrap(launchedForLocation: launchedForLocation,
+                              launchOptionKeys: launchOptionKeys)
         maintenance.schedule()
         maintenance.purgeAtLaunchIfNeeded()
     }

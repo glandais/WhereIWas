@@ -130,9 +130,16 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
     /// registration), monitoring is explicitly stopped so iOS stops
     /// relaunching us.
     ///
-    /// - Parameter launchedForLocation: `true` when
-    ///   `UIApplication.LaunchOptionsKey.location` was present.
-    public func bootstrap(launchedForLocation: Bool) {
+    /// - Parameters:
+    ///   - launchedForLocation: `true` when
+    ///     `UIApplication.LaunchOptionsKey.location` was present.
+    ///   - launchOptionKeys: every launch option key iOS passed, recorded as
+    ///     is. The `.location` key alone proved blind: it was absent on all
+    ///     17 launches of a week's trail, including relaunches that came
+    ///     mid-ride with the app never on screen. `appState` tells those apart
+    ///     (`background` means iOS launched the process, not the user) and the
+    ///     keys say what, if anything, iOS gave as the reason.
+    public func bootstrap(launchedForLocation: Bool, launchOptionKeys: [String] = []) {
         guard !bootstrapped else { return }
         bootstrapped = true
 
@@ -143,6 +150,8 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                 severity: .info,
                                 name: launchedForLocation ? "app.relaunched" : "app.launched",
                                 details: [AuditDetail("launchedForLocation", launchedForLocation),
+                                          AuditDetail("appState", Self.applicationStateName()),
+                                          AuditDetail("launchOptions", launchOptionKeys.joined(separator: ",")),
                                           AuditDetail("trackingEnabled", enabled),
                                           AuditDetail("locationAuthorization", engine.authorization.rawValue),
                                           AuditDetail("motionAuthorization", motion.authorization.rawValue)]))
