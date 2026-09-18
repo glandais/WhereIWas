@@ -231,13 +231,12 @@ The website under `docs/` is **English only, deliberately** — app and store li
 languages, the three site pages don't. Revisit if a non-English market justifies translating a
 privacy policy.
 
-### Still to do before a first submission
+### First submission
 
-- **Submit for review** — build 21 is attached to version 1.0.0 and `asc validate` reports no
-  blocking check.
-- App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, website-only).
+Version 1.0.0 with build 21 was submitted for review on 2026-09-18 (`WAITING_FOR_REVIEW`). App Store
+Regulations and Permits were checked by hand (asc reports NOT_CHECKED, website-only).
 
-Everything else is done: build attached, icon, privacy manifest, all ten locales of `metadata/` applied, the three
+Done before it: icon, privacy manifest, all ten locales of `metadata/` applied, the three
 metadata URLs resolving (GitHub Pages under `docs/`), App Privacy published as Data Not Collected,
 age rating, categories, content rights, availability, free price schedule, review details with the
 guideline 2.5.4 background-location rationale. Mac Apple Silicon / Vision Pro distribution stay
