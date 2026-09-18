@@ -147,6 +147,16 @@ what `assemble.sh` produces. The dry run prints the deletions and the uploads on
 45 — and is the whole reason not to skip it: it is where a locale gone missing shows up. The run
 takes well over ten minutes, so background it.
 
+**The fan-out misses `es-MX`**, a store-only locale with no directory of its own — it would keep
+serving the previous es-ES cards. Upload the es-ES set to it by version-localization id:
+
+```bash
+LID=$(asc localizations list --version "VERSION_ID" --locale es-MX --output json \
+  | python3 -c 'import sys, json; print(json.load(sys.stdin)["data"][0]["id"])')
+asc screenshots upload --version-localization "$LID" --path "./screenshots/IPHONE_65/es-ES" \
+  --device-type "IPHONE_65" --replace --confirm
+```
+
 Never delete assets by id first. An upload without `--replace` only *adds*, so it duplicates a set
 whose names did not change and orphans one whose names did — `--replace` is what reconciles both,
 in one approval instead of forty-five.

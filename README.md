@@ -7,7 +7,7 @@ point is exportable as GPX or JSON. Nothing leaves the device.
 Shipped in nine languages: English, French, German, Spanish, Italian, Japanese,
 Dutch, Polish and Czech.
 
-App Store name: **WhereIWas GPS Logger** — iOS 17+.
+App Store name: **WhereIWas: Location Timeline** (localized per market) — iOS 17+.
 
 - Website: <https://glandais.github.io/WhereIWas/>
 - Support: <https://glandais.github.io/WhereIWas/support/>
@@ -21,7 +21,7 @@ WhereIWasTests/  Swift Testing suites
 scripts/         build, simulator and screenshot tooling (xcb.sh is the only way in)
 docs/            the website, served by GitHub Pages from main
 design/          icon and site design sources
-metadata/        canonical App Store metadata, nine locales, applied with the asc CLI
+metadata/        canonical App Store metadata, ten store locales, applied with the asc CLI
 screenshots/     App Store screenshots and the pipeline that builds them
 project.yml      XcodeGen project definition — the source of truth, not the .pbxproj
 ```

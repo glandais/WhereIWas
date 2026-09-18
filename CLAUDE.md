@@ -92,10 +92,17 @@ Those are **short language codes** (`de`, `es`, `nl`), not region ones — `de` 
 `es-ES`, `nl-NL`, and `it`/`ja`/`pl`/`cs` bare — which name `metadata/` and the screenshot
 directories.
 
+The store has a **tenth locale, `es-MX`, that the app does not**: store metadata only. Latin
+American storefronts read es-MX (without it they fall back to the English listing), and the US
+storefront indexes its keywords too. Its text is es-ES with the Spain-only words swapped
+(coche → auto, coste → costo) and keywords of its own; the bundle's `es` already covers the app.
+There is no `screenshots/IPHONE_65/es-MX`: the es-ES set is uploaded to it (see the
+`screenshots-release` skill).
+
 **`i18n/translations.json` is the source of truth for every translation**; the catalogs are
 generated from it. It aggregates the two catalogs above, the screenshot catalog
-(`screenshots/koubou/koubou-strings.xcstrings`) and the store metadata under `metadata/` (21 files,
-nine languages) through `scripts/i18n.py export` / `import`, a byte-exact round trip
+(`screenshots/koubou/koubou-strings.xcstrings`) and the store metadata under `metadata/` (20 files,
+ten store locales) through `scripts/i18n.py export` / `import`, a byte-exact round trip
 (`scripts/i18n.py check` proves it). **Never hand-edit a generated file** — the edit survives until
 the next `import`, then is gone.
 
@@ -175,15 +182,21 @@ plain JSON with a `tables.Localizable[].key` array, and their union must equal t
 
 ## Release
 
-App Store Connect app ID **`6808349924`** — App Store name `WhereIWas GPS Logger` (bare
-`WhereIWas` is reserved by another developer; home-screen name stays `WhereIWas` via
-`CFBundleDisplayName`), bundle `io.github.glandais.whereiwas`, primary locale `en-US`, also
-`fr-FR`, `de-DE`, `es-ES`, `it`, `ja`, `nl-NL`, `pl` and `cs`.
+App Store Connect app ID **`6808349924`** — App Store name `WhereIWas: Location Timeline` in
+English, localized per market in `metadata/app-info/` (bare `WhereIWas` is reserved by another
+developer; home-screen name stays `WhereIWas` via `CFBundleDisplayName`), bundle
+`io.github.glandais.whereiwas`, primary locale `en-US`, also `fr-FR`, `de-DE`, `es-ES`, `es-MX`,
+`it`, `ja`, `nl-NL`, `pl` and `cs`.
+
+**The listing targets the general public** — location timeline, travel log, trip history — not
+first responders, since September 2026. Name, subtitle and keywords are one indexed pool: never
+repeat a word across them, keep keywords comma-separated with no spaces and near 100 characters,
+and don't name another company's product (guideline 2.3.7).
 
 Adding a locale takes **two** `apply` runs: creating an `app-info` localization makes App Store
 Connect auto-create the matching version localization, so the version half of the same plan comes
 back `Entity with locale: X already exists. Try updating.` on the first run. Re-plan and apply
-again — the second pass updates them. Seven failures on a new locale's first run are expected.
+again — the second pass updates them. Failures on a new locale's first run are expected.
 
 Canonical metadata lives under `./metadata/`, one file per scope and locale
 (`app-info/<locale>.json`, `version/<version>/<locale>.json`), generated from
@@ -224,7 +237,7 @@ privacy policy.
   build on version 1.0.0.
 - App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, website-only).
 
-Everything else is done: icon, privacy manifest, all nine locales of `metadata/` applied, the three
+Everything else is done: icon, privacy manifest, all ten locales of `metadata/` applied, the three
 metadata URLs resolving (GitHub Pages under `docs/`), App Privacy published as Data Not Collected,
 age rating, categories, content rights, availability, free price schedule, review details with the
 guideline 2.5.4 background-location rationale. Mac Apple Silicon / Vision Pro distribution stay
