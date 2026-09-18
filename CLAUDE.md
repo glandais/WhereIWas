@@ -233,11 +233,11 @@ privacy policy.
 
 ### Still to do before a first submission
 
-- **Attach a build** — the only blocking check left: archive, upload to TestFlight, select the
-  build on version 1.0.0.
+- **Submit for review** — build 21 is attached to version 1.0.0 and `asc validate` reports no
+  blocking check.
 - App Store Regulations and Permits: checked by hand (asc reports NOT_CHECKED, website-only).
 
-Everything else is done: icon, privacy manifest, all ten locales of `metadata/` applied, the three
+Everything else is done: build attached, icon, privacy manifest, all ten locales of `metadata/` applied, the three
 metadata URLs resolving (GitHub Pages under `docs/`), App Privacy published as Data Not Collected,
 age rating, categories, content rights, availability, free price schedule, review details with the
 guideline 2.5.4 background-location rationale. Mac Apple Silicon / Vision Pro distribution stay
