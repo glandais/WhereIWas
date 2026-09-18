@@ -36,11 +36,11 @@ OUT_ROOT="screenshots/flat"
 # scenarios; the rest only ever need `moving`, which is also the scenario
 # that gives the map and export screens their busiest-looking data.
 CARDS=(
-  "status:moving:01-status-moving"
-  "status:stationary:02-status-stationary"
-  "map:moving:03-map"
-  "audit:moving:04-audit-trail"
-  "export:moving:05-export"
+  "map:moving:01-map"
+  "status:moving:02-status-moving"
+  "status:stationary:03-status-stationary"
+  "export:moving:04-export"
+  "audit:moving:05-audit-trail"
 )
 
 # `knownRegions` in project.yml is the single source of truth for which

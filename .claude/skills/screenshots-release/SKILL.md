@@ -14,11 +14,14 @@ Five cards, in upload order (files upload alphabetically, hence the numbering):
 
 | # | File | Screen | Argument |
 |---|------|--------|----------|
-| 1 | `01-status-moving` | Status, `moving` | it records while you are not looking |
-| 2 | `02-status-stationary` | Status, `stationary` | GPS sleeps, so does the battery drain |
-| 3 | `03-map` | Map, yesterday | a whole day, street by street |
-| 4 | `04-audit-trail` | Audit trail | every fix, accepted or rejected, with the reason |
-| 5 | `05-export` | Export, scrolled to sessions | the data is yours to take |
+| 1 | `01-map` | Map, yesterday | your location timeline, every trip on the map |
+| 2 | `02-status-moving` | Status, `moving` | it logs every trip while you are not looking |
+| 3 | `03-status-stationary` | Status, `stationary` | GPS sleeps, so does the battery drain |
+| 4 | `04-export` | Export, scrolled to sessions | your trips as GPX, and nothing leaves unless you share |
+| 5 | `05-audit-trail` | Audit trail | every point explained, kept or dropped |
+
+The captions carry the listing's search words (timeline, trip, GPX, GPS) — App Store search is
+reported to OCR them. Keep them in step with the name, subtitle and keywords of each market.
 
 `screenshots/README.md` documents the pipeline. Read it before changing a template.
 

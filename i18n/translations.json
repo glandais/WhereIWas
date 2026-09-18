@@ -48,25 +48,25 @@
     "screenshots/koubou/config.yaml": {
       "note": "Each value is a key of the Koubou catalog.",
       "cards": {
-        "01-status-moving": {
-          "headline": "Records with the screen off",
-          "subtitle": "Survives termination, reboot and no signal."
+        "01-map": {
+          "headline": "Your location timeline",
+          "subtitle": "Every trip, day by day, street by street."
         },
-        "02-status-stationary": {
+        "02-status-moving": {
+          "headline": "Logs every trip, screen off",
+          "subtitle": "Keeps recording through reboots and no signal."
+        },
+        "03-status-stationary": {
           "headline": "GPS runs only while you move",
-          "subtitle": "Stand still and it switches off. Move and it is back in seconds."
+          "subtitle": "All-day battery: stand still and it switches off."
         },
-        "03-map": {
-          "headline": "Every day, on the map",
-          "subtitle": "A full day, street by street."
+        "04-export": {
+          "headline": "Export your trips as GPX",
+          "subtitle": "Or JSON. Nothing leaves your iPhone unless you share it."
         },
-        "04-audit-trail": {
-          "headline": "Every fix, accepted or rejected",
-          "subtitle": "With the reason, the threshold and the measured value."
-        },
-        "05-export": {
-          "headline": "Your data leaves when you say so",
-          "subtitle": "GPX or JSON, with speed, accuracy, activity and battery."
+        "05-audit-trail": {
+          "headline": "Every point, explained",
+          "subtitle": "Why each GPS position was kept or dropped."
         }
       }
     }
@@ -4901,43 +4901,56 @@
       "sourceLanguage": "en-US",
       "version": "1.0",
       "keys": {
-        "A full day, street by street.": {
+        "All-day battery: stand still and it switches off.": {
           "translations": {
-            "cs": "Celý den, ulici po ulici.",
-            "de-DE": "Ein ganzer Tag, Straße für Straße.",
-            "en-US": "A full day, street by street.",
-            "es-ES": "Un día completo, calle por calle.",
-            "fr-FR": "Une journée entière, rue par rue.",
-            "it": "Un'intera giornata, strada per strada.",
-            "ja": "まる一日を、​街路に沿って。",
-            "nl-NL": "Een volledige dag, straat voor straat.",
-            "pl": "Cały dzień, ulica po ulicy."
+            "en-US": "All-day battery: stand still and it switches off.",
+            "fr-FR": "Batterie préservée : à l'arrêt, il s'éteint.",
+            "de-DE": "Schont den Akku: Im Stand schaltet es ab.",
+            "es-ES": "Ahorra batería: si está quieto, se apaga.",
+            "it": "Risparmia batteria: da fermo si spegne.",
+            "ja": "静止すればオフ、​バッテリーは​一日もつ。",
+            "nl-NL": "Zuinig: bij stilstand gaat de GPS uit.",
+            "pl": "Oszczędza baterię: w bezruchu się wyłącza.",
+            "cs": "Šetří baterii: v klidu se vypne."
           }
         },
-        "Every day, on the map": {
+        "Every point, explained": {
           "translations": {
-            "cs": "Každý den na mapě",
-            "de-DE": "Jeder Tag auf der Karte",
-            "en-US": "Every day, on the map",
-            "es-ES": "Cada día, en el mapa",
-            "fr-FR": "Chaque jour, sur la carte",
-            "it": "Ogni giorno, sulla mappa",
-            "ja": "一日の軌跡を、​地図で",
-            "nl-NL": "Elke dag, op de kaart",
-            "pl": "Każdy dzień na mapie"
+            "en-US": "Every point, explained",
+            "fr-FR": "Chaque point, expliqué",
+            "de-DE": "Jeder Punkt, erklärt",
+            "es-ES": "Cada punto, explicado",
+            "it": "Ogni punto, spiegato",
+            "ja": "すべての​測位に、​理由を",
+            "nl-NL": "Elk punt, uitgelegd",
+            "pl": "Każdy punkt z wyjaśnieniem",
+            "cs": "Každý bod s vysvětlením"
           }
         },
-        "Every fix, accepted or rejected": {
+        "Every trip, day by day, street by street.": {
           "translations": {
-            "cs": "Každý fix, přijatý i odmítnutý",
-            "de-DE": "Jeder Fix, akzeptiert oder abgelehnt",
-            "en-US": "Every fix, accepted or rejected",
-            "es-ES": "Cada posición, aceptada o rechazada",
-            "fr-FR": "Chaque point, accepté ou rejeté",
-            "it": "Ogni fix, accettato o rifiutato",
-            "ja": "すべての測位を、​採否まで記録",
-            "nl-NL": "Elke fix, geaccepteerd of geweigerd",
-            "pl": "Każdy fix, zaakceptowany lub odrzucony"
+            "en-US": "Every trip, day by day, street by street.",
+            "fr-FR": "Chaque voyage, jour après jour, rue par rue.",
+            "de-DE": "Jede Reise, Tag für Tag, Straße für Straße.",
+            "es-ES": "Cada viaje, día a día, calle por calle.",
+            "it": "Ogni spostamento, giorno per giorno, strada per strada.",
+            "ja": "すべての旅を、​一日ずつ​地図で。",
+            "nl-NL": "Elke rit, dag na dag, straat voor straat.",
+            "pl": "Każda wycieczka, dzień po dniu, ulica po ulicy.",
+            "cs": "Každý výlet, den po dni, ulici po ulici."
+          }
+        },
+        "Export your trips as GPX": {
+          "translations": {
+            "en-US": "Export your trips as GPX",
+            "fr-FR": "Exportez vos trajets en GPX",
+            "de-DE": "Reisen als GPX exportieren",
+            "es-ES": "Exporte sus viajes en GPX",
+            "it": "Esporta i tuoi viaggi in GPX",
+            "ja": "旅の記録を​GPXで​書き出し",
+            "nl-NL": "Exporteer uw ritten als GPX",
+            "pl": "Eksportuj trasy do GPX",
+            "cs": "Export cest do GPX"
           }
         },
         "GPS runs only while you move": {
@@ -4953,82 +4966,69 @@
             "pl": "GPS działa tylko podczas ruchu"
           }
         },
-        "GPX or JSON, with speed, accuracy, activity and battery.": {
+        "Keeps recording through reboots and no signal.": {
           "translations": {
-            "cs": "GPX nebo JSON, s rychlostí, přesností, aktivitou i baterií.",
-            "de-DE": "GPX oder JSON, mit Geschwindigkeit, Genauigkeit, Aktivität und Akkustand.",
-            "en-US": "GPX or JSON, with speed, accuracy, activity and battery.",
-            "es-ES": "GPX o JSON, con velocidad, precisión, actividad y batería.",
-            "fr-FR": "GPX ou JSON, avec vitesse, précision, activité et batterie.",
-            "it": "GPX o JSON, con velocità, precisione, attività e batteria.",
-            "ja": "GPXまたはJSONで、​速度・精度・​活動・バッテリーまで。",
-            "nl-NL": "GPX of JSON, met snelheid, nauwkeurigheid, activiteit en batterij.",
-            "pl": "GPX lub JSON, z prędkością, dokładnością, aktywnością i baterią."
+            "en-US": "Keeps recording through reboots and no signal.",
+            "fr-FR": "Continue malgré les redémarrages et sans réseau.",
+            "de-DE": "Zeichnet weiter auf – trotz Neustart und ohne Netz.",
+            "es-ES": "Sigue registrando tras reinicios y sin cobertura.",
+            "it": "Continua a registrare dopo i riavvii e senza segnale.",
+            "ja": "再起動しても、​圏外でも​途切れない。",
+            "nl-NL": "Blijft registreren na een herstart en zonder bereik.",
+            "pl": "Nawet po restarcie i bez zasięgu.",
+            "cs": "Zaznamenává dál i po restartu a bez signálu."
           }
         },
-        "Records with the screen off": {
+        "Logs every trip, screen off": {
           "translations": {
-            "cs": "Zaznamenává i se zhasnutým displejem",
-            "de-DE": "Zeichnet bei ausgeschaltetem Display auf",
-            "en-US": "Records with the screen off",
-            "es-ES": "Registra con la pantalla apagada",
-            "fr-FR": "Enregistre écran éteint",
-            "it": "Registra a schermo spento",
-            "ja": "画面オフでも​記録を継続",
-            "nl-NL": "Registreert met het scherm uit",
-            "pl": "Zapisuje z wygaszonym ekranem"
+            "en-US": "Logs every trip, screen off",
+            "fr-FR": "Chaque trajet, écran éteint",
+            "de-DE": "Jede Reise, auch bei Display aus",
+            "es-ES": "Cada viaje, con la pantalla apagada",
+            "it": "Ogni viaggio, a schermo spento",
+            "ja": "画面オフでも、​旅を​まるごと記録",
+            "nl-NL": "Elke rit, ook met het scherm uit",
+            "pl": "Zapisuje każdą trasę w tle",
+            "cs": "Každá cesta, i se zhasnutým displejem"
           }
         },
-        "Stand still and it switches off. Move and it is back in seconds.": {
+        "Or JSON. Nothing leaves your iPhone unless you share it.": {
           "translations": {
-            "cs": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár sekund.",
-            "de-DE": "Im Stand schaltet es ab, bei Bewegung ist es in Sekunden zurück.",
-            "en-US": "Stand still and it switches off. Move and it is back in seconds.",
-            "es-ES": "Quédese quieto y se apaga. Muévase y vuelve en segundos.",
-            "fr-FR": "À l'arrêt, il s'éteint. Au premier pas, il revient en quelques secondes.",
-            "it": "Fermo, si spegne. Ti muovi, si riaccende in pochi secondi.",
-            "ja": "静止すればオフ、​動けば数秒で復帰。",
-            "nl-NL": "Stilstaan schakelt de GPS uit. Bewegen zet hem binnen seconden weer aan.",
-            "pl": "Stań w miejscu, a się wyłączy. Ruszaj się, a wróci w kilka sekund."
+            "en-US": "Or JSON. Nothing leaves your iPhone unless you share it.",
+            "fr-FR": "Ou en JSON. Rien ne quitte votre iPhone sans vous.",
+            "de-DE": "Oder als JSON. Nichts verlässt Ihr iPhone ohne Sie.",
+            "es-ES": "O en JSON. Nada sale de su iPhone sin usted.",
+            "it": "O in JSON. Nulla lascia l'iPhone senza di te.",
+            "ja": "JSONにも対応。​共有しない限り、​データは​iPhoneの中だけ。",
+            "nl-NL": "Of als JSON. Niets verlaat uw iPhone zonder u.",
+            "pl": "Albo do JSON. Nic nie opuszcza iPhone’a bez Twojej zgody.",
+            "cs": "Nebo do JSON. Nic neopustí iPhone bez vašeho souhlasu."
           }
         },
-        "Survives termination, reboot and no signal.": {
+        "Why each GPS position was kept or dropped.": {
           "translations": {
-            "cs": "Přežije ukončení, restart i výpadek signálu.",
-            "de-DE": "Übersteht Beendigung, Neustart und fehlendes Netz.",
-            "en-US": "Survives termination, reboot and no signal.",
-            "es-ES": "Resiste cierres, reinicios y la falta de cobertura.",
-            "fr-FR": "Résiste aux arrêts iOS, redémarrages et coupures réseau.",
-            "it": "Resiste a chiusure, riavvii e assenza di segnale.",
-            "ja": "強制終了・再起動・​圏外でも途切れない。",
-            "nl-NL": "Overleeft beëindiging, herstart en geen bereik.",
-            "pl": "Przetrwa zamknięcie, restart i brak zasięgu."
+            "en-US": "Why each GPS position was kept or dropped.",
+            "fr-FR": "Pourquoi chaque position GPS a été gardée ou écartée.",
+            "de-DE": "Warum jede GPS-Position behalten oder verworfen wurde.",
+            "es-ES": "Por qué cada posición GPS se guardó o se descartó.",
+            "it": "Perché ogni posizione GPS è stata tenuta o scartata.",
+            "ja": "各位置が​採用・除外された​理由まで​記録。",
+            "nl-NL": "Waarom elke GPS-positie is bewaard of verworpen.",
+            "pl": "Dlaczego każda pozycja GPS została zachowana lub odrzucona.",
+            "cs": "Proč byla každá poloha GPS ponechána, nebo zahozena."
           }
         },
-        "With the reason, the threshold and the measured value.": {
+        "Your location timeline": {
           "translations": {
-            "cs": "S důvodem, prahem a naměřenou hodnotou.",
-            "de-DE": "Mit Grund, Schwellenwert und gemessenem Wert.",
-            "en-US": "With the reason, the threshold and the measured value.",
-            "es-ES": "Con el motivo, el umbral y el valor medido.",
-            "fr-FR": "Avec la raison, le seuil et la valeur mesurée.",
-            "it": "Con il motivo, la soglia e il valore misurato.",
-            "ja": "理由・しきい値・​測定値つきで。",
-            "nl-NL": "Met de reden, de drempel en de gemeten waarde.",
-            "pl": "Z powodem, progiem i zmierzoną wartością."
-          }
-        },
-        "Your data leaves when you say so": {
-          "translations": {
-            "cs": "Data odejdou, až budete chtít",
-            "de-DE": "Sie entscheiden, wann Ihre Daten das iPhone verlassen",
-            "en-US": "Your data leaves when you say so",
-            "es-ES": "Sus datos salen cuando usted decide",
-            "fr-FR": "Vos données ne partent que sur ordre",
-            "it": "I tuoi dati escono quando decidi tu",
-            "ja": "外に出すのは、​自分で​決めたときだけ",
-            "nl-NL": "Uw gegevens gaan pas weg als u het zegt",
-            "pl": "Ty decydujesz, kiedy dane opuszczają telefon"
+            "en-US": "Your location timeline",
+            "fr-FR": "La chronologie de vos trajets",
+            "de-DE": "Ihr Standortverlauf",
+            "es-ES": "Su cronología de ubicaciones",
+            "it": "La cronologia dei tuoi viaggi",
+            "ja": "移動履歴を、​タイムラインで",
+            "nl-NL": "Uw reizen op een tijdlijn",
+            "pl": "Twoja oś czasu podróży",
+            "cs": "Vaše časová osa cest"
           }
         }
       }
@@ -5140,7 +5140,7 @@
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         },
         "nl-NL": {
-          "description": "WhereIWas is je reisdagboek en locatiegeschiedenis: dag na dag legt het ongemerkt vast waar je bent geweest en toont het op de kaart — een roadtrip, een vakantie, een wandeling of een werkdag — zonder de batterij leeg te trekken.\n\nWAT HET ANDERS MAAKT\nDe meeste trackers trekken de batterij leeg door de GPS permanent aan te laten staan, of verliezen ongemerkt uren van de dag zodra iOS ze onderbreekt. WhereIWas doet geen van beide. De app luistert naar de bewegingscoprocessor, die vrijwel geen energie kost, en schakelt de GPS pas in zodra er werkelijk beweging is — en past de nauwkeurigheid daarna aan de snelheid aan: een afstandsfilter van 10 m te voet, 50 m in de auto. Pas na twee minuten stilstand gaat de GPS weer uit, zodat een rood stoplicht nooit een spoor afbreekt.\n\nGEBOUWD OM TE OVERLEVEN\n• Blijft opnemen met het scherm uit en de app op de achtergrond\n• Start zichzelf opnieuw en hervat het werk nadat iOS de app bij geheugentekort heeft beëindigd\n• Overleeft een herstart van het apparaat, zodra u het hebt ontgrendeld\n• Werkt volledig offline — geen bereik, geen server, geen account nodig\n\nELKE FIX, VOLLEDIG GEDOCUMENTEERD\nElk bewaard meetpunt bevat de coördinaten, hoogte, horizontale en verticale nauwkeurigheid, snelheid, koers, tijdstempel, herkende activiteit (lopen, hardlopen, fietsen, autorijden, stilstaan), batterijniveau en het geldende GPS-profiel. Onnauwkeurige, verouderde, dubbele en niet-chronologische fixes worden weggefilterd voordat ze worden opgeslagen.\n\nAUDITLOGBOEK\nMet het optionele auditlogboek legt de app vast waarom hij deed wat hij deed: elke ontvangen fix, elke uitgevoerde nauwkeurigheidscontrole met de gemeten waarde en de toegepaste drempel, elke statuswijziging en elke keer dat de GPS werd uitgeschakeld. Wie zich afvraagt waarom er een gat zit tussen 14.02 en 14.20 uur, vindt daar het antwoord. Exporteerbaar als JSON of als platte tekst.\n\nEXPORTEREN WAT IS OPGENOMEN\nGPX 1.1 voor elk kaartprogramma, of JSON met alle metagegevens. Delen gaat via het standaard deelvenster. Exporteren kan van vandaag, de afgelopen zeven dagen, een zelfgekozen periode, één opgenomen sessie of alles.\n\nDE GEGEVENS BLIJVEN WAAR ZE HOREN\nAlles wordt op het apparaat bewaard, in een lokale database. Geen account, geen server, geen gebruiksstatistieken, geen advertenties, geen tracking. Er wordt niets geüpload. Wat het toestel verlaat en wanneer, bepaalt u zelf door het te exporteren.\n\nIN UW TAAL, IN UW EENHEDEN\nVertaald in het Engels, Frans, Duits, Spaans, Italiaans, Japans, Nederlands, Pools en Tsjechisch. Afstanden, snelheden en hoogtes volgen een eigen instelling voor metrische of imperiale eenheden, zodat u de taal van het toestel niet hoeft te wijzigen om mijlen te lezen.\n\nLOCATIE OP DE ACHTERGROND\nVoortdurend gebruik van GPS op de achtergrond kan de levensduur van de batterij aanzienlijk verkorten. WhereIWas is gebouwd om die kosten laag te houden — de GPS draait alleen tijdens beweging — en het statusscherm toont doorlopend wat er draait en welk GPS-profiel actief is.\n\nVereist iOS 17 of hoger. Voor opnemen op de achtergrond is de locatietoestemming „Altijd” vereist. De toestemming voor Beweging en fitness wordt sterk aangeraden: die maakt de batterijbesparing mogelijk.",
+          "description": "WhereIWas is uw reisdagboek en locatiegeschiedenis: dag na dag legt het ongemerkt vast waar u bent geweest en toont het op de kaart — een roadtrip, een vakantie, een wandeling of een werkdag — zonder de batterij leeg te trekken.\n\nWAT HET ANDERS MAAKT\nDe meeste trackers trekken de batterij leeg door de GPS permanent aan te laten staan, of verliezen ongemerkt uren van de dag zodra iOS ze onderbreekt. WhereIWas doet geen van beide. De app luistert naar de bewegingscoprocessor, die vrijwel geen energie kost, en schakelt de GPS pas in zodra er werkelijk beweging is — en past de nauwkeurigheid daarna aan de snelheid aan: een afstandsfilter van 10 m te voet, 50 m in de auto. Pas na twee minuten stilstand gaat de GPS weer uit, zodat een rood stoplicht nooit een spoor afbreekt.\n\nGEBOUWD OM TE OVERLEVEN\n• Blijft opnemen met het scherm uit en de app op de achtergrond\n• Start zichzelf opnieuw en hervat het werk nadat iOS de app bij geheugentekort heeft beëindigd\n• Overleeft een herstart van het apparaat, zodra u het hebt ontgrendeld\n• Werkt volledig offline — geen bereik, geen server, geen account nodig\n\nELKE FIX, VOLLEDIG GEDOCUMENTEERD\nElk bewaard meetpunt bevat de coördinaten, hoogte, horizontale en verticale nauwkeurigheid, snelheid, koers, tijdstempel, herkende activiteit (lopen, hardlopen, fietsen, autorijden, stilstaan), batterijniveau en het geldende GPS-profiel. Onnauwkeurige, verouderde, dubbele en niet-chronologische fixes worden weggefilterd voordat ze worden opgeslagen.\n\nAUDITLOGBOEK\nMet het optionele auditlogboek legt de app vast waarom hij deed wat hij deed: elke ontvangen fix, elke uitgevoerde nauwkeurigheidscontrole met de gemeten waarde en de toegepaste drempel, elke statuswijziging en elke keer dat de GPS werd uitgeschakeld. Wie zich afvraagt waarom er een gat zit tussen 14.02 en 14.20 uur, vindt daar het antwoord. Exporteerbaar als JSON of als platte tekst.\n\nEXPORTEREN WAT IS OPGENOMEN\nGPX 1.1 voor elk kaartprogramma, of JSON met alle metagegevens. Delen gaat via het standaard deelvenster. Exporteren kan van vandaag, de afgelopen zeven dagen, een zelfgekozen periode, één opgenomen sessie of alles.\n\nDE GEGEVENS BLIJVEN WAAR ZE HOREN\nAlles wordt op het apparaat bewaard, in een lokale database. Geen account, geen server, geen gebruiksstatistieken, geen advertenties, geen tracking. Er wordt niets geüpload. Wat het toestel verlaat en wanneer, bepaalt u zelf door het te exporteren.\n\nIN UW TAAL, IN UW EENHEDEN\nVertaald in het Engels, Frans, Duits, Spaans, Italiaans, Japans, Nederlands, Pools en Tsjechisch. Afstanden, snelheden en hoogtes volgen een eigen instelling voor metrische of imperiale eenheden, zodat u de taal van het toestel niet hoeft te wijzigen om mijlen te lezen.\n\nLOCATIE OP DE ACHTERGROND\nVoortdurend gebruik van GPS op de achtergrond kan de levensduur van de batterij aanzienlijk verkorten. WhereIWas is gebouwd om die kosten laag te houden — de GPS draait alleen tijdens beweging — en het statusscherm toont doorlopend wat er draait en welk GPS-profiel actief is.\n\nVereist iOS 17 of hoger. Voor opnemen op de achtergrond is de locatietoestemming „Altijd” vereist. De toestemming voor Beweging en fitness wordt sterk aangeraden: die maakt de batterijbesparing mogelijk.",
           "keywords": "tijdlijn,tracker,route,spoor,dagboek,reis,vakantie,kaart,wandelen,gpx,offline,export,locatie,rit",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "De GPS draait alleen tijdens beweging: een hele dienst past in één batterij. Overleeft beëindiging en herstart. Export naar GPX en JSON. Alles blijft op de iPhone.",

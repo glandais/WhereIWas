@@ -28,7 +28,7 @@ distinct files (fails on a shared md5) to catch that.
 device frame, headline, subtitle, brand field. Sources live in `screenshots/koubou/` and are
 committed — `config.yaml`, `templates/` (five layouts) and `koubou-strings.xcstrings` (the ten
 headline/subtitle strings in nine languages, D13). Renders are gitignored. Koubou resolves
-`../flat/01-status-moving.png` per locale by convention, so the config names each capture once.
+`../flat/01-map.png` per locale by convention, so the config names each capture once.
 
 `kou generate` has no locale flag: to iterate on one language, copy the config to
 `screenshots/koubou/x.local.yaml` (gitignored) and trim its `localization.languages` list, or use
@@ -43,8 +43,10 @@ same card in the other locales. It finishes with `asc screenshots validate` per 
 `--keep-stale` skips the deletion, `--no-validate` the asc pass.
 
 `screenshots/IPHONE_65/` is what is committed, numbered because assets upload in filename order:
-`01-status-moving`, `02-status-stationary`, `03-map`, `04-audit-trail`, `05-export` (Status leads
-twice, covering the moving and stationary scenarios; Settings left the set).
+`01-map`, `02-status-moving`, `03-status-stationary`, `04-export`, `05-audit-trail`. The map leads
+because the first three cards show in search results and the listing sells a location timeline; the
+two Status cards cover the moving and stationary scenarios; the audit trail, the most technical
+card, closes. Settings left the set.
 
 The app is iPhone-only (`TARGETED_DEVICE_FAMILY: "1"`), so `IPHONE_65` is the only display type
 submission requires — 1242×2688 or 1284×2778 portrait (`asc screenshots sizes` re-checks). Koubou
@@ -123,12 +125,12 @@ exports, not localized strings (same rule as `StateTransitionRecord.reason`).
 
 ## Framing notes
 
-Five layouts, one per card, no two alike. `04-audit-band` and `05-export-card` carry no device
+Five layouts, one per card, no two alike. `04-export-card` and `05-audit-band` carry no device
 frame — at 0.61× the audit rows and export session list become unreadable inside one, so those
 templates crop a documented window out of the capture instead (audit band at 1.07×, export card at
 0.85×; each template's header records its window in source pixels).
 
-Card 5's window is measured from the **bottom**, because `ExportView` bottom-anchors the session
+Card 4's window is measured from the **bottom**, because `ExportView` bottom-anchors the session
 list in screenshot mode: the session card ends at y 2574 (2558 in en-US) with a 197px row pitch in
 all nine locales. The crop's bottom edge is pinned (16px under the card, 28px clear of the tab bar)
 while its top edge is deliberately loose, landing in row whitespace so it absorbs the drift from
@@ -151,12 +153,14 @@ break can otherwise run off the canvas edge unnoticed.
 Each copy block declares the share of canvas height it owns (`data-fit-budget`); a short inline
 script steps the headline down until it fits, then the subtitle. English never moves, and the floor
 is 9vw — below the 10vw the Koubou skill asks for on this canvas class, a deliberate escape hatch
-against a German or Polish headline colliding with the device. Where it bites: card 1 (German and
-Polish on the 9vw floor, Czech 9.15), card 2 (German 10.25, Spanish and French 10.55, Italian
-10.85), card 5 (German 9.80, Dutch and Polish 10.55) — all still legible. Card 5's German is a
-line-breaking result, not a budget one: the headline wants four lines until 9.80vw and three from
-there down, so a larger budget buys nothing and only a shorter headline would. Cards 3 and 4 render
-at full size in every locale.
+against a German or Polish headline colliding with the device. Where it bites: the two
+Status cards (2 and 3) and the export card (4), in German, Polish and Czech first. Sizes were
+measured per locale for the September 2026 copy and are not recorded here — re-read the renders
+after any copy change instead. A line-breaking result is not a budget one: a headline that wants
+one more line at a given size gains nothing from a larger budget, only from shorter words.
+
+French puts a space before `:` `;` `?` `!` — make it a no-break space (U+00A0) in the catalog, or the
+punctuation can wrap onto a line of its own.
 
 ## Uploading
 

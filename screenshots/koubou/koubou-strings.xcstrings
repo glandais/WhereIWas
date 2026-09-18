@@ -1,176 +1,234 @@
 {
   "sourceLanguage": "en-US",
   "strings": {
-    "A full day, street by street.": {
+    "All-day battery: stand still and it switches off.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Celý den, ulici po ulici."
+            "value": "Šetří baterii: v klidu se vypne."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ein ganzer Tag, Straße für Straße."
+            "value": "Schont den Akku: Im Stand schaltet es ab."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "A full day, street by street."
+            "value": "All-day battery: stand still and it switches off."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un día completo, calle por calle."
+            "value": "Ahorra batería: si está quieto, se apaga."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Une journée entière, rue par rue."
+            "value": "Batterie préservée : à l'arrêt, il s'éteint."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Un'intera giornata, strada per strada."
+            "value": "Risparmia batteria: da fermo si spegne."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "まる一日を、​街路に沿って。"
+            "value": "静止すればオフ、​バッテリーは​一日もつ。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Een volledige dag, straat voor straat."
+            "value": "Zuinig: bij stilstand gaat de GPS uit."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cały dzień, ulica po ulicy."
+            "value": "Oszczędza baterię: w bezruchu się wyłącza."
           }
         }
       }
     },
-    "Every day, on the map": {
+    "Every point, explained": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Každý den na mapě"
+            "value": "Každý bod s vysvětlením"
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jeder Tag auf der Karte"
+            "value": "Jeder Punkt, erklärt"
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "Every day, on the map"
+            "value": "Every point, explained"
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cada día, en el mapa"
+            "value": "Cada punto, explicado"
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chaque jour, sur la carte"
+            "value": "Chaque point, expliqué"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ogni giorno, sulla mappa"
+            "value": "Ogni punto, spiegato"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "一日の軌跡を、​地図で"
+            "value": "すべての​測位に、​理由を"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Elke dag, op de kaart"
+            "value": "Elk punt, uitgelegd"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Każdy dzień na mapie"
+            "value": "Każdy punkt z wyjaśnieniem"
           }
         }
       }
     },
-    "Every fix, accepted or rejected": {
+    "Every trip, day by day, street by street.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Každý fix, přijatý i odmítnutý"
+            "value": "Každý výlet, den po dni, ulici po ulici."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jeder Fix, akzeptiert oder abgelehnt"
+            "value": "Jede Reise, Tag für Tag, Straße für Straße."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "Every fix, accepted or rejected"
+            "value": "Every trip, day by day, street by street."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cada posición, aceptada o rechazada"
+            "value": "Cada viaje, día a día, calle por calle."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Chaque point, accepté ou rejeté"
+            "value": "Chaque voyage, jour après jour, rue par rue."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ogni fix, accettato o rifiutato"
+            "value": "Ogni spostamento, giorno per giorno, strada per strada."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "すべての測位を、​採否まで記録"
+            "value": "すべての旅を、​一日ずつ​地図で。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Elke fix, geaccepteerd of geweigerd"
+            "value": "Elke rit, dag na dag, straat voor straat."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Każdy fix, zaakceptowany lub odrzucony"
+            "value": "Każda wycieczka, dzień po dniu, ulica po ulicy."
+          }
+        }
+      }
+    },
+    "Export your trips as GPX": {
+      "localizations": {
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export cest do GPX"
+          }
+        },
+        "de-DE": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reisen als GPX exportieren"
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export your trips as GPX"
+          }
+        },
+        "es-ES": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporte sus viajes en GPX"
+          }
+        },
+        "fr-FR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportez vos trajets en GPX"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esporta i tuoi viaggi in GPX"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "旅の記録を​GPXで​書き出し"
+          }
+        },
+        "nl-NL": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporteer uw ritten als GPX"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eksportuj trasy do GPX"
           }
         }
       }
@@ -233,350 +291,292 @@
         }
       }
     },
-    "GPX or JSON, with speed, accuracy, activity and battery.": {
+    "Keeps recording through reboots and no signal.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX nebo JSON, s rychlostí, přesností, aktivitou i baterií."
+            "value": "Zaznamenává dál i po restartu a bez signálu."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX oder JSON, mit Geschwindigkeit, Genauigkeit, Aktivität und Akkustand."
+            "value": "Zeichnet weiter auf – trotz Neustart und ohne Netz."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX or JSON, with speed, accuracy, activity and battery."
+            "value": "Keeps recording through reboots and no signal."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX o JSON, con velocidad, precisión, actividad y batería."
+            "value": "Sigue registrando tras reinicios y sin cobertura."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX ou JSON, avec vitesse, précision, activité et batterie."
+            "value": "Continue malgré les redémarrages et sans réseau."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX o JSON, con velocità, precisione, attività e batteria."
+            "value": "Continua a registrare dopo i riavvii e senza segnale."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPXまたはJSONで、​速度・精度・​活動・バッテリーまで。"
+            "value": "再起動しても、​圏外でも​途切れない。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX of JSON, met snelheid, nauwkeurigheid, activiteit en batterij."
+            "value": "Blijft registreren na een herstart en zonder bereik."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPX lub JSON, z prędkością, dokładnością, aktywnością i baterią."
+            "value": "Nawet po restarcie i bez zasięgu."
           }
         }
       }
     },
-    "Records with the screen off": {
+    "Logs every trip, screen off": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zaznamenává i se zhasnutým displejem"
+            "value": "Každá cesta, i se zhasnutým displejem"
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zeichnet bei ausgeschaltetem Display auf"
+            "value": "Jede Reise, auch bei Display aus"
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "Records with the screen off"
+            "value": "Logs every trip, screen off"
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registra con la pantalla apagada"
+            "value": "Cada viaje, con la pantalla apagada"
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enregistre écran éteint"
+            "value": "Chaque trajet, écran éteint"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registra a schermo spento"
+            "value": "Ogni viaggio, a schermo spento"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "画面オフでも​記録を継続"
+            "value": "画面オフでも、​旅を​まるごと記録"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Registreert met het scherm uit"
+            "value": "Elke rit, ook met het scherm uit"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zapisuje z wygaszonym ekranem"
+            "value": "Zapisuje każdą trasę w tle"
           }
         }
       }
     },
-    "Stand still and it switches off. Move and it is back in seconds.": {
+    "Or JSON. Nothing leaves your iPhone unless you share it.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zastavte se a GPS se vypne. Pohněte se a je zpět za pár sekund."
+            "value": "Nebo do JSON. Nic neopustí iPhone bez vašeho souhlasu."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Im Stand schaltet es ab, bei Bewegung ist es in Sekunden zurück."
+            "value": "Oder als JSON. Nichts verlässt Ihr iPhone ohne Sie."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stand still and it switches off. Move and it is back in seconds."
+            "value": "Or JSON. Nothing leaves your iPhone unless you share it."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quédese quieto y se apaga. Muévase y vuelve en segundos."
+            "value": "O en JSON. Nada sale de su iPhone sin usted."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "À l'arrêt, il s'éteint. Au premier pas, il revient en quelques secondes."
+            "value": "Ou en JSON. Rien ne quitte votre iPhone sans vous."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fermo, si spegne. Ti muovi, si riaccende in pochi secondi."
+            "value": "O in JSON. Nulla lascia l'iPhone senza di te."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "静止すればオフ、​動けば数秒で復帰。"
+            "value": "JSONにも対応。​共有しない限り、​データは​iPhoneの中だけ。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stilstaan schakelt de GPS uit. Bewegen zet hem binnen seconden weer aan."
+            "value": "Of als JSON. Niets verlaat uw iPhone zonder u."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Stań w miejscu, a się wyłączy. Ruszaj się, a wróci w kilka sekund."
+            "value": "Albo do JSON. Nic nie opuszcza iPhone’a bez Twojej zgody."
           }
         }
       }
     },
-    "Survives termination, reboot and no signal.": {
+    "Why each GPS position was kept or dropped.": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Přežije ukončení, restart i výpadek signálu."
+            "value": "Proč byla každá poloha GPS ponechána, nebo zahozena."
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Übersteht Beendigung, Neustart und fehlendes Netz."
+            "value": "Warum jede GPS-Position behalten oder verworfen wurde."
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "Survives termination, reboot and no signal."
+            "value": "Why each GPS position was kept or dropped."
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Resiste cierres, reinicios y la falta de cobertura."
+            "value": "Por qué cada posición GPS se guardó o se descartó."
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Résiste aux arrêts iOS, redémarrages et coupures réseau."
+            "value": "Pourquoi chaque position GPS a été gardée ou écartée."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Resiste a chiusure, riavvii e assenza di segnale."
+            "value": "Perché ogni posizione GPS è stata tenuta o scartata."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "強制終了・再起動・​圏外でも途切れない。"
+            "value": "各位置が​採用・除外された​理由まで​記録。"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Overleeft beëindiging, herstart en geen bereik."
+            "value": "Waarom elke GPS-positie is bewaard of verworpen."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Przetrwa zamknięcie, restart i brak zasięgu."
+            "value": "Dlaczego każda pozycja GPS została zachowana lub odrzucona."
           }
         }
       }
     },
-    "With the reason, the threshold and the measured value.": {
+    "Your location timeline": {
       "localizations": {
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "S důvodem, prahem a naměřenou hodnotou."
+            "value": "Vaše časová osa cest"
           }
         },
         "de-DE": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mit Grund, Schwellenwert und gemessenem Wert."
+            "value": "Ihr Standortverlauf"
           }
         },
         "en-US": {
           "stringUnit": {
             "state": "translated",
-            "value": "With the reason, the threshold and the measured value."
+            "value": "Your location timeline"
           }
         },
         "es-ES": {
           "stringUnit": {
             "state": "translated",
-            "value": "Con el motivo, el umbral y el valor medido."
+            "value": "Su cronología de ubicaciones"
           }
         },
         "fr-FR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Avec la raison, le seuil et la valeur mesurée."
+            "value": "La chronologie de vos trajets"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Con il motivo, la soglia e il valore misurato."
+            "value": "La cronologia dei tuoi viaggi"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "理由・しきい値・​測定値つきで。"
+            "value": "移動履歴を、​タイムラインで"
           }
         },
         "nl-NL": {
           "stringUnit": {
             "state": "translated",
-            "value": "Met de reden, de drempel en de gemeten waarde."
+            "value": "Uw reizen op een tijdlijn"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Z powodem, progiem i zmierzoną wartością."
-          }
-        }
-      }
-    },
-    "Your data leaves when you say so": {
-      "localizations": {
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Data odejdou, až budete chtít"
-          }
-        },
-        "de-DE": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sie entscheiden, wann Ihre Daten das iPhone verlassen"
-          }
-        },
-        "en-US": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Your data leaves when you say so"
-          }
-        },
-        "es-ES": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sus datos salen cuando usted decide"
-          }
-        },
-        "fr-FR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vos données ne partent que sur ordre"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I tuoi dati escono quando decidi tu"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "外に出すのは、​自分で​決めたときだけ"
-          }
-        },
-        "nl-NL": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uw gegevens gaan pas weg als u het zegt"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ty decydujesz, kiedy dane opuszczają telefon"
+            "value": "Twoja oś czasu podróży"
           }
         }
       }

@@ -26,49 +26,51 @@ localization:
 
 screenshots:
 
-  # 1 — hero. The one argument that has to survive a thumbnail: it records when you are not looking.
-  01-status-moving:
-    template: "templates/01-hero-record.html"
+  # 1 — the payoff first: the timeline the whole app exists to build. It leads because the first
+  # three cards show in search results, and this is the one a traveller recognises at a glance.
+  01-map:
+    template: "templates/01-map-slab.html"
     variables:
-      headline: "Records with the screen off"
-      subtitle: "Survives termination, reboot and no signal."
+      headline: "Your location timeline"
+      subtitle: "Every trip, day by day, street by street."
     assets:
-      app_screenshot: "../flat/01-status-moving.png"
+      app_screenshot: "../flat/01-map.png"
 
-  # 2 — the differentiator: the same screen making the opposite argument.
-  02-status-stationary:
-    template: "templates/02-split-motion.html"
+  # 2 — it records when you are not looking.
+  02-status-moving:
+    template: "templates/02-hero-record.html"
+    variables:
+      headline: "Logs every trip, screen off"
+      subtitle: "Keeps recording through reboots and no signal."
+    assets:
+      app_screenshot: "../flat/02-status-moving.png"
+
+  # 3 — the differentiator: the same screen making the opposite argument.
+  03-status-stationary:
+    template: "templates/03-split-motion.html"
     variables:
       headline: "GPS runs only while you move"
-      subtitle: "Stand still and it switches off. Move and it is back in seconds."
+      subtitle: "All-day battery: stand still and it switches off."
     assets:
-      app_screenshot: "../flat/02-status-stationary.png"
+      app_screenshot: "../flat/03-status-stationary.png"
 
-  # 3 — the payoff: what all that recording is for.
-  03-map:
-    template: "templates/03-map-slab.html"
-    variables:
-      headline: "Every day, on the map"
-      subtitle: "A full day, street by street."
-    assets:
-      app_screenshot: "../flat/03-map.png"
-
-  # 4 — proof. Frame dropped so the log rows stay readable (see the template header).
-  04-audit-trail:
-    template: "templates/04-audit-band.html"
+  # 4 — ownership. Frame dropped, one card lifted out of the export screen.
+  04-export:
+    template: "templates/04-export-card.html"
     frame: false
     variables:
-      headline: "Every fix, accepted or rejected"
-      subtitle: "With the reason, the threshold and the measured value."
+      headline: "Export your trips as GPX"
+      subtitle: "Or JSON. Nothing leaves your iPhone unless you share it."
     assets:
-      app_screenshot: "../flat/04-audit-trail.png"
+      app_screenshot: "../flat/04-export.png"
 
-  # 5 — close on ownership. Frame dropped, one card lifted out of the export screen.
-  05-export:
-    template: "templates/05-export-card.html"
+  # 5 — proof, for whoever reads this far. Frame dropped so the log rows stay readable (see the
+  # template header).
+  05-audit-trail:
+    template: "templates/05-audit-band.html"
     frame: false
     variables:
-      headline: "Your data leaves when you say so"
-      subtitle: "GPX or JSON, with speed, accuracy, activity and battery."
+      headline: "Every point, explained"
+      subtitle: "Why each GPS position was kept or dropped."
     assets:
-      app_screenshot: "../flat/05-export.png"
+      app_screenshot: "../flat/05-audit-trail.png"
