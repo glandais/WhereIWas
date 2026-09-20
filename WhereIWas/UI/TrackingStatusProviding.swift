@@ -63,6 +63,24 @@ extension TrackingStatus {
         return list
     }
 
+    /// ``warnings`` plus, when it applies, the staleness notice.
+    ///
+    /// It is not a counter but the only place the app can say that iOS has
+    /// stopped delivering anything — a force-quit does that until the app is
+    /// opened again — so it belongs with the things the user must act on, not
+    /// with the numbers. It stays out of ``warnings`` (and therefore out of
+    /// the tab badge) because the reader is already inside the app.
+    func warnings(now: Date) -> [StatusWarning] {
+        var list = warnings
+        if isStale(now: now) {
+            list.append(.init(id: "stale", severity: .warning,
+                              title: String(localized: "warning.stale.title", defaultValue: "No new fix for a while"),
+                              message: String(localized: "warning.stale.message", defaultValue: "If the app was force-quit, iOS delivers nothing until you reopen it — which you just did."),
+                              action: nil))
+        }
+        return list
+    }
+
     /// `true` when tracking is on but no sample arrived for a suspicious time.
     func isStale(now: Date = .now, threshold: TimeInterval = 30 * 60) -> Bool {
         guard isEnabled, phase != .disabled else { return false }
@@ -83,11 +101,11 @@ struct StatusWarning: Identifiable, Hashable {
     var message: String
     var action: Action?
 
-    var color: Color {
+    var tone: Theme.Tone {
         switch severity {
-        case .critical: return .red
-        case .warning: return .orange
-        case .info: return .secondary
+        case .critical: return .critical
+        case .warning: return .caution
+        case .info: return .neutral
         }
     }
 

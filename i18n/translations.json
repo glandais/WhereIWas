@@ -806,19 +806,6 @@
             }
           }
         },
-        "audit.detail.category": {
-          "translations": {
-            "cs": "Kategorie",
-            "de": "Kategorie",
-            "en": "Category",
-            "es": "Categoría",
-            "fr": "Catégorie",
-            "it": "Categoria",
-            "ja": "カテゴリ",
-            "nl": "Categorie",
-            "pl": "Kategoria"
-          }
-        },
         "audit.detail.data": {
           "translations": {
             "cs": "Data",
@@ -845,58 +832,6 @@
             "pl": "Zdarzenie"
           }
         },
-        "audit.detail.message": {
-          "translations": {
-            "cs": "Zpráva",
-            "de": "Meldung",
-            "en": "Message",
-            "es": "Mensaje",
-            "fr": "Message",
-            "it": "Messaggio",
-            "ja": "メッセージ",
-            "nl": "Bericht",
-            "pl": "Komunikat"
-          }
-        },
-        "audit.detail.name": {
-          "translations": {
-            "cs": "Název",
-            "de": "Name",
-            "en": "Name",
-            "es": "Nombre",
-            "fr": "Nom",
-            "it": "Nome",
-            "ja": "名前",
-            "nl": "Naam",
-            "pl": "Nazwa"
-          }
-        },
-        "audit.detail.phase": {
-          "translations": {
-            "cs": "Fáze",
-            "de": "Phase",
-            "en": "Phase",
-            "es": "Fase",
-            "fr": "Phase",
-            "it": "Fase",
-            "ja": "フェーズ",
-            "nl": "Fase",
-            "pl": "Faza"
-          }
-        },
-        "audit.detail.severity": {
-          "translations": {
-            "cs": "Závažnost",
-            "de": "Schweregrad",
-            "en": "Severity",
-            "es": "Gravedad",
-            "fr": "Gravité",
-            "it": "Gravità",
-            "ja": "重大度",
-            "nl": "Ernst",
-            "pl": "Poziom"
-          }
-        },
         "audit.detail.tests": {
           "translations": {
             "cs": "Provedené testy",
@@ -908,19 +843,6 @@
             "ja": "実行したテスト",
             "nl": "Uitgevoerde tests",
             "pl": "Wykonane testy"
-          }
-        },
-        "audit.detail.time": {
-          "translations": {
-            "cs": "Čas",
-            "de": "Uhrzeit",
-            "en": "Time",
-            "es": "Hora",
-            "fr": "Heure",
-            "it": "Ora",
-            "ja": "時刻",
-            "nl": "Tijd",
-            "pl": "Czas"
           }
         },
         "audit.disabled.description": {
@@ -1152,7 +1074,6 @@
         },
         "audit.export.compress": {
           "comment": "Export option: gzip the exported audit file",
-          "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Komprimovat (.gz)",
             "de": "Komprimieren (.gz)",
@@ -1477,17 +1398,18 @@
             "pl": "Brak zdarzeń pasujących do tych filtrów."
           }
         },
-        "audit.list.footer": {
+        "audit.load.failed": {
+          "comment": "Title of the card shown when reading the audit trail threw",
           "translations": {
-            "cs": "Od nejnovějších. Klepnutím na událost zobrazíte celý obsah.",
-            "de": "Neueste zuerst. Tippen Sie auf ein Ereignis für den vollständigen Inhalt.",
-            "en": "Newest first. Tap an event for the full details.",
-            "es": "Del más reciente al más antiguo. Toque un evento para ver su contenido completo.",
-            "fr": "Du plus récent au plus ancien. Touchez un événement pour voir son contenu complet.",
-            "it": "Dal più recente al più vecchio. Tocca un evento per vederne il contenuto completo.",
-            "ja": "新しい順に表示されます。イベントをタップすると詳細を確認できます。",
-            "nl": "Nieuwste eerst. Tik op een gebeurtenis voor de volledige inhoud.",
-            "pl": "Od najnowszych. Stuknij w zdarzenie, aby zobaczyć pełną treść."
+            "cs": "Log se nepodařilo načíst",
+            "de": "Protokoll nicht lesbar",
+            "en": "Could not read the log",
+            "es": "No se pudo leer el registro",
+            "fr": "Lecture du journal impossible",
+            "it": "Impossibile leggere il registro",
+            "ja": "ログを読み込めませんでした",
+            "nl": "Logboek kon niet worden gelezen",
+            "pl": "Nie udało się odczytać dziennika"
           }
         },
         "audit.location.significantChange": {
@@ -2066,15 +1988,15 @@
         },
         "audit.title": {
           "translations": {
-            "cs": "Auditní log",
-            "de": "Audit-Protokoll",
-            "en": "Audit trail",
-            "es": "Registro de auditoría",
-            "fr": "Journal d’audit",
-            "it": "Registro di audit",
-            "ja": "監査ログ",
-            "nl": "Auditlogboek",
-            "pl": "Dziennik audytu"
+            "cs": "Technický log",
+            "de": "Technisches Protokoll",
+            "en": "Technical log",
+            "es": "Registro técnico",
+            "fr": "Journal technique",
+            "it": "Registro tecnico",
+            "ja": "テクニカルログ",
+            "nl": "Technisch logboek",
+            "pl": "Dziennik techniczny"
           }
         },
         "audit.toolbar.actions": {
@@ -2581,17 +2503,32 @@
             "pl": "średnia"
           }
         },
-        "export.fileSize": {
+        "export.failed.title": {
+          "comment": "Title of the card shown when writing the export file threw",
           "translations": {
-            "cs": "Velikost",
-            "de": "Größe",
-            "en": "Size",
-            "es": "Tamaño",
-            "fr": "Taille",
-            "it": "Dimensione",
-            "ja": "サイズ",
-            "nl": "Grootte",
-            "pl": "Rozmiar"
+            "cs": "Export selhal",
+            "de": "Export fehlgeschlagen",
+            "en": "Export failed",
+            "es": "Error al exportar",
+            "fr": "Échec de l’export",
+            "it": "Esportazione non riuscita",
+            "ja": "書き出しに失敗しました",
+            "nl": "Export mislukt",
+            "pl": "Eksport nie powiódł się"
+          }
+        },
+        "export.file.ready": {
+          "comment": "State of a freshly written export file",
+          "translations": {
+            "cs": "připraveno",
+            "de": "bereit",
+            "en": "ready",
+            "es": "listo",
+            "fr": "prêt",
+            "it": "pronto",
+            "ja": "準備完了",
+            "nl": "gereed",
+            "pl": "gotowy"
           }
         },
         "export.footer": {
@@ -2685,6 +2622,20 @@
             "pl": "Wszystko"
           }
         },
+        "export.scope.allSummary": {
+          "comment": "Summary under the export scope picker when everything is selected",
+          "translations": {
+            "cs": "%1$@ relací · %2$@ bodů · od %3$@",
+            "de": "%1$@ Sitzungen · %2$@ Punkte · seit %3$@",
+            "en": "%1$@ sessions · %2$@ points · since %3$@",
+            "es": "%1$@ sesiones · %2$@ puntos · desde el %3$@",
+            "fr": "%1$@ sessions · %2$@ points · depuis le %3$@",
+            "it": "%1$@ sessioni · %2$@ punti · dal %3$@",
+            "ja": "%1$@ セッション・%2$@ 点・%3$@ 以降",
+            "nl": "%1$@ sessies · %2$@ punten · sinds %3$@",
+            "pl": "%1$@ sesji · %2$@ punktów · od %3$@"
+          }
+        },
         "export.scope.label": {
           "translations": {
             "cs": "Rozsah",
@@ -2709,6 +2660,20 @@
             "ja": "期間",
             "nl": "Periode",
             "pl": "Okres"
+          }
+        },
+        "export.scope.rangeSummary": {
+          "comment": "Summary under the export scope picker: the period covered",
+          "translations": {
+            "cs": "%1$@ → %2$@",
+            "de": "%1$@ → %2$@",
+            "en": "%1$@ → %2$@",
+            "es": "%1$@ → %2$@",
+            "fr": "%1$@ → %2$@",
+            "it": "%1$@ → %2$@",
+            "ja": "%1$@ → %2$@",
+            "nl": "%1$@ → %2$@",
+            "pl": "%1$@ → %2$@"
           }
         },
         "export.scope.week": {
@@ -2776,6 +2741,19 @@
             "pl": "Nie zarejestrowano jeszcze żadnej sesji."
           }
         },
+        "export.share.action": {
+          "translations": {
+            "cs": "Sdílet soubor",
+            "de": "Datei teilen",
+            "en": "Share the file",
+            "es": "Compartir el archivo",
+            "fr": "Partager le fichier",
+            "it": "Condividi il file",
+            "ja": "ファイルを共有",
+            "nl": "Bestand delen",
+            "pl": "Udostępnij plik"
+          }
+        },
         "export.what": {
           "translations": {
             "cs": "Co",
@@ -2787,6 +2765,19 @@
             "ja": "内容",
             "nl": "Wat",
             "pl": "Co"
+          }
+        },
+        "map.breakdown.title": {
+          "translations": {
+            "cs": "Vzdálenost podle aktivity",
+            "de": "Distanz nach Aktivität",
+            "en": "Distance by activity",
+            "es": "Distancia por actividad",
+            "fr": "Distance par activité",
+            "it": "Distanza per attività",
+            "ja": "アクティビティ別の距離",
+            "nl": "Afstand per activiteit",
+            "pl": "Dystans według aktywności"
           }
         },
         "map.dayPicker": {
@@ -2893,17 +2884,17 @@
             "pl": "Poprzedni dzień"
           }
         },
-        "map.sample.summary": {
+        "map.sample.close": {
           "translations": {
-            "cs": "%1$@ · %2$@ · %3$@ · baterie %4$@",
-            "de": "%1$@ · %2$@ · %3$@ · Akku %4$@",
-            "en": "%1$@ · %2$@ · %3$@ · battery %4$@",
-            "es": "%1$@ · %2$@ · %3$@ · batería %4$@",
-            "fr": "%1$@ · %2$@ · %3$@ · batterie %4$@",
-            "it": "%1$@ · %2$@ · %3$@ · batteria %4$@",
-            "ja": "%1$@ · %2$@ · %3$@ · バッテリー %4$@",
-            "nl": "%1$@ · %2$@ · %3$@ · batterij %4$@",
-            "pl": "%1$@ · %2$@ · %3$@ · bateria %4$@"
+            "cs": "Zavřít podrobnosti bodu",
+            "de": "Punktdetails schließen",
+            "en": "Close the point details",
+            "es": "Cerrar los detalles del punto",
+            "fr": "Fermer le détail du point",
+            "it": "Chiudi i dettagli del punto",
+            "ja": "地点の詳細を閉じる",
+            "nl": "Puntdetails sluiten",
+            "pl": "Zamknij szczegóły punktu"
           }
         },
         "map.stat.distance": {
@@ -3577,6 +3568,34 @@
             "pl": "Odrzucone fixy"
           }
         },
+        "settings.audit.summary.off": {
+          "comment": "Summary of the technical log row when the trail is not being written",
+          "translations": {
+            "cs": "Vypnuto",
+            "de": "Aus",
+            "en": "Off",
+            "es": "Desactivado",
+            "fr": "Désactivé",
+            "it": "Disattivato",
+            "ja": "オフ",
+            "nl": "Uit",
+            "pl": "Wyłączony"
+          }
+        },
+        "settings.audit.summary.on": {
+          "comment": "Summary of the technical log row when the trail is being written",
+          "translations": {
+            "cs": "Zaznamenává",
+            "de": "Zeichnet auf",
+            "en": "Recording",
+            "es": "Grabando",
+            "fr": "En cours d’écriture",
+            "it": "In registrazione",
+            "ja": "記録中",
+            "nl": "Legt vast",
+            "pl": "Zapisuje"
+          }
+        },
         "settings.audit.validationTests": {
           "translations": {
             "cs": "Ověřovací testy",
@@ -3629,6 +3648,19 @@
             "pl": "Średnia"
           }
         },
+        "settings.data.title": {
+          "translations": {
+            "cs": "Data",
+            "de": "Daten",
+            "en": "Data",
+            "es": "Datos",
+            "fr": "Données",
+            "it": "Dati",
+            "ja": "データ",
+            "nl": "Gegevens",
+            "pl": "Dane"
+          }
+        },
         "settings.filter.duplicateDistance": {
           "translations": {
             "cs": "Vzdálenost duplicit",
@@ -3640,6 +3672,19 @@
             "ja": "重複距離",
             "nl": "Duplicaatafstand",
             "pl": "Odległość duplikatu"
+          }
+        },
+        "settings.filter.duplicateDistance.hint": {
+          "translations": {
+            "cs": "Ignoruje bod takto blízko předchozímu",
+            "de": "Punkt so nah am vorherigen verwerfen",
+            "en": "Ignore a fix this close to the previous one",
+            "es": "Descarta un punto así de cerca del anterior",
+            "fr": "Ignore un point aussi proche du précédent",
+            "it": "Scarta un punto così vicino al precedente",
+            "ja": "直前の点とこれ以内なら破棄",
+            "nl": "Negeert een punt zo dicht bij het vorige",
+            "pl": "Pomija punkt tak bliski poprzedniemu"
           }
         },
         "settings.filter.footer": {
@@ -3668,6 +3713,19 @@
             "pl": "Maks. dokładność pozioma"
           }
         },
+        "settings.filter.maxAccuracy.hint": {
+          "translations": {
+            "cs": "Méně přesné body se zahodí",
+            "de": "Ungenauere Punkte werden verworfen",
+            "en": "Fixes vaguer than this are discarded",
+            "es": "Los puntos menos precisos se descartan",
+            "fr": "Les points plus flous que cela sont jetés",
+            "it": "I punti meno precisi vengono scartati",
+            "ja": "これより粗い測位は破棄",
+            "nl": "Vagere punten worden weggegooid",
+            "pl": "Mniej dokładne punkty są odrzucane"
+          }
+        },
         "settings.filter.maxAge": {
           "translations": {
             "cs": "Max. stáří vzorku",
@@ -3681,17 +3739,44 @@
             "pl": "Maks. wiek próbki"
           }
         },
+        "settings.filter.maxAge.hint": {
+          "translations": {
+            "cs": "Maximální stáří bodu při doručení",
+            "de": "Höchstalter eines Punkts bei Ankunft",
+            "en": "How stale a fix may be on arrival",
+            "es": "Antigüedad máxima de un punto al llegar",
+            "fr": "Ancienneté maximale d’un point à l’arrivée",
+            "it": "Età massima di un punto all’arrivo",
+            "ja": "到着時に許容する測位の古さ",
+            "nl": "Maximale ouderdom bij binnenkomst",
+            "pl": "Maksymalny wiek punktu przy odbiorze"
+          }
+        },
+        "settings.filter.summary": {
+          "comment": "Summary line of the sample quality row in the settings hub",
+          "translations": {
+            "cs": "Do %1$@ · duplicity %2$@",
+            "de": "Bis %1$@ · Duplikate %2$@",
+            "en": "Within %1$@ · duplicates %2$@",
+            "es": "Hasta %1$@ · duplicados %2$@",
+            "fr": "Jusqu’à %1$@ · doublons %2$@",
+            "it": "Fino a %1$@ · duplicati %2$@",
+            "ja": "%1$@ 以内・重複 %2$@",
+            "nl": "Tot %1$@ · duplicaten %2$@",
+            "pl": "Do %1$@ · duplikaty %2$@"
+          }
+        },
         "settings.filter.title": {
           "translations": {
-            "cs": "Filtr vzorků",
-            "de": "Messpunktfilter",
-            "en": "Sample filter",
-            "es": "Filtro de muestras",
-            "fr": "Filtre des points",
-            "it": "Filtro campioni",
-            "ja": "サンプルフィルタ",
-            "nl": "Meetpuntfilter",
-            "pl": "Filtr próbek"
+            "cs": "Kvalita bodů",
+            "de": "Punktqualität",
+            "en": "Point quality",
+            "es": "Calidad de los puntos",
+            "fr": "Qualité des points",
+            "it": "Qualità dei punti",
+            "ja": "測位の品質",
+            "nl": "Puntkwaliteit",
+            "pl": "Jakość punktów"
           }
         },
         "settings.motion.footer": {
@@ -3705,6 +3790,19 @@
             "ja": "静止判定までの時間を長くすると信号待ちでの切り替わりを防げますが、停止後もGPSがオンのままになる時間が長くなります。その後もここで設定した時間だけGPSが省電力のまま監視を続けるため、再出発は動作検出が要する数分ではなく数秒で分かります。記録中はシステムの位置情報インジケータが表示され続けます。これを非表示にすると、iOSがバックグラウンドでAppを停止させる原因になることが知られています。",
             "nl": "Een langere stilstand voorkomt schakelen bij verkeerslichten, maar houdt de GPS langer aan na het stoppen. Daarna blijft de gps zuinig meekijken gedurende de hier ingestelde tijd, zodat opnieuw vertrekken binnen seconden wordt gezien in plaats van na de minuten die bewegingsdetectie nodig heeft. De systeemlocatie-indicator blijft aan zolang er wordt vastgelegd: hem verbergen is een gedocumenteerde manier waarop iOS de app op de achtergrond onderbreekt.",
             "pl": "Dłuższy czas bezruchu zapobiega przełączaniu na światłach, ale dłużej utrzymuje GPS po zatrzymaniu. Następnie GPS czuwa w trybie oszczędnym przez ustawiony tutaj czas, dzięki czemu ruszenie widać w kilka sekund, a nie po minutach potrzebnych detekcji ruchu. Systemowy wskaźnik lokalizacji świeci przez cały czas rejestrowania: jego ukrycie to udokumentowany powód, dla którego iOS wstrzymuje aplikację w tle."
+          }
+        },
+        "settings.motion.intro": {
+          "translations": {
+            "cs": "GPS běží jen, když se pohybujete. Tyto tři doby určují, kdy se vypne a zase zapne.",
+            "de": "GPS läuft nur, während Sie sich bewegen. Diese drei Dauern bestimmen, wann es aus- und wieder eingeschaltet wird.",
+            "en": "GPS only runs while you move. These three durations decide when it switches off and back on.",
+            "es": "El GPS solo funciona mientras te mueves. Estas tres duraciones deciden cuándo se apaga y se vuelve a encender.",
+            "fr": "Le GPS ne tourne que lorsque vous bougez. Ces trois durées décident du moment où il s’éteint et se rallume.",
+            "it": "Il GPS funziona solo mentre ti muovi. Queste tre durate decidono quando si spegne e si riaccende.",
+            "ja": "GPS は移動中だけ動作します。この 3 つの時間が、GPS を切るタイミングと入れ直すタイミングを決めます。",
+            "nl": "Gps draait alleen terwijl u beweegt. Deze drie duren bepalen wanneer het uit- en weer aangaat.",
+            "pl": "GPS działa tylko wtedy, gdy się poruszasz. Te trzy czasy decydują, kiedy się wyłącza i włącza ponownie."
           }
         },
         "settings.motion.minimumConfidence": {
@@ -3733,6 +3831,19 @@
             "pl": "Czas wykrywania"
           }
         },
+        "settings.motion.probeDuration.hint": {
+          "translations": {
+            "cs": "GPS krátce zapnutá na ověření",
+            "de": "GPS kurz an zur Prüfung",
+            "en": "GPS on briefly to check",
+            "es": "GPS encendido un momento para comprobar",
+            "fr": "GPS allumé brièvement pour vérifier",
+            "it": "GPS acceso brevemente per verificare",
+            "ja": "確認のため GPS を短時間オン",
+            "nl": "Gps kort aan om te controleren",
+            "pl": "GPS krótko włączony, by sprawdzić"
+          }
+        },
         "settings.motion.settling": {
           "translations": {
             "cs": "Sledování po zastavení",
@@ -3744,6 +3855,19 @@
             "ja": "停止後の監視",
             "nl": "Waken na stop",
             "pl": "Czuwanie po postoju"
+          }
+        },
+        "settings.motion.settling.hint": {
+          "translations": {
+            "cs": "Široký filtr hned po zastavení",
+            "de": "Weiter Filter direkt nach dem Halt",
+            "en": "Wide filter just after a stop",
+            "es": "Filtro amplio justo tras la parada",
+            "fr": "Filtre large juste après l’arrêt",
+            "it": "Filtro ampio subito dopo la sosta",
+            "ja": "停止直後は広いフィルター",
+            "nl": "Ruim filter net na een stop",
+            "pl": "Szeroki filtr tuż po zatrzymaniu"
           }
         },
         "settings.motion.settling.off": {
@@ -3770,6 +3894,33 @@
             "ja": "GPSオフまでの静止時間",
             "nl": "Stilstand voor GPS uit",
             "pl": "Bezruch przed wyłączeniem GPS"
+          }
+        },
+        "settings.motion.stillness.hint": {
+          "translations": {
+            "cs": "Nutný nepřerušený klid",
+            "de": "Ununterbrochene Ruhe nötig",
+            "en": "Unbroken stillness required",
+            "es": "Quietud continua necesaria",
+            "fr": "Immobilité continue exigée",
+            "it": "Immobilità continua richiesta",
+            "ja": "連続した静止が必要",
+            "nl": "Ononderbroken stilstand vereist",
+            "pl": "Wymagany nieprzerwany bezruch"
+          }
+        },
+        "settings.motion.summary": {
+          "comment": "Summary line of the motion detection row in the settings hub",
+          "translations": {
+            "cs": "Klid %1$@ · sonda %2$@",
+            "de": "Ruhe %1$@ · Prüfung %2$@",
+            "en": "Stillness %1$@ · probe %2$@",
+            "es": "Quietud %1$@ · sondeo %2$@",
+            "fr": "Immobilité %1$@ · sondage %2$@",
+            "it": "Immobilità %1$@ · sondaggio %2$@",
+            "ja": "静止 %1$@・確認 %2$@",
+            "nl": "Stilstand %1$@ · controle %2$@",
+            "pl": "Bezruch %1$@ · sondowanie %2$@"
           }
         },
         "settings.motion.title": {
@@ -3875,6 +4026,19 @@
             "ja": "任意、%@",
             "nl": "Elke activiteit, %@",
             "pl": "Dowolny, %@"
+          }
+        },
+        "settings.profiles.columnHint": {
+          "translations": {
+            "cs": "bod každých…",
+            "de": "ein Punkt alle…",
+            "en": "one fix every…",
+            "es": "un punto cada…",
+            "fr": "un point tous les…",
+            "it": "un punto ogni…",
+            "ja": "測位の間隔",
+            "nl": "één punt per…",
+            "pl": "punkt co…"
           }
         },
         "settings.profiles.footer": {
@@ -4073,6 +4237,19 @@
             }
           }
         },
+        "settings.recording.title": {
+          "translations": {
+            "cs": "Záznam",
+            "de": "Aufzeichnung",
+            "en": "Recording",
+            "es": "Grabación",
+            "fr": "Enregistrement",
+            "it": "Registrazione",
+            "ja": "記録",
+            "nl": "Opname",
+            "pl": "Zapis"
+          }
+        },
         "settings.retention.days": {
           "translations": {
             "cs": {
@@ -4191,6 +4368,46 @@
             "pl": "Przechowuj próbki przez"
           }
         },
+        "settings.retention.keepSamples.hint": {
+          "translations": {
+            "cs": "Starší body se smažou",
+            "de": "Ältere Punkte werden gelöscht",
+            "en": "Older points are deleted automatically",
+            "es": "Los puntos más antiguos se eliminan",
+            "fr": "Les points plus anciens sont supprimés",
+            "it": "I punti più vecchi vengono eliminati",
+            "ja": "これより古い点は自動削除",
+            "nl": "Oudere punten worden verwijderd",
+            "pl": "Starsze punkty są usuwane"
+          }
+        },
+        "settings.retention.stored": {
+          "translations": {
+            "cs": "Uloženo",
+            "de": "Gespeichert",
+            "en": "Stored",
+            "es": "Almacenados",
+            "fr": "Enregistrés",
+            "it": "Memorizzati",
+            "ja": "保存済み",
+            "nl": "Opgeslagen",
+            "pl": "Zapisane"
+          }
+        },
+        "settings.retention.summary": {
+          "comment": "Summary line of the retention row in the settings hub",
+          "translations": {
+            "cs": "%1$@ · %2$@ bodů",
+            "de": "%1$@ · %2$@ Punkte",
+            "en": "%1$@ · %2$@ points",
+            "es": "%1$@ · %2$@ puntos",
+            "fr": "%1$@ · %2$@ points",
+            "it": "%1$@ · %2$@ punti",
+            "ja": "%1$@・%2$@ 点",
+            "nl": "%1$@ · %2$@ punten",
+            "pl": "%1$@ · %2$@ punktów"
+          }
+        },
         "settings.retention.title": {
           "translations": {
             "cs": "Doba uchování",
@@ -4271,6 +4488,33 @@
             "pl": "Wizyta"
           }
         },
+        "status.hero.profile": {
+          "comment": "Profile summary on the Status hero card: profile name, accuracy level, distance filter",
+          "translations": {
+            "cs": "%1$@ · %2$@ · každých %3$@",
+            "de": "%1$@ · %2$@ · alle %3$@",
+            "en": "%1$@ · %2$@ · every %3$@",
+            "es": "%1$@ · %2$@ · cada %3$@",
+            "fr": "%1$@ · %2$@ · tous les %3$@",
+            "it": "%1$@ · %2$@ · ogni %3$@",
+            "ja": "%1$@・%2$@・%3$@ ごと",
+            "nl": "%1$@ · %2$@ · elke %3$@",
+            "pl": "%1$@ · %2$@ · co %3$@"
+          }
+        },
+        "status.hero.todayPoints": {
+          "translations": {
+            "cs": "Body dnes",
+            "de": "Punkte heute",
+            "en": "Points today",
+            "es": "Puntos de hoy",
+            "fr": "Points du jour",
+            "it": "Punti di oggi",
+            "ja": "本日の点",
+            "nl": "Punten vandaag",
+            "pl": "Punkty dziś"
+          }
+        },
         "status.lastFix.accuracy": {
           "translations": {
             "cs": "Přesnost",
@@ -4323,32 +4567,6 @@
             "pl": "Brak fixu."
           }
         },
-        "status.lastFix.position": {
-          "translations": {
-            "cs": "Poloha",
-            "de": "Position",
-            "en": "Position",
-            "es": "Posición",
-            "fr": "Position",
-            "it": "Posizione",
-            "ja": "位置",
-            "nl": "Positie",
-            "pl": "Pozycja"
-          }
-        },
-        "status.lastFix.source": {
-          "translations": {
-            "cs": "Zdroj",
-            "de": "Quelle",
-            "en": "Source",
-            "es": "Fuente",
-            "fr": "Source",
-            "it": "Origine",
-            "ja": "ソース",
-            "nl": "Bron",
-            "pl": "Źródło"
-          }
-        },
         "status.lastFix.speed": {
           "translations": {
             "cs": "Rychlost",
@@ -4375,97 +4593,6 @@
             "pl": "Ostatni fix"
           }
         },
-        "status.lastFix.when": {
-          "translations": {
-            "cs": "Kdy",
-            "de": "Zeit",
-            "en": "When",
-            "es": "Cuándo",
-            "fr": "Quand",
-            "it": "Quando",
-            "ja": "日時",
-            "nl": "Wanneer",
-            "pl": "Kiedy"
-          }
-        },
-        "status.samples.acceptedRejected": {
-          "translations": {
-            "cs": "Přijato / odmítnuto od spuštění",
-            "de": "Akzeptiert / abgelehnt seit Start",
-            "en": "Accepted / rejected since launch",
-            "es": "Aceptadas / rechazadas desde el inicio",
-            "fr": "Acceptés / rejetés depuis le lancement",
-            "it": "Accettati / rifiutati dall'avvio",
-            "ja": "受理／却下（起動後）",
-            "nl": "Geaccepteerd/geweigerd sinds start",
-            "pl": "Zaakceptowane / odrzucone od uruchomienia"
-          }
-        },
-        "status.samples.oldest": {
-          "translations": {
-            "cs": "Nejstarší vzorek",
-            "de": "Ältester Messpunkt",
-            "en": "Oldest sample",
-            "es": "Muestra más antigua",
-            "fr": "Le plus ancien",
-            "it": "Campione più vecchio",
-            "ja": "最も古いサンプル",
-            "nl": "Oudste meetpunt",
-            "pl": "Najstarsza próbka"
-          }
-        },
-        "status.samples.title": {
-          "translations": {
-            "cs": "Vzorky",
-            "de": "Messpunkte",
-            "en": "Samples",
-            "es": "Muestras",
-            "fr": "Échantillons",
-            "it": "Campioni",
-            "ja": "サンプル",
-            "nl": "Meetpunten",
-            "pl": "Próbki"
-          }
-        },
-        "status.samples.today": {
-          "translations": {
-            "cs": "Dnes",
-            "de": "Heute",
-            "en": "Today",
-            "es": "Hoy",
-            "fr": "Aujourd’hui",
-            "it": "Oggi",
-            "ja": "今日",
-            "nl": "Vandaag",
-            "pl": "Dziś"
-          }
-        },
-        "status.samples.totalStored": {
-          "translations": {
-            "cs": "Celkem uloženo",
-            "de": "Insgesamt gespeichert",
-            "en": "Total stored",
-            "es": "Total almacenado",
-            "fr": "Total stocké",
-            "it": "Totale salvati",
-            "ja": "総保存件数",
-            "nl": "Totaal opgeslagen",
-            "pl": "Zapisane łącznie"
-          }
-        },
-        "status.state.activity": {
-          "translations": {
-            "cs": "Aktivita",
-            "de": "Aktivität",
-            "en": "Activity",
-            "es": "Actividad",
-            "fr": "Activité",
-            "it": "Attività",
-            "ja": "アクティビティ",
-            "nl": "Activiteit",
-            "pl": "Aktywność"
-          }
-        },
         "status.state.gpsOff": {
           "translations": {
             "cs": "GPS vypnuto",
@@ -4477,32 +4604,6 @@
             "ja": "GPSオフ",
             "nl": "GPS uit",
             "pl": "GPS wyłączony"
-          }
-        },
-        "status.state.gpsProfile": {
-          "translations": {
-            "cs": "Profil GPS",
-            "de": "GPS-Profil",
-            "en": "GPS profile",
-            "es": "Perfil GPS",
-            "fr": "Profil GPS",
-            "it": "Profilo GPS",
-            "ja": "GPSプロファイル",
-            "nl": "GPS-profiel",
-            "pl": "Profil GPS"
-          }
-        },
-        "status.state.stale": {
-          "translations": {
-            "cs": "Už chvíli nepřišel žádný nový fix. Pokud byla aplikace vynuceně ukončena, otevřete ji znovu pro obnovení sledování.",
-            "de": "Seit einiger Zeit kein neuer Fix. Falls Sie die App manuell beendet haben, öffnen Sie sie erneut, um die Aufzeichnung fortzusetzen.",
-            "en": "No new fix for a while. If the app was force-quit, reopen it to resume tracking.",
-            "es": "Sin nuevas posiciones GPS desde hace un tiempo. Si la app se cerró a la fuerza, vuelva a abrirla para reanudar el seguimiento.",
-            "fr": "Aucun nouveau point depuis un moment. Si l’app a été fermée de force, rouvrez-la pour reprendre l’enregistrement.",
-            "it": "Nessun nuovo fix da un po'. Se l'app è stata chiusa forzatamente, riaprila per riprendere il monitoraggio.",
-            "ja": "しばらく新しい測位がありません。Appが強制終了された場合は、もう一度開くと記録を再開します。",
-            "nl": "Al een tijdje geen nieuwe fix. Als de app geforceerd is afgesloten, open deze dan opnieuw om het bijhouden te hervatten.",
-            "pl": "Brak nowego fixu od dłuższego czasu. Jeśli aplikacja została zamknięta ręcznie, otwórz ją ponownie, aby wznowić śledzenie."
           }
         },
         "status.tab": {
@@ -4520,15 +4621,15 @@
         },
         "status.title": {
           "translations": {
-            "cs": "WhereIWas",
-            "de": "WhereIWas",
-            "en": "WhereIWas",
-            "es": "WhereIWas",
-            "fr": "WhereIWas",
-            "it": "WhereIWas",
-            "ja": "WhereIWas",
-            "nl": "WhereIWas",
-            "pl": "WhereIWas"
+            "cs": "Dnes",
+            "de": "Heute",
+            "en": "Today",
+            "es": "Hoy",
+            "fr": "Aujourd’hui",
+            "it": "Oggi",
+            "ja": "今日",
+            "nl": "Vandaag",
+            "pl": "Dziś"
           }
         },
         "status.tracking.hint": {
@@ -4542,32 +4643,6 @@
             "ja": "バックグラウンドでの位置情報記録のオン/オフを切り替えます",
             "nl": "Schakelt het registreren van de positie op de achtergrond in of uit",
             "pl": "Włącza lub wyłącza zapis pozycji w tle"
-          }
-        },
-        "status.tracking.off": {
-          "translations": {
-            "cs": "Vypnuto — nic se nezaznamenává.",
-            "de": "Aus — es wird nichts aufgezeichnet.",
-            "en": "Off — nothing is recorded.",
-            "es": "Desactivado: no se registra nada.",
-            "fr": "Désactivé — rien n’est enregistré.",
-            "it": "Disattivato — non viene registrato nulla.",
-            "ja": "オフ — 何も記録されません。",
-            "nl": "Uit — er wordt niets geregistreerd.",
-            "pl": "Wyłączone — nic nie jest zapisywane."
-          }
-        },
-        "status.tracking.on": {
-          "translations": {
-            "cs": "Zapnuto — běží na pozadí a znovu se spustí, když aplikaci ukončí iOS nebo když se restartuje telefon.",
-            "de": "Ein — läuft im Hintergrund und nimmt die Aufzeichnung wieder auf, nachdem iOS die App beendet hat oder das iPhone neu gestartet wurde.",
-            "en": "On — runs in the background and after restarts.",
-            "es": "Activado: funciona en segundo plano y se reanuda después de que iOS cierre la app o de que se reinicie el teléfono.",
-            "fr": "Activé — fonctionne en arrière-plan, et se relance après un arrêt par iOS ou un redémarrage du téléphone.",
-            "it": "Attivato — funziona in background e riprende dopo che iOS chiude l'app o dopo il riavvio del telefono.",
-            "ja": "オン — バックグラウンドで動作します。iOSにAppを終了されても、デバイスを再起動しても復帰します。",
-            "nl": "Aan — werkt op de achtergrond en hervat het registreren nadat iOS de app heeft beëindigd of de telefoon opnieuw is opgestart.",
-            "pl": "Włączone — działa w tle i wznawia pracę po zamknięciu aplikacji przez iOS lub po restarcie telefonu."
           }
         },
         "status.tracking.toggle": {
@@ -4646,6 +4721,34 @@
             "ja": "要確認",
             "nl": "Vereist aandacht",
             "pl": "Wymaga uwagi"
+          }
+        },
+        "track.idle": {
+          "comment": "Map legend: stationary or unclassified stretches",
+          "translations": {
+            "cs": "Stání",
+            "de": "Still",
+            "en": "Still",
+            "es": "Detenido",
+            "fr": "À l’arrêt",
+            "it": "Fermo",
+            "ja": "静止",
+            "nl": "Stilstand",
+            "pl": "Postój"
+          }
+        },
+        "track.onFoot": {
+          "comment": "Map legend: walking and running together",
+          "translations": {
+            "cs": "Pěšky",
+            "de": "Zu Fuß",
+            "en": "On foot",
+            "es": "A pie",
+            "fr": "À pied",
+            "it": "A piedi",
+            "ja": "徒歩",
+            "nl": "Te voet",
+            "pl": "Pieszo"
           }
         },
         "units.imperial": {
@@ -4819,6 +4922,32 @@
             "pl": "Dokładna lokalizacja jest wyłączona"
           }
         },
+        "warning.stale.message": {
+          "translations": {
+            "cs": "Pokud byla aplikace vynuceně ukončena, iOS nic nedoručí, dokud ji znovu neotevřete — což jste právě udělali.",
+            "de": "Wurde die App zwangsbeendet, liefert iOS nichts mehr, bis Sie sie wieder öffnen — was Sie gerade getan haben.",
+            "en": "If the app was force-quit, iOS delivers nothing until you reopen it — which you just did.",
+            "es": "Si se forzó el cierre de la app, iOS no entrega nada hasta que la vuelves a abrir, que es lo que acabas de hacer.",
+            "fr": "Si l’app a été forcée à quitter, iOS ne livre plus rien jusqu’à sa réouverture — ce que vous venez de faire.",
+            "it": "Se l’app è stata chiusa forzatamente, iOS non consegna nulla finché non la riapri — cosa che hai appena fatto.",
+            "ja": "アプリを強制終了すると、再び開くまで iOS は何も届けません。今まさに開いたところです。",
+            "nl": "Als de app geforceerd is afgesloten, levert iOS niets meer tot u hem heropent — wat u zojuist deed.",
+            "pl": "Jeśli aplikacja została zamknięta na siłę, iOS nic nie dostarcza do jej ponownego otwarcia — co właśnie zrobiono."
+          }
+        },
+        "warning.stale.title": {
+          "translations": {
+            "cs": "Delší dobu žádný bod",
+            "de": "Seit einer Weile kein Punkt",
+            "en": "No new fix for a while",
+            "es": "Sin puntos desde hace rato",
+            "fr": "Aucun point depuis un moment",
+            "it": "Nessun punto da un po’",
+            "ja": "しばらく測位がありません",
+            "nl": "Al een tijd geen punt",
+            "pl": "Od dłuższej chwili brak punktu"
+          }
+        },
         "warning.whenInUse.message": {
           "translations": {
             "cs": "Sledování na pozadí se zastaví, jakmile je aplikace pozastavena. V Nastavení změňte přístup k poloze na „Vždy“.",
@@ -4903,54 +5032,54 @@
       "keys": {
         "All-day battery: stand still and it switches off.": {
           "translations": {
-            "en-US": "All-day battery: stand still and it switches off.",
-            "fr-FR": "Batterie préservée : à l'arrêt, il s'éteint.",
+            "cs": "Šetří baterii: v klidu se vypne.",
             "de-DE": "Schont den Akku: Im Stand schaltet es ab.",
+            "en-US": "All-day battery: stand still and it switches off.",
             "es-ES": "Ahorra batería: si está quieto, se apaga.",
+            "fr-FR": "Batterie préservée : à l'arrêt, il s'éteint.",
             "it": "Risparmia batteria: da fermo si spegne.",
             "ja": "静止すればオフ、​バッテリーは​一日もつ。",
             "nl-NL": "Zuinig: bij stilstand gaat de GPS uit.",
-            "pl": "Oszczędza baterię: w bezruchu się wyłącza.",
-            "cs": "Šetří baterii: v klidu se vypne."
+            "pl": "Oszczędza baterię: w bezruchu się wyłącza."
           }
         },
         "Every point, explained": {
           "translations": {
-            "en-US": "Every point, explained",
-            "fr-FR": "Chaque point, expliqué",
+            "cs": "Každý bod s vysvětlením",
             "de-DE": "Jeder Punkt, erklärt",
+            "en-US": "Every point, explained",
             "es-ES": "Cada punto, explicado",
+            "fr-FR": "Chaque point, expliqué",
             "it": "Ogni punto, spiegato",
             "ja": "すべての​測位に、​理由を",
             "nl-NL": "Elk punt, uitgelegd",
-            "pl": "Każdy punkt z wyjaśnieniem",
-            "cs": "Každý bod s vysvětlením"
+            "pl": "Każdy punkt z wyjaśnieniem"
           }
         },
         "Every trip, day by day, street by street.": {
           "translations": {
-            "en-US": "Every trip, day by day, street by street.",
-            "fr-FR": "Chaque voyage, jour après jour, rue par rue.",
+            "cs": "Každý výlet, den po dni, ulici po ulici.",
             "de-DE": "Jede Reise, Tag für Tag, Straße für Straße.",
+            "en-US": "Every trip, day by day, street by street.",
             "es-ES": "Cada viaje, día a día, calle por calle.",
+            "fr-FR": "Chaque voyage, jour après jour, rue par rue.",
             "it": "Ogni spostamento, giorno per giorno, strada per strada.",
             "ja": "すべての旅を、​一日ずつ​地図で。",
             "nl-NL": "Elke rit, dag na dag, straat voor straat.",
-            "pl": "Każda wycieczka, dzień po dniu, ulica po ulicy.",
-            "cs": "Každý výlet, den po dni, ulici po ulici."
+            "pl": "Każda wycieczka, dzień po dniu, ulica po ulicy."
           }
         },
         "Export your trips as GPX": {
           "translations": {
-            "en-US": "Export your trips as GPX",
-            "fr-FR": "Exportez vos trajets en GPX",
+            "cs": "Export cest do GPX",
             "de-DE": "Reisen als GPX exportieren",
+            "en-US": "Export your trips as GPX",
             "es-ES": "Exporte sus viajes en GPX",
+            "fr-FR": "Exportez vos trajets en GPX",
             "it": "Esporta i tuoi viaggi in GPX",
             "ja": "旅の記録を​GPXで​書き出し",
             "nl-NL": "Exporteer uw ritten als GPX",
-            "pl": "Eksportuj trasy do GPX",
-            "cs": "Export cest do GPX"
+            "pl": "Eksportuj trasy do GPX"
           }
         },
         "GPS runs only while you move": {
@@ -4968,67 +5097,67 @@
         },
         "Keeps recording through reboots and no signal.": {
           "translations": {
-            "en-US": "Keeps recording through reboots and no signal.",
-            "fr-FR": "Continue malgré les redémarrages et sans réseau.",
+            "cs": "Zaznamenává dál i po restartu a bez signálu.",
             "de-DE": "Zeichnet weiter auf – trotz Neustart und ohne Netz.",
+            "en-US": "Keeps recording through reboots and no signal.",
             "es-ES": "Sigue registrando tras reinicios y sin cobertura.",
+            "fr-FR": "Continue malgré les redémarrages et sans réseau.",
             "it": "Continua a registrare dopo i riavvii e senza segnale.",
             "ja": "再起動しても、​圏外でも​途切れない。",
             "nl-NL": "Blijft registreren na een herstart en zonder bereik.",
-            "pl": "Nawet po restarcie i bez zasięgu.",
-            "cs": "Zaznamenává dál i po restartu a bez signálu."
+            "pl": "Nawet po restarcie i bez zasięgu."
           }
         },
         "Logs every trip, screen off": {
           "translations": {
-            "en-US": "Logs every trip, screen off",
-            "fr-FR": "Chaque trajet, écran éteint",
+            "cs": "Každá cesta, i se zhasnutým displejem",
             "de-DE": "Jede Reise, auch bei Display aus",
+            "en-US": "Logs every trip, screen off",
             "es-ES": "Cada viaje, con la pantalla apagada",
+            "fr-FR": "Chaque trajet, écran éteint",
             "it": "Ogni viaggio, a schermo spento",
             "ja": "画面オフでも、​旅を​まるごと記録",
             "nl-NL": "Elke rit, ook met het scherm uit",
-            "pl": "Zapisuje każdą trasę w tle",
-            "cs": "Každá cesta, i se zhasnutým displejem"
+            "pl": "Zapisuje każdą trasę w tle"
           }
         },
         "Or JSON. Nothing leaves your iPhone unless you share it.": {
           "translations": {
-            "en-US": "Or JSON. Nothing leaves your iPhone unless you share it.",
-            "fr-FR": "Ou en JSON. Rien ne quitte votre iPhone sans vous.",
+            "cs": "Nebo do JSON. Nic neopustí iPhone bez vašeho souhlasu.",
             "de-DE": "Oder als JSON. Nichts verlässt Ihr iPhone ohne Sie.",
+            "en-US": "Or JSON. Nothing leaves your iPhone unless you share it.",
             "es-ES": "O en JSON. Nada sale de su iPhone sin usted.",
+            "fr-FR": "Ou en JSON. Rien ne quitte votre iPhone sans vous.",
             "it": "O in JSON. Nulla lascia l'iPhone senza di te.",
             "ja": "JSONにも対応。​共有しない限り、​データは​iPhoneの中だけ。",
             "nl-NL": "Of als JSON. Niets verlaat uw iPhone zonder u.",
-            "pl": "Albo do JSON. Nic nie opuszcza iPhone’a bez Twojej zgody.",
-            "cs": "Nebo do JSON. Nic neopustí iPhone bez vašeho souhlasu."
+            "pl": "Albo do JSON. Nic nie opuszcza iPhone’a bez Twojej zgody."
           }
         },
         "Why each GPS position was kept or dropped.": {
           "translations": {
-            "en-US": "Why each GPS position was kept or dropped.",
-            "fr-FR": "Pourquoi chaque position GPS a été gardée ou écartée.",
+            "cs": "Proč byla každá poloha GPS ponechána, nebo zahozena.",
             "de-DE": "Warum jede GPS-Position behalten oder verworfen wurde.",
+            "en-US": "Why each GPS position was kept or dropped.",
             "es-ES": "Por qué cada posición GPS se guardó o se descartó.",
+            "fr-FR": "Pourquoi chaque position GPS a été gardée ou écartée.",
             "it": "Perché ogni posizione GPS è stata tenuta o scartata.",
             "ja": "各位置が​採用・除外された​理由まで​記録。",
             "nl-NL": "Waarom elke GPS-positie is bewaard of verworpen.",
-            "pl": "Dlaczego każda pozycja GPS została zachowana lub odrzucona.",
-            "cs": "Proč byla každá poloha GPS ponechána, nebo zahozena."
+            "pl": "Dlaczego każda pozycja GPS została zachowana lub odrzucona."
           }
         },
         "Your location timeline": {
           "translations": {
-            "en-US": "Your location timeline",
-            "fr-FR": "La chronologie de vos trajets",
+            "cs": "Vaše časová osa cest",
             "de-DE": "Ihr Standortverlauf",
+            "en-US": "Your location timeline",
             "es-ES": "Su cronología de ubicaciones",
+            "fr-FR": "La chronologie de vos trajets",
             "it": "La cronologia dei tuoi viaggi",
             "ja": "移動履歴を、​タイムラインで",
             "nl-NL": "Uw reizen op een tijdlijn",
-            "pl": "Twoja oś czasu podróży",
-            "cs": "Vaše časová osa cest"
+            "pl": "Twoja oś czasu podróży"
           }
         }
       }
@@ -5058,6 +5187,11 @@
           "privacyPolicyUrl": "https://glandais.github.io/WhereIWas/privacy/",
           "subtitle": "Historial de ubicación y rutas"
         },
+        "es-MX": {
+          "name": "WhereIWas: Diario de viaje GPS",
+          "privacyPolicyUrl": "https://glandais.github.io/WhereIWas/privacy/",
+          "subtitle": "Historial de ubicación y rutas"
+        },
         "fr-FR": {
           "name": "WhereIWas – Journal de voyage",
           "subtitle": "Historique des positions GPS",
@@ -5082,11 +5216,6 @@
           "name": "WhereIWas: Dziennik podróży",
           "privacyPolicyUrl": "https://glandais.github.io/WhereIWas/privacy/",
           "subtitle": "Historia lokalizacji i trasy"
-        },
-        "es-MX": {
-          "name": "WhereIWas: Diario de viaje GPS",
-          "privacyPolicyUrl": "https://glandais.github.io/WhereIWas/privacy/",
-          "subtitle": "Historial de ubicación y rutas"
         }
       },
       "version/1.0.0": {
@@ -5114,6 +5243,13 @@
         "es-ES": {
           "description": "WhereIWas es su diario de viaje y su historial de ubicaciones: día tras día registra con discreción por dónde ha pasado y se lo muestra en un mapa — un viaje por carretera, unas vacaciones, una ruta a pie o una jornada de trabajo — sin agotar la batería.\n\nQUÉ LO HACE DISTINTO\nLa mayoría de los rastreadores agotan la batería manteniendo el GPS encendido de forma permanente, o pierden en silencio horas del día cuando iOS los suspende. WhereIWas no hace ni lo uno ni lo otro. Se apoya en el coprocesador de movimiento, cuyo coste energético es casi nulo, y solo enciende el GPS cuando hay movimiento real; después ajusta la precisión a la velocidad: filtro de distancia de 10 m a pie, de 50 m en coche. Espera dos minutos de inmovilidad antes de volver a apagar el GPS, para que un semáforo en rojo no corte nunca la traza.\n\nHECHO PARA AGUANTAR\n• Sigue registrando con la pantalla apagada y la app en segundo plano\n• Se reinicia y reanuda por sí solo después de que iOS lo cierre por falta de memoria\n• Sobrevive a un reinicio del dispositivo, una vez desbloqueado\n• Funciona totalmente sin conexión: sin cobertura, sin servidor y sin cuenta\n\nCADA POSICIÓN GPS, DOCUMENTADA AL DETALLE\nCada punto guardado conserva sus coordenadas, la altitud, la precisión horizontal y vertical, la velocidad, el rumbo, la marca de tiempo, la actividad detectada (a pie, corriendo, en bici, en coche, inmóvil), el nivel de batería y el perfil GPS vigente. Las posiciones GPS imprecisas, caducadas, duplicadas o fuera de orden se descartan antes de escribirlas.\n\nREGISTRO DE AUDITORÍA\nAl activar el registro de auditoría opcional, la app anota por qué hizo lo que hizo: cada posición GPS recibida, cada comprobación de precisión realizada con el valor medido y el umbral aplicado, cada cambio de estado y cada apagado del GPS. Cuando surja la duda de por qué no hay nada entre las 14:02 y las 14:20, la respuesta está ahí. Puede exportarlo en JSON o en texto plano.\n\nEXPORTAR LO REGISTRADO\nGPX 1.1 para cualquier herramienta cartográfica, o JSON con todos los metadatos. Envíelo a donde haga falta desde la hoja de compartir estándar. Puede exportar el día de hoy, los últimos siete días, un intervalo de fechas a su elección, una sesión concreta o todo.\n\nLOS DATOS SIGUEN SIENDO SUYOS\nTodo se guarda en el dispositivo, en una base de datos local. Sin cuenta, sin servidor, sin analíticas, sin publicidad y sin seguimiento. No se envía nada a ninguna parte. Usted decide qué sale del teléfono, y cuándo, exportándolo por su cuenta.\n\nEN SU IDIOMA, EN SUS UNIDADES\nTraducida al inglés, francés, alemán, español, italiano, japonés, neerlandés, polaco y checo. Las distancias, velocidades y altitudes siguen un ajuste propio, métrico o imperial, sin necesidad de cambiar el idioma del teléfono.\n\nUBICACIÓN EN SEGUNDO PLANO\nEl uso continuado del GPS en segundo plano puede reducir drásticamente la duración de la batería. WhereIWas está diseñado para limitar ese coste — el GPS solo funciona mientras hay movimiento — y la pantalla de estado muestra en todo momento qué se está ejecutando y qué perfil de GPS está en vigor.\n\nRequiere iOS 17 o posterior. El permiso de ubicación «Siempre» es imprescindible para registrar en segundo plano. El permiso de movimiento es muy recomendable: es lo que permite ahorrar batería.",
           "keywords": "cronología,rastreador,recorrido,trayecto,mapa,localización,seguimiento,vacaciones,senderismo,gpx",
+          "marketingUrl": "https://glandais.github.io/WhereIWas/",
+          "promotionalText": "El GPS solo funciona cuando usted se mueve: un turno entero cabe en la batería. Resiste cierres y reinicios. Exporta a GPX y JSON. Todo se queda en el iPhone.",
+          "supportUrl": "https://glandais.github.io/WhereIWas/support/"
+        },
+        "es-MX": {
+          "description": "WhereIWas es su diario de viaje y su historial de ubicaciones: día tras día registra con discreción por dónde ha pasado y se lo muestra en un mapa — un viaje en carretera, unas vacaciones, una excursión o una jornada de trabajo — sin agotar la batería.\n\nQUÉ LO HACE DISTINTO\nLa mayoría de los rastreadores agotan la batería manteniendo el GPS encendido de forma permanente, o pierden en silencio horas del día cuando iOS los suspende. WhereIWas no hace ni lo uno ni lo otro. Se apoya en el coprocesador de movimiento, cuyo costo energético es casi nulo, y solo enciende el GPS cuando hay movimiento real; después ajusta la precisión a la velocidad: filtro de distancia de 10 m a pie, de 50 m en auto. Espera dos minutos de inmovilidad antes de volver a apagar el GPS, para que un semáforo en rojo no corte nunca la traza.\n\nHECHO PARA AGUANTAR\n• Sigue registrando con la pantalla apagada y la app en segundo plano\n• Se reinicia y reanuda por sí solo después de que iOS lo cierre por falta de memoria\n• Sobrevive a un reinicio del dispositivo, una vez desbloqueado\n• Funciona totalmente sin conexión: sin cobertura, sin servidor y sin cuenta\n\nCADA POSICIÓN GPS, DOCUMENTADA AL DETALLE\nCada punto guardado conserva sus coordenadas, la altitud, la precisión horizontal y vertical, la velocidad, el rumbo, la marca de tiempo, la actividad detectada (a pie, corriendo, en bici, en auto, inmóvil), el nivel de batería y el perfil GPS vigente. Las posiciones GPS imprecisas, caducadas, duplicadas o fuera de orden se descartan antes de escribirlas.\n\nREGISTRO DE AUDITORÍA\nAl activar el registro de auditoría opcional, la app anota por qué hizo lo que hizo: cada posición GPS recibida, cada comprobación de precisión realizada con el valor medido y el umbral aplicado, cada cambio de estado y cada apagado del GPS. Cuando surja la duda de por qué no hay nada entre las 14:02 y las 14:20, la respuesta está ahí. Puede exportarlo en JSON o en texto plano.\n\nEXPORTAR LO REGISTRADO\nGPX 1.1 para cualquier herramienta cartográfica, o JSON con todos los metadatos. Envíelo a donde haga falta desde la hoja de compartir estándar. Puede exportar el día de hoy, los últimos siete días, un intervalo de fechas a su elección, una sesión concreta o todo.\n\nLOS DATOS SIGUEN SIENDO SUYOS\nTodo se guarda en el dispositivo, en una base de datos local. Sin cuenta, sin servidor, sin analíticas, sin publicidad y sin seguimiento. No se envía nada a ninguna parte. Usted decide qué sale del teléfono, y cuándo, exportándolo por su cuenta.\n\nEN SU IDIOMA, EN SUS UNIDADES\nTraducida al inglés, francés, alemán, español, italiano, japonés, neerlandés, polaco y checo. Las distancias, velocidades y altitudes siguen un ajuste propio, métrico o imperial, sin necesidad de cambiar el idioma del teléfono.\n\nUBICACIÓN EN SEGUNDO PLANO\nEl uso continuado del GPS en segundo plano puede reducir drásticamente la duración de la batería. WhereIWas está diseñado para limitar ese costo — el GPS solo funciona mientras hay movimiento — y la pantalla de estado muestra en todo momento qué se está ejecutando y qué perfil de GPS está en vigor.\n\nRequiere iOS 17 o posterior. El permiso de ubicación «Siempre» es imprescindible para registrar en segundo plano. El permiso de movimiento es muy recomendable: es lo que permite ahorrar batería.",
+          "keywords": "cronología,rastreador,recorrido,trayecto,mapa,localización,rastreo,bitácora,vacaciones,excursión,gpx",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "El GPS solo funciona cuando usted se mueve: un turno entero cabe en la batería. Resiste cierres y reinicios. Exporta a GPX y JSON. Todo se queda en el iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
@@ -5151,13 +5287,6 @@
           "keywords": "oś,czasu,rejestrator,śledzenie,gpx,tracker,offline,eksport,wycieczka,wakacje,mapa,trasa,ślad,gps",
           "marketingUrl": "https://glandais.github.io/WhereIWas/",
           "promotionalText": "GPS działa tylko podczas ruchu, więc bateria wystarcza na całą zmianę. Przetrwa zamknięcie i restart. Eksport GPX i JSON. Wszystko zostaje na iPhonie.",
-          "supportUrl": "https://glandais.github.io/WhereIWas/support/"
-        },
-        "es-MX": {
-          "description": "WhereIWas es su diario de viaje y su historial de ubicaciones: día tras día registra con discreción por dónde ha pasado y se lo muestra en un mapa — un viaje en carretera, unas vacaciones, una excursión o una jornada de trabajo — sin agotar la batería.\n\nQUÉ LO HACE DISTINTO\nLa mayoría de los rastreadores agotan la batería manteniendo el GPS encendido de forma permanente, o pierden en silencio horas del día cuando iOS los suspende. WhereIWas no hace ni lo uno ni lo otro. Se apoya en el coprocesador de movimiento, cuyo costo energético es casi nulo, y solo enciende el GPS cuando hay movimiento real; después ajusta la precisión a la velocidad: filtro de distancia de 10 m a pie, de 50 m en auto. Espera dos minutos de inmovilidad antes de volver a apagar el GPS, para que un semáforo en rojo no corte nunca la traza.\n\nHECHO PARA AGUANTAR\n• Sigue registrando con la pantalla apagada y la app en segundo plano\n• Se reinicia y reanuda por sí solo después de que iOS lo cierre por falta de memoria\n• Sobrevive a un reinicio del dispositivo, una vez desbloqueado\n• Funciona totalmente sin conexión: sin cobertura, sin servidor y sin cuenta\n\nCADA POSICIÓN GPS, DOCUMENTADA AL DETALLE\nCada punto guardado conserva sus coordenadas, la altitud, la precisión horizontal y vertical, la velocidad, el rumbo, la marca de tiempo, la actividad detectada (a pie, corriendo, en bici, en auto, inmóvil), el nivel de batería y el perfil GPS vigente. Las posiciones GPS imprecisas, caducadas, duplicadas o fuera de orden se descartan antes de escribirlas.\n\nREGISTRO DE AUDITORÍA\nAl activar el registro de auditoría opcional, la app anota por qué hizo lo que hizo: cada posición GPS recibida, cada comprobación de precisión realizada con el valor medido y el umbral aplicado, cada cambio de estado y cada apagado del GPS. Cuando surja la duda de por qué no hay nada entre las 14:02 y las 14:20, la respuesta está ahí. Puede exportarlo en JSON o en texto plano.\n\nEXPORTAR LO REGISTRADO\nGPX 1.1 para cualquier herramienta cartográfica, o JSON con todos los metadatos. Envíelo a donde haga falta desde la hoja de compartir estándar. Puede exportar el día de hoy, los últimos siete días, un intervalo de fechas a su elección, una sesión concreta o todo.\n\nLOS DATOS SIGUEN SIENDO SUYOS\nTodo se guarda en el dispositivo, en una base de datos local. Sin cuenta, sin servidor, sin analíticas, sin publicidad y sin seguimiento. No se envía nada a ninguna parte. Usted decide qué sale del teléfono, y cuándo, exportándolo por su cuenta.\n\nEN SU IDIOMA, EN SUS UNIDADES\nTraducida al inglés, francés, alemán, español, italiano, japonés, neerlandés, polaco y checo. Las distancias, velocidades y altitudes siguen un ajuste propio, métrico o imperial, sin necesidad de cambiar el idioma del teléfono.\n\nUBICACIÓN EN SEGUNDO PLANO\nEl uso continuado del GPS en segundo plano puede reducir drásticamente la duración de la batería. WhereIWas está diseñado para limitar ese costo — el GPS solo funciona mientras hay movimiento — y la pantalla de estado muestra en todo momento qué se está ejecutando y qué perfil de GPS está en vigor.\n\nRequiere iOS 17 o posterior. El permiso de ubicación «Siempre» es imprescindible para registrar en segundo plano. El permiso de movimiento es muy recomendable: es lo que permite ahorrar batería.",
-          "keywords": "cronología,rastreador,recorrido,trayecto,mapa,localización,rastreo,bitácora,vacaciones,excursión,gpx",
-          "marketingUrl": "https://glandais.github.io/WhereIWas/",
-          "promotionalText": "El GPS solo funciona cuando usted se mueve: un turno entero cabe en la batería. Resiste cierres y reinicios. Exporta a GPX y JSON. Todo se queda en el iPhone.",
           "supportUrl": "https://glandais.github.io/WhereIWas/support/"
         }
       }

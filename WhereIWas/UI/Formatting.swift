@@ -116,6 +116,15 @@ enum Formatting {
         date.formatted(.dateTime.hour().minute().second())
     }
 
+    /// "14:32", the same leading-zero shape as ``time(_:)`` without seconds.
+    ///
+    /// For the places where two times share one line — the map's span tile —
+    /// and the seconds are noise that costs six characters the tile does not
+    /// have.
+    static func clock(_ date: Date) -> String {
+        date.formatted(.dateTime.hour().minute())
+    }
+
     /// "Sep 2, 2026, 14:32".
     static func dateTime(_ date: Date) -> String {
         date.formatted(date: .abbreviated, time: .shortened)

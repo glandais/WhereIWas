@@ -38,6 +38,10 @@ struct RootView: View {
         .onChange(of: controller.settings.unitSystem, initial: true) { _, newValue in
             Formatting.unitSystem = newValue
         }
+        // The one accent, applied once: selected tabs, links, the controls the
+        // app does not draw itself. `AccentColor` in the asset catalog covers
+        // UIKit-backed views; this covers SwiftUI's own.
+        .tint(Theme.Palette.accent)
     }
 }
 

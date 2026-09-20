@@ -2,8 +2,14 @@ import Combine
 import SwiftUI
 import UIKit
 
-/// Main screen: tracking toggle, state, last fix, counters, battery,
-/// permission warnings and the recent transition log.
+/// Home screen: the recording switch and the tracking state on one inverted
+/// hero card, whatever needs the user's hand next, the last fix, and the
+/// recent state changes.
+///
+/// The counters the old screen carried (total stored, accepted/rejected,
+/// session count, oldest sample, fix source) are gone on purpose: they answered
+/// questions a daily reader never asks, and the ones that matter after an
+/// incident are in the export and the technical log.
 struct StatusView: View {
     @Environment(\.trackingController) private var controller
     @Environment(\.openURL) private var openURL
@@ -16,18 +22,17 @@ struct StatusView: View {
     private let clock = Timer.publish(every: 15, on: .main, in: .common).autoconnect()
 
     private var status: TrackingStatus { controller.status }
+    private var warnings: [StatusWarning] { status.warnings(now: now) }
 
     var body: some View {
         NavigationStack {
-            List {
-                trackingSection
-                if status.needsAttention { warningsSection }
-                stateSection
+            CardScreen(title: "status.title", trailing: Formatting.day(now)) {
+                heroCard
+                if !warnings.isEmpty { warningsSection }
                 lastFixSection
-                countersSection
                 transitionsSection
             }
-            .navigationTitle("status.title")
+            .navigationBarHidden(true)
             .refreshable { await reload() }
             .task(id: status.lastTransition) { await reload() }
             .task(id: status.acceptedCount) { await reloadTodayCount() }
@@ -38,158 +43,195 @@ struct StatusView: View {
         }
     }
 
-    // MARK: Sections
+    // MARK: Hero
 
-    private var trackingSection: some View {
-        Section {
-            Toggle(isOn: Binding(get: { status.isEnabled },
-                                 set: { controller.setTrackingEnabled($0) })) {
-                VStack(alignment: .leading, spacing: 4) {
+    /// The one card that answers "is it recording, and what is it doing?".
+    private var heroCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center) {
+                Text("status.tracking.toggle")
+                    .sectionLabelStyle()
+                    .foregroundStyle(Theme.Palette.heroInkMuted)
+                Spacer(minLength: Theme.Spacing.row)
+                Toggle(isOn: Binding(get: { status.isEnabled },
+                                     set: { controller.setTrackingEnabled($0) })) {
                     Text("status.tracking.toggle")
-                        .font(.title3.weight(.semibold))
-                    Text(status.isEnabled ? "status.tracking.on"
-                                          : "status.tracking.off")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
                 }
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .tint(Theme.Tone.positive.color)
+                .accessibilityHint("status.tracking.hint")
             }
-            .toggleStyle(.switch)
-            .tint(.green)
-            .accessibilityHint("status.tracking.hint")
-        }
-    }
 
-    private var warningsSection: some View {
-        Section("status.warnings.title") {
-            ForEach(status.warnings) { warning in
-                VStack(alignment: .leading, spacing: 6) {
-                    Label(warning.title, systemImage: warning.systemImage)
-                        .font(.headline)
-                        .foregroundStyle(warning.color)
-                    Text(warning.message)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    if let action = warning.action {
-                        Button(action == .openSettings ? "common.openSettings" : "status.warning.grantPermissions") {
-                            perform(action)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
-                    }
-                }
-                .padding(.vertical, 4)
-            }
-        }
-    }
-
-    private var stateSection: some View {
-        Section("common.state") {
             HStack(spacing: 14) {
                 Image(systemName: status.phase.systemImage)
-                    .font(.system(size: 34, weight: .semibold))
-                    .foregroundStyle(status.phase.color)
-                    .frame(minWidth: 44)
+                    .font(.system(size: 24, weight: .semibold))
+                    .foregroundStyle(status.isEnabled ? Theme.Palette.accent : Theme.Palette.heroInkMuted)
+                    .frame(width: 46, height: 46)
+                    .background((status.isEnabled ? Theme.Palette.accent : Theme.Palette.heroInkMuted)
+                                    .opacity(0.16), in: .circle)
                     .symbolEffect(.pulse, isActive: status.phase == .probing)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(status.phase.title)
-                        .font(.title2.weight(.bold))
+                        .font(Theme.Typography.heroState)
+                        .foregroundStyle(Theme.Palette.heroInk)
                     Text(status.phase.explanation)
                         .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Theme.Palette.heroInkMuted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
-            .padding(.vertical, 4)
             .accessibilityElement(children: .combine)
 
-            if let profile = status.appliedProfile {
-                LabeledContent("status.state.gpsProfile") {
-                    Text(verbatim: "\(profile.displayName) · \(profile.desiredAccuracy.title) · \(Formatting.distance(profile.distanceFilter))")
-                        .multilineTextAlignment(.trailing)
-                }
-            } else {
-                LabeledContent("status.state.gpsProfile") { Text("status.state.gpsOff") }
+            Rectangle()
+                .fill(Theme.Palette.heroInk.opacity(0.14))
+                .frame(height: 1)
+
+            HStack(alignment: .top, spacing: Theme.Spacing.row) {
+                StatTile(value: status.lastFix.map { Formatting.relative($0.timestamp, to: now) } ?? "—",
+                         label: "status.lastFix.title", onHero: true, monospaced: false)
+                StatTile(value: samplesToday.map(Formatting.count) ?? "—",
+                         label: "status.hero.todayPoints", onHero: true)
+                StatTile(value: Formatting.battery(status.batteryLevel),
+                         label: "common.battery", onHero: true)
             }
 
-            LabeledContent("status.state.activity") {
-                // A `Label` here stretches the row to fill the rest of the
-                // section (it loses its intrinsic height inside the value
-                // slot), which is what left half the Status screen blank.
-                HStack(spacing: 6) {
-                    Image(systemName: status.lastActivity.systemImage)
-                    Text(verbatim: "\(status.lastActivity.title) (\(status.lastActivityConfidence.title))")
-                }
-            }
+            profileLine
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.Palette.hero, in: .rect(cornerRadius: Theme.Radius.hero))
+    }
 
-            if status.isStale(now: now) {
-                Label("status.state.stale",
-                      systemImage: "clock.badge.exclamationmark")
-                    .font(.footnote)
-                    .foregroundStyle(.orange)
+    /// What CoreLocation is actually running, in one sentence. The activity
+    /// that picked it rides along: on its own row it read like a second state.
+    private var profileLine: some View {
+        HStack(spacing: 8) {
+            Image(systemName: status.appliedProfile == nil ? "location.slash" : status.lastActivity.systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Theme.Palette.heroInkMuted)
+            Text(verbatim: profileSummary)
+                .font(.caption)
+                .foregroundStyle(Theme.Palette.heroInkMuted)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 9)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.Palette.heroInk.opacity(0.07), in: .rect(cornerRadius: Theme.Radius.tile))
+        .accessibilityElement(children: .combine)
+    }
+
+    private var profileSummary: String {
+        guard let profile = status.appliedProfile else {
+            return String(localized: "status.state.gpsOff", defaultValue: "GPS off")
+        }
+        return String(localized: "status.hero.profile",
+                      defaultValue: "\(profile.displayName) · \(profile.desiredAccuracy.title) · every \(Formatting.distance(profile.distanceFilter))",
+                      comment: "Profile summary on the Status hero card: profile name, accuracy level, distance filter")
+    }
+
+    // MARK: Sections
+
+    private var warningsSection: some View {
+        VStack(alignment: .leading, spacing: Theme.Spacing.row) {
+            SectionHeader("status.warnings.title")
+            ForEach(warnings) { warning in
+                AlertCard(title: warning.title,
+                          message: warning.message,
+                          tone: warning.tone,
+                          systemImage: warning.systemImage,
+                          actionTitle: actionTitle(for: warning),
+                          action: warning.action.map { action in { perform(action) } })
             }
+        }
+    }
+
+    private func actionTitle(for warning: StatusWarning) -> LocalizedStringKey? {
+        switch warning.action {
+        case .openSettings: return "common.openSettings"
+        case .requestPermissions: return "status.warning.grantPermissions"
+        case nil: return nil
         }
     }
 
     private var lastFixSection: some View {
-        Section("status.lastFix.title") {
+        VStack(alignment: .leading, spacing: Theme.Spacing.row) {
+            SectionHeader(title: "status.lastFix.title") {
+                if let fix = status.lastFix {
+                    Text(verbatim: Formatting.time(fix.timestamp))
+                        .font(Theme.Typography.code)
+                        .foregroundStyle(Theme.Palette.inkMuted)
+                }
+            }
             if let fix = status.lastFix {
-                LabeledContent("status.lastFix.when") {
-                    VStack(alignment: .trailing) {
-                        Text(Formatting.relative(fix.timestamp, to: now))
-                        Text(Formatting.time(fix.timestamp))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                Card {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(verbatim: Formatting.coordinate(fix.latitude, fix.longitude))
+                            .font(Theme.Typography.rowValue)
+                            .foregroundStyle(Theme.Palette.ink)
+                            .textSelection(.enabled)
+                        // A two-column grid rather than four rows: these are
+                        // four short measurements, and stacked they pushed the
+                        // state changes off the first screen entirely.
+                        Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 10) {
+                            GridRow {
+                                fixCell("status.lastFix.accuracy", Formatting.accuracy(fix.horizontalAccuracy))
+                                fixCell("status.lastFix.speed", Formatting.speed(fix.validSpeed))
+                            }
+                            GridRow {
+                                fixCell("status.lastFix.altitude", Formatting.altitude(fix.altitude))
+                                fixCell("status.lastFix.course", Formatting.course(fix.course))
+                            }
+                        }
                     }
                 }
-                LabeledContent("status.lastFix.position", value: Formatting.coordinate(fix.latitude, fix.longitude))
-                LabeledContent("status.lastFix.accuracy", value: Formatting.accuracy(fix.horizontalAccuracy))
-                LabeledContent("status.lastFix.speed", value: Formatting.speed(fix.validSpeed))
-                LabeledContent("status.lastFix.course", value: Formatting.course(fix.course))
-                LabeledContent("status.lastFix.altitude") {
-                    Text(verbatim: "\(Formatting.altitude(fix.altitude)) \(Formatting.accuracy(fix.verticalAccuracy))")
-                }
-                if let source = status.lastFixSource {
-                    LabeledContent("status.lastFix.source", value: source.title)
-                }
             } else {
-                Text("status.lastFix.none")
-                    .foregroundStyle(.secondary)
+                Card {
+                    Text("status.lastFix.none")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.Palette.inkMuted)
+                }
             }
         }
     }
 
-    private var countersSection: some View {
-        Section("status.samples.title") {
-            LabeledContent("status.samples.today", value: samplesToday.map(Formatting.count) ?? "—")
-            LabeledContent("status.samples.totalStored", value: Formatting.count(status.stats.totalSamples))
-            LabeledContent("status.samples.acceptedRejected",
-                           value: "\(Formatting.count(status.acceptedCount)) / \(Formatting.count(status.rejectedCount))")
-            LabeledContent("common.sessions", value: Formatting.count(status.stats.sessionCount))
-            if let oldest = status.stats.oldestSample {
-                LabeledContent("status.samples.oldest", value: Formatting.dateTime(oldest))
-            }
-            LabeledContent("common.battery") {
-                Label(Formatting.battery(status.batteryLevel),
-                      systemImage: batterySymbol(level: status.batteryLevel, state: status.batteryState))
-                    .foregroundStyle((status.batteryLevel ?? 1) < 0.2 ? .red : .primary)
-            }
+    private func fixCell(_ title: LocalizedStringKey, _ value: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(title)
+                .font(.footnote)
+                .foregroundStyle(Theme.Palette.inkMuted)
+            Spacer(minLength: 8)
+            Text(verbatim: value)
+                .font(.footnote.weight(.semibold).monospacedDigit())
+                .foregroundStyle(Theme.Palette.ink)
         }
+        .gridCellColumns(1)
+        .accessibilityElement(children: .combine)
     }
 
     private var transitionsSection: some View {
-        Section {
-            if transitions.isEmpty {
-                Text("status.transitions.empty")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(transitions) { record in
-                    TransitionRow(record: record, now: now)
+        VStack(alignment: .leading, spacing: Theme.Spacing.row) {
+            SectionHeader("status.transitions.title")
+            RowCard {
+                if transitions.isEmpty {
+                    Text("status.transitions.empty")
+                        .font(.subheadline)
+                        .foregroundStyle(Theme.Palette.inkMuted)
+                        .padding(Theme.Spacing.card)
+                } else {
+                    ForEach(Array(transitions.enumerated()), id: \.element.id) { index, record in
+                        if index > 0 { RowSeparator() }
+                        TransitionRow(record: record, now: now, isLatest: index == 0)
+                    }
                 }
             }
-        } header: {
-            Text("status.transitions.title")
-        } footer: {
             Text(verbatim: String(localized: "status.transitions.footer",
                                   defaultValue: "Moving → stationary requires \(Formatting.duration(controller.settings.stillnessTimeout)) of stillness; any motion switches GPS back on immediately."))
+                .font(.caption)
+                .foregroundStyle(Theme.Palette.inkMuted)
+                .padding(.horizontal, 2)
         }
     }
 
@@ -222,37 +264,30 @@ struct StatusView: View {
 private struct TransitionRow: View {
     let record: StateTransitionRecord
     let now: Date
+    let isLatest: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
-            HStack(spacing: 6) {
-                Text(record.from.title)
-                    .foregroundStyle(record.from.color)
-                Image(systemName: "arrow.right")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(record.to.title)
-                    .foregroundStyle(record.to.color)
-                    .fontWeight(.semibold)
-                Spacer()
-                Text(Formatting.relative(record.timestamp, to: now))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            HStack {
-                Text(Formatting.transitionReason(record.reason))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+        HStack(alignment: .top, spacing: Theme.Spacing.row) {
+            Circle()
+                .fill(isLatest ? Theme.Palette.accent : Theme.Palette.inkMuted.opacity(0.5))
+                .frame(width: 8, height: 8)
+                .padding(.top, 5)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(verbatim: "\(record.from.title) → \(record.to.title)")
+                    .font(Theme.Typography.rowTitle)
+                    .foregroundStyle(Theme.Palette.ink)
+                Text(verbatim: Formatting.transitionReason(record.reason))
+                    .font(Theme.Typography.rowSubtitle)
+                    .foregroundStyle(Theme.Palette.inkMuted)
                     .lineLimit(2)
-                Spacer()
-                if let battery = record.batteryLevel {
-                    Text(Formatting.battery(battery))
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
-                }
             }
+            Spacer(minLength: Theme.Spacing.row)
+            Text(verbatim: Formatting.time(record.timestamp))
+                .font(Theme.Typography.code)
+                .foregroundStyle(Theme.Palette.inkMuted)
         }
-        .padding(.vertical, 2)
+        .padding(.horizontal, Theme.Spacing.card)
+        .padding(.vertical, 11)
         .accessibilityElement(children: .combine)
     }
 }

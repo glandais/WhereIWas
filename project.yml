@@ -54,6 +54,10 @@ targets:
         # XcodeGen defaults iOS targets to "1,2"; iPhone-only has to be set here.
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Tints every system control (switches, pickers, links) with the one
+        # accent of the theme, so `Theme.Palette.accent` and the controls the
+        # app does not draw itself cannot drift apart.
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         SWIFT_EMIT_LOC_STRINGS: YES
         ENABLE_PREVIEWS: YES
     info:
