@@ -250,6 +250,26 @@ out = sys.argv[1]
 # check stays as a guard against that ever silently happening again.
 TARGET_RATIO = 1320 / 2868  # iPhone 17 Pro Max, the pinned device, at native resolution
 TOLERANCE = 0.02
+
+# Appearance, measured rather than assumed.
+#
+# The script pins the simulator to light before the first launch, which is
+# what protects a run; this is what proves the pin took. The app follows the
+# system appearance, so a run that somehow started dark would produce a full
+# set of dark cards that every later check passes — `assemble.sh` weighs
+# dimensions, alpha and file size, `asc screenshots validate` weighs
+# dimensions, and a dark card is a perfectly valid card. It has to be caught
+# here or not at all.
+#
+# The band is the app's own chrome just under the status bar: the screen
+# title on Status, Export and Settings, the day bar on Map, the navigation
+# bar on the log. It is page ground on all five, never content, which is what
+# keeps a screen with a lot of dark content from reading as a dark screen.
+# Measured over the nine locales: 229.6..247.1 in light, 33.0..44.4 in dark.
+# The threshold sits in the middle of that gap, nowhere near either end.
+APPEARANCE_BAND = (100, 210, 1220, 330)   # left, upper, right, lower
+APPEARANCE_FLOOR = 150                    # mean luma of a light-appearance band
+too_dark = []
 for locale in sys.argv[2:]:
     for src in sorted(pathlib.Path(out, locale).glob("*.png")):
         im = Image.open(src)
@@ -270,8 +290,23 @@ for locale in sys.argv[2:]:
             im = bg
         else:
             im = im.convert("RGB")
+        # Mean luma off the histogram rather than the pixels: same number,
+        # no per-pixel Python, and none of Pillow's churn around `getdata`.
+        histogram = im.convert("L").crop(APPEARANCE_BAND).histogram()
+        count = sum(histogram)
+        luma = sum(i * n for i, n in enumerate(histogram)) / count
+        if luma < APPEARANCE_FLOOR:
+            too_dark.append((src, luma))
+
         im.save(src, "PNG", optimize=True)
         print(f"   · {src}")
+
+if too_dark:
+    for src, luma in too_dark:
+        print(f"{src}: top band reads {luma:.0f}, under {APPEARANCE_FLOOR} — "
+              f"captured in dark appearance", file=sys.stderr)
+    sys.exit("the simulator was not in light appearance: re-run, and check "
+             "nothing else moved it mid-run (`xcrun simctl ui <udid> appearance light`)")
 PY
 
 echo "▸ done: $OUT_ROOT/<locale>/NN-*.png, ${#CARDS[@]} cards × ${#locales[@]} locales."
