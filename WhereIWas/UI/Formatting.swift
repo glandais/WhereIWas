@@ -135,15 +135,20 @@ enum Formatting {
         date.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day())
     }
 
-    /// Duration in seconds: "2 min", "1 h 30 min", "3 d 2 h".
+    /// Duration in seconds: "2 min", "1 hr 30 min", "3 days 2 hr".
     ///
-    /// `.days` is allowed because a session spans a deployment, not an outing:
-    /// without it a three-day session reads "74 h 12 min". `maximumUnitCount: 2`
-    /// keeps the settings timeouts (45 s, 2 min) rendering exactly as before —
-    /// empty leading units are hidden by default.
+    /// `.days` is allowed because a session spans a trip, not an outing:
+    /// without it a three-day session reads "74 hr 12 min".
+    /// `maximumUnitCount: 2` keeps the settings timeouts to two terms — empty
+    /// leading units are hidden by default.
+    ///
+    /// `.abbreviated` rather than `.narrow`: narrow glues the number to the
+    /// unit ("2min", "45s"), which is not how any of the nine languages spell
+    /// a duration, and it read as a typo everywhere the value appears next to
+    /// a label. Abbreviated keeps the unit short and puts the space back.
     static func duration(_ seconds: TimeInterval) -> String {
         Duration.seconds(max(0, seconds))
-            .formatted(.units(allowed: [.days, .hours, .minutes, .seconds], width: .narrow, maximumUnitCount: 2))
+            .formatted(.units(allowed: [.days, .hours, .minutes, .seconds], width: .abbreviated, maximumUnitCount: 2))
     }
 
     /// Battery level 0...1 → "82 %".
