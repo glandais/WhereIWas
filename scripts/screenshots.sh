@@ -145,6 +145,15 @@ xcrun simctl install "$UDID" "$APP"
 SYSTEM_LANGUAGES_BEFORE="$(xcrun simctl spawn "$UDID" defaults read -g AppleLanguages 2>/dev/null | tr -d ' \n"()' || true)"
 SYSTEM_LOCALE_BEFORE="$(xcrun simctl spawn "$UDID" defaults read -g AppleLocale 2>/dev/null || true)"
 
+# The app follows the system appearance, so the simulator deciding it is what
+# decides whether the store gets 45 light cards or 45 dark ones — and nothing
+# downstream would notice: `assemble.sh` checks dimensions, alpha and file
+# size, `asc screenshots validate` checks dimensions, and a dark card passes
+# every one of them. Pinning it here is what makes a run start from a known
+# state whatever the simulator was left in; restoring it afterwards is only
+# courtesy to whatever else shares this device.
+SYSTEM_APPEARANCE_BEFORE="$(xcrun simctl ui "$UDID" appearance 2>/dev/null | tr -d ' \n' || true)"
+
 # Puts the simulator's *system* into `$1` (a language tag) / `$2` (a locale
 # identifier) and restarts SpringBoard so the change is picked up.
 set_system_locale() {
@@ -156,12 +165,19 @@ set_system_locale() {
 
 restore_simulator() {
   xcrun simctl status_bar "$UDID" clear >/dev/null 2>&1 || true
+  case "$SYSTEM_APPEARANCE_BEFORE" in
+    light|dark) xcrun simctl ui "$UDID" appearance "$SYSTEM_APPEARANCE_BEFORE" >/dev/null 2>&1 || true ;;
+  esac
   if [ -n "$SYSTEM_LANGUAGES_BEFORE" ] && [ -n "$SYSTEM_LOCALE_BEFORE" ]; then
     set_system_locale "$SYSTEM_LANGUAGES_BEFORE" "$SYSTEM_LOCALE_BEFORE"
   fi
 }
 
 trap restore_simulator EXIT
+
+# Before the first launch, not per locale: the setting survives the SpringBoard
+# restarts `set_system_locale` does.
+xcrun simctl ui "$UDID" appearance light >/dev/null
 
 for locale in "${locales[@]}"; do
   lang="${locale%%-*}"

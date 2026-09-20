@@ -10,23 +10,32 @@
   across three days, each with its sample count, distance and duration, the first badged Open.
   That list is what actually sells the screen; the format picker above it is a settings row.
 
-  Crop window in source pixels: x 45..1275, y 772..2590  (capture is 1320 x 2868).
+  Crop window in source pixels: x 45..1275, y 1091..2618  (capture is 1320 x 2868).
   The window is measured from the BOTTOM of the capture, not the top: `ExportView` scrolls the
   list into view in screenshot mode, so the content is bottom-anchored and everything below the
-  fold sits at the same pixel row in all nine locales. Measured across the nine captures, the
-  session card ends at y 2574 everywhere except en-US (2558) and its six rows have a 197px pitch
-  in all of them; what moves is only what is above — the format description is three lines in
-  ja/pl/cs against two elsewhere, and the "files are written to…" footer takes a third line in
-  German and Polish, which pushes the prepared-file card up by up to 60px. So the bottom edge
-  (2590) is fixed 16px under the card in eight locales, 32px in en-US, and always 28px clear of
-  the tab bar; the top edge (772) is deliberately loose — it lands in the whitespace under the
-  share-row divider in en/de/es/fr/it/nl and under the "Prepare GPX file" row in ja/pl/cs, so no
-  line of text is sliced anywhere. A window measured from the top would have to absorb that 60px
-  of drift twice over.
-    img width      = 1320 / 1230 * 84vw =  90.1463vw
-    img margin-left=  -45 / 1230 * 84vw =  -3.0732vw
-    img margin-top =  -772 / 1230 * 84vw = -52.7220vw
-    card height    = 1818 / 1230 * 84vw = 124.1561vw  (1542px = 57% of canvas)
+  fold sits at the same pixel row in all nine locales.
+
+  Both edges are now measured rather than guessed, because the redesign moved everything: the
+  old window (y 772..2590) was cut for a screen built out of `Form` sections, and against the
+  card layout it sliced the two format tiles through the middle of a sentence — a card whose
+  first line was half a word.
+
+  Bottom edge 2618: the session rows are separated by hairlines at y 2075, 2256, 2437 and 2618,
+  the same four rows in all nine locales (the list is bottom-anchored and its pitch is 181px).
+  Cutting on the hairline ends the card on a rule instead of through a row, and says the list
+  continues. Top edge 1091: the whitespace above the prepared-file card. That band is
+  1091..1138 in seven locales and 1043..1090 in German and Italian, whose format description is
+  one line shorter — 1091 is the only row that slices nothing anywhere, flush with the card's
+  own top edge in those two. Re-measure both whenever the export screen moves; the numbers come
+  out of the flat captures, not out of the design.
+  The window is 1527px tall against the old 1818, so at the old 84vw the card came out a
+  ninth of the canvas shorter and opened an empty band across the middle. The card is 88vw
+  instead, and sits higher (bottom 14%), which keeps it lapping into the green block the way
+  the block was drawn for.
+    img width      = 1320 / 1230 * 88vw =  94.4390vw
+    img margin-left=  -45 / 1230 * 88vw =  -3.2195vw
+    img margin-top = -1091 / 1230 * 88vw = -78.0648vw
+    card height    = 1527 / 1230 * 88vw = 109.2683vw  (1357px = 50% of canvas)
   Canvas: 1242 x 2688 (iPhone6_5). 1vw = 12.42px, 1vh = 26.88px.
 -->
 <style>
@@ -68,15 +77,15 @@
   }
 
   .card {
-    position: absolute; left: 50%; bottom: 6.5%; z-index: 2;
-    width: 84vw; height: 124.1561vw; overflow: hidden;
+    position: absolute; left: 50%; bottom: 14%; z-index: 2;
+    width: 88vw; height: 109.2683vw; overflow: hidden;
     border-radius: 2.4vw;
     transform: translateX(-50%) rotate(-3deg);
     box-shadow: 0 46px 90px rgba(0,0,0,0.62), 0 0 0 1px rgba(255,255,255,0.10);
   }
   .card img {
-    display: block; width: 90.1463vw; height: auto;
-    margin-left: -3.0732vw; margin-top: -52.7220vw;
+    display: block; width: 94.4390vw; height: auto;
+    margin-left: -3.2195vw; margin-top: -78.0648vw;
   }
 </style>
 </head>

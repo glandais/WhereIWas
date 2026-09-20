@@ -7,12 +7,17 @@
   The audit rows are 51px type in a 1320px capture. Inside a device frame they render at ~0.6x
   and stop being readable, so this slide drops the frame and shows the rows themselves at ~1:1,
   full-bleed off the bottom edge, with the copy on a hard diagonal colour block above.
-  Crop window in source pixels: x 40..1270, y 745..2290  (capture is 1320 x 2868).
-  Both edges of the window sit in row whitespace, so no row is sliced in half: 745 is above the
-  "8 shown / stored" count, 2290 is just past the divider under the motion.event row.
+  Crop window in source pixels: x 40..1270, y 715..2260  (capture is 1320 x 2868).
+  Both edges sit on a row divider, so no row is sliced: the redesigned log rules its rows at
+  y 715, 910, then every 225px to 2485 — the same rows in all nine locales, because the list
+  is a fixed-height feed and nothing above it moves. The old window (745..2290) was measured
+  against the previous layout and cut 30px into the first row, which put half a line of
+  monospaced event code along the top edge. Height is unchanged at 1545px, so the band still
+  fills the same share of the canvas; only the offset moved. Re-measure from the flat
+  captures whenever the log's row metrics change.
     img width      = 1320 / 1230 * 100vw = 107.3171vw
     img margin-left= -40  / 1230 * 100vw =  -3.2520vw
-    img margin-top = -745 / 1230 * 100vw = -60.5691vw
+    img margin-top = -715 / 1230 * 100vw = -58.1301vw
     band height    = 1545 / 1230 * 100vw = 125.6098vw  (1560px = 58% of canvas)
   Canvas: 1242 x 2688 (iPhone6_5). 1vw = 12.42px, 1vh = 26.88px.
 -->
@@ -68,7 +73,7 @@
   }
   .band img {
     display: block; width: 107.3171vw; height: auto;
-    margin-left: -3.2520vw; margin-top: -60.5691vw;
+    margin-left: -3.2520vw; margin-top: -58.1301vw;
   }
 </style>
 </head>
