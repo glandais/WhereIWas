@@ -182,6 +182,11 @@ enum Formatting {
         }
         let head = String(raw[raw.startIndex..<bracket.lowerBound])
         let detail = String(raw[bracket.upperBound..<raw.index(before: raw.endIndex)])
+        // `recordTransition` always composes "<input> [<reason>]", and when
+        // nothing explained the input beyond itself the coordinator passes
+        // `describe(input)` as the reason too — so most real rows arrive as
+        // "stillness timer [stillness timer]". Saying it twice is noise.
+        guard head != detail else { return reasonAtom(head) }
         return "\(reasonAtom(head)) [\(reasonAtom(detail))]"
     }
 

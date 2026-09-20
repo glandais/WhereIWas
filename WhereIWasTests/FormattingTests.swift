@@ -45,6 +45,32 @@ struct TransitionReasonTests {
         #expect(Formatting.transitionReason("something new") == "something new")
         #expect(Formatting.transitionReason("something [new]") == "something [new]")
     }
+
+    /// `recordTransition` composes "<input> [<reason>]" and passes
+    /// `describe(input)` as the reason whenever nothing else explained it, so
+    /// most real rows have the same token on both sides. Showing it twice is
+    /// noise the screen does not need.
+    @Test func aReasonThatOnlyRepeatsItsInputIsSaidOnce() {
+        let once = Formatting.transitionReason("stillness timer")
+        #expect(Formatting.transitionReason("stillness timer [stillness timer]") == once)
+        // A reason that adds something still shows both halves.
+        #expect(Formatting.transitionReason("enable [user]").contains(" ["))
+    }
+
+    /// The seeded fixtures have to speak the coordinator's vocabulary, or the
+    /// previews — and the App Store screenshots, which are captured from the
+    /// demo controller — show untranslated machine text in all nine
+    /// languages. They did exactly that until this test existed.
+    @MainActor
+    @Test func seededTransitionsAreTranslated() async throws {
+        let controller = PreviewTrackingController()
+        let records = try await controller.recentTransitions(limit: 20)
+        #expect(!records.isEmpty)
+        for record in records {
+            #expect(Formatting.transitionReason(record.reason) != record.reason,
+                    "untranslated seeded reason: \(record.reason)")
+        }
+    }
 }
 
 /// The audit trail persists a *code* plus its parameters, never English

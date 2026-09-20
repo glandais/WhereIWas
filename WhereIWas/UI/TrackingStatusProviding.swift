@@ -145,10 +145,10 @@ final class PreviewTrackingController: TrackingControlling {
                                    endedAt: now.addingTimeInterval(-80_000), sampleCount: 812, distanceMeters: 12_300)
         ]
         let seededTransitions = [
-            StateTransitionRecord(timestamp: now.addingTimeInterval(-60), from: .probing, to: .moving, reason: "motionActivity(walking, high)", batteryLevel: 0.82),
-            StateTransitionRecord(timestamp: now.addingTimeInterval(-400), from: .stationary, to: .probing, reason: "significantChange", batteryLevel: 0.83),
-            StateTransitionRecord(timestamp: now.addingTimeInterval(-1_900), from: .moving, to: .stationary, reason: "stillnessTimerFired", batteryLevel: 0.85),
-            StateTransitionRecord(timestamp: now.addingTimeInterval(-3_600), from: .disabled, to: .probing, reason: "enable", batteryLevel: 0.90)
+            StateTransitionRecord(timestamp: now.addingTimeInterval(-60), from: .probing, to: .moving, reason: "activity walking/high [activity walking/high]", batteryLevel: 0.82),
+            StateTransitionRecord(timestamp: now.addingTimeInterval(-400), from: .stationary, to: .probing, reason: "significant change [significant change]", batteryLevel: 0.83),
+            StateTransitionRecord(timestamp: now.addingTimeInterval(-1_900), from: .moving, to: .stationary, reason: "stillness timer [stillness timer]", batteryLevel: 0.85),
+            StateTransitionRecord(timestamp: now.addingTimeInterval(-3_600), from: .disabled, to: .probing, reason: "enable [user]", batteryLevel: 0.90)
         ]
         transitions = seededTransitions
         status = TrackingStatus(

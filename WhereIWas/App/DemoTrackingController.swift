@@ -372,30 +372,30 @@ final class DemoTrackingController: TrackingControlling {
         if scenario == .stationary, let parked = today.samples.last?.fix.timestamp {
             records.append(StateTransitionRecord(timestamp: parked.addingTimeInterval(90),
                                                  from: .moving, to: .stationary,
-                                                 reason: "stillnessTimerFired", batteryLevel: 0.86))
+                                                 reason: "stillness timer [stillness timer]", batteryLevel: 0.86))
         }
         if let departure = today.samples.first?.fix.timestamp {
             records.append(StateTransitionRecord(timestamp: departure.addingTimeInterval(-8),
                                                  from: .probing, to: .moving,
-                                                 reason: "motionActivity(automotive, high)",
+                                                 reason: "activity automotive/high [activity automotive/high]",
                                                  batteryLevel: 0.88))
             records.append(StateTransitionRecord(timestamp: departure.addingTimeInterval(-70),
                                                  from: .stationary, to: .probing,
-                                                 reason: "significantChange", batteryLevel: 0.88))
+                                                 reason: "significant change [significant change]", batteryLevel: 0.88))
         }
         if let last = yesterday.samples.last?.fix.timestamp {
             records.append(StateTransitionRecord(timestamp: last.addingTimeInterval(120),
                                                  from: .moving, to: .stationary,
-                                                 reason: "stillnessTimerFired", batteryLevel: 0.68))
+                                                 reason: "stillness timer [stillness timer]", batteryLevel: 0.68))
         }
         if let first = yesterday.samples.first?.fix.timestamp {
             records.append(StateTransitionRecord(timestamp: first.addingTimeInterval(-15),
                                                  from: .probing, to: .moving,
-                                                 reason: "motionActivity(walking, high)",
+                                                 reason: "activity walking/high [activity walking/high]",
                                                  batteryLevel: 0.97))
             records.append(StateTransitionRecord(timestamp: first.addingTimeInterval(-95),
                                                  from: .disabled, to: .probing,
-                                                 reason: "enable", batteryLevel: 0.97))
+                                                 reason: "enable [user]", batteryLevel: 0.97))
         }
         return records
     }
