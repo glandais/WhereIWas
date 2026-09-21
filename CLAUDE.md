@@ -242,6 +242,16 @@ age rating, categories, content rights, availability, free price schedule, revie
 guideline 2.5.4 background-location rationale. Mac Apple Silicon / Vision Pro distribution stay
 unchecked — CoreMotion, background location, significant changes and visits do nothing there.
 
+### Held back for 1.0.1
+
+The Ko-fi tip link (`https://ko-fi.com/gabylandais`) is live on the site but **not in the app**:
+the Settings → About row (`settings.about.tip`) waits on branch `worktree-kofi-link`, kept out of
+1.0.0 because a donation link to the developer can be rejected under guideline 3.1.1 (Apple wants
+tips as in-app purchases; Apple Pay is for physical goods and approved nonprofits). **Bring it up
+at the next release request.** Before shipping it: re-read 3.1.1 / 3.1.3, check whether the
+Settings store card shows the About section (recapture if so), and mention the link in
+`metadata/review-notes.md`. If Apple refuses, drop the row and the key, or move to a StoreKit tip.
+
 ### Gotchas worth remembering
 
 - **`privacy.publish_state.unverified` is reported on every run** — noise, the public API can't
