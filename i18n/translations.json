@@ -3451,6 +3451,19 @@
             "pl": "Przywróć domyślne"
           }
         },
+        "settings.about.tip": {
+          "translations": {
+            "cs": "Podpořit vývojáře",
+            "de": "Entwickler unterstützen",
+            "en": "Support the developer",
+            "es": "Apoyar al desarrollador",
+            "fr": "Soutenir le développeur",
+            "it": "Sostieni lo sviluppatore",
+            "ja": "開発者を支援",
+            "nl": "Steun de ontwikkelaar",
+            "pl": "Wesprzyj twórcę"
+          }
+        },
         "settings.about.title": {
           "translations": {
             "cs": "O aplikaci",
