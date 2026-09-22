@@ -249,16 +249,29 @@ age rating, categories, content rights, availability, free price schedule, revie
 guideline 2.5.4 background-location rationale. Mac Apple Silicon / Vision Pro distribution stay
 unchecked — CoreMotion, background location, significant changes and visits do nothing there.
 
-### Held back for 1.0.1
+### Tips (1.0.1)
 
-The Ko-fi tip link (`https://ko-fi.com/gabylandais`) is live on the site but **not in the app**:
-the Settings → About row (`settings.about.tip`) was committed as `423d181` and reverted by
-`fa2657f` for the resubmission — `git show 423d181 | git apply` brings it back (it conflicts
-trivially with the Privacy Policy row next to it). Kept out of 1.0.0 because a donation link to the developer can be rejected under guideline 3.1.1 (Apple wants
-tips as in-app purchases; Apple Pay is for physical goods and approved nonprofits). **Bring it up
-at the next release request.** Before shipping it: re-read 3.1.1 / 3.1.3, check whether the
-Settings store card shows the About section (recapture if so), and mention the link in
-`metadata/review-notes.md`. If Apple refuses, drop the row and the key, or move to a StoreKit tip.
+Three **consumable** in-app purchases that unlock nothing, from Settings → About → "Support the
+developer" (`settings.about.tip`, `SettingsRoute.tips` → `UI/Settings/TipJarView.swift`). A tip
+to the developer inside the app must go through in-app purchase (guideline 3.1.1), which is why
+the earlier Ko-fi row (`423d181`, reverted by `fa2657f`) never shipped: **no external donation
+link in the app**; Ko-fi stays on the site and the README.
+
+- App Store Connect products: `io.github.glandais.whereiwas.tip.small` (€0.99, `6814909118`),
+  `.medium` (€2.99, `6814909043`), `.large` (€4.99, `6814909301`). Base territory France,
+  174 territories (mainland China excluded, like the app), names in the ten store locales. The
+  first in-app purchase ships **with an app version**: attach them to the 1.0.1 submission.
+- `App/TipJar.swift` is copied from the reference shared by the developer's apps (the
+  `donations` repo, outside this one). `WhereIWasApp` starts it at launch so Ask to Buy or
+  interrupted transactions get finished. Names and prices come from the store (`displayName`,
+  `displayPrice`), never the catalog.
+- `Tips.storekit` (repo root) is the `storeKitConfiguration` of both schemes. It **only applies
+  when run from Xcode**: installed through `simctl` (`xcb.sh`), the app queries the real store
+  and the screen says "unavailable" until the products are approved.
+- In the simulator, AXe's default tap does not trigger a `NavigationLink` or the test payment
+  sheet's Buy button: pass `--tap-style physical`.
+- The Settings store card may now show the About section with the new row: check before
+  shipping 1.0.1, recapture if so.
 
 ### Gotchas worth remembering
 

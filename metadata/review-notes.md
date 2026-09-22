@@ -32,3 +32,6 @@ Please note that CoreMotion activity, background relaunch and visits do not work
 
 PRIVACY
 No account, no server, no analytics, no advertising, no third-party SDKs. The app contains no networking code. Location history is stored in a local database and leaves the device only when the user exports it themselves as GPX or JSON through the share sheet. The Map screen draws Apple Maps tiles via MapKit, a system framework, which is the only third party involved.
+
+IN-APP PURCHASES
+Settings → About → Support the developer offers three optional consumable tips (io.github.glandais.whereiwas.tip.small, .medium, .large). They unlock no content or feature; the app just says thank you. There is no external tip or donation link in the app.

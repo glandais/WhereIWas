@@ -5,7 +5,7 @@ import UIKit
 /// inside it can push any other — and so screenshot mode can open the
 /// technical log by seeding the path.
 enum SettingsRoute: Hashable {
-    case motion, quality, data, audit
+    case motion, quality, data, audit, tips
 }
 
 /// The settings hub: permissions, then one row per group with the current
@@ -58,6 +58,7 @@ struct SettingsView: View {
                 case .quality: QualitySettingsView()
                 case .data: DataSettingsView()
                 case .audit: AuditLogView()
+                case .tips: TipJarView()
                 }
             }
         }
@@ -177,6 +178,12 @@ struct SettingsView: View {
             SectionHeader("settings.about.title")
             RowCard {
                 ValueRow("settings.about.version", value: appVersion)
+                RowSeparator()
+                // The tip goes through in-app purchase and stays in the app
+                // (guideline 3.1.1): a pushed screen, not an outbound link.
+                NavRow(title: "settings.about.tip",
+                       systemImage: "cup.and.saucer",
+                       value: SettingsRoute.tips)
                 RowSeparator()
                 actionRow("settings.about.website", systemImage: "globe") {
                     openURL(AppLinks.website)
@@ -301,4 +308,5 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environment(\.trackingController, PreviewTrackingController())
+        .environment(TipJar())
 }

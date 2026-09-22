@@ -3516,6 +3516,19 @@
             "pl": "Pomoc"
           }
         },
+        "settings.about.tip": {
+          "translations": {
+            "cs": "Podpořit vývojáře",
+            "de": "Entwickler unterstützen",
+            "en": "Support the developer",
+            "es": "Apoyar al desarrollador",
+            "fr": "Soutenir le développeur",
+            "it": "Sostieni lo sviluppatore",
+            "ja": "開発者を支援",
+            "nl": "Steun de ontwikkelaar",
+            "pl": "Wesprzyj twórcę"
+          }
+        },
         "settings.about.title": {
           "translations": {
             "cs": "O aplikaci",
@@ -4838,6 +4851,97 @@
             "ja": "要確認",
             "nl": "Vereist aandacht",
             "pl": "Wymaga uwagi"
+          }
+        },
+        "tip.failed": {
+          "translations": {
+            "cs": "Nákup se nezdařil.",
+            "de": "Der Kauf wurde nicht abgeschlossen.",
+            "en": "The purchase didn't go through.",
+            "es": "La compra no se ha completado.",
+            "fr": "L'achat n'a pas abouti.",
+            "it": "L'acquisto non è andato a buon fine.",
+            "ja": "購入を完了できませんでした。",
+            "nl": "De aankoop is niet gelukt.",
+            "pl": "Zakup nie powiódł się."
+          }
+        },
+        "tip.header": {
+          "translations": {
+            "cs": "WhereIWas je zdarma a open source. Spropitné nic neodemyká: je to jen poděkování.",
+            "de": "WhereIWas ist kostenlos und Open Source. Ein Trinkgeld schaltet nichts frei: Es sagt einfach Danke.",
+            "en": "WhereIWas is free and open source. A tip unlocks nothing: it just says thank you.",
+            "es": "WhereIWas es gratuita y de código abierto. Una propina no desbloquea nada: solo dice gracias.",
+            "fr": "WhereIWas est gratuit et open source. Un pourboire ne débloque rien : il dit simplement merci.",
+            "it": "WhereIWas è gratuita e open source. Una mancia non sblocca nulla: dice solo grazie.",
+            "ja": "WhereIWas は無料のオープンソースアプリです。チップで何かが解除されることはありません。感謝の気持ちを伝えるだけです。",
+            "nl": "WhereIWas is gratis en open source. Een fooi ontgrendelt niets: het is gewoon een bedankje.",
+            "pl": "WhereIWas jest darmowa i open source. Napiwek niczego nie odblokowuje: to po prostu podziękowanie."
+          }
+        },
+        "tip.pending": {
+          "translations": {
+            "cs": "Čeká na schválení. Spropitné proběhne po schválení.",
+            "de": "Warten auf Genehmigung. Das Trinkgeld wird nach der Genehmigung ausgeführt.",
+            "en": "Waiting for approval. The tip will go through once it is approved.",
+            "es": "Pendiente de aprobación. La propina se completará cuando se apruebe.",
+            "fr": "En attente d'approbation. Le pourboire passera une fois approuvé.",
+            "it": "In attesa di approvazione. La mancia verrà completata dopo l'approvazione.",
+            "ja": "承認待ちです。承認されるとチップが送られます。",
+            "nl": "Wacht op goedkeuring. De fooi gaat door zodra die is goedgekeurd.",
+            "pl": "Oczekiwanie na zgodę. Napiwek zostanie przekazany po zatwierdzeniu."
+          }
+        },
+        "tip.retry": {
+          "translations": {
+            "cs": "Zkusit znovu",
+            "de": "Erneut versuchen",
+            "en": "Try Again",
+            "es": "Reintentar",
+            "fr": "Réessayer",
+            "it": "Riprova",
+            "ja": "再試行",
+            "nl": "Opnieuw proberen",
+            "pl": "Spróbuj ponownie"
+          }
+        },
+        "tip.thanks": {
+          "translations": {
+            "cs": "Děkuji!",
+            "de": "Danke!",
+            "en": "Thank you!",
+            "es": "¡Gracias!",
+            "fr": "Merci !",
+            "it": "Grazie!",
+            "ja": "ありがとうございます!",
+            "nl": "Bedankt!",
+            "pl": "Dziękuję!"
+          }
+        },
+        "tip.title": {
+          "translations": {
+            "cs": "Dát spropitné",
+            "de": "Trinkgeld geben",
+            "en": "Leave a Tip",
+            "es": "Dejar una propina",
+            "fr": "Laisser un pourboire",
+            "it": "Lascia una mancia",
+            "ja": "チップを贈る",
+            "nl": "Fooi geven",
+            "pl": "Zostaw napiwek"
+          }
+        },
+        "tip.unavailable": {
+          "translations": {
+            "cs": "Spropitné teď není k dispozici.",
+            "de": "Trinkgeld ist gerade nicht verfügbar.",
+            "en": "Tips are unavailable right now.",
+            "es": "Las propinas no están disponibles en este momento.",
+            "fr": "Les pourboires sont indisponibles pour le moment.",
+            "it": "Le mance non sono disponibili al momento.",
+            "ja": "現在チップはご利用いただけません。",
+            "nl": "Fooien zijn nu niet beschikbaar.",
+            "pl": "Napiwki są teraz niedostępne."
           }
         },
         "track.idle": {

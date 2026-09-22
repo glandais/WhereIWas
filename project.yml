@@ -114,6 +114,8 @@ schemes:
         WhereIWasTests: [test]
     run:
       config: Debug
+      # Tips: local purchases from Xcode, no sandbox account needed.
+      storeKitConfiguration: Tips.storekit
     test:
       config: Debug
       targets:
@@ -128,3 +130,5 @@ schemes:
         WhereIWas: [run, build]
     run:
       config: Screenshots
+      # Tips: local purchases from Xcode, no sandbox account needed.
+      storeKitConfiguration: Tips.storekit

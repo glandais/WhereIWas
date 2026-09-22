@@ -9,6 +9,16 @@ import SwiftUI
 struct WhereIWasApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
+    /// Listens to transactions from launch: a tip approved later (Ask to Buy)
+    /// or interrupted must be finished, whether the tip screen is open or not.
+    @State private var tipJar: TipJar
+
+    init() {
+        let tipJar = TipJar()
+        tipJar.start()
+        _tipJar = State(initialValue: tipJar)
+    }
+
     #if SCREENSHOTS
     /// Built once, so navigating between tabs does not reshuffle the dataset.
     @State private var screenshotController = DemoTrackingController()
@@ -20,13 +30,16 @@ struct WhereIWasApp: App {
             if ScreenshotMode.isActive {
                 RootView(initialTab: .init(ScreenshotMode.screen))
                     .environment(\.trackingController, screenshotController)
+                    .environment(tipJar)
             } else {
                 RootView()
                     .environment(\.trackingController, AppEnvironment.shared.trackingController)
+                    .environment(tipJar)
             }
             #else
             RootView()
                 .environment(\.trackingController, AppEnvironment.shared.trackingController)
+                .environment(tipJar)
             #endif
         }
     }

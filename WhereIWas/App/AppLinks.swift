@@ -3,8 +3,8 @@ import Foundation
 /// Every external URL the app can open, in one place. Each one leaves the app
 /// for Safari or the App Store: none is fetched by the app itself.
 ///
-/// No donation or tip link belongs here (guideline 3.1.1) — see `CLAUDE.md`,
-/// "Held back for 1.0.1".
+/// No donation or tip link belongs here (guideline 3.1.1): tips go through
+/// in-app purchase instead (`App/TipJar.swift`, `UI/Settings/TipJarView.swift`).
 enum AppLinks {
     static let website = URL(string: "https://glandais.github.io/WhereIWas/")!
     static let support = URL(string: "https://glandais.github.io/WhereIWas/support/")!
