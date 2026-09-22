@@ -15005,6 +15005,64 @@
         }
       }
     },
+    "settings.permissions.continue" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pokračovat"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weiter"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuer"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continua"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "続ける"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doorgaan"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dalej"
+          }
+        }
+      }
+    },
     "settings.permissions.footer" : {
       "localizations" : {
         "cs" : {
@@ -15059,64 +15117,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Śledzenie w tle wymaga dostępu do lokalizacji ustawionego na „Zawsze”, z włączoną opcją Dokładna lokalizacja. „Ruch i sprawność” pozwala aplikacji wyłączać GPS w czasie bezruchu."
-          }
-        }
-      }
-    },
-    "settings.permissions.request" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vyžádat oprávnění"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Berechtigungen anfordern"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Request permissions"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Solicitar permisos"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Demander les autorisations"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Richiedi autorizzazioni"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "アクセス許可をリクエスト"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Toestemmingen aanvragen"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Poproś o uprawnienia"
           }
         }
       }
@@ -17871,60 +17871,60 @@
         }
       }
     },
-    "status.warning.grantPermissions" : {
+    "status.warning.continue" : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Udělit oprávnění"
+            "value" : "Pokračovat"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Berechtigungen erteilen"
+            "value" : "Weiter"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grant permissions"
+            "value" : "Continue"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conceder permisos"
+            "value" : "Continuar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accorder les autorisations"
+            "value" : "Continuer"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Concedi autorizzazioni"
+            "value" : "Continua"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "アクセスを許可"
+            "value" : "続ける"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toestemmingen verlenen"
+            "value" : "Doorgaan"
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przyznaj uprawnienia"
+            "value" : "Dalej"
           }
         }
       }
@@ -18397,60 +18397,60 @@
         }
       }
     },
-    "warning.locationNotDetermined.message" : {
+    "warning.locationNotDetermined.detail" : {
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Udělte přístup k poloze „Vždy“, aby sledování pokračovalo na pozadí."
+            "value" : "Záznam na pozadí vyžaduje přístup k poloze „Vždy“."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Erteilen Sie den Standortzugriff „Immer“, damit die Aufzeichnung im Hintergrund erhalten bleibt."
+            "value" : "Die Aufzeichnung im Hintergrund erfordert den Standortzugriff „Immer“."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grant “Always” location access so tracking survives in the background."
+            "value" : "Recording in the background needs “Always” location access."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Conceda el acceso a la ubicación «Siempre» para que el seguimiento continúe en segundo plano."
+            "value" : "El registro en segundo plano requiere el acceso a la ubicación «Siempre»."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accordez l’accès à la position « Toujours » pour que l’enregistrement se poursuive en arrière-plan."
+            "value" : "L’enregistrement en arrière-plan nécessite l’accès à la position « Toujours »."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Concedi l'accesso alla posizione «Sempre» affinché il monitoraggio continui in background."
+            "value" : "La registrazione in background richiede l'accesso alla posizione «Sempre»."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "バックグラウンドでも記録が続くように、位置情報へのアクセスを「常に」に許可してください。"
+            "value" : "バックグラウンドで記録するには、位置情報へのアクセスを「常に」にする必要があります。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Verleen locatietoegang „Altijd” zodat het bijhouden op de achtergrond blijft werken."
+            "value" : "Opnemen op de achtergrond vereist locatietoegang „Altijd”."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Przyznaj dostęp do lokalizacji „Zawsze”, aby śledzenie działało również w tle."
+            "value" : "Rejestrowanie w tle wymaga dostępu do lokalizacji „Zawsze”."
           }
         }
       }

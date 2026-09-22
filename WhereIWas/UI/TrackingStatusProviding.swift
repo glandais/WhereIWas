@@ -32,7 +32,7 @@ extension TrackingStatus {
         case .notDetermined:
             list.append(.init(id: "loc-none", severity: .warning,
                               title: String(localized: "warning.locationNotDetermined.title", defaultValue: "Location permission not granted yet"),
-                              message: String(localized: "warning.locationNotDetermined.message", defaultValue: "Grant “Always” location access so tracking survives in the background."),
+                              message: String(localized: "warning.locationNotDetermined.detail", defaultValue: "Recording in the background needs “Always” location access."),
                               action: .requestPermissions))
         case .always:
             break

@@ -3976,6 +3976,19 @@
             "pl": "Dokładna lokalizacja"
           }
         },
+        "settings.permissions.continue": {
+          "translations": {
+            "cs": "Pokračovat",
+            "de": "Weiter",
+            "en": "Continue",
+            "es": "Continuar",
+            "fr": "Continuer",
+            "it": "Continua",
+            "ja": "続ける",
+            "nl": "Doorgaan",
+            "pl": "Dalej"
+          }
+        },
         "settings.permissions.footer": {
           "translations": {
             "cs": "Sledování na pozadí vyžaduje přístup k poloze nastavený na „Vždy“ se zapnutou funkcí Přesná poloha. „Pohyb a kondice“ umožňuje aplikaci vypnout GPS, když jste v klidu.",
@@ -3987,19 +4000,6 @@
             "ja": "バックグラウンドでの追跡には、位置情報へのアクセスを「常に」に設定し、正確な位置情報をオンにする必要があります。「モーションとフィットネス」により、静止中はGPSをオフに切り替えられます。",
             "nl": "Bijhouden op de achtergrond vereist dat locatietoegang is ingesteld op „Altijd”, met Precieze locatie ingeschakeld. Beweging en fitness laat de app de GPS uitschakelen bij stilstand.",
             "pl": "Śledzenie w tle wymaga dostępu do lokalizacji ustawionego na „Zawsze”, z włączoną opcją Dokładna lokalizacja. „Ruch i sprawność” pozwala aplikacji wyłączać GPS w czasie bezruchu."
-          }
-        },
-        "settings.permissions.request": {
-          "translations": {
-            "cs": "Vyžádat oprávnění",
-            "de": "Berechtigungen anfordern",
-            "en": "Request permissions",
-            "es": "Solicitar permisos",
-            "fr": "Demander les autorisations",
-            "it": "Richiedi autorizzazioni",
-            "ja": "アクセス許可をリクエスト",
-            "nl": "Toestemmingen aanvragen",
-            "pl": "Poproś o uprawnienia"
           }
         },
         "settings.permissions.title": {
@@ -4697,17 +4697,17 @@
             "pl": "Ostatnie przejścia"
           }
         },
-        "status.warning.grantPermissions": {
+        "status.warning.continue": {
           "translations": {
-            "cs": "Udělit oprávnění",
-            "de": "Berechtigungen erteilen",
-            "en": "Grant permissions",
-            "es": "Conceder permisos",
-            "fr": "Accorder les autorisations",
-            "it": "Concedi autorizzazioni",
-            "ja": "アクセスを許可",
-            "nl": "Toestemmingen verlenen",
-            "pl": "Przyznaj uprawnienia"
+            "cs": "Pokračovat",
+            "de": "Weiter",
+            "en": "Continue",
+            "es": "Continuar",
+            "fr": "Continuer",
+            "it": "Continua",
+            "ja": "続ける",
+            "nl": "Doorgaan",
+            "pl": "Dalej"
           }
         },
         "status.warnings.title": {
@@ -4818,17 +4818,17 @@
             "pl": "Odmówiono dostępu do lokalizacji"
           }
         },
-        "warning.locationNotDetermined.message": {
+        "warning.locationNotDetermined.detail": {
           "translations": {
-            "cs": "Udělte přístup k poloze „Vždy“, aby sledování pokračovalo na pozadí.",
-            "de": "Erteilen Sie den Standortzugriff „Immer“, damit die Aufzeichnung im Hintergrund erhalten bleibt.",
-            "en": "Grant “Always” location access so tracking survives in the background.",
-            "es": "Conceda el acceso a la ubicación «Siempre» para que el seguimiento continúe en segundo plano.",
-            "fr": "Accordez l’accès à la position « Toujours » pour que l’enregistrement se poursuive en arrière-plan.",
-            "it": "Concedi l'accesso alla posizione «Sempre» affinché il monitoraggio continui in background.",
-            "ja": "バックグラウンドでも記録が続くように、位置情報へのアクセスを「常に」に許可してください。",
-            "nl": "Verleen locatietoegang „Altijd” zodat het bijhouden op de achtergrond blijft werken.",
-            "pl": "Przyznaj dostęp do lokalizacji „Zawsze”, aby śledzenie działało również w tle."
+            "cs": "Záznam na pozadí vyžaduje přístup k poloze „Vždy“.",
+            "de": "Die Aufzeichnung im Hintergrund erfordert den Standortzugriff „Immer“.",
+            "en": "Recording in the background needs “Always” location access.",
+            "es": "El registro en segundo plano requiere el acceso a la ubicación «Siempre».",
+            "fr": "L’enregistrement en arrière-plan nécessite l’accès à la position « Toujours ».",
+            "it": "La registrazione in background richiede l'accesso alla posizione «Sempre».",
+            "ja": "バックグラウンドで記録するには、位置情報へのアクセスを「常に」にする必要があります。",
+            "nl": "Opnemen op de achtergrond vereist locatietoegang „Altijd”.",
+            "pl": "Rejestrowanie w tle wymaga dostępu do lokalizacji „Zawsze”."
           }
         },
         "warning.locationNotDetermined.title": {

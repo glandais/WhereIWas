@@ -88,7 +88,7 @@ struct SettingsView: View {
                 if controller.status.locationAuthorization == .notDetermined
                     || controller.status.motionAuthorization == .notDetermined {
                     RowSeparator()
-                    actionRow("settings.permissions.request", systemImage: "hand.raised") {
+                    actionRow("settings.permissions.continue", systemImage: "hand.raised") {
                         controller.requestPermissions()
                     }
                 }

@@ -151,7 +151,7 @@ struct StatusView: View {
     private func actionTitle(for warning: StatusWarning) -> LocalizedStringKey? {
         switch warning.action {
         case .openSettings: return "common.openSettings"
-        case .requestPermissions: return "status.warning.grantPermissions"
+        case .requestPermissions: return "status.warning.continue"
         case nil: return nil
         }
     }
