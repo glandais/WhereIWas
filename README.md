@@ -9,6 +9,7 @@ Dutch, Polish and Czech.
 
 App Store name: **WhereIWas: Location Timeline** (localized per market) — iOS 17+.
 
+- App Store: <https://apps.apple.com/app/id6808349924>
 - Website: <https://glandais.github.io/WhereIWas/>
 - Support: <https://glandais.github.io/WhereIWas/support/>
 - Privacy: <https://glandais.github.io/WhereIWas/privacy/>

@@ -3438,6 +3438,19 @@
             "pl": "Dziś"
           }
         },
+        "settings.about.moreApps": {
+          "translations": {
+            "cs": "Další aplikace vývojáře",
+            "de": "Weitere Apps des Entwicklers",
+            "en": "More Apps by the Developer",
+            "es": "Más apps del desarrollador",
+            "fr": "Autres apps du développeur",
+            "it": "Altre app dello sviluppatore",
+            "ja": "この開発者の他のアプリ",
+            "nl": "Meer apps van de ontwikkelaar",
+            "pl": "Więcej aplikacji dewelopera"
+          }
+        },
         "settings.about.privacy": {
           "translations": {
             "cs": "Zásady ochrany osobních údajů",
@@ -3451,6 +3464,19 @@
             "pl": "Polityka prywatności"
           }
         },
+        "settings.about.rate": {
+          "translations": {
+            "cs": "Ohodnotit v App Storu",
+            "de": "Im App Store bewerten",
+            "en": "Rate on the App Store",
+            "es": "Valorar en el App Store",
+            "fr": "Noter sur l’App Store",
+            "it": "Valuta su App Store",
+            "ja": "App Store で評価",
+            "nl": "Beoordeel in de App Store",
+            "pl": "Oceń w App Store"
+          }
+        },
         "settings.about.reset": {
           "translations": {
             "cs": "Obnovit výchozí nastavení",
@@ -3462,6 +3488,32 @@
             "ja": "デフォルトに戻す",
             "nl": "Standaardwaarden herstellen",
             "pl": "Przywróć domyślne"
+          }
+        },
+        "settings.about.source": {
+          "translations": {
+            "cs": "Zdrojový kód na GitHubu",
+            "de": "Quellcode auf GitHub",
+            "en": "Source Code on GitHub",
+            "es": "Código fuente en GitHub",
+            "fr": "Code source sur GitHub",
+            "it": "Codice sorgente su GitHub",
+            "ja": "GitHub のソースコード",
+            "nl": "Broncode op GitHub",
+            "pl": "Kod źródłowy na GitHubie"
+          }
+        },
+        "settings.about.support": {
+          "translations": {
+            "cs": "Podpora",
+            "de": "Support",
+            "en": "Support",
+            "es": "Soporte",
+            "fr": "Assistance",
+            "it": "Assistenza",
+            "ja": "サポート",
+            "nl": "Ondersteuning",
+            "pl": "Pomoc"
           }
         },
         "settings.about.title": {
@@ -3488,6 +3540,19 @@
             "ja": "バージョン",
             "nl": "Versie",
             "pl": "Wersja"
+          }
+        },
+        "settings.about.website": {
+          "translations": {
+            "cs": "Webové stránky",
+            "de": "Website",
+            "en": "Website",
+            "es": "Sitio web",
+            "fr": "Site web",
+            "it": "Sito web",
+            "ja": "ウェブサイト",
+            "nl": "Website",
+            "pl": "Strona internetowa"
           }
         },
         "settings.audit.acceptedFixes": {
@@ -4607,7 +4672,6 @@
           }
         },
         "status.setup.location.title": {
-          "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Přístup k poloze",
             "de": "Standortzugriff",
@@ -4621,7 +4685,6 @@
           }
         },
         "status.setup.motion.title": {
-          "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Pohybová aktivita",
             "de": "Bewegungsaktivität",
@@ -4977,7 +5040,6 @@
           }
         },
         "warning.whenInUse.detail": {
-          "extractionState": "extracted_with_value",
           "translations": {
             "cs": "Pokud iOS aplikaci na pozadí ukončí nebo se iPhone restartuje, záznam se zastaví, dokud aplikaci znovu neotevřete. V Nastavení změňte přístup k poloze na „Vždy“.",
             "de": "Wenn iOS die App im Hintergrund beendet oder das iPhone neu startet, stoppt die Aufzeichnung, bis Sie die App wieder öffnen. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“.",

@@ -178,10 +178,30 @@ struct SettingsView: View {
             RowCard {
                 ValueRow("settings.about.version", value: appVersion)
                 RowSeparator()
+                actionRow("settings.about.website", systemImage: "globe") {
+                    openURL(AppLinks.website)
+                }
+                RowSeparator()
+                actionRow("settings.about.support", systemImage: "questionmark.circle") {
+                    openURL(AppLinks.support)
+                }
+                RowSeparator()
                 // Guideline 5.1.1(i): the policy must be reachable from inside
                 // the app, not only from the store listing.
                 actionRow("settings.about.privacy", systemImage: "lock.shield") {
-                    if let url = URL(string: "https://glandais.github.io/WhereIWas/privacy/") { openURL(url) }
+                    openURL(AppLinks.privacy)
+                }
+                RowSeparator()
+                actionRow("settings.about.source", systemImage: "chevron.left.forwardslash.chevron.right") {
+                    openURL(AppLinks.sourceCode)
+                }
+                RowSeparator()
+                actionRow("settings.about.rate", systemImage: "star") {
+                    openURL(AppLinks.writeReview)
+                }
+                RowSeparator()
+                actionRow("settings.about.moreApps", systemImage: "square.grid.2x2") {
+                    openURL(AppLinks.developerApps)
                 }
                 RowSeparator()
                 Button {

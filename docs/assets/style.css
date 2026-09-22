@@ -204,6 +204,36 @@ a:hover { text-decoration-color: currentColor; }
   margin: 0;
 }
 
+.hero .hero__cta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  max-width: none;
+  margin-top: 2rem;
+}
+
+/* The site's own button, not Apple's badge artwork. */
+.store-button {
+  display: inline-block;
+  padding: 0.7rem 1.35rem;
+  background: var(--ink);
+  color: var(--paper-lift);
+  font-size: var(--fs-body);
+  font-variation-settings: 'wdth' 88, 'wght' 600;
+  text-decoration: none;
+  border-radius: 0.6rem;
+  box-shadow: inset 0 -3px 0 var(--accent);
+}
+.store-button:hover { background: #1A2A4E; }
+.store-button:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+.hero__req {
+  font-family: var(--font-mono);
+  font-size: var(--fs-tiny);
+  color: var(--ink-mid);
+}
+
 /* ---------- shift diagram ---------- */
 
 .shift {
@@ -506,7 +536,9 @@ a:hover { text-decoration-color: currentColor; }
   flex-wrap: wrap;
 }
 
-.footer nav { display: flex; gap: 1.25rem; }
+.footer nav { display: flex; gap: 0.5rem 1.25rem; flex-wrap: wrap; }
+
+.footer__apps { flex-basis: 100%; margin: 0; }
 
 /* ---------- diagrams ---------- */
 
@@ -601,6 +633,6 @@ code { font-family: var(--font-mono); font-size: 0.875em; }
 }
 
 @media print {
-  .masthead, .footer nav { display: none; }
+  .masthead, .footer nav, .footer__apps, .hero__cta { display: none; }
   html { background: #fff; font-size: 11pt; }
 }
