@@ -172,12 +172,6 @@ struct SettingsView: View {
             RowCard {
                 ValueRow("settings.about.version", value: appVersion)
                 RowSeparator()
-                // Opens Safari: the tip is optional, unlocks nothing and never
-                // goes through the app, which keeps its "no networking" claim.
-                actionRow("settings.about.tip", systemImage: "cup.and.saucer") {
-                    if let url = URL(string: "https://ko-fi.com/gabylandais") { openURL(url) }
-                }
-                RowSeparator()
                 Button {
                     controller.settings = TrackingSettings()
                 } label: {
