@@ -12622,6 +12622,64 @@
         }
       }
     },
+    "settings.about.privacy" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zásady ochrany osobních údajů"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzerklärung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Informativa sulla privacy"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プライバシーポリシー"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacybeleid"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Polityka prywatności"
+          }
+        }
+      }
+    },
     "settings.about.reset" : {
       "localizations" : {
         "cs" : {
@@ -17407,6 +17465,182 @@
         }
       }
     },
+    "status.setup.location.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Přístup k poloze"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Standortzugriff"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location access"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acceso a la ubicación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accès à la position"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accesso alla posizione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "位置情報へのアクセス"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locatietoegang"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dostęp do lokalizacji"
+          }
+        }
+      }
+    },
+    "status.setup.motion.title" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pohybová aktivita"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegungsaktivität"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Motion activity"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actividad de movimiento"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données de mouvement"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attività di movimento"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "モーションアクティビティ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewegingsactiviteit"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktywność ruchowa"
+          }
+        }
+      }
+    },
+    "status.setup.title" : {
+      "localizations" : {
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Příprava"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einrichtung"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuración"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configuration"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurazione"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "セットアップ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellen"
+          }
+        },
+        "pl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Konfiguracja"
+          }
+        }
+      }
+    },
     "status.state.gpsOff" : {
       "localizations" : {
         "cs" : {
@@ -18455,64 +18689,6 @@
         }
       }
     },
-    "warning.locationNotDetermined.title" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oprávnění k poloze zatím neuděleno"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Standortberechtigung noch nicht erteilt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Location permission not granted yet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permiso de ubicación aún no concedido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autorisation de position pas encore accordée"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autorizzazione di posizione non ancora concessa"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "位置情報の許可がまだありません"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Locatietoestemming nog niet verleend"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uprawnienie do lokalizacji nie zostało jeszcze przyznane"
-          }
-        }
-      }
-    },
     "warning.motionDenied.message" : {
       "localizations" : {
         "cs" : {
@@ -18683,64 +18859,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aktywność ruchowa pozwala aplikacji wyłączać GPS w czasie bezruchu."
-          }
-        }
-      }
-    },
-    "warning.motionNotDetermined.title" : {
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Oprávnění k pohybu zatím neuděleno"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bewegungsberechtigung noch nicht erteilt"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Motion permission not granted yet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Permiso de movimiento aún no concedido"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autorisation de mouvement pas encore accordée"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Autorizzazione di movimento non ancora concessa"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "モーションの許可がまだありません"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bewegingstoestemming nog niet verleend"
-          }
-        },
-        "pl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Uprawnienie do ruchu nie zostało jeszcze przyznane"
           }
         }
       }
@@ -18977,60 +19095,61 @@
         }
       }
     },
-    "warning.whenInUse.message" : {
+    "warning.whenInUse.detail" : {
+      "extractionState" : "extracted_with_value",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sledování na pozadí se zastaví, jakmile je aplikace pozastavena. V Nastavení změňte přístup k poloze na „Vždy“."
+            "value" : "Pokud iOS aplikaci na pozadí ukončí nebo se iPhone restartuje, záznam se zastaví, dokud aplikaci znovu neotevřete. V Nastavení změňte přístup k poloze na „Vždy“."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Aufzeichnung im Hintergrund stoppt, sobald iOS die App anhält. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“."
+            "value" : "Wenn iOS die App im Hintergrund beendet oder das iPhone neu startet, stoppt die Aufzeichnung, bis Sie die App wieder öffnen. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings."
+            "value" : "If iOS closes the app in the background or the iPhone restarts, recording stops until you open the app again. Change location access to “Always” in Settings."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El seguimiento en segundo plano se detiene en cuanto la app se suspende. Cambie el acceso a la ubicación a «Siempre» en Ajustes."
+            "value" : "Si iOS cierra la app en segundo plano o el iPhone se reinicia, el registro se detiene hasta que vuelva a abrir la app. Cambie el acceso a la ubicación a «Siempre» en Ajustes."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le suivi en arrière-plan s’arrête dès que l’app est suspendue. Passez l’accès à la position sur « Toujours » dans Réglages."
+            "value" : "Si iOS ferme l’app en arrière-plan ou si l’iPhone redémarre, l’enregistrement s’arrête jusqu’à ce que vous rouvriez l’app. Passez l’accès à la position sur « Toujours » dans Réglages."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Il monitoraggio in background si interrompe non appena l'app viene sospesa. Imposta l'accesso alla posizione su «Sempre» nelle Impostazioni."
+            "value" : "Se iOS chiude l'app in background o l'iPhone si riavvia, la registrazione si interrompe finché non riapri l'app. Imposta l'accesso alla posizione su «Sempre» nelle Impostazioni."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appが一時停止されると、バックグラウンドでの追跡は停止します。設定で位置情報へのアクセスを「常に」に変更してください。"
+            "value" : "iOSがバックグラウンドでAppを終了したりiPhoneが再起動したりすると、Appを再び開くまで記録は停止します。設定で位置情報へのアクセスを「常に」に変更してください。"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Het bijhouden op de achtergrond stopt zodra de app wordt onderbroken. Wijzig locatietoegang naar „Altijd” in Instellingen."
+            "value" : "Als iOS de app op de achtergrond sluit of de iPhone opnieuw opstart, stopt het vastleggen tot u de app weer opent. Wijzig locatietoegang naar „Altijd” in Instellingen."
           }
         },
         "pl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Śledzenie w tle zatrzymuje się, gdy tylko aplikacja zostanie zawieszona. Zmień dostęp do lokalizacji na „Zawsze” w Ustawieniach."
+            "value" : "Jeśli iOS zamknie aplikację w tle lub iPhone uruchomi się ponownie, rejestrowanie zatrzyma się do czasu ponownego otwarcia aplikacji. Zmień dostęp do lokalizacji na „Zawsze” w Ustawieniach."
           }
         }
       }

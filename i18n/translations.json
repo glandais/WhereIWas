@@ -3438,6 +3438,19 @@
             "pl": "Dziś"
           }
         },
+        "settings.about.privacy": {
+          "translations": {
+            "cs": "Zásady ochrany osobních údajů",
+            "de": "Datenschutzerklärung",
+            "en": "Privacy Policy",
+            "es": "Política de privacidad",
+            "fr": "Politique de confidentialité",
+            "it": "Informativa sulla privacy",
+            "ja": "プライバシーポリシー",
+            "nl": "Privacybeleid",
+            "pl": "Polityka prywatności"
+          }
+        },
         "settings.about.reset": {
           "translations": {
             "cs": "Obnovit výchozí nastavení",
@@ -4593,6 +4606,47 @@
             "pl": "Ostatni fix"
           }
         },
+        "status.setup.location.title": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Přístup k poloze",
+            "de": "Standortzugriff",
+            "en": "Location access",
+            "es": "Acceso a la ubicación",
+            "fr": "Accès à la position",
+            "it": "Accesso alla posizione",
+            "ja": "位置情報へのアクセス",
+            "nl": "Locatietoegang",
+            "pl": "Dostęp do lokalizacji"
+          }
+        },
+        "status.setup.motion.title": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Pohybová aktivita",
+            "de": "Bewegungsaktivität",
+            "en": "Motion activity",
+            "es": "Actividad de movimiento",
+            "fr": "Données de mouvement",
+            "it": "Attività di movimento",
+            "ja": "モーションアクティビティ",
+            "nl": "Bewegingsactiviteit",
+            "pl": "Aktywność ruchowa"
+          }
+        },
+        "status.setup.title": {
+          "translations": {
+            "cs": "Příprava",
+            "de": "Einrichtung",
+            "en": "Setup",
+            "es": "Configuración",
+            "fr": "Configuration",
+            "it": "Configurazione",
+            "ja": "セットアップ",
+            "nl": "Instellen",
+            "pl": "Konfiguracja"
+          }
+        },
         "status.state.gpsOff": {
           "translations": {
             "cs": "GPS vypnuto",
@@ -4831,19 +4885,6 @@
             "pl": "Rejestrowanie w tle wymaga dostępu do lokalizacji „Zawsze”."
           }
         },
-        "warning.locationNotDetermined.title": {
-          "translations": {
-            "cs": "Oprávnění k poloze zatím neuděleno",
-            "de": "Standortberechtigung noch nicht erteilt",
-            "en": "Location permission not granted yet",
-            "es": "Permiso de ubicación aún no concedido",
-            "fr": "Autorisation de position pas encore accordée",
-            "it": "Autorizzazione di posizione non ancora concessa",
-            "ja": "位置情報の許可がまだありません",
-            "nl": "Locatietoestemming nog niet verleend",
-            "pl": "Uprawnienie do lokalizacji nie zostało jeszcze przyznane"
-          }
-        },
         "warning.motionDenied.message": {
           "translations": {
             "cs": "Bez pohybové aktivity se aplikace musí při detekci pohybu spoléhat na GPS, což spotřebovává více baterie.",
@@ -4881,19 +4922,6 @@
             "ja": "モーションアクティビティにより、静止中はGPSをオフに切り替えられます。",
             "nl": "Bewegingsactiviteit laat de app de GPS uitschakelen bij stilstand.",
             "pl": "Aktywność ruchowa pozwala aplikacji wyłączać GPS w czasie bezruchu."
-          }
-        },
-        "warning.motionNotDetermined.title": {
-          "translations": {
-            "cs": "Oprávnění k pohybu zatím neuděleno",
-            "de": "Bewegungsberechtigung noch nicht erteilt",
-            "en": "Motion permission not granted yet",
-            "es": "Permiso de movimiento aún no concedido",
-            "fr": "Autorisation de mouvement pas encore accordée",
-            "it": "Autorizzazione di movimento non ancora concessa",
-            "ja": "モーションの許可がまだありません",
-            "nl": "Bewegingstoestemming nog niet verleend",
-            "pl": "Uprawnienie do ruchu nie zostało jeszcze przyznane"
           }
         },
         "warning.preciseOff.message": {
@@ -4948,17 +4976,18 @@
             "pl": "Od dłuższej chwili brak punktu"
           }
         },
-        "warning.whenInUse.message": {
+        "warning.whenInUse.detail": {
+          "extractionState": "extracted_with_value",
           "translations": {
-            "cs": "Sledování na pozadí se zastaví, jakmile je aplikace pozastavena. V Nastavení změňte přístup k poloze na „Vždy“.",
-            "de": "Die Aufzeichnung im Hintergrund stoppt, sobald iOS die App anhält. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“.",
-            "en": "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings.",
-            "es": "El seguimiento en segundo plano se detiene en cuanto la app se suspende. Cambie el acceso a la ubicación a «Siempre» en Ajustes.",
-            "fr": "Le suivi en arrière-plan s’arrête dès que l’app est suspendue. Passez l’accès à la position sur « Toujours » dans Réglages.",
-            "it": "Il monitoraggio in background si interrompe non appena l'app viene sospesa. Imposta l'accesso alla posizione su «Sempre» nelle Impostazioni.",
-            "ja": "Appが一時停止されると、バックグラウンドでの追跡は停止します。設定で位置情報へのアクセスを「常に」に変更してください。",
-            "nl": "Het bijhouden op de achtergrond stopt zodra de app wordt onderbroken. Wijzig locatietoegang naar „Altijd” in Instellingen.",
-            "pl": "Śledzenie w tle zatrzymuje się, gdy tylko aplikacja zostanie zawieszona. Zmień dostęp do lokalizacji na „Zawsze” w Ustawieniach."
+            "cs": "Pokud iOS aplikaci na pozadí ukončí nebo se iPhone restartuje, záznam se zastaví, dokud aplikaci znovu neotevřete. V Nastavení změňte přístup k poloze na „Vždy“.",
+            "de": "Wenn iOS die App im Hintergrund beendet oder das iPhone neu startet, stoppt die Aufzeichnung, bis Sie die App wieder öffnen. Ändern Sie den Standortzugriff in den Einstellungen auf „Immer“.",
+            "en": "If iOS closes the app in the background or the iPhone restarts, recording stops until you open the app again. Change location access to “Always” in Settings.",
+            "es": "Si iOS cierra la app en segundo plano o el iPhone se reinicia, el registro se detiene hasta que vuelva a abrir la app. Cambie el acceso a la ubicación a «Siempre» en Ajustes.",
+            "fr": "Si iOS ferme l’app en arrière-plan ou si l’iPhone redémarre, l’enregistrement s’arrête jusqu’à ce que vous rouvriez l’app. Passez l’accès à la position sur « Toujours » dans Réglages.",
+            "it": "Se iOS chiude l'app in background o l'iPhone si riavvia, la registrazione si interrompe finché non riapri l'app. Imposta l'accesso alla posizione su «Sempre» nelle Impostazioni.",
+            "ja": "iOSがバックグラウンドでAppを終了したりiPhoneが再起動したりすると、Appを再び開くまで記録は停止します。設定で位置情報へのアクセスを「常に」に変更してください。",
+            "nl": "Als iOS de app op de achtergrond sluit of de iPhone opnieuw opstart, stopt het vastleggen tot u de app weer opent. Wijzig locatietoegang naar „Altijd” in Instellingen.",
+            "pl": "Jeśli iOS zamknie aplikację w tle lub iPhone uruchomi się ponownie, rejestrowanie zatrzyma się do czasu ponownego otwarcia aplikacji. Zmień dostęp do lokalizacji na „Zawsze” w Ustawieniach."
           }
         },
         "warning.whenInUse.title": {
@@ -4998,15 +5027,15 @@
         "NSLocationWhenInUseUsageDescription": {
           "extractionState": "manual",
           "translations": {
-            "cs": "WhereIWas zaznamenává polohu, aby vytvořil historii pohybu.",
-            "de": "WhereIWas zeichnet Ihren Standort auf, um Ihren Standortverlauf zu erstellen.",
+            "cs": "WhereIWas zaznamenává polohu, když je aplikace otevřená, abyste viděli trasu na mapě a mohli ji exportovat jako GPX nebo JSON.",
+            "de": "WhereIWas zeichnet Ihren Standort auf, während die App geöffnet ist, damit Sie Ihre Strecke auf der Karte sehen und als GPX oder JSON exportieren können.",
             "en": "WhereIWas records your position while the app is open, so you can see your track on the map and export it as GPX or JSON.",
-            "es": "WhereIWas registra la posición para crear el historial de desplazamientos.",
-            "fr": "WhereIWas enregistre votre position pour constituer votre historique de déplacements.",
-            "it": "WhereIWas registra la tua posizione per costruire la cronologia dei tuoi spostamenti.",
-            "ja": "WhereIWasは、移動履歴を作成するために位置情報を記録します。",
-            "nl": "WhereIWas legt de positie vast om de locatiegeschiedenis op te bouwen.",
-            "pl": "WhereIWas rejestruje pozycję, aby utworzyć historię przemieszczeń."
+            "es": "WhereIWas registra la posición mientras la app está abierta, para mostrar el recorrido en el mapa y exportarlo en GPX o JSON.",
+            "fr": "WhereIWas enregistre votre position lorsque l’app est ouverte, pour afficher votre trajet sur la carte et l’exporter en GPX ou JSON.",
+            "it": "WhereIWas registra la tua posizione mentre l’app è aperta, per mostrarti il percorso sulla mappa ed esportarlo in GPX o JSON.",
+            "ja": "WhereIWasは、Appを開いている間に位置情報を記録し、経路を地図に表示したりGPXまたはJSONで書き出したりできるようにします。",
+            "nl": "WhereIWas legt de positie vast terwijl de app geopend is, zodat u de route op de kaart ziet en als GPX of JSON kunt exporteren.",
+            "pl": "WhereIWas zapisuje pozycję, gdy aplikacja jest otwarta, aby pokazać trasę na mapie i umożliwić jej eksport do GPX lub JSON."
           }
         },
         "NSMotionUsageDescription": {

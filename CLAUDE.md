@@ -267,8 +267,9 @@ Settings store card shows the About section (recapture if so), and mention the l
 
 ## Known constraints
 
-- Background tracking requires **Always** location authorization; When-In-Use stops recording as
-  soon as the app is suspended.
+- Background tracking requires **Always** location authorization. With When-In-Use the held
+  `CLBackgroundActivitySession` keeps recording while the process lives, but a background
+  termination or a reboot ends it for good: relaunch by significant change / visits needs Always.
 - Nothing is recorded between a reboot and the first device unlock — no API changes that.
 - A user force-quit stops all background delivery until the app is opened again. Expected iOS
   behaviour, surfaced in the Status screen.

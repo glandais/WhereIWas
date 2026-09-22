@@ -13,7 +13,9 @@ typealias TrackingStatusProviding = TrackingControlling
 
 extension TrackingStatus {
     /// Something is wrong enough that the user must act (permissions).
-    var needsAttention: Bool { !warnings.isEmpty }
+    /// A permission not asked for yet is not a problem: its setup card
+    /// neither badges the tab nor sits under "Needs attention".
+    var needsAttention: Bool { warnings.contains { !$0.isSetup } }
 
     /// Human readable warnings, most severe first.
     var warnings: [StatusWarning] {
@@ -27,13 +29,13 @@ extension TrackingStatus {
         case .whenInUse:
             list.append(.init(id: "loc-wheninuse", severity: .critical,
                               title: String(localized: "warning.whenInUse.title", defaultValue: "Location only while using the app"),
-                              message: String(localized: "warning.whenInUse.message", defaultValue: "Background tracking stops as soon as the app is suspended. Change location access to “Always” in Settings."),
+                              message: String(localized: "warning.whenInUse.detail", defaultValue: "If iOS closes the app in the background or the iPhone restarts, recording stops until you open the app again. Change location access to “Always” in Settings."),
                               action: .openSettings))
         case .notDetermined:
-            list.append(.init(id: "loc-none", severity: .warning,
-                              title: String(localized: "warning.locationNotDetermined.title", defaultValue: "Location permission not granted yet"),
+            list.append(.init(id: "loc-none", severity: .info,
+                              title: String(localized: "status.setup.location.title", defaultValue: "Location access"),
                               message: String(localized: "warning.locationNotDetermined.detail", defaultValue: "Recording in the background needs “Always” location access."),
-                              action: .requestPermissions))
+                              action: .requestLocationPermission, isSetup: true))
         case .always:
             break
         }
@@ -51,9 +53,9 @@ extension TrackingStatus {
                               action: .openSettings))
         case .notDetermined:
             list.append(.init(id: "motion-none", severity: .info,
-                              title: String(localized: "warning.motionNotDetermined.title", defaultValue: "Motion permission not granted yet"),
+                              title: String(localized: "status.setup.motion.title", defaultValue: "Motion activity"),
                               message: String(localized: "warning.motionNotDetermined.message", defaultValue: "Motion activity lets the app switch GPS off while you are still."),
-                              action: .requestPermissions))
+                              action: .requestMotionPermission, isSetup: true))
         case .authorized:
             break
         }
@@ -93,13 +95,16 @@ extension TrackingStatus {
 
 struct StatusWarning: Identifiable, Hashable {
     enum Severity: Hashable { case critical, warning, info }
-    enum Action: Hashable { case openSettings, requestPermissions }
+    enum Action: Hashable { case openSettings, requestLocationPermission, requestMotionPermission }
 
     var id: String
     var severity: Severity
     var title: String
     var message: String
     var action: Action?
+    /// A permission that has not been asked for yet: shown under "Setup",
+    /// never counted as something wrong.
+    var isSetup = false
 
     var tone: Theme.Tone {
         switch severity {
@@ -203,9 +208,12 @@ final class PreviewTrackingController: TrackingControlling {
         status.activeProfile = enabled ? .probing : nil
     }
 
-    func requestPermissions() {
+    func requestLocationPermission() {
         status.locationAuthorization = .always
         status.hasFullAccuracy = true
+    }
+
+    func requestMotionPermission() {
         status.motionAuthorization = .authorized
     }
 

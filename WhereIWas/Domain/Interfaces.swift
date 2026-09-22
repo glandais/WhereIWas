@@ -406,8 +406,12 @@ public protocol TrackingControlling: AnyObject, Observable, Sendable {
 
     /// Turn tracking on/off. Persists the flag so launch can re-arm it.
     func setTrackingEnabled(_ enabled: Bool)
-    /// Ask for location "Always" + motion permissions.
-    func requestPermissions()
+    /// Show the location prompt (While Using, then the Always upgrade).
+    /// Only the location prompt: each request is triggered by a control
+    /// that names what it asks for.
+    func requestLocationPermission()
+    /// Show the Motion & Fitness prompt, and nothing else.
+    func requestMotionPermission()
 
     // Data access for Map / Export views.
     func samples(in interval: DateInterval) async throws -> [StoredLocationSample]

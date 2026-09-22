@@ -23,12 +23,15 @@ struct StatusView: View {
 
     private var status: TrackingStatus { controller.status }
     private var warnings: [StatusWarning] { status.warnings(now: now) }
+    private var setupCards: [StatusWarning] { warnings.filter(\.isSetup) }
+    private var problemCards: [StatusWarning] { warnings.filter { !$0.isSetup } }
 
     var body: some View {
         NavigationStack {
             CardScreen(title: "status.title", trailing: Formatting.day(now)) {
                 heroCard
-                if !warnings.isEmpty { warningsSection }
+                if !setupCards.isEmpty { cardsSection("status.setup.title", setupCards) }
+                if !problemCards.isEmpty { cardsSection("status.warnings.title", problemCards) }
                 lastFixSection
                 transitionsSection
             }
@@ -134,10 +137,10 @@ struct StatusView: View {
 
     // MARK: Sections
 
-    private var warningsSection: some View {
+    private func cardsSection(_ title: LocalizedStringKey, _ cards: [StatusWarning]) -> some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.row) {
-            SectionHeader("status.warnings.title")
-            ForEach(warnings) { warning in
+            SectionHeader(title)
+            ForEach(cards) { warning in
                 AlertCard(title: warning.title,
                           message: warning.message,
                           tone: warning.tone,
@@ -151,7 +154,7 @@ struct StatusView: View {
     private func actionTitle(for warning: StatusWarning) -> LocalizedStringKey? {
         switch warning.action {
         case .openSettings: return "common.openSettings"
-        case .requestPermissions: return "status.warning.continue"
+        case .requestLocationPermission, .requestMotionPermission: return "status.warning.continue"
         case nil: return nil
         }
     }
@@ -239,8 +242,10 @@ struct StatusView: View {
 
     private func perform(_ action: StatusWarning.Action) {
         switch action {
-        case .requestPermissions:
-            controller.requestPermissions()
+        case .requestLocationPermission:
+            controller.requestLocationPermission()
+        case .requestMotionPermission:
+            controller.requestMotionPermission()
         case .openSettings:
             if let url = URL(string: UIApplication.openSettingsURLString) {
                 openURL(url)

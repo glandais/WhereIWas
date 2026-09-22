@@ -567,7 +567,8 @@ final class DemoTrackingController: TrackingControlling {
         status.appliedProfile = status.activeProfile
     }
 
-    func requestPermissions() {}
+    func requestLocationPermission() {}
+    func requestMotionPermission() {}
 
     func samples(in interval: DateInterval) async throws -> [StoredLocationSample] {
         storedSamples.filter { interval.contains($0.fix.timestamp) }

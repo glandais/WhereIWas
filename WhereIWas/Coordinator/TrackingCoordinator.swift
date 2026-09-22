@@ -179,6 +179,12 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         defaults.set(enabled, forKey: Self.trackingEnabledKey)
         guard enabled != (machine.phase != .disabled) else { return }
         if enabled {
+            // Turning on "Record my location" is the moment the location
+            // prompt makes sense; without it a fresh install would record
+            // nothing while looking switched on.
+            if engine.authorization == .notDetermined {
+                engine.requestAuthorization()
+            }
             enable(reason: "user")
         } else {
             disable(reason: "user")
@@ -187,12 +193,16 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         scheduleStatsRefresh()
     }
 
-    public func requestPermissions() {
+    public func requestLocationPermission() {
         engine.requestAuthorization()
+        refreshStatus()
+    }
+
+    public func requestMotionPermission() {
         // CoreMotion has no explicit request API: the prompt appears when
-        // updates start. If tracking is off the events are ignored by the
-        // state machine and updates stop on the next `.disable`.
-        if machine.phase == .disabled {
+        // updates start. With tracking off, they are stopped again as soon
+        // as the user has answered (see `.authorizationChanged`).
+        if machine.phase == .disabled, motion.authorization == .notDetermined {
             motion.start { [weak self] event in self?.handleMotionEvent(event) }
         }
         refreshStatus()
@@ -562,6 +572,11 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
                                     arguments: [auth.rawValue],
                                     details: [AuditDetail("status", auth.rawValue),
                                               AuditDetail("activityAvailable", motion.isActivityAvailable)]))
+            // Started only to show the prompt: nothing to listen to while
+            // tracking is off.
+            if machine.phase == .disabled, auth != .notDetermined {
+                motion.stop()
+            }
             applyEffectiveSettings()
         }
         refreshStatus()

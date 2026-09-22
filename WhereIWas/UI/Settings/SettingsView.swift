@@ -88,8 +88,14 @@ struct SettingsView: View {
                 if controller.status.locationAuthorization == .notDetermined
                     || controller.status.motionAuthorization == .notDetermined {
                     RowSeparator()
+                    // One prompt per tap: location first, then motion on
+                    // the next tap, each named by the row above it.
                     actionRow("settings.permissions.continue", systemImage: "hand.raised") {
-                        controller.requestPermissions()
+                        if controller.status.locationAuthorization == .notDetermined {
+                            controller.requestLocationPermission()
+                        } else {
+                            controller.requestMotionPermission()
+                        }
                     }
                 }
                 RowSeparator()
@@ -171,6 +177,12 @@ struct SettingsView: View {
             SectionHeader("settings.about.title")
             RowCard {
                 ValueRow("settings.about.version", value: appVersion)
+                RowSeparator()
+                // Guideline 5.1.1(i): the policy must be reachable from inside
+                // the app, not only from the store listing.
+                actionRow("settings.about.privacy", systemImage: "lock.shield") {
+                    if let url = URL(string: "https://glandais.github.io/WhereIWas/privacy/") { openURL(url) }
+                }
                 RowSeparator()
                 Button {
                     controller.settings = TrackingSettings()

@@ -230,7 +230,8 @@ public final class NoopTrackingController: TrackingControlling {
         status.phase = enabled ? .probing : .disabled
     }
 
-    public func requestPermissions() {}
+    public func requestLocationPermission() {}
+    public func requestMotionPermission() {}
 
     public func samples(in interval: DateInterval) async throws -> [StoredLocationSample] { [] }
     public func samples(sessionID: UUID) async throws -> [StoredLocationSample] { [] }

@@ -66,13 +66,13 @@
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas zaznamenává polohu, aby vytvořil historii pohybu."
+            "value": "WhereIWas zaznamenává polohu, když je aplikace otevřená, abyste viděli trasu na mapě a mohli ji exportovat jako GPX nebo JSON."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas zeichnet Ihren Standort auf, um Ihren Standortverlauf zu erstellen."
+            "value": "WhereIWas zeichnet Ihren Standort auf, während die App geöffnet ist, damit Sie Ihre Strecke auf der Karte sehen und als GPX oder JSON exportieren können."
           }
         },
         "en": {
@@ -84,37 +84,37 @@
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas registra la posición para crear el historial de desplazamientos."
+            "value": "WhereIWas registra la posición mientras la app está abierta, para mostrar el recorrido en el mapa y exportarlo en GPX o JSON."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas enregistre votre position pour constituer votre historique de déplacements."
+            "value": "WhereIWas enregistre votre position lorsque l’app est ouverte, pour afficher votre trajet sur la carte et l’exporter en GPX ou JSON."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas registra la tua posizione per costruire la cronologia dei tuoi spostamenti."
+            "value": "WhereIWas registra la tua posizione mentre l’app è aperta, per mostrarti il percorso sulla mappa ed esportarlo in GPX o JSON."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWasは、移動履歴を作成するために位置情報を記録します。"
+            "value": "WhereIWasは、Appを開いている間に位置情報を記録し、経路を地図に表示したりGPXまたはJSONで書き出したりできるようにします。"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas legt de positie vast om de locatiegeschiedenis op te bouwen."
+            "value": "WhereIWas legt de positie vast terwijl de app geopend is, zodat u de route op de kaart ziet en als GPX of JSON kunt exporteren."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "WhereIWas rejestruje pozycję, aby utworzyć historię przemieszczeń."
+            "value": "WhereIWas zapisuje pozycję, gdy aplikacja jest otwarta, aby pokazać trasę na mapie i umożliwić jej eksport do GPX lub JSON."
           }
         }
       }
