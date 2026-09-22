@@ -12,6 +12,7 @@ App Store name: **WhereIWas: Location Timeline** (localized per market) — iOS 
 - Website: <https://glandais.github.io/WhereIWas/>
 - Support: <https://glandais.github.io/WhereIWas/support/>
 - Privacy: <https://glandais.github.io/WhereIWas/privacy/>
+- Tip jar: <https://ko-fi.com/gabylandais>
 
 ## Repository layout
 
