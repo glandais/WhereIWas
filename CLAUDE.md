@@ -233,8 +233,15 @@ privacy policy.
 
 ### First submission
 
-Version 1.0.0 with build 21 was submitted for review on 2026-09-18 (`WAITING_FOR_REVIEW`). App Store
-Regulations and Permits were checked by hand (asc reports NOT_CHECKED, website-only).
+Version 1.0.0 with build 21 was submitted for review on 2026-09-18 and **rejected on 2026-09-22
+under guideline 5.1.1(iv)**: the custom message before the location and Motion & Fitness prompts
+ended in a "Grant permissions" button (Apple wants "Continue" / "Next"). Build 23 answers it with a
+strict 5.1.1 pass — a neutral "Setup" section whose cards each trigger only their own prompt and
+end in "Continue", no badge for a permission never asked for, a privacy policy link in Settings →
+About (5.1.1(i) wants it *inside* the app, not only in the listing) — and was resubmitted the same
+day (`WAITING_FOR_REVIEW`). Keep new permission copy descriptive, never "Grant"/"Allow", in all
+nine languages. App Store Regulations and Permits were checked by hand (asc reports NOT_CHECKED,
+website-only).
 
 Done before it: icon, privacy manifest, all ten locales of `metadata/` applied, the three
 metadata URLs resolving (GitHub Pages under `docs/`), App Privacy published as Data Not Collected,
@@ -245,14 +252,24 @@ unchecked — CoreMotion, background location, significant changes and visits do
 ### Held back for 1.0.1
 
 The Ko-fi tip link (`https://ko-fi.com/gabylandais`) is live on the site but **not in the app**:
-the Settings → About row (`settings.about.tip`) waits on branch `worktree-kofi-link`, kept out of
-1.0.0 because a donation link to the developer can be rejected under guideline 3.1.1 (Apple wants
+the Settings → About row (`settings.about.tip`) was committed as `423d181` and reverted by
+`fa2657f` for the resubmission — `git show 423d181 | git apply` brings it back (it conflicts
+trivially with the Privacy Policy row next to it). Kept out of 1.0.0 because a donation link to the developer can be rejected under guideline 3.1.1 (Apple wants
 tips as in-app purchases; Apple Pay is for physical goods and approved nonprofits). **Bring it up
 at the next release request.** Before shipping it: re-read 3.1.1 / 3.1.3, check whether the
 Settings store card shows the About section (recapture if so), and mention the link in
 `metadata/review-notes.md`. If Apple refuses, drop the row and the key, or move to a StoreKit tip.
 
 ### Gotchas worth remembering
+
+- **Resubmitting after a rejection** reuses the open review submission (`UNRESOLVED_ISSUES`), like
+  the website's Resubmit button: `asc versions attach-build`, then mark the rejected item resolved
+  (`asc review items update --id <item> --resolved true`), then `asc review submissions-submit`.
+  Skipping the middle step fails with "Version is not ready to be submitted yet". Read the
+  rejection with `asc web review show` (needs a web session, 2FA); the e-mail carries no reason.
+  Reply in the Resolution Center **before** resubmitting: sent right after the resubmission,
+  `asc web review reply` got a 409 `STATE_ERROR` and left an unsent draft (cause unconfirmed —
+  most likely the thread closing once the submission is `WAITING_FOR_REVIEW`).
 
 - **`privacy.publish_state.unverified` is reported on every run** — noise, the public API can't
   read the publish state. Confirmed published two ways: `asc web privacy pull` returns
