@@ -260,7 +260,20 @@ link in the app**; Ko-fi stays on the site and the README.
 - App Store Connect products: `io.github.glandais.whereiwas.tip.small` (€0.99, `6814909118`),
   `.medium` (€2.99, `6814909043`), `.large` (€4.99, `6814909301`). Base territory France,
   174 territories (mainland China excluded, like the app), names in the ten store locales. The
-  first in-app purchase ships **with an app version**: attach them to the 1.0.1 submission.
+  first in-app purchase ships **with an app version**.
+- **Submitting them**: one review submission holds the version and the three IAP versions —
+  `asc review submissions-create --platform IOS`, `asc review items-add --item-type
+  appStoreVersions --item-id <version>`, then `asc iap versions submit --version-id <iap
+  version> --submission <id> --confirm` per tip (ids from `asc iap versions list --iap-id`),
+  then `asc review submissions-submit --id <id> --confirm`. The `submitWithNextAppStoreVersion`
+  route (skill `asc-iap-attach`) is refused for a first consumable
+  (`FIRST_CONSUMABLE_MUST_BE_SUBMITTED_ON_VERSION`).
+- Each tip carries its own App Review note ("unlocks nothing, Settings → About → Support the
+  developer"). `asc iap` cannot set it: it went through the web session
+  (`PATCH /iris/v2/inAppPurchases/<id>`, attribute `reviewNote`). The web UI shows the field
+  empty right after saving even though it is stored — read it back through the API. The web
+  side reports the tips `MISSING_METADATA` while the public API says `READY_TO_SUBMIT`; the
+  submission goes through anyway.
 - `App/TipJar.swift` is copied from the reference shared by the developer's apps (the
   `donations` repo, outside this one). `WhereIWasApp` starts it at launch so Ask to Buy or
   interrupted transactions get finished. Names and prices come from the store (`displayName`,
@@ -270,8 +283,13 @@ link in the app**; Ko-fi stays on the site and the README.
   and the screen says "unavailable" until the products are approved.
 - In the simulator, AXe's default tap does not trigger a `NavigationLink` or the test payment
   sheet's Buy button: pass `--tap-style physical`.
-- The Settings store card may now show the About section with the new row: check before
-  shipping 1.0.1, recapture if so.
+- No store card shows Settings (the five are map, status ×2, export, audit), so the About
+  section and the tip row needed no recapture.
+
+**1.0.1 (build 24)** went to review on 2026-09-25 with the three tips: submission
+`76f3ce75-0855-47af-87dc-a3f3e10f906c`, version `9e8d3082-e4f6-491b-aa41-c08db4ac9ca7`, release
+after approval. Creating a version copies description, keywords and URLs from the previous one;
+only What's New and Promotional Text had to be applied.
 
 ### Gotchas worth remembering
 

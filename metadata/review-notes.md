@@ -1,4 +1,4 @@
-# App Review notes (version 1.0.0)
+# App Review notes (current version — 1.0.1)
 
 Canonical copy of the App Review Information → Notes field. `asc metadata` does not manage review
 details, so this file is the source and gets pushed by hand:
