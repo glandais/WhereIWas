@@ -6,7 +6,7 @@ description: Cut a new TestFlight build of WhereIWas — pick the build number, 
 # A new TestFlight build
 
 App `6808349924`, bundle `io.github.glandais.whereiwas`, team `7Q49262697`, marketing
-version `1.0.0`. One TestFlight group: **Internal** (`e757ca90-ec55-4ea3-8559-3c3b59c7a982`).
+version from `MARKETING_VERSION` in `project.yml` (bumped with the build for a store release). One TestFlight group: **Internal** (`e757ca90-ec55-4ea3-8559-3c3b59c7a982`).
 Test-note locales: **en-US** and **fr-FR** — both are filled, never just English.
 
 The whole point of a build is the diff since the previous one. Work out that diff *first*:
