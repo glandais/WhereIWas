@@ -184,6 +184,9 @@ struct AuditSummaryTests {
         ("gps.stopped", []),
         ("background.session.started", []),
         ("background.session.ended", []),
+        ("keepAlive.started", []),
+        ("keepAlive.stopped", []),
+        ("keepAlive.fix", []),
         ("fix.accepted", []),
         ("store.insert", ["12"]),
         ("store.insertFailed", ["12"])

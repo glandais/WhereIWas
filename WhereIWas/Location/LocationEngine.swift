@@ -3,15 +3,18 @@ import Foundation
 import os
 import UIKit
 
-/// Owner of the single `CLLocationManager` of the app.
+/// Owner of the app's `CLLocationManager` — and of a second, keep-alive one.
 ///
 /// Responsibilities (see ARCHITECTURE.md §5):
 /// * configure the manager for background tracking
 ///   (`allowsBackgroundLocationUpdates`, no automatic pausing, indicator on);
-/// * apply a ``GPSProfile`` in place (`startGPS`) or drop to coarse / off
-///   (`stopGPS`) while holding a `CLBackgroundActivitySession` whenever
-///   high-accuracy GPS runs — re-asserting `startUpdatingLocation()` on every
+/// * apply a ``GPSProfile`` in place (`startGPS`) or turn GPS off
+///   (`stopGPS`), holding a `CLBackgroundActivitySession` for as long as
+///   tracking is on — re-asserting `startUpdatingLocation()` on every
 ///   request, since that is what keeps the process alive in the background;
+/// * while GPS is off, run a coarse request on the ``KeepAliveLocation``
+///   manager, whose fixes are never recorded: it only keeps the process
+///   scheduled so CoreMotion can see the next departure;
 /// * keep significant-change + visit monitoring armed while tracking is
 ///   enabled, because those two are what relaunch a terminated app;
 /// * run every `CLLocation` through the pure ``LocationFilter``, annotate
@@ -74,6 +77,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     private let logger = Logger(subsystem: "io.github.glandais.whereiwas", category: "engine")
 
     private var backgroundSession: CLBackgroundActivitySession?
+    /// Coarse request that keeps the process scheduled while GPS is off.
+    private let keepAlive = KeepAliveLocation()
     private var buffer: [LocationSampleDraft] = []
     private var flushTask: Task<Void, Never>?
     private var wantsAlwaysUpgrade = false
@@ -141,6 +146,8 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         // request has to be re-asserted. `apply(profile:)` stays quiet in the
         // trail when nothing changed.
         applyBackgroundFlags()
+        // The real updates take over from here; the two never run together.
+        keepAlive.stop(audit: audit)
         // Before `apply(profile:)`, so the session the `gps.started` /
         // `gps.changed` trace reports is the one the updates actually run
         // under.
@@ -161,6 +168,17 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
         // powers, so dropping it at every STATIONARY meant the next ride —
         // which starts in the background — ran without a session at all.
         // Hold it for as long as the trail is on; `stopAll()` releases it.
+        //
+        // Holding it is not enough on its own, though: with no location
+        // request behind it, iOS suspended the process within a minute of
+        // every STATIONARY — no CoreMotion callback reached the app until a
+        // significant change woke it 3–8 minutes and 650–1100 m into the next
+        // ride. The keep-alive request is what keeps it scheduled. Gated on
+        // the session, so the stale-registration path at launch (tracking
+        // off, `stopGPS` called to make the system forget us) starts nothing.
+        if backgroundSession != nil {
+            keepAlive.start(audit: audit)
+        }
         if wasOn { logger.info("stopGPS") }
         scheduleFlush()
     }
@@ -215,6 +233,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
     public func stopAll() {
         currentProfile = nil
         stopUpdates()
+        keepAlive.stop(audit: audit)
         closeBackgroundSession(reason: "stopAll")
         stopSignificantChangeMonitoring()
         scheduleFlush()
@@ -680,5 +699,92 @@ extension LocationEngine: CLLocationManagerDelegate {
                                     name: "location.updates.resumed",
                                     details: [AuditDetail("profile", appliedProfile?.label ?? "off")]))
         }
+    }
+}
+
+// MARK: - Keep-alive
+
+/// A deliberately coarse location request that runs only while GPS is off,
+/// for the single purpose of keeping the process scheduled.
+///
+/// A held `CLBackgroundActivitySession` was thought to be enough on its own
+/// (it is, while GPS runs). The audit of build 24 said otherwise for a phone
+/// at rest: in 3.5 days of STATIONARY the app logged ten events, CoreMotion
+/// reached it only in a burst at the significant change that woke it, and
+/// every departure was seen 90–500 s and 650–1100 m late — 7.1 of the 7.8 km
+/// missed over ten rides. AutoRide, on the same phone, stayed awake throughout
+/// with a session *plus* a 3 km / 3000 m request, and so does this.
+///
+/// It owns a manager of its own, so that its fixes can never be confused with
+/// the main manager's significant changes: they are not filtered, recorded or
+/// forwarded — a `keepAlive.fix` row in the trail, nothing more. The 3000 m
+/// distance filter is not optional. Asking for `threeKilometers` does not
+/// space fixes out (iOS delivers what it has, 6 m in the median); the filter
+/// is what does, and dropping it once made a parked phone log 95 fixes an
+/// hour.
+@MainActor
+final class KeepAliveLocation: NSObject, CLLocationManagerDelegate {
+    private let manager = CLLocationManager()
+    private var audit: any AuditRecording = NoopAuditLog()
+    private(set) var isRunning = false
+
+    override init() {
+        super.init()
+        manager.delegate = self
+        manager.pausesLocationUpdatesAutomatically = false
+        manager.activityType = .other
+        manager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        manager.distanceFilter = 3000
+    }
+
+    func start(audit: any AuditRecording) {
+        self.audit = audit
+        // Re-asserted on every call, like the main manager's request: a
+        // background wake-up is exactly when it matters.
+        if !manager.allowsBackgroundLocationUpdates {
+            manager.allowsBackgroundLocationUpdates = true
+        }
+        manager.showsBackgroundLocationIndicator = true
+        manager.startUpdatingLocation()
+        guard !isRunning else { return }
+        isRunning = true
+        audit.record(AuditEvent(timestamp: Date(),
+                                category: .location,
+                                severity: .info,
+                                name: "keepAlive.started",
+                                details: [AuditDetail("desiredAccuracy", "threeKilometers"),
+                                          AuditDetail("distanceFilter", manager.distanceFilter)]))
+    }
+
+    func stop(audit: any AuditRecording) {
+        guard isRunning else { return }
+        isRunning = false
+        manager.stopUpdatingLocation()
+        audit.record(AuditEvent(timestamp: Date(),
+                                category: .location,
+                                severity: .info,
+                                name: "keepAlive.stopped"))
+    }
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let last = locations.last else { return }
+        let count = locations.count
+        let accuracy = last.horizontalAccuracy
+        let age = -last.timestamp.timeIntervalSinceNow
+        MainActor.assumeIsolated {
+            // Proof of life only: the position goes nowhere.
+            audit.record(AuditEvent(timestamp: Date(),
+                                    category: .location,
+                                    severity: .debug,
+                                    name: "keepAlive.fix",
+                                    details: [AuditDetail("count", count),
+                                              AuditDetail("horizontalAccuracy", accuracy),
+                                              AuditDetail("age", age)]))
+        }
+    }
+
+    nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
+        // Errors are the main manager's to report; a coarse request failing
+        // (`locationUnknown`, typically) changes nothing about tracking.
     }
 }

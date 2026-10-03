@@ -1248,6 +1248,57 @@
             "pl": "Systemowy wskaźnik lokalizacji widoczny"
           }
         },
+        "audit.keepAlive.fix": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Udržovací poloha přijata (neuložena)",
+            "de": "Keep-Alive-Standort empfangen (nicht gespeichert)",
+            "en": {
+              "value": "Keep-alive location received (not recorded)",
+              "state": "new"
+            },
+            "es": "Ubicación de mantenimiento recibida (no registrada)",
+            "fr": "Position de maintien en vie reçue (non enregistrée)",
+            "it": "Posizione di mantenimento ricevuta (non registrata)",
+            "ja": "維持用の位置情報を受信（記録なし）",
+            "nl": "Keep-alive-locatie ontvangen (niet opgeslagen)",
+            "pl": "Podtrzymująca lokalizacja odebrana (nie zapisana)"
+          }
+        },
+        "audit.keepAlive.started": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Udržovací požadavek na polohu spuštěn",
+            "de": "Keep-Alive-Standortanfrage gestartet",
+            "en": {
+              "value": "Keep-alive location request started",
+              "state": "new"
+            },
+            "es": "Solicitud de ubicación de mantenimiento iniciada",
+            "fr": "Requête de position de maintien en vie démarrée",
+            "it": "Richiesta di posizione di mantenimento avviata",
+            "ja": "維持用の位置情報リクエストを開始",
+            "nl": "Keep-alive-locatieverzoek gestart",
+            "pl": "Podtrzymujące żądanie lokalizacji uruchomione"
+          }
+        },
+        "audit.keepAlive.stopped": {
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Udržovací požadavek na polohu zastaven",
+            "de": "Keep-Alive-Standortanfrage beendet",
+            "en": {
+              "value": "Keep-alive location request stopped",
+              "state": "new"
+            },
+            "es": "Solicitud de ubicación de mantenimiento detenida",
+            "fr": "Requête de position de maintien en vie arrêtée",
+            "it": "Richiesta di posizione di mantenimento interrotta",
+            "ja": "維持用の位置情報リクエストを停止",
+            "nl": "Keep-alive-locatieverzoek gestopt",
+            "pl": "Podtrzymujące żądanie lokalizacji zatrzymane"
+          }
+        },
         "audit.list.counts": {
           "translations": {
             "cs": "%1$lld zobrazeno · %2$lld uloženo",

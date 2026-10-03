@@ -65,6 +65,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
     @ObservationIgnored private var probeTask: Task<Void, Never>?
     @ObservationIgnored private var sessionTask: Task<Void, Never>?
     @ObservationIgnored private var heartbeatTask: Task<Void, Never>?
+    @ObservationIgnored private var heartbeatTaskInterval: TimeInterval = 0
     @ObservationIgnored private var currentSessionID: UUID?
     @ObservationIgnored private var fixesSinceStatsRefresh = 0
     @ObservationIgnored private var lastFixSource: LocationSource?
@@ -469,12 +470,17 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         }
     }
 
-    /// Interval between two `app.heartbeat` rows. Long enough to be free,
-    /// short enough that the five-minute holes seen in a ride export cannot
-    /// hide one.
+    /// Interval between two `app.heartbeat` rows while GPS runs. Long enough
+    /// to be free, short enough that the five-minute holes seen in a ride
+    /// export cannot hide one.
     static let heartbeatInterval: TimeInterval = 30
 
-    /// Runs a heartbeat while GPS does, and only while the trail is on.
+    /// Interval while STATIONARY. A parked phone is where the process used
+    /// to be suspended unseen; one row every five minutes proves it was not,
+    /// at 288 rows a day instead of 2880.
+    static let stationaryHeartbeatInterval: TimeInterval = 300
+
+    /// Runs a heartbeat while tracking is on, and only while the trail is on.
     ///
     /// A trail records what happens; nothing records that the app was there
     /// to see it. So an export cannot distinguish "the receiver reported
@@ -483,12 +489,20 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
     /// a hole with a measurable edge: the last heartbeat before it is when
     /// execution actually stopped.
     private func updateHeartbeat() {
-        let wanted = audit.isEnabled && machine.phase.isGPSActive
+        let wanted = audit.isEnabled && machine.phase != .disabled
+        let interval = machine.phase.isGPSActive ? Self.heartbeatInterval : Self.stationaryHeartbeatInterval
+        // A task sleeping five minutes must not hold the 30 s beat back when
+        // a ride starts: a change of pace restarts it.
+        if heartbeatTask != nil, heartbeatTaskInterval != interval {
+            heartbeatTask?.cancel()
+            heartbeatTask = nil
+        }
         if wanted, heartbeatTask == nil {
+            heartbeatTaskInterval = interval
             heartbeatTask = Task { [weak self] in
                 while !Task.isCancelled {
                     do {
-                        try await Task.sleep(for: .seconds(Self.heartbeatInterval))
+                        try await Task.sleep(for: .seconds(interval))
                     } catch {
                         return
                     }

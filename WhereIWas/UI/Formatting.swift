@@ -386,6 +386,15 @@ enum Formatting {
         case "background.session.ended":
             return String(localized: "audit.background.session.ended",
                           defaultValue: "Background activity session closed")
+        case "keepAlive.started":
+            return String(localized: "audit.keepAlive.started",
+                          defaultValue: "Keep-alive location request started")
+        case "keepAlive.stopped":
+            return String(localized: "audit.keepAlive.stopped",
+                          defaultValue: "Keep-alive location request stopped")
+        case "keepAlive.fix":
+            return String(localized: "audit.keepAlive.fix",
+                          defaultValue: "Keep-alive location received (not recorded)")
         case "location.updates.paused":
             return String(localized: "audit.location.updatesPaused",
                           defaultValue: "CoreLocation paused location updates")
