@@ -408,10 +408,7 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
             // Only real fixes: an event fix is ~500 m wide and speed-less, so
             // letting it into the ring would evict GPS fixes without ever
             // matching one.
-            recentFixes.append(fix)
-            if recentFixes.count > LocationFilter.recentCapacity {
-                recentFixes.removeFirst(recentFixes.count - LocationFilter.recentCapacity)
-            }
+            LocationFilter.remember(fix, in: &recentFixes)
         }
         acceptedCount += 1
         if buffer.count >= max(1, settings.insertBatchSize) || source != .gps {
@@ -446,6 +443,9 @@ public final class LocationEngine: NSObject, LocationEngineProtocol {
                     handleCoarse(fix, source: .significantChange)
                     delegate?.locationEngine(self, didReceiveSignificantChange: fix)
                 } else {
+                    if case .cachedRepeat = reason {
+                        LocationFilter.remember(fix, in: &recentFixes)
+                    }
                     rejectedCount += 1
                     lastRejection = reason
                     delegate?.locationEngine(self, didReject: fix, reason: reason)

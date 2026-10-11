@@ -259,6 +259,62 @@ struct LocationFilterCachedRepeatTests {
         #expect(out.count == 3)
         #expect(out.last?.latitude == 47.229780)
     }
+
+    /// A real fix `index` steps along a walk, ten seconds apart, ending at `age`.
+    private func step(_ index: Int, age: TimeInterval) -> LocationFix {
+        fix(lat: 47.229780 + Double(index) * 0.0001, lon: -1.613845,
+            accuracy: 20, age: age, speed: -1)
+    }
+
+    @Test("The window is an age, not a count: a dozen real fixes do not evict the twin")
+    func manyRealFixesInBetween() {
+        // 2026-10-08, indoors: ten fixes accepted in four minutes pushed the
+        // twin out of a ten-slot ring, and the replay got back in each time.
+        var recent: [LocationFix] = []
+        LocationFilter.remember(ghost(age: 240), in: &recent)
+        for i in 0..<12 {
+            LocationFilter.remember(step(i, age: 230 - Double(i) * 10), in: &recent)
+        }
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: recent.last, now: now, recent: recent)
+                == .rejected(.cachedRepeat))
+    }
+
+    @Test("A rejected replay refreshes its twin, so a steady echo stays out")
+    func replayRefreshesTwin() {
+        var recent: [LocationFix] = []
+        LocationFilter.remember(ghost(age: 900), in: &recent)
+        // Rejected at 400 s ago — 500 s after the twin, inside the window —
+        // and remembered as the new twin.
+        LocationFilter.remember(ghost(age: 400), in: &recent)
+        LocationFilter.remember(step(0, age: 10), in: &recent)
+        // 899 s after the first copy, 399 s after the refreshed one.
+        #expect(LocationFilter.evaluate(ghost(age: 1), previous: recent.last, now: now, recent: recent)
+                == .rejected(.cachedRepeat))
+    }
+
+    @Test("remember keeps one copy per solution and forgets what left the window")
+    func rememberPrunes() {
+        var recent: [LocationFix] = []
+        LocationFilter.remember(step(0, age: LocationFilter.recentWindow + 100), in: &recent)
+        LocationFilter.remember(ghost(age: 300), in: &recent)
+        LocationFilter.remember(ghost(age: 50), in: &recent)
+        LocationFilter.remember(step(1, age: 1), in: &recent)
+        #expect(recent.count == 2)
+        #expect(recent.first?.timestamp == ghost(age: 50).timestamp)
+    }
+
+    @Test("filter refreshes the twin on a rejected replay too")
+    func batchRefresh() {
+        // Twin and replays far enough apart that only a refreshed twin can
+        // still match the last one.
+        var settings = TrackingSettings()
+        settings.maxSampleAge = 3600
+        let batch = [ghost(age: 1000), step(0, age: 900), ghost(age: 500),
+                     step(1, age: 300), ghost(age: 1)]
+        let out = LocationFilter.filter(batch, previous: nil, now: now, settings: settings)
+        #expect(out.count == 3)
+        #expect(out.allSatisfy { $0.horizontalAccuracy != 7.71 || $0.timestamp == ghost(age: 1000).timestamp })
+    }
 }
 
 @Suite("LocationFix · helpers")

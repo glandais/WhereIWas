@@ -129,6 +129,9 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
             enqueue(fix, source: .gps)
             delegate?.locationEngine(self, didAccept: fix)
         case .rejected(let reason):
+            if case .cachedRepeat = reason {
+                LocationFilter.remember(fix, in: &recentFixes)
+            }
             rejectedCount += 1
             delegate?.locationEngine(self, didReject: fix, reason: reason)
         }
@@ -182,10 +185,7 @@ public final class SimulatedLocationEngine: LocationEngineProtocol {
         buffer.append(LocationSampleDraft(fix: fix, annotation: annotation, source: source))
         lastFix = fix
         if source == .gps {
-            recentFixes.append(fix)
-            if recentFixes.count > LocationFilter.recentCapacity {
-                recentFixes.removeFirst(recentFixes.count - LocationFilter.recentCapacity)
-            }
+            LocationFilter.remember(fix, in: &recentFixes)
         }
         acceptedCount += 1
         if buffer.count >= max(1, settings.insertBatchSize) || source != .gps {

@@ -97,18 +97,39 @@ public enum LocationFilter {
     /// Tolerance for fixes timestamped slightly in the future.
     public static let futureTolerance: TimeInterval = 5
 
-    /// How many recently accepted fixes the `cachedRepeat` check looks back
-    /// at. Ten covers the observed interleaving: the replayed fix came back
-    /// with real fixes in between, which is exactly what the previous-fix-only
-    /// `duplicate` check misses.
-    public static let recentCapacity = 10
+    /// A ceiling on the `cachedRepeat` history, never the limit that applies:
+    /// one fix a second for ``recentWindow`` plus margin. It used to be ten,
+    /// and a count was the bug — indoors on 2026-10-08, ten real fixes
+    /// arrived in four minutes, pushed the replayed Wi-Fi fix's twin out, and
+    /// the replay got back in every four minutes, each time a 28 m round trip
+    /// in the trace.
+    public static let recentCapacity = 1000
 
-    /// How far back the `cachedRepeat` check compares. The ring only grows on
-    /// *accepted* fixes, so without this a receiver whose whole input is the
-    /// same repeated solution — a Wi-Fi position indoors, which is a real
-    /// position and the only one available there — would be silenced forever.
-    /// With it, one such fix gets through every ten minutes.
+    /// How far back the `cachedRepeat` check compares, by age of the twin.
+    /// ``remember(_:in:)`` refreshes a twin each time its replay is rejected,
+    /// so a fix iOS keeps replaying stays silenced for as long as it does, and
+    /// the window only lets it back in after ten minutes without one — by
+    /// then it is a position again, not an echo. A receiver whose whole input
+    /// is that one solution never reaches this check: `duplicate` compares it
+    /// with itself first.
     public static let recentWindow: TimeInterval = 600
+
+    /// Records `fix` in the `cachedRepeat` history: drops twins older than
+    /// ``recentWindow`` and any earlier copy of the same solution, then
+    /// appends it. Call it for every accepted GPS fix *and* every fix rejected
+    /// as `cachedRepeat`, so the replay keeps its twin fresh.
+    public static func remember(_ fix: LocationFix, in recent: inout [LocationFix]) {
+        recent.removeAll {
+            fix.timestamp.timeIntervalSince($0.timestamp) >= recentWindow
+                || ($0.latitude == fix.latitude
+                    && $0.longitude == fix.longitude
+                    && $0.horizontalAccuracy == fix.horizontalAccuracy)
+        }
+        recent.append(fix)
+        if recent.count > recentCapacity {
+            recent.removeFirst(recent.count - recentCapacity)
+        }
+    }
 
     /// Evaluate a fix.
     ///
@@ -182,13 +203,15 @@ public enum LocationFilter {
         var window = recent
         var out: [LocationFix] = []
         for fix in fixes {
-            if evaluate(fix, previous: last, now: now, settings: settings, recent: window).isAccepted {
+            switch evaluate(fix, previous: last, now: now, settings: settings, recent: window) {
+            case .accepted:
                 out.append(fix)
                 last = fix
-                window.append(fix)
-                if window.count > recentCapacity {
-                    window.removeFirst(window.count - recentCapacity)
-                }
+                remember(fix, in: &window)
+            case .rejected(.cachedRepeat):
+                remember(fix, in: &window)
+            case .rejected:
+                break
             }
         }
         return out
