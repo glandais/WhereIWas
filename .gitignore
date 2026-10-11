@@ -24,3 +24,6 @@ WhereIWas.xcodeproj/
 screenshots/flat/
 screenshots/koubou/out/
 screenshots/koubou/*.local.yaml
+
+# /brag launch-video output
+brag-output/
