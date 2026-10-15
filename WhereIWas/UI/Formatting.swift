@@ -538,6 +538,9 @@ enum Formatting {
         case "settling":
             return String(localized: "profile.settling", defaultValue: "Standby",
                           comment: "GPS profile name: rationed updates after a stop, watching for a departure")
+        case "loitering":
+            return String(localized: "profile.loitering", defaultValue: "In place",
+                          comment: "GPS profile name: walking around without going anywhere (a shop, a house); rationed updates")
         default: return label
         }
     }

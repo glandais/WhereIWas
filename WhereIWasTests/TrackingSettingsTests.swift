@@ -142,7 +142,7 @@ struct TrackingSettingsCodableTests {
         let data = try JSONEncoder().encode(TrackingSettings())
         let object = try #require(try JSONSerialization.jsonObject(with: data) as? [String: Any])
         let expectedKeys: Set<String> = [
-            "stillnessTimeout", "probeTimeout", "settlingTimeout",
+            "stillnessTimeout", "probeTimeout", "settlingTimeout", "loiterTimeout", "loiterRadius",
             "movingSpeedThreshold", "movingFixConfirmations", "stillSpeedThreshold",
             "minimumActivityConfidence",
             "unitSystem",

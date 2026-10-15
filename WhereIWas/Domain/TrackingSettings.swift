@@ -24,6 +24,22 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     /// 0.8 km of their restart on 2026-09-12.
     public var settlingTimeout: TimeInterval = 300
 
+    /// How long MOVING fixes must stay within ``loiterRadius`` of one another
+    /// before GPS drops to the cheap ``GPSProfile/loitering(_:)`` profile.
+    /// Default 180 s. `0` disables it.
+    ///
+    /// Walking around a shop or a house keeps the pedometer busy, so MOVING
+    /// never ends — and on 2026-10-14 that was 2.4 h of GPS at best accuracy
+    /// for a net displacement under 25 m. Three minutes inside 50 m is not a
+    /// walk anyone would want traced at 10 m: even a stroll at 0.3 m/s leaves
+    /// the radius in that time.
+    public var loiterTimeout: TimeInterval = 180
+
+    /// Radius (meters) of the loitering watch, and the distance filter of the
+    /// loitering profile: the first fix it delivers is the one that left.
+    /// Default 50 m.
+    public var loiterRadius: Double = 50
+
     /// GPS speed (m/s) at or above which a fix counts as "moving" while
     /// PROBING. Default 0.7 m/s (~2.5 km/h).
     public var movingSpeedThreshold: Double = 0.7
@@ -141,7 +157,7 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
     // MARK: Decoding with defaults for missing keys
 
     private enum CodingKeys: String, CodingKey {
-        case stillnessTimeout, probeTimeout, settlingTimeout
+        case stillnessTimeout, probeTimeout, settlingTimeout, loiterTimeout, loiterRadius
         case movingSpeedThreshold, movingFixConfirmations, stillSpeedThreshold
         case minimumActivityConfidence
         case unitSystem
@@ -159,6 +175,8 @@ public struct TrackingSettings: Codable, Sendable, Hashable {
         stillnessTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .stillnessTimeout) ?? d.stillnessTimeout
         probeTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .probeTimeout) ?? d.probeTimeout
         settlingTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .settlingTimeout) ?? d.settlingTimeout
+        loiterTimeout = try c.decodeIfPresent(TimeInterval.self, forKey: .loiterTimeout) ?? d.loiterTimeout
+        loiterRadius = try c.decodeIfPresent(Double.self, forKey: .loiterRadius) ?? d.loiterRadius
         movingSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .movingSpeedThreshold) ?? d.movingSpeedThreshold
         movingFixConfirmations = try c.decodeIfPresent(Int.self, forKey: .movingFixConfirmations) ?? d.movingFixConfirmations
         stillSpeedThreshold = try c.decodeIfPresent(Double.self, forKey: .stillSpeedThreshold) ?? d.stillSpeedThreshold

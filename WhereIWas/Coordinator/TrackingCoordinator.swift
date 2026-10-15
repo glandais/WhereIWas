@@ -600,7 +600,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
 
     public func locationEngine(_ engine: any LocationEngineProtocol, didAccept fix: LocationFix) {
         lastFixSource = .gps
-        handle(.gpsFix(speed: fix.validSpeed))
+        handle(.gpsFix(speed: fix.validSpeed, fix: fix))
         fixesSinceStatsRefresh += 1
         if fixesSinceStatsRefresh >= Self.statsRefreshEveryFixes {
             fixesSinceStatsRefresh = 0
@@ -993,7 +993,7 @@ public final class TrackingCoordinator: TrackingControlling, LocationEngineDeleg
         case .probeTimerFired: return "probe timer"
         case .significantChange: return "significant change"
         case .visit: return "visit"
-        case .gpsFix(let speed):
+        case .gpsFix(let speed, _):
             if let speed { return "fix \(String(format: "%.1f", speed)) m/s" }
             return "fix (no speed)"
         case .motionHint: return "motion hint"

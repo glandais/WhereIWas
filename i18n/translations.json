@@ -3132,6 +3132,21 @@
             "pl": "Włączona"
           }
         },
+        "profile.loitering": {
+          "comment": "GPS profile name: walking around without going anywhere (a shop, a house); rationed updates",
+          "extractionState": "extracted_with_value",
+          "translations": {
+            "cs": "Na místě",
+            "de": "Vor Ort",
+            "en": "In place",
+            "es": "Sin desplazarse",
+            "fr": "Sur place",
+            "it": "Sul posto",
+            "ja": "その場",
+            "nl": "Ter plekke",
+            "pl": "W miejscu"
+          }
+        },
         "profile.settling": {
           "comment": "GPS profile name: rationed updates after a stop, watching for a departure",
           "translations": {

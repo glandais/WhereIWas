@@ -56,7 +56,9 @@ public enum TrackingInput: Sendable, Equatable {
     /// CoreLocation delivered a `CLVisit` (arrival or departure).
     case visit
     /// An *accepted* (post-filter) GPS fix. `speed` in m/s, `nil` if invalid.
-    case gpsFix(speed: Double?)
+    /// `fix` carries the position and time the loitering watch needs; without
+    /// it the fix only counts for its speed.
+    case gpsFix(speed: Double?, fix: LocationFix? = nil)
     /// Pedometer / accelerometer said "there is movement" (cheap hint that
     /// is not a full activity classification).
     case motionHint
@@ -188,6 +190,13 @@ public struct TrackingStateMachine: Sendable, Equatable {
     public private(set) var settledStationary = false
     /// Last phase change, for the UI / logging.
     public private(set) var lastTransition: TrackingTransition?
+    /// `true` while MOVING has stayed within `loiterRadius` for
+    /// `loiterTimeout`: GPS runs on ``GPSProfile/loitering(_:)`` instead of
+    /// the activity table.
+    public private(set) var loitering = false
+    /// The fix the loitering watch measures from: the first MOVING fix, then
+    /// the first one outside `loiterRadius` of the previous anchor.
+    private var loiterAnchor: LocationFix?
 
     public init(phase: TrackingPhase = .disabled, settings: TrackingSettings = TrackingSettings()) {
         self.phase = phase
@@ -276,8 +285,8 @@ public struct TrackingStateMachine: Sendable, Equatable {
                 return []
             }
 
-        case .gpsFix(let speed):
-            return handleFix(speed: speed, input: input)
+        case .gpsFix(let speed, let fix):
+            return handleFix(speed: speed, fix: fix, input: input)
         }
     }
 
@@ -364,6 +373,10 @@ public struct TrackingStateMachine: Sendable, Equatable {
 
         case .moving:
             if kind.impliesMotion {
+                // Steps are what loitering is made of, so `walking` does not
+                // end it; a ride or a drive does, without waiting for a fix to
+                // cross the radius.
+                if kind != .walking && credible { resetLoitering() }
                 var effects = disarmStillnessTimer()
                 effects += updateProfileIfNeeded()
                 return effects
@@ -378,7 +391,8 @@ public struct TrackingStateMachine: Sendable, Equatable {
         }
     }
 
-    private mutating func handleFix(speed: Double?, input: TrackingInput) -> [TrackingEffect] {
+    private mutating func handleFix(speed: Double?, fix: LocationFix?,
+                                    input: TrackingInput) -> [TrackingEffect] {
         guard phase != .disabled else { return [] }
         let valid = (speed ?? -1) >= 0 ? speed : nil
         lastSpeed = valid
@@ -409,6 +423,7 @@ public struct TrackingStateMachine: Sendable, Equatable {
             return []
 
         case .moving:
+            watchForLoitering(fix, speed: valid)
             var effects = updateProfileIfNeeded()
             if let s = valid {
                 if s < settings.stillSpeedThreshold {
@@ -479,9 +494,41 @@ public struct TrackingStateMachine: Sendable, Equatable {
         }
     }
 
+    /// Move the loitering watch along with a MOVING fix.
+    ///
+    /// A fix outside `loiterRadius` of the anchor, or one fast enough to be
+    /// more than a walk, restarts the watch from that fix and ends any
+    /// loitering; one still inside it for `loiterTimeout` starts loitering.
+    /// The watch only runs on fixes, so a profile that delivers none — the
+    /// automotive one in a car park — never enters it.
+    private mutating func watchForLoitering(_ fix: LocationFix?, speed: Double?) {
+        guard settings.loiterTimeout > 0, let fix else { return }
+        guard let anchor = loiterAnchor,
+              GPSProfile.speedTier(speed) == 0,
+              fix.distance(to: anchor) <= settings.loiterRadius else {
+            loiterAnchor = fix
+            loitering = false
+            return
+        }
+        if fix.timestamp.timeIntervalSince(anchor.timestamp) >= settings.loiterTimeout {
+            loitering = true
+        }
+    }
+
+    private mutating func resetLoitering() {
+        loiterAnchor = nil
+        loitering = false
+    }
+
+    /// The profile MOVING runs with right now.
+    private func movingProfile() -> GPSProfile {
+        loitering ? GPSProfile.loitering(settings)
+            : GPSProfile.profile(for: lastActivity, speed: profileSpeed, settings: settings)
+    }
+
     /// Recompute the MOVING profile and emit `startGPS` only when it changed.
     private mutating func updateProfileIfNeeded() -> [TrackingEffect] {
-        let wanted = GPSProfile.profile(for: lastActivity, speed: profileSpeed, settings: settings)
+        let wanted = movingProfile()
         guard wanted != activeProfile else { return [] }
         activeProfile = wanted
         return [.startGPS(wanted)]
@@ -510,6 +557,7 @@ public struct TrackingStateMachine: Sendable, Equatable {
         switch previous {
         case .moving:
             effects += disarmStillnessTimer()
+            resetLoitering()
         case .probing, .settling:
             effects += disarmProbeTimer()
             probeFixCount = 0
@@ -530,7 +578,8 @@ public struct TrackingStateMachine: Sendable, Equatable {
             effects += armProbeTimer()
         case .moving:
             recentlyMoved = true
-            let profile = GPSProfile.profile(for: lastActivity, speed: profileSpeed, settings: settings)
+            resetLoitering()
+            let profile = movingProfile()
             activeProfile = profile
             effects.append(.startGPS(profile))
         case .settling:

@@ -1196,3 +1196,114 @@ struct TrackingStateScenarioTests {
         #expect(base.phase == .probing)
     }
 }
+
+@Suite("TrackingStateMachine · loitering")
+struct TrackingStateLoiteringTests {
+    private static let origin = Date(timeIntervalSince1970: 1_791_000_000)
+
+    /// A fix `north` meters north of a fixed point, `at` seconds in.
+    private func fix(north: Double = 0, at seconds: TimeInterval) -> LocationFix {
+        LocationFix(latitude: 47.2131 + north / 111_195, longitude: -1.5538,
+                    horizontalAccuracy: 10, speed: 1.0,
+                    timestamp: Self.origin.addingTimeInterval(seconds))
+    }
+
+    /// MOVING on the walking profile, with a first fix anchoring the watch.
+    private func walking(settings: TrackingSettings = TrackingSettings()) -> TrackingStateMachine {
+        var m = TrackingStateMachine.at(.moving, settings: settings)
+        _ = m.handle(.motionActivity(kind: .walking, confidence: .high))
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(at: 0)))
+        precondition(m.activeProfile?.label == "walking")
+        return m
+    }
+
+    @Test("Walking within the radius for loiterTimeout drops GPS to the loitering profile")
+    func entersLoitering() {
+        // 2026-10-14: 45 minutes walking around one spot at ~1 m/s, all of it
+        // at best accuracy every 10 m.
+        var m = walking()
+        #expect(m.handle(.gpsFix(speed: 1.0, fix: fix(north: 30, at: 90))).startGPSProfiles.isEmpty)
+        #expect(m.handle(.gpsFix(speed: 1.0, fix: fix(north: 10, at: 179))).startGPSProfiles.isEmpty)
+        let effects = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 20, at: 180)))
+        #expect(effects.startGPSProfiles == [GPSProfile.loitering()])
+        #expect(m.loitering)
+        #expect(m.phase == .moving)
+    }
+
+    @Test("A walk that leaves the radius never loiters: the anchor moves with it")
+    func walkNeverLoiters() {
+        var m = walking()
+        for i in 1...20 {
+            let effects = m.handle(.gpsFix(speed: 1.0, fix: fix(north: Double(i) * 60, at: Double(i) * 60)))
+            #expect(effects.startGPSProfiles.isEmpty)
+        }
+        #expect(!m.loitering)
+    }
+
+    @Test("The first fix outside the radius hands the profile back to the activity table")
+    func leavesOnDistance() {
+        var m = walking()
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 5, at: 200)))
+        #expect(m.loitering)
+        let effects = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 55, at: 260)))
+        #expect(effects.startGPSProfiles == [GPSProfile.profile(for: .walking, speed: 1.0)])
+        #expect(!m.loitering)
+    }
+
+    @Test("A fix faster than a walk ends loitering even inside the radius")
+    func leavesOnSpeed() {
+        var m = walking()
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 5, at: 200)))
+        #expect(m.loitering)
+        var fast = fix(north: 10, at: 205)
+        fast.speed = 4
+        _ = m.handle(.gpsFix(speed: 4, fix: fast))
+        #expect(!m.loitering)
+        #expect(m.activeProfile?.label == "walking")
+    }
+
+    @Test("Steps keep loitering; a confident ride ends it at once")
+    func activityEndsLoitering() {
+        var m = walking()
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 5, at: 200)))
+        #expect(m.handle(.motionActivity(kind: .walking, confidence: .high)).startGPSProfiles.isEmpty)
+        #expect(m.handle(.motionHint).startGPSProfiles.isEmpty)
+        #expect(m.loitering)
+        let effects = m.handle(.motionActivity(kind: .cycling, confidence: .high))
+        #expect(effects.startGPSProfiles == [GPSProfile.profile(for: .cycling, speed: 1.0)])
+        #expect(!m.loitering)
+    }
+
+    @Test("loiterTimeout 0 disables the watch")
+    func disabled() {
+        var settings = TrackingSettings()
+        settings.loiterTimeout = 0
+        var m = walking(settings: settings)
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 5, at: 3600)))
+        #expect(!m.loitering)
+        #expect(m.activeProfile?.label == "walking")
+    }
+
+    @Test("A fix without a position counts for its speed only")
+    func needsPosition() {
+        var m = TrackingStateMachine.at(.moving)
+        _ = m.handle(.motionActivity(kind: .walking, confidence: .high))
+        for _ in 0..<50 { _ = m.handle(.gpsFix(speed: 1.0)) }
+        #expect(!m.loitering)
+    }
+
+    @Test("A new trip starts with a fresh watch")
+    func resetOnNewTrip() {
+        var m = walking()
+        _ = m.handle(.gpsFix(speed: 1.0, fix: fix(north: 5, at: 200)))
+        #expect(m.loitering)
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.motionActivity(kind: .stationary, confidence: .high))
+        _ = m.handle(.stillnessTimerFired)
+        #expect(m.phase == .settling)
+        _ = m.handle(.motionActivity(kind: .walking, confidence: .high))
+        #expect(m.phase == .moving)
+        #expect(!m.loitering)
+        #expect(m.activeProfile?.label == "walking")
+    }
+}

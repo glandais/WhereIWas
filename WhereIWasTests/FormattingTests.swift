@@ -112,8 +112,8 @@ struct AuditSummaryTests {
                 "untranslated profile: \(profile.label)")
     }
 
-    /// The two profiles that name a phase rather than an activity.
-    @Test(arguments: [GPSProfile.probing, .settling()])
+    /// The profiles that name a phase or a situation rather than an activity.
+    @Test(arguments: [GPSProfile.probing, .settling(), .loitering()])
     func everyPhaseProfileIsNamed(_ profile: GPSProfile) {
         #expect(Formatting.profileName(profile.label) != profile.label,
                 "untranslated profile: \(profile.label)")

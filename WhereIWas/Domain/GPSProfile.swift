@@ -78,6 +78,21 @@ public struct GPSProfile: Codable, Sendable, Hashable {
                    label: "settling")
     }
 
+    /// Profile used while MOVING in place: steps keep coming but the fixes
+    /// have not left ``TrackingSettings/loiterRadius`` for
+    /// ``TrackingSettings/loiterTimeout`` — a shop, a house, a platform.
+    ///
+    /// Same shape as ``settling(_:)``, for the same reason: the distance
+    /// filter is what rations fixes, and making it the loiter radius means the
+    /// first fix delivered is the one that walked out of it, which hands the
+    /// profile back to the activity table.
+    public static func loitering(_ settings: TrackingSettings = TrackingSettings()) -> GPSProfile {
+        GPSProfile(desiredAccuracy: .hundredMeters,
+                   distanceFilter: settings.loiterRadius,
+                   activityType: .other,
+                   label: "loitering")
+    }
+
     // MARK: - Pure table
 
     /// Speed tiers (m/s) used when the activity classifier is `unknown`.
